@@ -1,0 +1,82 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog / Specular Materials</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog / Specular Materials</h1>
+			</header>
+			<div class="summary">
+<p>Adding specular materials to <a href="/projects/crtrm/index.html?loc=specMats">crtrm</a></p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>I've been putting some time into reworking the materials code for <a href="/projects/crtrm/index.html?loc=specMats">crtrm</a>.  Well, that's a bit inaccurate - I've <em>added</em> materials code.  Previously, changing the material involved editing code in the rendering loop, which could reasonably described as &quot;less than ideal&quot;.  So I've pulled all that materials-related code out into its own module, and indexed all the materials I was using so I can now have a mapping from model id number to material id number.  This will eventually lead to having a user-friendly editor where you will be able to select different materials from drop down menus and apply them to the models you are designing.  In real time, of course.  If you have a 32-core machine.  With 16Ghz cores.</p>
+<p>That'll take a while, so for now enjoy some pictures of the fancy new materials code in action.</p>
+<h2 id="diffuse--specular">Diffuse + Specular</h2>
+<p><img loading="lazy" src="/projects/crtrm/spikeball1.png" alt="Specular and Diffuse" title="Diffuse and Specular"></p>
+<div style="clear:both"></div>
+<h2 id="mostly-specular-with-a-glaze-shader">Mostly Specular (with a glaze shader)</h2>
+<p><img loading="lazy" src="/projects/crtrm/spikeball2.png" alt="Specular Glaze" title="Specular Glaze"></p>
+<div style="clear:both"></div>
+<h2 id="shadows">Shadows</h2>
+<p><img loading="lazy" src="/projects/crtrm/spikeball3.png" alt="Specular Glaze with Shadows" title="Specular Glaze with Shadows"></p>
+<div style="clear:both"></div>
+<p>It's really starting to bother me that I can't see the reflections of the spikes in the specular highlight. Now that I have the main loop refactored, I should be able to handle reflections easily enough.  The challenge is to handle them efficiently.</p>
+<h2 id="bonus">Bonus</h2>
+<p>I spent ages trying to get this picture to work, but I couldn't get the right angle for it.  Now I'm not even sure why I thought adding a ring around it would be cool.  Everybody likes rings, right?</p>
+<p><img loading="lazy" src="/projects/crtrm/ringAndSpike.png" alt="SpikeBall and Ring" title="SpikeBall and Ring"></p>
+<div style="clear:both"></div>
+<p>Maybe if I rotate it...</p>
+<p><img loading="lazy" src="/projects/crtrm/ringAndSpike1.png" alt="SpikeBall and Ring Rotated" title="SpikeBall and Ring Rotated"></p>
+<div style="clear:both"></div>
+<h2 id="nah">Nah</h2>
+
+			</article>
+			</html>
+			

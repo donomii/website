@@ -1,0 +1,251 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>code / Common Tail, revisited</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>code / Common Tail, revisited</h1>
+			</header>
+			<div class="summary">
+<p>Doing dodgey things in C for fun and ... fun</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p><a href="../../resources/c_exercises/tree_recursive.c">Download</a></p>
+<p><a href="/post/find_common_tail_1.html">Last time</a>, I posted a solution to the problem of finding the common tail of two lists in C.  The code was correct, but it was a little bit inefficient.  It traverses both lists more than once, which annoyed me.  I feel like I shouldn't have to visit each node more than once.</p>
+<p>The task was:</p>
+<blockquote>
+<p>... to find the first common parent of any two leaf nodes.  What this boils down to is finding the common tail of two linked lists...</p>
+</blockquote>
+<p>The last solution was a by-the-book solution.  I get the length of both lists, shorten the long list, then compare the elements.  It works, but it traverses the lists twice each.  For long lists, this is necessary, because we might not have enough memory to create the data structures we need to speed this up.  However if we assume that we are dealing with moderately small lists, then we can take note of all the elements in the list, so we don't have to revisit them a second time.</p>
+<p>The simplest way to do this is to reverse both lists as you traverse them.  Then when you get to the end of both lists, you start walking along the reversed versions, checking that the elements are the same for both lists.  When the elements are different, you have found the end of your common tail.</p>
+<p>But you should not do this in a production environment.  Creating a complete copy of each node just to reverse a list is not good C style.  We only need to keep track of a pointer to each node, so we use a classic structure - the linked list node.  By tradition, it is called the cons.</p>
+<pre><code>typedef struct cons {
+	pointer car;
+	struct cons* cdr;
+} cons;
+</code></pre>
+<p>Again by tradition, the pointer to your data is the <em>car</em> element.  The <em>cons</em> element points to the next element of the list, which is another <em>cons</em> structure.  You could call them <em>data</em> and <em>list</em>, but then how would Scheme programmers understand the code?</p>
+<pre><code>typedef struct node {
+	pointer data;
+	struct node* next;
+} node;
+</code></pre>
+<p>We can't allocate a new cons for each node however, malloc is way too slow for that.  Your project probably has its own version of malloc, and possibly its own flexible array struct, and routines to add and remove elements, resize the array etc.  Unfortunately this a self-contained exercise, so I can't rely on any libraries.  What I need is a data structure like a stack, that lets me add elements, and does its own memory allocation.  Luckily C has one of these built in, it's called <em>the stack</em>.</p>
+<p>The fun happens in this routine.  Since it is a bit complex, I'll break it down.</p>
+<pre><code>TreeNode* findFirstCommonAncestorRec (TreeNode* A, TreeNode* B, cons* reverseA, cons* reverseB) {
+	cons rA = { A, reverseA};
+	cons rB = { B, reverseB};
+	if (A||B) {
+		return findFirstCommonAncestorRec(
+									A?A-&gt;parent:A, 
+									B?B-&gt;parent:B, 
+									A?&amp;rA:reverseA, 
+									B?&amp;rB:reverseB);
+	} else {
+		if (!(reverseA-&gt;car==reverseB-&gt;car)) {
+			//The branches have no common root!
+			return NULL;
+		} else {
+			return findLastMatchingElement(
+										reverseA,
+										reverseB);
+		}
+	}
+}
+</code></pre>
+<p>A and B are the lists we are checking for a common ancestor.  So</p>
+<pre><code>A?A-&gt;parent:A
+B?B-&gt;parent:B
+</code></pre>
+<p>Mean &quot;if there is more list to follow, move to the next element&quot;.  A list ends when the parent is NULL.</p>
+<pre><code>A?&amp;rA:reverseA
+B?&amp;rB:reverseB
+</code></pre>
+<p>These pass the &quot;reverse lists&quot; forwards to the next step.  If one list has finished (A), then we pass the reference to the front of the reversed list (reverseA).  Otherwise, we add the current element of the list A to the front of the reversed list (reverseA), and we pass this new reversed A list (rA).</p>
+<p>This is, incidentally, why I don't think code is inherently self documenting.  Even though I wrote this code, I still have to pause for a while when I read it, to understand what it is actually trying to do (walk two lists and reverse them).  Even the most familiar algorithms become difficult to understand once they are implemented (and optimised).</p>
+<p>One further note:</p>
+<p>rA and rB are declared as <em>stack variables</em>.  We take a reference to them, which is normally a bug, because when findFirstCommonAncestorRec returns, the memory for rA and rB becomes invalid.  Not invalid in a &quot;segfault&quot; way, just open to being silently overwritten.  However findFirstCommonAncestorRec is recursive, so the references will be valid when we use them.  rA and rB will be safe in this scenario.  In a larger program, possibly not.</p>
+<p>So findFirstCommonAncestorRec actually reverses both lists (using pointers), then calls findLastMatchingElement on the reversed lists.  This seems like a lot of wonkery to get the same result as last time.  Was it really worth it?  Let's run the tests and see how fast each version is.</p>
+<p>Tree.c is my original implementation, which uses a for loop and goes along each list twice.  Tree_recursive is this new, improved version.</p>
+<pre><code>gcc tree.c
+
+time:	0m18.068s
+
+
+gcc Tree_recursive.c
+
+time:	0m42.785s
+
+</code></pre>
+<p>That's terrible!  I've wasted <del>hours</del> minutes for no benefit!  Or did I?</p>
+<pre><code>gcc -O3 tree.c
+
+time:	0m10.752s
+
+
+gcc -O3 Tree_recursive.c
+
+time:	0m6.741s
+
+</code></pre>
+<p>The recursive version runs in 60% of the time of the smaller, simpler version.  Was it worth it?  If this code was in the critical path, most definitely.  Reducing the runtime by 40% in the critical path is a huge win.  Any other time, probably not.  The simpler version is easier to read and maintain, works for huge lists, and is much easier to understand.</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;assert.h&gt;
+typedef void* pointer;
+typedef struct TreeNodeStruct { 
+	struct TreeNodeStruct* parent;
+} TreeNode;
+
+typedef struct cons {
+	pointer car;
+	struct cons* cdr;
+} cons;
+
+/* Traverse two lists pairwise, checking that the elements in both lists are the same.  Stop at the last element for which this is true. */
+TreeNode* findLastMatchingElement (cons* A, cons* B) {
+	if ((!A-&gt;cdr)||(!B-&gt;cdr)) { return NULL;}
+	if ((!A-&gt;cdr-&gt;cdr)||(!B-&gt;cdr-&gt;cdr)) { return A-&gt;car;}
+	if (A-&gt;cdr-&gt;car == B-&gt;cdr-&gt;car) {
+		return findLastMatchingElement(A-&gt;cdr, B-&gt;cdr);
+	} else {
+		return A-&gt;car;
+	}
+}
+
+/* Traverse two lists to find the common tail (the common ancestor in this tree structure. */
+TreeNode* findFirstCommonAncestorRec (TreeNode* A, TreeNode* B, cons* reverseA, cons* reverseB) {
+	cons rA = { A, reverseA};
+	cons rB = { B, reverseB};
+	if (A||B) {
+		return findFirstCommonAncestorRec(A?A-&gt;parent:A, B?B-&gt;parent:B, A?&amp;rA:reverseA, B?&amp;rB:reverseB);
+	} else {
+		if (!(reverseA-&gt;car==reverseB-&gt;car)) {
+			//The branches have no common root!
+			return NULL;
+		} else {
+			return findLastMatchingElement(reverseA,reverseB);
+		}
+	}
+}
+
+/* Take two leaf nodes, traverse towards the root node until we find a common node (if any) */
+TreeNode* findFirstCommonAncestor (TreeNode* A, TreeNode* B) {
+	cons rA = {NULL, NULL};
+	cons rB = {NULL, NULL};
+
+	return findFirstCommonAncestorRec(A, B, &amp;rA, &amp;rB);
+}
+
+/* Test function: Create a linked list to test our functions on */
+TreeNode* makeBranch (TreeNode* parent, int length) {
+	int i;
+	TreeNode* t;
+	TreeNode* prev_t = parent;
+
+	for (i=0;i&lt;length; i++) {
+		t = (TreeNode*) calloc(1,sizeof(TreeNode));
+		t-&gt;parent = prev_t;
+		prev_t=t;
+	}
+	return t;
+}
+
+void test () {
+
+		//R is the root not of the tree
+        TreeNode* R = (TreeNode*) calloc(1,sizeof(TreeNode));
+        TreeNode* Rbranch = makeBranch(R,200);
+        TreeNode* A = makeBranch(NULL, 10);
+        TreeNode* B = makeBranch(NULL, 5);
+        TreeNode* C = makeBranch(R, 10);
+        TreeNode* D = makeBranch(R, 5);
+        TreeNode* E = makeBranch(Rbranch, 1000);
+        TreeNode* F = makeBranch(Rbranch, 500);
+
+        int i;
+        for (i=0; i&lt;1000000; i++) {
+
+                //Check we handle NULL correctly
+                TreeNode* res = findFirstCommonAncestor(NULL, NULL);
+                assert(res==NULL);
+
+                //Check branches from different trees (no common root)
+                res = findFirstCommonAncestor(A,B);
+                assert(res==NULL);
+
+                //Check branches are separate up to the tree root
+                res = findFirstCommonAncestor(C,D);
+                assert(res==R);
+
+                //Check degenerate case
+                res = findFirstCommonAncestor(R,R);
+                assert(res==R);
+
+                //Check a real case
+                res = findFirstCommonAncestor(E,F);
+                assert(res==Rbranch);
+
+                //Check branchLength(B)&gt;branchLength(A)
+                res = findFirstCommonAncestor(F,E);
+                assert(res==Rbranch);
+        }
+}
+
+
+int main(int argc, char* argv[])
+{
+		test();
+}
+
+</code></pre>
+
+			</article>
+			</html>
+			

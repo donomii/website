@@ -1,0 +1,112 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Javascript Ray Marcher</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Javascript Ray Marcher</h1>
+			</header>
+			<div class="summary">
+<p>Render scenes in your browser</p>
+<p>Try the latest <a href="/projects/javascriptraymarcher/nver15.html">online demo </a>, or the much faster <a href="/projects/crtrm/index.html">C Real-Time RayMarcher</a>.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<script src="/projects/javascriptraymarcher/jquery-2.1.3.min.js"></script>
+<script src="/projects/javascriptraymarcher/jquery.slideme2.js"></script>
+<link href="/projects/javascriptraymarcher/slideme.css" rel="stylesheet" />
+<p><img loading="lazy" src="/projects/javascriptraymarcher/14.2.png" alt="pic">
+<img loading="lazy" src="/projects/javascriptraymarcher/15.1.png" alt="pic">
+<img loading="lazy" src="/projects/javascriptraymarcher/mandel2.png" alt="pic">
+<img loading="lazy" src="/projects/javascriptraymarcher/mandel3.png" alt="pic">
+<img loading="lazy" src="/projects/javascriptraymarcher/mandelbulb3.png" alt="pic"></p>
+<div id="foo" >
+<ul class="slideme">
+<li><img loading="lazy" src="/projects/javascriptraymarcher/14.3.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/14.2.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/14.1.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/15.3.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/15.2.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/15.1.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/11.3.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/11.2.png?loc=javascriptraymarcherProjectPage" style="width:80%"  /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/9.8.png?loc=javascriptraymarcherProjectPage" style="width:80%"  /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/8.8.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/8.7.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/8.6.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+<li><img loading="lazy" src="/projects/javascriptraymarcher/8.5.png?loc=javascriptraymarcherProjectPage" style="width:80%" /></li>
+</ul>
+</div>
+<h2 id="raymarcher">RayMarcher</h2>
+<p>This is a javascript raymarcher. It draws pictures using fractals and other complex shapes.</p>
+<p>Writing a graphics engine in a web-browser has a lot of benefits.  It runs everywhere, doesn't need to be compiled and installed, and has a good debugger.</p>
+<p>Unfortunately it is also too slow.  My original plan was to turn this into a cluster program, rendering a small part of the image in each open webpage.  Instead, I rewrote everything in hand-optimised C, and now it runs in almost <a href="/projects/crtrm/index.html">real time</a></p>
+<h2 id="dev-blog">Dev Blog</h2>
+<p>I documented my progress while writing the raymarcher.  You can see this program go from the tiny and incomplete first version up to the complex and (somewhat) performant code of the latest version.</p>
+<p>Each version is still functional, so you can see the images being calculated in your web browser.</p>
+<ol>
+<li>We draw <a href="/projects/javascriptraymarcher/nver1.html">a flat plane</a>.  We have to start somewhere.</li>
+<li><a href="/projects/javascriptraymarcher/nver2.html">Something to look at</a>.  Colouring by normals.</li>
+<li><a href="/projects/javascriptraymarcher/nver3.html">Diffuse lighting</a>.  Soft shading.</li>
+<li><a href="/projects/javascriptraymarcher/nver4.html">Render primitives</a>.  The first primitives.</li>
+<li><a href="/projects/javascriptraymarcher/nver5.html">Shadows</a>.  Proper lighting, but monochrome.</li>
+<li><a href="/projects/javascriptraymarcher/nver6.html">Coloured lights</a>.  Lights have colours, but the objects don't.</li>
+<li><a href="/projects/javascriptraymarcher/nver7.html">Fractals</a>.  The Mandelbrot fractal.</li>
+<li><a href="/projects/javascriptraymarcher/nver8.html">Rotations and mirrors</a>.  Mirrored surfaces, and a camera that rotates.</li>
+<li><a href="/projects/javascriptraymarcher/nver9.html">MD2 Loader</a>.  Load and render quake MD2 models.</li>
+<li><a href="/projects/javascriptraymarcher/nver10.html">Diagnostic displays</a>.  A display window to show rendering hotspots (areas that take longer to render are brighter red).</li>
+<li><a href="/projects/javascriptraymarcher/nver11.html">Cleanup</a>.  Code janitoring.</li>
+<li><a href="/projects/javascriptraymarcher/nver12.html">Speedups</a>.  Pushing javascript harder.</li>
+<li><a href="/projects/javascriptraymarcher/nver13.html">l-systems</a>. An advanced shape language.</li>
+<li><a href="/projects/javascriptraymarcher/nver14.html">Flood fill rendering</a>.  A speedup technique that renders pixels in a different order.</li>
+<li><a href="/projects/javascriptraymarcher/nver15.html">Documentation</a>. Improved the user experience.</li>
+</ol>
+
+			</article>
+			</html>
+			

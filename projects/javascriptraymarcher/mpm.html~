@@ -1,0 +1,454 @@
+<html>
+<head>
+<title>Canvas tutorial</title>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script src="test.raw" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+var up = new Vector(0,1,0);
+var PI=3.14159;
+var outWin;
+var wallDamp = 0.0;
+
+function Particle (x, y, z, strength, f) {
+this.fixed = f;
+this.strength = strength;
+this.original_position = new Vector(x,y,0);
+this.acceleration = new Vector(0,0,0);
+this.velocity = new Vector(0,0,0);
+this.position = new Vector(x,y,0);
+
+this.damp = function (c) {this.velocity = this.velocity.smult(1-c);}
+this.checkbounds = function(x1,y1,x2,y2) {
+if (this.fixed) { this.position = this.original_position.smult(1);}
+if (this.position.x<x1){this.velocity = this.velocity.vmult(new Vector(-1,0,0));this.position.x = x1;this.damp(wallDamp);}
+if (this.position.y<y1){this.velocity = this.velocity.vmult(new Vector(0,-1,0));this.position.y = y1;this.damp(wallDamp);}
+
+if (this.position.x>x2){this.velocity = this.velocity.vmult(new Vector(-1,0,0));this.position.x = x2;this.damp(wallDamp);}
+if (this.position.y>y2){this.velocity = this.velocity.vmult(new Vector(0,-1,0));;this.position.y = y2;this.damp(wallDamp);}
+}
+}
+
+function Cell (x,y) {
+this.down = []
+this.up = false
+this.val = 0;
+this.flow = new Vector(0,0,0);
+this.position = new Vector(x,y,0);
+
+this.recalc_position = function () {
+
+this.position = new Vector(0,0,0);
+for (var ii=0; ii< this.down.length; ii++){
+this.position = this.position.add(this.down[ii].position);
+}
+this.position = this.position.smult(1/this.down.length);
+}
+
+
+this.checkbounds = function() {
+
+if (this.flow.magnitude()>1) {
+this.flow.normalise();
+}
+}
+}
+
+
+Size = 64
+function makemesh(size) {
+var arr = new Array(Size);
+ for (i = 0; i < arr.length; ++ i)
+	{arr [i] = new Array(Size);}
+for (i=0;i<Size;i++){
+for (j=0;j<Size;j++){
+arr[i][j] = new Cell(i,j);
+}}
+return arr;
+}
+
+function levelup (anArr, aSize) {
+var arr2 = makemesh(aSize/2);
+for (i=0;i<aSize;i++){
+for (j=0;j<aSize;j++){
+arr2[Math.floor(i/2)][Math.floor(j/2)].down.push(anArr[i][j]);
+anArr[i][j].up = arr2[Math.floor(i/2)][Math.floor(j/2)]
+arr2[Math.floor(i/2)][Math.floor(j/2)].val += anArr[i][j].val
+
+arr2[Math.floor(i/2)][Math.floor(j/2)].recalc_position();
+}}
+return arr2;
+}
+
+
+function pars2array (p) {
+var arr = makemesh(Size)
+
+for (i=0;i<pars.length;i++){	
+//alert(make_int(pars[i].position.x) + ", " +make_int(pars[i].position.y))
+cell = arr[make_int(pars[i].position.x)][make_int(pars[i].position.y)];
+cell.val = cell.val+pars[i].strength;;
+//cell.flow = cell.flow.add(pars[i].velocity);
+cell.checkbounds();
+}
+
+var a2 = levelup(arr, Size)
+var a3 = levelup(a2, Size/2)
+var a4 = levelup(a3, Size/4)
+a5 = levelup(a4, Size/8)
+a6 = levelup(a5, Size/16)
+
+
+return arr;
+}
+
+function setup(){
+
+	//Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph('canvasdiv');
+	outWin.erase();
+	timeWin = new Graph('timediv');
+	timeWin.erase();
+	normalWin = new Graph('normaldiv');
+	normalWin.erase();
+      
+pars = [];
+for (i=20;i<30;i=i+0.5 ){
+ for (j=20;j<30; j=j+0.5) {
+pars.push(new Particle(i, j, 0, 1));
+}}
+mesh = pars2array(pars);
+//for (i=10;i<Size;i=i+1){pars.push(new Particle(i, 9, 0, 9, true));}
+//for (i=10;i<Size;i=i+1){pars.push(new Particle(i, 8, 0, 9, true));}
+	Step();
+}
+
+
+function clearMesh(){
+for (i=0;i<Size;i++){
+for (j=0;j<Size;j++){
+mesh[i][j].val = 0;
+}}
+
+}
+function Step() {
+clearMesh();
+for (i=0;i<pars.length;i++){	
+//alert(make_int(pars[i].position.x) + ", " +make_int(pars[i].position.y))
+cell = mesh[make_int(pars[i].position.x)][make_int(pars[i].position.y)];
+cell.val = cell.val+pars[i].strength;;
+//cell.flow = cell.flow.add(pars[i].velocity);
+cell.checkbounds();
+}
+
+
+for (i=0;i<pars.length;i++) {
+var p = pars[i];
+p.acceleration = new Vector(0,0.1,0);//new Vector (0,-0.1,0);
+var x= make_int(p.position.x)
+var y= make_int(p.position.y)
+
+cell = mesh[x][y];
+p.val = cell.val;
+var dir=new Vector(0,0,0);
+var size=0;
+for (j=0;j<Size/16;j++){
+for (k=0;k<Size/16;k++){
+adj = a6[j][k];
+alert(j + ", " + k+ " : " +adj.position)
+diff = cell.val - adj.val;
+diff_vec = adj.position.vsub(p.position);
+magnitude = diff_vec.magnitude();
+if(magnitude>0){
+diff_vec = diff_vec.smult(1/magnitude/magnitude);
+dir = dir.add(diff_vec.smult((diff-1)/2))
+}}}
+
+//(dir + ", " + size); 
+p.velocity = p.velocity.add(dir.smult(0.1));
+
+
+p.velocity = p.velocity.add(p.acceleration.smult(2));
+p.velocity = p.velocity.smult(0.9);
+p.checkbounds(10,10,Size-5,Size-5);
+p.position = p.position.add(p.velocity);
+
+p.checkbounds(10,10,Size-5,Size-5);
+  }
+
+outWin.erase();
+timeWin.erase();
+for (i=0;i<pars.length;i++) {
+var p = pars[i];
+outWin.setPixel(make_int(p.position.x*4-40), make_int(p.position.y*4-40), new Colour(0, 0, 1));
+//outWin.setPixel(10, 10, new Colour(1, 1, 1));
+
+}
+for (i=0;i<Size;i++) {
+for (j=0;j<Size;j++) {
+
+cell = mesh[i][j];
+timeWin.setBox(i*4-40, j*4-40, new Colour(0, 0, 1-cell.val/10));
+}}
+//outWin.redraw();
+setTimeout("Step()", 100);
+}
+
+function dumpProps (obj, prefix) {
+var confString = "";
+for(var prop in obj) {
+    if(obj.hasOwnProperty(prop))
+        confString += prefix + "." + prop + " : " + obj[prop] + "<br/>" ;
+	if (typeof(obj[prop])=="object") { confString += dumpProps(obj[prop], prefix + "." +prop);} 
+}
+return confString;
+}
+
+
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+
+this.object="uninited";
+
+this.add = function (aVec) {
+newx =this.x + aVec.x;
+newy =this.y + aVec.y;
+newz =this.z + aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.vsub = function (aVec) {
+newx = this.x - aVec.x;
+newy = this.y - aVec.y;
+newz = this.z - aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+this.calculate_magnitude()
+}
+this.smult = function (aScalar) {
+newx = this.x * aScalar;
+newy = this.y * aScalar;
+newz = this.z * aScalar;
+return new Vector(newx, newy, newz);
+}
+
+this.vmult = function (aVec) {
+newx = this.x * aVec.x;
+newy = this.y * aVec.y;
+newz = this.z * aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.magnitude = function () {return this.m}
+this.calculate_magnitude = function () {
+this.m = Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+return this.m;
+}
+
+this.normalise = function ( p ) {
+newx = this.x/this.m;
+newy = this.y/this.m;
+newz = this.z/this.m;
+return new Vector(newx, newy, newz);
+}
+
+this.cross = function ( p ) {
+newx = this.y*p.z - this.z*p.y;
+newy = this.z*p.x - this.x*p.z;
+newz = this.x*p.y - this.y*p.x;
+return new Vector(newx, newy, newz);
+}
+
+this.innerProduct = function(p) {
+var res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+return res;
+}
+this.toString = function() {
+return "x: " + this.x + "  y: " + this.y + "  z: " + this.z ; 
+}
+
+this.clone = function() {
+var ret = new Vector(this.x, this.y, this.z);
+return ret;
+}
+
+this.rotateZ = function(q) {
+var nx = this.x*Math.cos(q) - this.y*Math.sin(q);
+var ny = this.x*Math.sin(q) + this.y*Math.cos(q);
+var nz = this.z;
+this.x = nx; this.y = ny; this.z = nz;
+this.calculate_magnitude()
+}
+
+
+this.rotateY = function(q) {
+nx = this.z*Math.sin(q) + this.x*Math.cos(q);
+ny = this.y;
+nz = this.z*Math.cos(q) - this.x*Math.sin(q);
+this.x = nx; this.y = ny; this.z = nz;
+this.calculate_magnitude()
+}
+
+
+this.rotateX = function(q) {
+nx = this.x;
+ny = this.y*Math.cos(q) - this.z*Math.sin(q);
+nz = this.y*Math.sin(q) + this.z*Math.cos(q);
+this.x = nx; this.y = ny; this.z = nz;
+this.calculate_magnitude();
+}
+
+this.m = this.calculate_magnitude();
+}
+
+function Colour ( rr, gg, bb) {
+this.r = rr;
+this.g = gg;
+this.b = bb;
+this.darken = function () {
+this.r = this.r*0.9;
+this.g = this.g*0.9;
+this.b = this.b*0.9; 
+}
+this.lighten = function () {
+this.r = this.r*1.1;
+
+this.g = this.g*1.1;
+this.b = this.b*1.1; 
+}
+}
+
+function Graph(aCanvasName ) {
+	this.canvas = document.getElementById(aCanvasName);
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	this.Ctx = this.ctx;
+	this.imageData = this.ctx.createImageData(this.width, this.height);
+	this.setRawPixel = function (x, y, aColour) {
+	  index = (x + y * this.imageData.width) * 4;
+	  this.imageData.data[index+0] = aColour.r*256;
+	  this.imageData.data[index+1] = aColour.g*256;
+	  this.imageData.data[index+2] = aColour.b*256;
+	  this.imageData.data[index+3] = 256; //aColour.a;
+	  //this.ctx.putImageData(this.imageData, 0, 0);
+}
+	this.update = function () {this.ctx.putImageData(this.imageData, 0, 0);}
+	this.redraw= function (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		var ii = false;
+		for ( ii=0;ii<aLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	
+
+	this.setPixel = function (x, yy, aColor) {
+		var y =  yy;
+		
+		this.ctx.strokeStyle = rgb(aColor);
+		this.Ctx.beginPath();
+		this.Ctx.moveTo(x-1,y-1);
+		this.Ctx.lineTo(x,y);
+		this.Ctx.stroke();
+
+	};
+  this.setLine = function (x, yy, aColor) {
+		var y =  yy;
+		
+		this.ctx.strokeStyle = rgb(aColor);
+		this.Ctx.beginPath();
+		this.Ctx.moveTo(x-5,y-5);
+		this.Ctx.lineTo(x+5,y+5);
+		this.Ctx.stroke();
+	};
+  this.setBox = function (x, yy, aColor) {
+		var y =  yy;
+		
+		this.ctx.strokeStyle = rgb(aColor);
+		this.Ctx.fillStyle = rgb(aColor);
+		this.Ctx.globalAlpha=1;
+		
+		this.Ctx.fillRect( x, y, 30, 30);
+}
+
+
+	this.erase = function () {
+		this.Ctx = this.ctx;
+		this.Ctx.fillStyle = "#FFFFFF";
+		this.Ctx.globalAlpha=1;
+		this.Ctx.strokeStyle ='#FFFFFF';
+		this.Ctx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+}
+
+
+
+
+function make_int (x) { return Math.abs(Math.round(x)) }
+function int2hex (x) {
+var t = x.toString(16);
+if (t.length ==1 ) {
+t = "0" + t ;
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(aCol)
+{
+  var red = aCol.r*255;
+var blue = aCol.b*255;
+var green = aCol.g*255;
+  if(red>254){red=254;}
+  if(blue>254){blue=254;}
+  if(green>254){green=254;}
+//  blue=int(blue);
+//  green=int(green);
+  
+  var decColor = make_int(red) + 256 * make_int(green) + 65536 * make_int(blue);
+  var ret = '#'+int2hex(make_int(red))+int2hex(make_int(green))+int2hex(make_int(blue));
+//  setDiv('debugdiv', "ret: " + ret); 
+  return ret; 
+}
+
+
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+
+</script>
+</head>
+<body onload="setup();">
+<canvas id="canvasdiv" width="500" height="500"></canvas> 
+<canvas id="timediv" width="500" height="500"></canvas> 
+<canvas id="normaldiv" width="500" height="500"></canvas> 
+<div id="debugdiv"></div>
+<div id="config"></div>
+<div>
+Cleanup time.  I've added Javsacript objects to hold the raytracer objects.  Now all the properties for the objects are in the same place, and adding new ones is much easier.
+
+A few changes to the display routine means it should now do a low-res pass across the whole picture before filling in the details.
+
+Added rotation to vectors, and the code to rotate the camera.
+</div>
+</body>
+</html>

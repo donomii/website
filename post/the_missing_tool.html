@@ -1,0 +1,80 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>The Missing Tool</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>The Missing Tool</h1>
+			</header>
+			<div class="summary">
+<p>I couldn't find it, so I wrote it.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>The Missing Tool is a command line program that fills in the gaps in your command line experience.  It provides lots of handy little utilities that your command line is missing, like:</p>
+<ul>
+<li>A <code>killport</code> that kills a process by port number (how has this not been a standard command?)</li>
+<li>A <code>ports</code> command that lists all listening ports</li>
+<li>A <code>port</code> command to describe the process listening on a port</li>
+<li>A <code>watch</code> command that runs a command every X seconds</li>
+<li>A <code>restart</code> command that restarts a command when it exits</li>
+<li>A <code>selector</code> web server that lets you browse and select images to move</li>
+<li>A <code>network-info</code> command that shows network details in a format that doesn't make me hate my existence</li>
+<li>A <code>http-logger</code> that logs HTTP requests</li>
+<li>A <code>find</code> for systems that don't have it</li>
+<li>A <code>ssh-key</code> command that copies your SSH public key to a remote server for automatic login</li>
+<li>A <code>image-check</code> command that scans directories for images and verifies they are uncorrupted</li>
+<li>A <code>combine-files</code> command that concatenates files from a directory into a single file</li>
+<li>A <code>relay</code> command that relays TCP connections to a remote server</li>
+<li>A <code>relay-ipv6</code> command that listens on ipv6 addresses and relays to ipv4 addresses</li>
+</ul>
+<p>It is written in Go, and is available on <a href="https://github.com/donomii/tool">github</a>.</p>
+
+			</article>
+			</html>
+			

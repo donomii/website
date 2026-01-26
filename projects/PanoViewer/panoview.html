@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <meta charset = "utf-8" />
+   <title>Device Orientation API</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<script type="text/javascript">
+var fov = 6000/180;
+var alphaoffset=0;
+var betaoffset=0;
+var alpha=0;
+var beta=0;
+var gamma=0;
+var targetAlpha=0;
+var targetBeta=0;
+var imageWidth=6400
+var xScale= 2*imageWidth/6400
+
+var imageHeight=3200
+var yScale= 2*imageHeight/3200
+
+
+var canvasWidth=10
+var canvasHeight=10
+
+
+   function draw(xpos,ypos){
+        var canvas = document.getElementById('displayPane');
+        if (canvas.getContext){
+          var ctx = canvas.getContext('2d');
+          //ctx.canvas.width  = window.innerWidth;
+          //ctx.canvas.height = window.innerHeight;
+          //ctx.fillStyle = "rgb(200,200,200)";
+          //ctx.clearRect ( 0 , 0 , 720 , 720 );
+          
+       ctx.drawImage(document.getElementById('pano'),xpos,ypos);
+        }
+      }
+      
+      
+
+function process(event) {
+//if (alphaoffset==0) {alphaoffset=-event.alpha*fov;}  
+  //targetAlpha = event.alpha*fov;
+  if (betaoffset==0) {betaoffset=event.beta*fov;}
+  targetBeta=yScale*event.beta*fov
+//alert(beta);
+
+  gamma = event.gamma;
+  if (alphaoffset==0) {alphaoffset=event.gamma*fov;}
+  targetAlpha=xScale*(event.alpha*fov+event.gamma*fov/1.0)
+  
+
+  //document.getElementById("log").innerHTML = "<ul><li>Alpha : " + alpha + "</li><li>Beta : " + beta + "</li><li>Gamma : " + gamma + "</li></ul>"; 
+}
+
+function resetOffsets() {
+alphaoffset=alpha;
+betaoffset=beta;
+}
+
+function converge() {
+  alpha = (alpha + (targetAlpha-alpha)/20);
+  beta = (beta+(targetBeta-beta)/20);
+}
+
+
+function Update() {
+setTimeout("Update();", 50);
+converge();
+draw(alpha-alphaoffset-imageWidth/2+canvasWidth/2,beta-betaoffset-imageHeight/2+canvasHeight/2);
+}
+
+ function startShow() {
+	var canvas = document.getElementById('displayPane');
+	if (canvas && canvas.getContext){
+	var ctx = canvas.getContext('2d');
+	ctx.canvas.width  = window.innerWidth;
+	canvasWidth=window.innerWidth
+	canvasHeight=window.innerHeight
+	ctx.canvas.height = window.innerHeight;
+	          ctx.fillStyle = "rgb(200,200,200)";
+          ctx.clearRect ( 0 , 0 , 720 , 720 );
+
+	resetOffsets();
+	setTimeout("Update()", 100);
+	} else {
+	 document.getElementById("log").innerHTML = "<p>Started!<p>"
+	 console.log("started")
+	setTimeout("StartShow()", 100);
+  }
+}
+
+window.onload = startShow
+
+if(window.DeviceOrientationEvent) {
+  window.addEventListener("deviceorientation", process, false);
+} else {
+  // Le navigateur ne supporte pas l'événement deviceorientation
+}
+
+</script>
+  </head>
+  <body >
+   
+   <div id="startPane" onClick="resetOffsets();document.getElementById('startPane').style.display='none';document.getElementById('displayPane').style.display='block'" style="position:absolute;height:100%;width:100%;">TOUCH TO START</div>
+   <canvas style="display:none" id="displayPane" width="10" height="10" onClick="resetOffsets();"></canvas>
+<img id=pano style="display:none" src="earth.gif">
+<div id="log"></div>
+</body>
+</html>

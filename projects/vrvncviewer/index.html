@@ -1,0 +1,98 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>VR VNC Viewer</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>VR VNC Viewer</h1>
+			</header>
+			<div class="summary">
+<p>View your desktop in Virtual Reality</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>VR VNC lets you view your computer's desktop on a large virtual screen.</p>
+<p>Download the <a href="https://play.google.com/store/apps/details?id=com.praeceptamachinae.vrvncviewer">Android App</a>.</p>
+<p>To use vrvncviewer, you need to start a server on your desktop, and vrvncviewer on your mobile.  Both computer and mobile must be on the same network (e.g. connected to the same WiFi station), and have an IP address between 192.168.0.0 and 192.168.10.255.</p>
+<h2 id="mjpeg-desktop-server">Mjpeg desktop server</h2>
+<p>You can use this <a href="/resources/binaries/rtaVideoStreamer-demo.7z">MJPEG Desktop Streamer</a>.  The <a href="/resources/binaries/rtaVideoStreamer-src.zip">source</a> is available too.</p>
+<p>Unzip rtaVideoStreamer, start it and then start the Android app.  VR VNC Viewer will scan the local network to find rtaVideoStreamer, and automatically connect.</p>
+<h2 id="vnc-server">VNC server</h2>
+<p>You will need to install a VNC server, and set the password option to 'no password'.  There are many choices for vnc servers, a small selection are listed here:</p>
+<h3 id="windows">Windows</h3>
+<ul>
+<li><a href="http://tigervnc.org/">TigerVNC</a></li>
+<li><a href="http://www.tightvnc.com/">TightVNC</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Virtual_Network_Computing">more on Wikipedia</a></li>
+</ul>
+<h3 id="linux">Linux</h3>
+<ul>
+<li>xvncserver</li>
+<li>vncserver</li>
+<li>...</li>
+</ul>
+<h3 id="macosx">MacOSX</h3>
+<p>MacOSX has a VNC server built in.  To enable it, follow these instructions:</p>
+<p>Setup <a href="https://www.dssw.co.uk/reference/vnc/index.html">VNC</a> for MacOSX.  (Open your settings and search for &quot;Screen Sharing&quot;)</p>
+<h3 id="android-app">Android app</h3>
+<p>Download and install <a href="https://play.google.com/store/apps/details?id=com.praeceptamachinae.vrvncviewer">VR VNC Viewer</a> from the play store.  After you have started your VNC server, start VR VNC Viewer.  VR VNC Viewer will scan the local network for your computer, and display it in VR.</p>
+<p>Finding your computer should take a few seconds.  If vrvncviwer loses the connection or freezes, you will have to close the app and start it again.</p>
+<h2 id="speed">Speed</h2>
+<p>vrvncviewer currently runs at around 3 frames per second, regardless of settings.  With a fast phone and fast network, it might be a bit higher.</p>
+<p>To get the best performance, lower your screen resolution to 800x600, or even better, 640x480</p>
+<h2 id="known-issueswork-to-do">Known issues/work to do</h2>
+<ul>
+<li>Retry connection after losing it</li>
+<li>Improve frame rate</li>
+</ul>
+<h1 id="privacy-policy">Privacy Policy</h1>
+<p>VR VNC Viewer does not record or transmit any user data. Full <a href="privacypolicy.html">privacy policy</a>.</p>
+
+			</article>
+			</html>
+			

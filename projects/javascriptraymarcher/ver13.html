@@ -1,0 +1,1549 @@
+<html>
+<head>
+<title>Canvas tutorial</title>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script src="test.raw" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+var up = new Vector(0,1,0);
+var PI=3.14159;
+var outWin;
+var scene_brightness=1.000;
+//camera.rotate(70,0,-30);
+//camera.translate(00,20,0);
+//camera.rotate(60,0,0);
+//camera.translate(0,0,-10);
+//camera.rotate(0,0,0);
+
+
+function setup(){
+
+	//Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph('canvasdiv');
+	outWin.erase();
+	timeWin = new Graph('timediv');
+	timeWin.erase();
+	normalWin = new Graph('normaldiv');
+	normalWin.erase();
+      
+
+lights = [
+//new Light(0, -30, -40, 5, 1000.0,1000.0,1000.0),
+//new Light(0, 50, -20, 5, 1000.0,0,0),
+
+//new Light(0, -50, -20, 5, 0,0,1000.0),
+//new Light(50, 0, -20, 5, 0,0,1000.0),
+new Light(5, 10, 0, 0.5, 1.0,0,0),
+new Light(-5, 10, 0, 0.5, 0,1.0,0),
+//new Light(-10,0,0, 0.5, 1.0,1.0,0),
+new Light(-5,10, -5, 0.5, 0,0,1.0),
+//new Light(0, -50, 0, 5, 0,1,0),
+];
+//for (i=0;i<5;i++)
+//  { lights[i]=new Light(80*i, 40, -20, 512,0,0)}
+for (iii=-10;iii<=10;iii++){
+//objects.push(new Sphere(iii*5,0,0,-3/(iii-11),1,0,0));
+//objects.push(new Sphere(0,iii*5,0,-3/(iii-11),0,1,0));
+//objects.push(new Sphere(0,0,iii*5,-3/(iii-11),0,0,1));
+//lights.push(new Light(iii*5,0,0,-3/(iii-11),1,0,0));
+//lights.push(new Light(0,iii*5,0,-3/(iii-11),0,1,0));
+//lights.push(new Light(0,0,iii*5,-3/(iii-11),0,0,1));
+
+}
+config.camera.translate(5,5,5);
+//config.camera.rotate(180,0,0);
+config.camera.target = new Vector(0,0,0)
+setDiv("config", dumpProps(config, "config"));
+
+  //Kick off the render
+	renderImage();
+}
+
+function dumpProps (obj, prefix) {
+var confString = "";
+for(var prop in obj) {
+    if(obj.hasOwnProperty(prop))
+        confString += prefix + "." + prop + " : " + obj[prop] + "<br/>" ;
+	if (typeof(obj[prop])=="object") { confString += dumpProps(obj[prop], prefix + "." +prop);} 
+}
+return confString;
+}
+
+function Config () {
+this.tracer = false;//  "smoke";
+this.camera = new Camera();
+this.x = 0;
+this.y = 0;
+this.hitCount = 0;
+}
+config = new Config();
+function Light ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.rad = rr;
+this.r = cr;
+this.g = cg;
+this.b = cb;
+this.colour = new Colour( cr, cg, cb);
+this.name = "Light";
+
+this.bounding_sphere = new BoundingSphere(xx,yy,zz,rr);
+
+this.surrounds = 
+function (point,direction) { 
+if (gen_sphere(this.x, this.y, this.z, point.x,point.y,point.z) < this.rad*this.rad) {
+  point.object=this;
+  return point;
+ } else { return false; }
+
+
+}
+
+}
+
+
+config.phase=0;
+config.yphase=0;
+config.x = config.phase;
+config.y = config.yphase;
+function renderImage () {
+	//If we try to draw the entire picture in one go, the browser will freeze.  So instead we draw one pixel at a time.
+	config.x+=11;
+	if (config.x>=outWin.width) {	
+	  config.x=config.phase;
+	  config.y+=11;
+	  if (config.y>=outWin.height) {
+	    
+	    setDiv('debugdiv', "hits: " + config.hitCount);
+	    config.hitCount=0;
+	    outWin.update();
+	    timeWin.update();
+	    normalWin.update();
+	    config.y=config.yphase;
+	    config.phase++;
+	    if(config.phase>11) {
+	      config.yphase++;
+	      config.phase=0;
+	      if(config.yphase>11) {
+			//finished
+	      alert("Finished");
+	      return;}}}}
+	var ray = config.camera.newray(config.x,config.y);
+	var start = new Date();
+	var colour = false;
+	if (config.tracer=="smoke"){
+	 colour = transRay( ray.origin, ray.direction ) ;
+	} else {
+	 var intersection = castRay( ray.origin, ray.direction ) ;
+	colour = calculate_colour(intersection, ray, false);
+	}
+	var end = new Date();
+	var elapsed = end - start;
+	timeColour = new Colour ((Math.log(elapsed)-1)/5,0,0);
+	//The ray object contains the position and direction of the ray.  castRay walks along the ray, looking for terrain.
+	if((config.phase==0) && (config.yphase==0)) {    
+	  outWin.setBox(config.x,config.y,colour);
+	  timeWin.setBox(config.x,config.y,timeColour);}
+	else {
+	  outWin.setRawPixel(config.x,config.y,colour);
+	  timeWin.setRawPixel(config.x,config.y,timeColour);}
+	  //Give the browser some time to do other processing
+	  setTimeout("renderImage()", 1);
+}
+
+function calculate_colour(intersection, ray, reflected) {
+//setDiv('debugdiv', "intersection: " + intersection); 
+  if( intersection ) { 
+    return terrainColour( intersection, ray.direction, reflected ); }  //We hit the terrain, draw the ground colour  
+  else
+   { return skyColour(); }  //We missed the terrain, draw the sky colour
+}
+
+//This is the function that sets the shape of the ground.  Simple for now, it will get very complicated soon.
+function ground(x,y,z) { return z*2+1;ret=0; if (z>90) { ret=200;};return ret;}
+//function ground(x,z) { ret= 90*Math.sin(x/5)*Math.sin(z/5); return ret; ;}
+//function ground(x,z) { ret= 60*Math.sin(x*x+z*z); return ret; ;}
+//function ground(x,y,z) { ret= 50*Math.sin(x/20)*Math.sin(z/10); return ret; ;}
+//function ground(x,z) { ret= 150-(x-100)*(x-100)/32-z*z; return ret; ;}
+//Math.sin(x)*Math.sin(x)+
+function sphere(x,y,z) { ret = (x-120)*(x-120) + (y-140)*(y-140) + (z-21)*(z-21); return ret; }
+function gen_sphere(cx,cy,cz,x,y,z) { ret = (x-cx)*(x-cx) + (y-cy)*(y-cy) + (z-cz)*(z-cz); return ret; }
+function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+function sphere3(x,y,z) { ret = (x-180)*(x-180) + (y-70)*(y-70) + (z-21)*(z-21); return ret; }
+
+//function sphere(x,y,z) { ret = (x-50)*(x-50) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+//function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+//function sphere3(x,y,z) { ret = (x-150)*(x-150) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+
+function BoundingSphere ( xx, yy, zz, rr) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.center = new Vector(xx,yy,zz);
+this.r = rr;
+this.name = "BoundingSphere";
+
+this.intersects = 
+function (origin, direction) {
+var l = direction.normalise();
+var c = this.center.vsub(origin);
+var d = (l.innerProduct( c))*(l.innerProduct( c)) - this.x*this.x-this.y*this.y-this.z*this.z + this.r*this.r;
+
+//dir = direction.normalise();
+//dst = origin.vsub(this.center);
+//B = dst.innerProduct(dir);
+//C = dst.innerProduct(dst) - sphere.r*sphere.r;
+//D = B*B -C;
+
+if (d>=0) {
+   return true;
+ } else { return false; }
+}
+
+}
+
+function BoundingFunction ( xx, yy, zz, f) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.center = new Vector(xx,yy,zz);
+this.name = "BoundingFunction";
+
+this.intersects = f;
+
+}
+
+function TrueBounds () {
+this.x = 0;
+this.y = 0;
+this.z = 0;
+this.center = new Vector(0,0,0);
+this.name = "TrueBounds";
+
+this.intersects = function (a,b) {return true};
+
+}
+
+
+//Objects for display on screen
+function Sphere ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.centre = new Vector(xx,yy,zz);
+this.r = rr;
+this.colour = new Colour( cr, cg, cb);
+this.name = "Sphere";
+this.bounding_sphere = new BoundingSphere(xx,yy,zz,rr);
+
+this.surrounds = 
+function (point,direction) { 
+dist_vec = this.centre.vsub(point);
+dist = dist_vec.magnitude();
+if (this.r>dist) {
+   point.object=this;
+  return point;
+ }
+return false;
+}
+
+}
+
+
+
+function BlobCylinder (startvec, endvec ) {
+this.start = startvec;
+this.end = endvec;
+this.colour = new Colour(1,1,1);
+this.name = "Blob";
+this.bounding_sphere = new BoundingSphere(startvec.x, startvec.y, startvec.z,5);
+this.points = [];
+var v = false;
+var rad = 1;
+this.diff = this.end.vsub(this.start);
+this.step = this.diff.smult(0.2);
+for(v=this.start;this.start.vsub(v).magnitude()<this.diff.magnitude();v=v.add(this.step)) {
+this.points.push(new Vector(v.x, v.y, v.z));
+}
+//for(v=0;v<3.14159*2;v=v+.314159*2) {
+//this.points.push(new Vector(Math.sin(v)*rad,Math.cos(v)*rad,2));
+//rad++}
+
+//this.points.push(new Vector(0,0,0));
+this.surrounds = 
+function (point,direction) {
+var p = point; 
+var v = false;
+var potential = 0;
+for(v=0;v<this.points.length;v++){
+var vdist = p.vsub(this.points[v]);
+var dist = vdist.magnitude();
+potential += 1.0/dist/dist;
+}
+
+if (potential>1) {
+   point.object=this;
+  return point;
+ } else { return false; }
+}
+
+}
+
+
+function Cylinder ( xx, yy, zz, x1,x2,x3, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.end1 = new Vector(xx, yy, zz);
+this.end2 = new Vector(x1, x2, x3);
+this.r = rr;
+this.colour = new Colour( cr, cg, cb);
+this.name = "Sphere";
+var temp = this.end1.vsub(this.end2);
+this.len = temp.magnitude();
+this.bounding_sphere = new BoundingSphere(xx,yy,zz,this.len);
+ 
+this.surrounds = 
+function (point,direction) { 
+    var norm1 = this.end2.vsub(this.end1);
+   norm1 = norm1.normalise();
+   var norm2 = norm1.smult(-1);
+   var dist1 = point.vsub(this.end1);
+    dist1 = dist1.innerProduct(norm1);
+   var dist2 = point.vsub(this.end2);
+   dist2 = dist2.innerProduct(norm2);
+   if (dist1 < 0 )	{return false};	
+   if (dist2 < 0) {return false}; 
+   var t =  point.vsub(norm1.smult(dist1));
+   var centerdist = t.vsub(this.end1);
+   if (centerdist.magnitude() > this.r) {return false};
+   point.object=this;	
+   return point; // All tests passed, point is in cylinder
+
+}
+
+}
+
+
+function Lsystem () {
+this.seed = ["T"];
+this.tree = this.seed;
+this.rules = [];
+this.rules["T"] = ["F", "H", "F", "[", "S",  "R", "T", "]", "[", "S",  "r", "T", "]", "[", "S",  "Z", "T", "]", "[", "S",  "z", "T", "]"];
+this.rules["H"] = ["H"];
+this.rules["Z"] = ["Z"];
+this.rules["z"] = ["z"];
+this.rules["R"] = ["R"];
+this.rules["F"]=["F"]
+//this.rules["T"] = ["T"];
+this.rules["S"] = ["S"];
+this.rules["r"] = ["r"];
+this.rules["["] =  ["["];
+this.rules["]"] = ["]"];
+this.stack = [];
+this.recurse = function () {
+var newtree = [];
+var e;
+for (e=0;e<this.tree.length;e++) {
+var replacement = this.rules[this.tree[e]];
+var ee;
+for (ee=0;ee<replacement.length;ee++){
+newtree.push(replacement[ee]);
+}
+}
+this.tree = newtree;
+//setDiv('debugdiv', "tree: " + newtree); 
+}
+this.genobjects = function (oblist) {
+var pos = new Vector(0,0,0);
+var dir = new Vector(0,-2,0);
+var scale = 0.6;
+var thickness = 1;
+for (e=0;e<this.tree.length;e++) {
+var c = this.tree[e];
+if (c == "T") {
+//oblist.push(new Cylinder(pos.x, pos.y, pos.z, pos.x, pos.y+3, pos.z, thickness, 0,1,0));
+oblist.push(new BlobCylinder(pos,new Vector( pos.x, pos.y+3, pos.z)));
+}
+if (c == "F") {
+var aa = false;
+oldpos = pos.smult(1);
+
+for(aa=0;aa<3;aa++){ 
+
+//oblist.push(new Sphere(pos.x, pos.y, pos.z, thickness, 1,1,1));
+pos = pos.add(dir);}
+
+oblist.push(new BlobCylinder(oldpos, pos));
+}
+
+if (c == "S") { dir = dir.smult(scale); thickness = thickness *scale }
+if (c == "R") { dir.rotateZ(45*PI/180)}
+if (c == "r") { dir.rotateZ(-45*PI/180)}
+if (c == "Z") { dir.rotateY(45*PI/180)}
+if (c == "z") { dir.rotateY(-45*PI/180)}
+if (c == "[") { this.stack.push(pos.clone());this.stack.push(dir.clone());this.stack.push(thickness);}
+if (c == "]") { thickness = this.stack.pop();dir = this.stack.pop();pos = this.stack.pop();}
+ 
+}
+}
+}
+
+
+function PointCloud ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.scale = 2;
+this.colour = new Colour( cr, cg, cb);
+this.name = "PointCloud";
+
+this.surrounds = 
+function (point,direction) {
+var iii=false;
+for (iii=0;iii<myPoints.length;iii=iii+3){
+vertexx = myPoints[iii]*this.scale; 
+vertexy = myPoints[iii+1]*this.scale;
+vertexz = myPoints[iii+2]*this.scale;
+dist_squared = (this.x-point.x+vertexx)*(this.x-point.x+vertexx) + (this.y-point.y+vertexy)*(this.y-point.y+vertexy) + (this.z-point.z+vertexz)*(this.z-point.z+vertexz);
+if (this.r*this.r>dist_squared) {
+   point.object=this;
+  return point;
+ }}
+return false; 
+}
+
+}
+
+
+function sameSide(p1,p2,a,b) {
+BA = b.vsub(a);
+cp1 = BA.cross(p1.vsub(a));
+cp2 = BA.cross(p2.vsub(a));
+if (cp1.innerProduct(cp2)>=0) {return true;} else {return false;}
+}
+
+function inTriangle(point,A,B,C) {
+if(
+sameSide(point, A,B,C) && 
+sameSide(point, B, A, C) && 
+sameSide(point,C,A,B)
+){return true;}else{return false} 
+}
+
+
+function BoundingTriangle ( x1, y1, z1, x2, y2, z2, x3, y3 ,z3) {
+this.v0 = new Vector(x1,y1,z1);
+this.v1 = new Vector(x2,y2,z2);
+this.v2 = new Vector(x3,y3,z3);
+this.name = "BoundingTriangle";
+
+this.intersects = 
+function (origin, direction) {
+	var e1,e2,h,s,q;
+	var a,f,u,v;
+	
+	e1=this.v1.vsub(this.v0);
+	e2=this.v2.vsub(this.v0);
+	h= direction.cross(e2);
+	a = e1.innerProduct(h);
+	
+	if (a > -0.00001 && a < 0.00001)
+		return false;
+	
+	f = 1/a;
+	s=origin.vsub(this.v0);
+	u = f * (s.innerProduct(h));
+	
+	if (u < 0.0 || u > 1.0)
+		return false;
+	
+	q=s.cross(e1);
+	v = f * direction.innerProduct(q);
+	if (v < 0.0 || u + v > 1.0)
+		return false ;
+	// at this stage we can compute t to find out where 
+	// the intersection point is on the line
+	var t = f * e2.innerProduct(q);
+
+	if (t > 0.00001) // ray intersection
+		return true ;
+	else // this means that there is a line intersection  
+		 // but not a ray intersection
+		 return false;
+
+
+}
+
+}
+
+function Triangle ( x1, y1, z1, x2,y2,z2, x3,y3,z3,thickness, cr, cg, cb) {
+this.x = x1;
+this.y = y1;
+this.z = z1;
+this.A = new Vector(x1,y1,z1);
+this.B = new Vector(x2,y2,z2);
+this.C = new Vector(x3,y3,z3);
+var n = this.C.cross(this.B);
+var N = n.normalise();
+N = N.smult(2);
+this.D = this.A.add(N);
+this.bounding_sphere = new BoundingTriangle( x1, y1, z1, x2,y2,z2, x3,y3,z3);//new BoundingSphere((x1+x2+x3)/3,(y1+y2+y3)/3,(z1+z2+z3)/3,(this.A.vsub(this.B)).magnitude());
+//this.bounding_sphere =  new BoundingFunction(0,0,0,function (origin, direction) {return true;});
+//new Triangle(0,0,20 ,30,0,20, 0,30,20, 10, 1.0,1.0,1.0),
+// A = 0,0,20
+//B = 30,0,20
+//C = 0,30,20
+//D = 10,0,20
+this.r = cr;
+this.colour = new Colour( cr, cg, cb);
+this.name = "Triangle";
+
+this.surrounds = 
+function (origin, direction) {
+	oo = origin;
+	origin = origin.smult(1);
+	var warp_point = new Vector( 5, 5, 0);
+	var dist = origin.vsub(warp_point);
+	//var shift_vector = dist.smult(1.2/dist.magnitude());
+	//origin.rotateZ(5*PI/180);
+	var e1,e2,h,s,q;
+	var a,f,u,v;
+	
+	e1=this.B.vsub(this.A);
+	e2=this.C.vsub(this.A);
+	h= direction.cross(e2);
+	a = e1.innerProduct(h);
+	
+	if (a > -0.00001 && a < 0.00001)
+		return false;
+	
+	f = 1/a;
+	s=origin.vsub(this.A);
+	u = f * (s.innerProduct(h));
+	
+	if (u < 0.0 || u > 1.0)
+		return false;
+	
+	q=s.cross(e1);
+	v = f * direction.innerProduct(q);
+	if (v < 0.0 || u + v > 1.0)
+		return false ;
+	// at this stage we can compute t to find out where 
+	// the intersection point is on the line
+	var t = f * e2.innerProduct(q);
+//setDiv('debugdiv', "t: " + t); 
+
+	if ((t > 0.00001) &&( t <1.0)) // ray intersection
+		{oo.object = this;return oo;}
+	else // this means that there is a line intersection  
+		 // but not a ray intersection
+		 {return false;}
+
+
+}
+
+}
+
+
+function Tetrahedron ( x1, y1, z1, x2,y2,z2, x3,y3,z3,thickness, cr, cg, cb) {
+this.x = x1;
+this.y = y1;
+this.z = z1;
+this.A = new Vector(x1,y1,z1);
+this.B = new Vector(x2,y2,z2);
+this.C = new Vector(x3,y3,z3);
+var n = this.C.cross(this.B);
+var N = n.normalise();
+N = N.smult(2);
+this.D = this.A.add(N);
+this.bounding_sphere = new BoundingSphere((x1+x2+x3)/3,(y1+y2+y3)/3,(z1+z2+z3)/3,(this.A.vsub(this.B)).magnitude());
+
+//new Triangle(0,0,20 ,30,0,20, 0,30,20, 10, 1.0,1.0,1.0),
+// A = 0,0,20
+//B = 30,0,20
+//C = 0,30,20
+//D = 10,0,20
+this.colour = new Colour( cr, cg, cb);
+this.name = "Tetrahedron";
+
+this.surrounds = 
+function (point) {
+//setDiv('debugdiv', "D: " + this.D); 
+if(
+inTriangle(point,this.A,this.B,this.D)&&
+ inTriangle(point,this.A,this.B,this.C) &&
+inTriangle(point,this.A,this.D,this.C) &&
+
+inTriangle(point,this.D,this.B,this.C) 
+){ point.object = this;return point}
+else {return false;}
+}
+
+}
+
+
+
+function Colour ( rr, gg, bb) {
+this.r = rr;
+this.g = gg;
+this.b = bb;
+this.darken = function () {
+this.r = this.r*0.9;
+this.g = this.g*0.9;
+this.b = this.b*0.9; 
+}
+this.lighten = function () {
+this.r = this.r*1.1;
+this.g = this.g*1.1;
+this.b = this.b*1.1; 
+}
+
+
+}
+function Terrain ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+
+this.colour = new Colour( cr, cg, cb);
+this.name = "Terrain";
+this.bounding_sphere = new TrueBounds();
+
+this.surrounds = function (point, direction) { 
+if (point.y<0){point.object=this;return point;}
+return false;
+}
+}
+
+function Square ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.bounding_sphere = new BoundingSphere(xx,yy,zz,2*rr);
+this.colour = new Colour( cr, cg, cb);
+this.name = "Cube";
+
+this.surrounds = 
+function (point,direction) { 
+xdis = (this.x-point.x)*(this.x-point.x);
+ydis = (this.y-point.y)*(this.y-point.y);
+zdis = (this.z-point.z)*(this.z-point.z);
+if (this.r*this.r>xdis) {
+if (this.r*this.r>ydis) {
+if (this.r*this.r>zdis) {
+  point.object=this;
+  return point;
+ }}}
+return false;
+}
+
+}
+
+function Grid ( xx, yy, zz, rr) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.scale = 1/rr;
+this.sphere = new Sphere(xx,yy,zz,rr);
+this.name = "Mandelbrot";
+
+this.surrounds = function (point,direction) { 
+for(ix=-2;ix<3;ix++){
+for(iy=-2;iy<3;iy++){
+ tx = (point.x-this.x+ix*100)*this.scale;
+ ty = (point.y-this.y+iy*100)*this.scale;
+ tz = (point.z-this.z)*this.scale;
+// if(this.sphere.surrounds(point)) {
+   if(in_mandelbrot(tx,ty,tz)) { 
+   point.object=this;
+   return point;}
+//   }
+ }
+}
+return false;
+}
+}
+
+
+function Mandelbrot ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.scale = 1/rr;
+this.colour = new Colour( cr, cg, cb);
+this.sphere = new Sphere(xx,yy,zz,rr*2);
+this.bounding_sphere = new BoundingSphere(0,0,0,rr*2);
+this.name = "Mandelbrot";
+
+this.surrounds = function (point,direction) { 
+tx = (point.x-this.x)*this.scale;
+ty = (point.y-this.y)*this.scale;
+tz = (point.z-this.z)*this.scale;
+
+if(this.sphere.surrounds(point,direction)) {
+lv = new Vector(tx,ty,tz);
+lv.rotateY(45*PI/180);
+lv.rotateX(45*PI/180);
+if (lv.z*lv.z<0.1) {
+  if(in_mandelbrot(lv.x,lv.y,lv.z)) { 
+  point.object=this;
+  return point;} else { return false;}
+  }
+}
+return false;
+}
+}
+
+function MandelBulb ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.scale = 2/rr;
+this.colour = new Colour( cr, cg, cb);
+this.bounding_sphere = new BoundingSphere(0,0,0,rr*2);
+this.name = "MandelBulb";
+
+this.surrounds = function (point,direction) { 
+tx = (point.x-this.x)*this.scale;
+ty = (point.y-this.y)*this.scale;
+tz = (point.z-this.z)*this.scale;
+
+
+lv = new Vector(tx,ty,tz);
+lv.rotateX(45*PI/180);
+lv.rotateY(45*PI/180);
+if(in_mandelbulb(lv.x,lv.y,lv.z)) { 
+  point.object=this;
+  return point;} else { return false;}
+  
+
+return false;
+}
+}
+objects = [
+//new ThreeDFunc(0,0,0,5,1,1,1),
+//new MandelBulb(0,0,0,5,1,1,1),
+//new BlobCylinder(new Vector(0,0,0), new Vector(-10,10,0)),
+new Terrain(1,2,3,4,0.0,1.0,0.0),
+//new Cylinder(0  ,0,0,0,5,0,2,1,1,1),
+//new Sphere(0,0,0,2,1,1,1),
+//new Sphere(10 ,-100,-21,10,1,1,1),
+//new Sphere( 2,0,2,3,1,1,1),
+//new Mandelbrot(2,0,2,5, 1.0, 1.0, 1.0),
+//new PointCloud(0,-30,0,1, 1.0, 1.0, 1.0),
+//new Triangle(0,100,20,30,0,20,0,30,20,10,1.0,1.0,1.0),
+//new Sphere(30,30,21,0,1,0),
+//new Sphere(-30,-30,21,10,1,0,0),
+//new Square(-30,30,21,10),
+//new Square(30,-30,21,10,0,1,0),
+//new Square(2,0,2,4,1,1,1),
+//new Sphere(150,100,21,20),
+//new Grid(100,100,10,20)
+new Sphere(100,100,10,0,1,0)
+];
+
+for (iii=0;iii<myPoints.length;iii=iii+9){
+objects.push(new Triangle(myPoints[iii+0],myPoints[iii+1],myPoints[iii+2],myPoints[iii+3],myPoints[iii+4],myPoints[iii+5],myPoints[iii+6],myPoints[iii+7],myPoints[iii+8],10,1.0,1.0,1.0));
+}
+//var l = new Lsystem;
+//l.recurse();
+//l.recurse();
+//l.recurse();
+//l.recurse();
+//l.recurse();
+l.genobjects(objects);
+
+for (iii=-10;iii<=10;iii++){
+//objects.push(new Sphere(iii*5,0,0,-3/(iii-11),1,0,0));
+//objects.push(new Sphere(0,iii*5,0,-3/(iii-11),0,1,0));
+//objects.push(new Sphere(0,0,iii*5,-3/(iii-11),0,0,1));
+//lights.push(new Light(iii*5,0,0,-3/(iii-11),1,0,0));
+//lights.push(new Light(0,iii*5,0,-3/(iii-11),0,1,0));
+//lights.push(new Light(0,0,iii*5,-3/(iii-11),0,0,1)),
+
+}
+//objects = objects.slice(0,40);
+//function chatter (message) {setDiv("debugdiv",message);sleep(50)}
+function chatter(message) {}
+ function sleep(naptime){
+	var sleeping = true;
+        var now = new Date();
+        var alarm;
+        var startingMSeconds = now.getTime();
+        alert("starting nap at timestamp: " + startingMSeconds + "\nWill sleep for: " + naptime + " ms");
+        while(sleeping){
+            alarm = new Date();
+            alarmMSeconds = alarm.getTime();
+            if(alarmMSeconds - startingMSeconds > naptime){ sleeping = false; }
+        }        
+        alert("Wakeup!");
+    }
+
+
+
+
+
+function castRay(   ro,  rd ) {
+     var delt = 0.1;
+     var mint = 0.0001;
+     var maxt = 100.0;
+     var maxdelt = 2;
+    //Step along the ray 
+    var last = ro
+chatter( "Casting ray " + config.x + ", " + config.y + " with xphase, yphase: " + config.phase +", "+ config.yphase);
+var candidates = [];
+//Check if we hit a bounding sphere
+// If we don't, we can leave early
+hitbounds = false;
+var ii=false;
+      for(ii=0;ii<objects.length;ii++){
+        if (objects[ii].bounding_sphere.intersects(ro,rd)) {
+           candidates.push(objects[ii]);hitbounds = true;}
+        }
+for(ii=0;ii<lights.length;ii++){
+        if (lights[ii].bounding_sphere.intersects(ro,rd)) {hitbounds = true;}
+       }
+if (!hitbounds ) {
+//setDiv('debugdiv',"Bailed early");
+return false
+}
+//candidates = objects;
+candidates = candidates.concat(lights)
+//setDiv('debugdiv',"Did not bail - "+candidates.length+" candidates");
+var tt = false;
+var d = new Vector(0,0,0);
+    for( tt = mint; d.magnitude() < 20; tt += delt )
+    {
+chatter(" t is: " + tt);
+      //delt=delt*1.05;
+      if (delt>maxdelt){delt=maxdelt}
+      //p =  jQuery.extend(true, {}, ro);
+      //dir = jQuery.extend(true, {}, rd);
+      d = rd.smult(tt);
+      var p=ro.add(d);
+//setDiv('debugdiv',"!!" + make_int(p.x) + " "+ make_int(p.y) + " "+ make_int(p.z) + " ");      
+	var intersection = isHit(p,rd, candidates)
+	if (intersection) {
+	config.hitCount++;
+	var h = bifurcation(last,p,15,[intersection.object].concat(lights));
+//setDiv('debugdiv',"!!" + h.toString() + " is halfway between " + last.toString() + " and " + p.toString() + "!");
+	p.x=h.x;p.y=h.y;p.z=h.z;
+	return p;}      
+      last = p;
+//        if( p.y < ground( p.x, 0, p.z ) ) {
+//       //We've sunk into the ground. 
+//            return p;
+//        }
+    }
+    return false;
+}
+
+
+
+function transRay(   ro,  rd ) {
+     var delt = 0.05;
+     var mint = 0.0001;
+     var maxt = 50.0;
+     var maxdelt = 1;
+    //Step along the ray 
+    var last = ro
+chatter( "Casting ray " + config.x + ", " + config.y + " with xphase, yphase: " + config.phase +", "+ config.yphase);
+var candidates = [];
+//Check if we hit a bounding sphere
+// If we don't, we can leave early
+hitbounds = false;
+var ii=false;
+      for(ii=0;ii<objects.length;ii++){
+        if (objects[ii].bounding_sphere.intersects(ro,rd)) {
+           candidates.push(objects[ii]);hitbounds = true;}
+        }
+for(ii=0;ii<lights.length;ii++){
+        if (lights[ii].bounding_sphere.intersects(ro,rd)) {hitbounds = true;}
+       }
+if (!hitbounds ) {
+//setDiv('debugdiv',"Bailed early");
+return new Colour(0,0,0);}
+//setDiv('debugdiv',"Did not bail - "+candidates.length+" candidates");
+var tt = false;
+    var col = new Colour(0.1,0.1,0.1);
+    for( tt = mint; tt < maxt; tt += delt )
+    {
+chatter(" t is: " + tt);
+      //delt=delt*1.005;
+      if (delt>maxdelt){delt=maxdelt}
+      //p =  jQuery.extend(true, {}, ro);
+      //dir = jQuery.extend(true, {}, rd);
+      var dir = rd.smult(tt);
+      var p=ro.add(dir);
+      
+      if (isHit(p,rd, candidates)) {
+      col.lighten();}      
+      //last = p;
+//        if( p.y < ground( p.x, 0, p.z ) ) {
+//       //We've sunk into the ground. 
+//            return p;
+//        }
+    }
+    return col;
+}
+
+
+
+function isHit (p,direction, candidates) {
+chatter("isHit("+p+","+direction+",);");
+//Check for impact with a light.   
+var ii=false;     
+      //for(ii=0;ii<lights.length;ii++){
+        //if (lights[ii].surrounds(p,direction)) {return p;}
+        //}
+
+//Otherwise check if we have hit an object
+      for(ii=0;ii<candidates.length;ii++){
+        if (candidates[ii].surrounds(p,direction)) {return p;}
+        }
+return false;
+
+}
+
+function findHalfWay(a,b){
+chatter("findHalfWay("+a+","+b+",);");
+var c = b.vsub(a);
+var d = c.smult(0.5);
+var e = a.add(d);
+//setDiv('debugdiv',"!!" + e.toString() + " e");
+return e;
+}
+function bifurcation (a,b, count, candidates) {
+chatter("bifurcation("+a+", "+b+", "+count+");");
+var direction = b.vsub(a);
+if (count>0) {
+var h = findHalfWay(a, b);
+if (isHit(h,direction, candidates)) {
+return bifurcation(a,h, count-1,candidates);}
+else{
+return bifurcation(h,b, count-1,candidates);
+}
+}
+return findHalfWay(a,b);
+}
+
+//Clumsy attempt at a vector object
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+
+this.object="uninited";
+
+this.add = function (aVec) {
+newx =this.x + aVec.x;
+newy =this.y + aVec.y;
+newz =this.z + aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.vsub = function (aVec) {
+newx = this.x - aVec.x;
+newy = this.y - aVec.y;
+newz = this.z - aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+this.calculate_magnitude()
+}
+this.smult = function (aScalar) {
+newx = this.x * aScalar;
+newy = this.y * aScalar;
+newz = this.z * aScalar;
+return new Vector(newx, newy, newz);
+}
+
+this.vmult = function (aVec) {
+newx = this.x * aVec.x;
+newy = this.y * aVec.y;
+newz = this.z * aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.magnitude = function () {return this.m}
+this.calculate_magnitude = function () {
+this.m = Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+return this.m;
+}
+
+this.normalise = function ( p ) {
+newx = this.x/this.m;
+newy = this.y/this.m;
+newz = this.z/this.m;
+return new Vector(newx, newy, newz);
+}
+
+this.cross = function ( p ) {
+newx = this.y*p.z - this.z*p.y;
+newy = this.z*p.x - this.x*p.z;
+newz = this.x*p.y - this.y*p.x;
+return new Vector(newx, newy, newz);
+}
+
+this.innerProduct = function(p) {
+var res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+return res;
+}
+this.toString = function() {
+return "x: " + this.x + "  y: " + this.y + "  z: " + this.z ; 
+}
+
+this.clone = function() {
+var ret = new Vector(this.x, this.y, this.z);
+return ret;
+}
+
+this.rotateZ = function(q) {
+var nx = this.x*Math.cos(q) - this.y*Math.sin(q);
+var ny = this.x*Math.sin(q) + this.y*Math.cos(q);
+var nz = this.z;
+this.x = nx; this.y = ny; this.z = nz;
+this.calculate_magnitude()
+}
+
+
+this.rotateY = function(q) {
+nx = this.z*Math.sin(q) + this.x*Math.cos(q);
+ny = this.y;
+nz = this.z*Math.cos(q) - this.x*Math.sin(q);
+this.x = nx; this.y = ny; this.z = nz;
+this.calculate_magnitude()
+}
+
+
+this.rotateX = function(q) {
+nx = this.x;
+ny = this.y*Math.cos(q) - this.z*Math.sin(q)
+nz = this.y*Math.sin(q) + this.z*Math.cos(q)
+this.x = nx; this.y = ny; this.z = nz;
+this.calculate_magnitude()
+}
+
+this.m = this.calculate_magnitude();
+}
+
+//This creates a ray, pointing in the right direction
+
+
+
+function Camera () {
+this.x = 0;
+this.y = 0;
+this.z = 0;
+this.xrot = 0;
+this.yrot = 0;
+this.zrot = 0;
+this.target = new Vector(0,0,0);
+
+this.translate = function (dx, dy, dz) {
+this.x = this.x + dx;
+this.y = this.y + dy;
+this.z = this.z + dz;
+}
+
+this.rotate = function (dx, dy, dz) {
+this.xrot = this.xrot + dx;
+this.yrot = this.yrot + dy;
+this.zrot = this.zrot + dz;
+}
+
+this.newray = function (px, py) {
+var aRay = new Ray(px,py, new Vector(this.x, this.y, this.z), this.target);
+
+	aRay.origin.rotateX(this.xrot*PI/180);
+        aRay.direction.rotateX(this.xrot*PI/180);
+	aRay.origin.rotateY(this.yrot*PI/180);
+        aRay.direction.rotateY(this.yrot*PI/180);
+	aRay.origin.rotateZ(this.zrot*PI/180);
+        aRay.direction.rotateZ(this.zrot*PI/180);
+
+	aRay.origin    = aRay.origin.add(new Vector(this.x, this.y, this.z));
+        //aRay.direction = aRay.direction.add(new Vector(this.x, this.y, this.z));
+
+return aRay;
+}
+}
+
+function Ray (x,y, position, target) {
+//y=100-y;
+
+
+//this.origin = new Vector (outWin.width/2,outWin.height/4,-1);
+//offset = new Vector(0,outWin.height/3,0);
+//this.origin = this.origin.add(offset);
+
+
+//this.direction = new Vector (0.1,-0.5+y/200,0.1);
+
+
+//this.viewport = new Vector(x,y,0);
+//this.viewport = this.viewport.add(offset);
+//this.direction = this.origin.vsub(this.viewport);
+//this.direction = this.direction.normalise();
+//this.origin = new Vector (x/2,y/2,0);
+//b = new Vector(0,0,-50);
+//this.origin = this.origin.add(b);
+//this.direction = new Vector (0,0,1);
+//(-25 -> 0), (-25 -> 0)
+this.origin = new Vector (0,0, -11);
+this.viewport = new Vector((x-outWin.width/2)/outWin.width/2,(y-outWin.height/2)/outWin.height/2,-10);
+this.direction = this.origin.vsub(this.viewport);
+this.direction = this.viewport.vsub(this.origin);
+this.direction = this.direction.normalise();
+this.origin = this.viewport; 
+//setDiv('debugdiv', "direction: " + this.direction.toString());
+
+//this.direction = new Vector (0,-y/100,1);
+//setDiv("debugdiv", printVec(this.direction)); 
+this.origin = position;
+this.viewport = target.vsub(position);
+this.viewport.rotateY(0.5*(x/outWin.width*PI-PI/2));
+this.viewport.rotateZ(0.5*(y/outWin.height*2*PI-PI));
+this.direction = this.viewport;
+//this.viewport.vsub(this.origin);
+this.direction = this.direction.normalise();
+}
+
+function printVec(v) {
+return "" + v.x + ", " + v.y + ", " + v.z;
+}
+
+
+
+
+function normalColour(norm) {
+    var norm = norm.normalise();
+    norm = norm.smult(256);
+    
+    norm.x=make_int((norm.x>0) ? norm.x : -norm.x);
+    norm.y=make_int((norm.y>0) ? norm.y : -norm.y);
+    norm.z=make_int((norm.z>0) ? norm.z : -norm.z);
+//  setDiv('debugdiv',"!!"+n.toString()+"!");
+     var ret = new Colour(norm.x/256,norm.y/256,norm.z/256);
+     return ret;   
+}
+
+function terrainColour(p, direction, reflected) {
+   var hit=p;
+   
+   var red=0;var green=0;var blue=0;
+//Fire a ray towards each light.  If we hit a light, this point is illuminated by that light.
+//The combination of all the lights is the colour we draw.
+//Later we will add colours to the objects, these will be calculated here as well.
+var i;
+for(i=0;i<lights.length;i++) {
+    var l = lights[i];
+    var m = new Vector(hit.x, hit.y, hit.z); 
+
+   m = m.vsub(direction);
+  m = m.vsub(direction);
+  //setDiv('debugdiv', "Checking light " +i+ " at " + lights[i].x);
+     var to_light = m.vsub(l);
+   to_light = to_light.normalise();
+   //to_light.mult(0.01);  
+   
+   var md = new Vector(to_light.x, to_light.y, to_light.z);
+   md.mult(-1);
+   var see_light = castRay(m, md);
+  //setDiv('debugdiv', "Hit light " + see_moon);
+if (see_light) {
+      if (see_light.object==l) {
+      var distance = p.vsub(l);
+      distance = distance.magnitude();
+//setDiv('debugdiv',"!! distance "+distance+"!");
+
+   var n = interpolate_normal(p, direction);
+   if(!reflected){normalWin.setRawPixel(config.x,config.y, normalColour(n));}
+//distance=1;
+//      n = interpolate_normal(h, direction);
+ var diffuse_intensity = n.innerProduct(to_light);
+
+
+var a = direction.innerProduct(n);
+var b = n.smult(a);
+var c = b.smult(2);
+var reflected_ray = direction.vsub(c);
+var reflected_ray = reflected_ray.normalise();
+var spec_intensity = reflected_ray.innerProduct(to_light);
+spec_intensity = 0;
+var intensity = 1/distance/distance;
+//setDiv('debugdiv',"!! intensity "+intensity+"!");
+
+        //if (intensity<0) {intensity=0} 
+//intensity=1;
+//setDiv('debugdiv',"!!object "+p.object.name+"!");
+//        red=red+intensity*l.r*p.object.colour.r+intensity*0.2; 
+//green=green+intensity*l.g*p.object.colour.g+intensity*0.2;
+//blue=blue+intensity*l.b*p.object.colour.b+intensity*0.2;
+
+//setDiv('debugdiv',"!! red "+intensity+"!");
+red   = red   
++ spec_intensity*l.r 
++ diffuse_intensity*l.r*p.object.colour.r
++intensity*0.2; 
+green = green 
++ spec_intensity*l.g 
++ diffuse_intensity*l.g*p.object.colour.g
++intensity*0.2;
+blue  = blue  
++ spec_intensity*l.b + 
+diffuse_intensity*l.b*p.object.colour.b
++intensity*0.2;
+         //setDiv('debugdiv', "Added colour"); 
+
+}}
+  }
+//Reflected light
+if(!reflected){
+//if (false){
+if(p.object.name=="Terrain"){
+//setDiv('debugdiv',"!! match "+p.object+"!");
+//The last attempt:
+
+//avec = n.cross(direction);
+//reflected = direction.cross(avec);
+
+//And it actually should have been:
+
+//avec = n.cross(direction);
+//reflected = avec.cross(n);
+var n = interpolate_normal(p, direction);
+var a = direction.innerProduct(n);
+var b = n.smult(a);
+var c = b.smult(2);
+var reflected_ray = direction.vsub(c);
+
+var aHit = castRay(m, reflected_ray);
+//setDiv('debugdiv', "m: "  + " dir: " + reflected_ray.toString());
+var aRay = new Ray(0,0,p,new Vector(0,0,0));
+aRay.direction = reflected_ray;  //Override calculated direction because we know better
+var col =  calculate_colour(aHit, aRay, true);
+col.darken();
+col.darken();
+return col;
+}
+ 
+}
+     return new Colour(red*scene_brightness, green*scene_brightness, blue*scene_brightness);
+		
+}
+
+function skyColour () { return new Colour(0,0,1);}
+
+function interpolate_normal (hit, direction) {
+var eps = 0.01;
+var p = hit;
+var qo = new Vector(p.x, p.y+eps, p.z);
+var ro = new Vector(p.x, p.y, p.z+eps);
+
+var ey = new Vector ( 0, 1, 0);
+var ez = new Vector ( 0, 0, 1);
+var doty = Math.abs(ey.innerProduct(direction));
+var dotz = Math.abs(ez.innerProduct(direction));
+
+if (doty>0.8) {
+qo = new Vector(p.x+eps, p.y, p.z);
+ro = new Vector(p.x, p.y, p.z+eps);
+}
+
+if (dotz>0.8) {
+qo = new Vector(p.x+eps, p.y, p.z);
+ro = new Vector(p.x, p.y+eps, p.z);
+}
+
+//no = new Vector(p.x, p.y, p.z);
+  //nd = jQuery.extend(true, {}, direction);
+  //no = no.vsub(nd);
+  //no = no.vsub(nd);
+  //nd.mult(0.1);
+  //n = castRay(no, nd);
+    var n = hit;
+
+//qo = new Vector(p.x, p.y-eps, p.z);
+  var qd = jQuery.extend(true, {}, direction);
+  qo = qo.vsub(qd);
+  qo = qo.vsub(qd);
+  qd.mult(0.1);
+  var q = castRay(qo, qd);
+
+
+//ro = new Vector(p.x, p.y, p.z+eps);
+  var rd = jQuery.extend(true, {}, direction);
+  ro = ro.vsub(rd);
+  ro = ro.vsub(rd);
+  rd.mult(0.1);
+  var r = castRay(ro, rd);
+  
+
+    var xvec = new Vector ( n.x - q.x, n.y - q.y, n.z - q.z);
+    var zvec = new Vector ( n.x - r.x, n.y - r.y, n.z - r.z);
+    xvec=xvec.normalise();
+    zvec=zvec.normalise();
+    var ret = xvec.cross(zvec); 
+    ret = ret.normalise();
+   
+//    setDiv('debugdiv', " " + normal.x +", "+ normal.y +", "+ normal.z);
+    return ret;
+}
+
+function Graph(aCanvasName ) {
+	this.canvas = document.getElementById(aCanvasName);
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	this.Ctx = this.ctx;
+	this.imageData = this.ctx.createImageData(this.width, this.height);
+	this.setRawPixel = function (x, y, aColour) {
+	  index = (x + y * this.imageData.width) * 4;
+	  this.imageData.data[index+0] = aColour.r*256;
+	  this.imageData.data[index+1] = aColour.g*256;
+	  this.imageData.data[index+2] = aColour.b*256;
+	  this.imageData.data[index+3] = 256; //aColour.a;
+	  //this.ctx.putImageData(this.imageData, 0, 0);
+}
+	this.update = function () {this.ctx.putImageData(this.imageData, 0, 0);}
+	this.redraw= function (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		var ii = false;
+		for ( ii=0;ii<myLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	
+
+	this.setPixel = function (x, yy, aColor) {
+		var y =  yy;
+		
+		this.ctx.strokeStyle = rgb(aColor);
+		this.Ctx.beginPath();
+		this.Ctx.moveTo(x-1,y-1);
+		this.Ctx.lineTo(x,y);
+		this.Ctx.stroke();
+
+	};
+  this.setLine = function (x, yy, aColor) {
+		var y =  yy;
+		
+		this.ctx.strokeStyle = rgb(aColor);
+		this.Ctx.beginPath();
+		this.Ctx.moveTo(x-5,y-5);
+		this.Ctx.lineTo(x+5,y+5);
+		this.Ctx.stroke();
+	};
+  this.setBox = function (x, yy, aColor) {
+		var y =  yy;
+		
+		this.ctx.strokeStyle = rgb(aColor);
+		this.Ctx.fillStyle = rgb(aColor);
+		this.Ctx.globalAlpha=1;
+		
+		this.Ctx.fillRect( x, y, 30, 30);
+}
+
+
+	this.erase = function () {
+		this.Ctx = this.ctx;
+		this.Ctx.fillStyle = "#000000";
+		this.Ctx.globalAlpha=1;
+		this.Ctx.strokeStyle ='#FFFFFF';
+		this.Ctx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+}
+
+
+
+
+function make_int (x) { return Math.abs(Math.floor(x)) }
+function int2hex (x) {
+var t = x.toString(16);
+if (t.length ==1 ) {
+t = "0" + t ;
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(aCol)
+{
+  var red = aCol.r*255;
+var blue = aCol.b*255;
+var green = aCol.g*255;
+  if(red>254){red=254;}
+  if(blue>254){blue=254;}
+  if(green>254){green=254;}
+//  blue=int(blue);
+//  green=int(green);
+  
+  var decColor = make_int(red) + 256 * make_int(green) + 65536 * make_int(blue);
+  var ret = '#'+int2hex(make_int(red))+int2hex(make_int(green))+int2hex(make_int(blue));
+//  setDiv('debugdiv', "ret: " + ret); 
+  return ret; 
+}
+
+
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+
+function in_mandelbrot (x, y, z) {
+  x0 = x-0.3;
+  y0 = y;
+
+  x = 0;
+  y = 0;
+
+  iteration = 0;
+  max_iteration = 1000;
+
+  while ( (x*x + y*y <= (2*2)) && ( iteration < max_iteration) )  {
+    xtemp = x*x - y*y + x0;
+    y = 2*x*y + y0;
+
+    x = xtemp;
+
+    iteration = iteration + 1;
+  }
+
+  if ( iteration == max_iteration ) { return true;}
+  return false;
+  
+}
+
+
+function in_mandelbulbdis (xx, xy, xz) {
+  var x0 = xx;
+  var y0 = xy;
+  var z0 = xz;
+
+  var mx = 0;
+  var my = 0;
+  var mz = 0;
+
+  iteration = 0;
+  max_iteration = 4;
+  n = 8;
+  while ( (mx*mx + my*my + mz*mz < 16) && ( iteration < max_iteration) )  {
+     // extract polar coordinates
+//{x,y,z}^n = r^n{cos(n*theta)cos(n*phi),sin(n*theta)cos(n*phi),-sin(n*phi)}
+    r=Math.sqrt(mx^2+my^2+mz^2);
+    theta=n*Math.atan2(my,mx);
+    phi=n*Math.asin(mz/r)
+
+    
+  mx = Math.cos(n*theta) * Math.cos(n*phi) + x0;
+  my = Math.sin(n*theta) * Math.cos(n*phi) + y0;
+  mz = -Math.sin(n*phi) + z0;
+  iteration = iteration + 1;
+  }
+  if ( iteration >= max_iteration ) { return true;}
+  return false;
+  
+}
+
+function in_mandelbulb (xx, xy, xz) {
+  var x0 = xx;
+  var y0 = xy;
+  var z0 = xz;
+
+  var mx = 0;
+  var my = 0;
+  var mz = 0;
+
+  iteration = 0;
+  max_iteration = 4;
+
+  while ( (mx*mx + my*my + mz*mz < 16) && ( iteration < max_iteration) )  {
+     // extract polar coordinates
+  var wr = Math.sqrt(mx^2+my^2+mz^2);
+  var wo = Math.acos(my/wr);
+  var wi = Math.atan2(mx,mz);
+
+  // scale and rotate the point
+  wr = Math.pow( wr, 8.0 );
+  wo = wo * 8.0;
+  wi = wi * 8.0;
+
+  // convert back to cartesian coordinates
+  mx = Math.sin(wo)*Math.sin(wi)+x0;
+  my = Math.cos(wo)+y0;
+  mz = Math.sin(wo)*Math.cos(wi)+z0;
+    iteration = iteration + 1;
+  }
+
+  if ( iteration >= max_iteration ) { return true;}
+  return false;
+  
+}
+
+function in_mandelbulbdisabled (nx, ny, nz) {
+  var x0 = nx;
+  var y0 = ny;
+  var z0 = nz;
+
+  var mx = 0;
+  var my = 0;
+  var mz = 0;
+
+  var iteration = 0;
+  var max_iteration = 8;
+   var n=8;
+  while ( (mx*mx + my*my + mz*mz < 16) && ( iteration < max_iteration) )  {
+  var r = Math.sqrt(mx*mx + my*my + mz*mz ) ;
+var theta = Math.atan2(Math.sqrt(mx*mx + my*my) , mz); 
+var phi = Math.atan2(my,mx) ;
+
+mx = r^n * Math.sin(theta*n) * Math.cos(phi*n) +x0; 
+my = r^n * Math.sin(theta*n) * Math.sin(phi*n) +y0;
+mz = r^n * Math.cos(theta*n) +z0;
+  iteration = iteration + 1;
+  }
+
+  if ( iteration >= max_iteration ) { return true;}
+  return false;
+  
+}
+
+
+</script>
+</head>
+<body onload="setup();">
+<canvas id="canvasdiv" width="250" height="250"></canvas> 
+<canvas id="timediv" width="50" height="50"></canvas> 
+<canvas id="normaldiv" width="50" height="50"></canvas> 
+<div id="debugdiv"></div>
+<div id="config"></div>
+<div>
+Large speedups, shrunk the calculation display, later on I'll make it pop out on mouseover.
+
+
+</div>
+</body>
+</html>

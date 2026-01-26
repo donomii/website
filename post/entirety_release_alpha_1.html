@@ -1,0 +1,83 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>release / Entirety alpha 1</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>release / Entirety alpha 1</h1>
+			</header>
+			<div class="summary">
+<p>Entirety Alpha 1 is released!  (64bit windows) - 147Mib</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p><img loading="lazy" src="../../static/pics/demimonde_invert.png" alt="The world, in its Entirety"></p>
+<div style="clear:both">
+</div>
+<p>This release features</p>
+<ul>
+<li>Two graphical clients using different drivers: OpenGL and SDL</li>
+<li>Over 4 million locations, from the USGS public dataset</li>
+</ul>
+<h3 id="instructions">Instructions</h3>
+<p>Click to move around the map, mousewheel zooms in and out</p>
+<p>L - Map Labels on/off/dots</p>
+<p>/ - Search for a label (openGL version only)</p>
+<h3 id="font-support">Font support</h3>
+<p>Entirety currently uses the <a href="http://www.fixedsysexcelsior.com/">fixedsys excelsior font</a>.  You can install any font you want by overwriting the &quot;font.ttf&quot; file in the Entirety directory.  You can use a font of your own choice.  The map labels are in Unicode, so with the right font installed, you should be able to see the map in correct alphabet for your country.</p>
+<p>To do this, download the font you want, rename it to &quot;font.ttf&quot;, and put it in the Entirety folder (overwrite the existing font.ttf).</p>
+<h3 id="known-issues">Known issues</h3>
+<p>Oh so many</p>
+<h4 id="i-cant-see-any-writing-for-places-in-my-country--all-i-see-are-dots">I can't see any writing for places in my country.  All I see are dots</h4>
+<p>Entirety currently doesn't have a complete set of fonts.  You could use the <a href="http://unifoundry.com/unifont.html">GNU unifont</a> to display all the labels correctly.</p>
+<h4 id="it-crashes">It crashes</h4>
+<p>Entirety is 64-bit only.  Please check you have a 64-bit processor.  If you do have a 64-bit machine, please send me a bug report.</p>
+
+			</article>
+			</html>
+			

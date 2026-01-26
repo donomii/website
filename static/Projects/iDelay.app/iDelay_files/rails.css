@@ -1,0 +1,24 @@
+
+	   input, select   {
+	    margin: 0.8em;
+	    font-size: 150%;}
+
+	   div.inputform { font-size: 200% }
+	   
+	    span#timespan, span#timespan_template {
+	    background-color: #0000FF; float: left; color: #E0E0E0; padding-top:0em;padding-bottom: 2em;
+	    }
+	    div#event_display {
+	      height:100%; margin-left: 25%;margin-right:25%; margin-top: 0;
+padding-top:0em;padding-bottom: 2em; padding-left: 2em; background-color:
+#000080; color: #E0E0E0;
+	    }
+	    body {
+		height:100%; background-color: #0000FF;font-weight: bold;font-family:Arial,sans-serif;
+	    }
+	    div#event_display {
+	      height:100%;margin-left: 25%;margin-right:25%; margin-top: 0;padding-top:0em;padding-bottom: 2em; padding-left: 2em; background-color:#000080; color: #E0E0E0
+	    }
+	    div#display {
+	     height:100%; background-color: #0000FF
+	    }

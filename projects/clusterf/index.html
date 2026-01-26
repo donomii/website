@@ -1,0 +1,65 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>🐸 ClusterF</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>🐸 ClusterF</h1>
+			</header>
+			<div class="summary">
+<p>I vibed coded a distributed file store cluster.  It hurt.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>ClusterF is a distributed file store with redundant storage and replication.  Nodes are drop-in/drop-out, and can be added or removed at any time.  The cluster then tries to rebuild and rebalance itself.</p>
+<p>This was my first attempt at vibe coding something serious, and the frustration and misery caused by working with an AI was enough to put me off further attempts.  I complain about it a lot more in my <a href="/post/vibe_coding.html">blog</a>.</p>
+<p>The code is available on <a href="https://github.com/donomii/clusterF">Github</a>.  It's beta software, so don't trust it with anything important  But it can hold an amazing amount of cat pictures.</p>
+
+			</article>
+			</html>
+			

@@ -1,0 +1,4 @@
+Sitemap: http://praeceptamachinae.com/sitemap.xml
+
+User-agent: *
+Disallow: /resources/binaries/

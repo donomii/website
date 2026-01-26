@@ -1,0 +1,76 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog / crtrm running on glsl</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog / crtrm running on glsl</h1>
+			</header>
+			<div class="summary">
+<p>The <a href="/projects/crtrm/index.html">C Real Time Raymarcher</a> running on the GPU</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Some nice new pictures of <a href="/projects/crtrm/index.html">crtrm</a>, the C Real-Time Ray Marcher, running on the GPU.  This was something I have been putting off for a long time for various reasons, partially because I have a more limited toolkit in GLSL, and partially because I didn't want to complicate an already complicated render engine.  In fact, I had to duplicate the render engine, and now I have to maintain parallel versions.  But the pictures I am getting suggest it is worth the time and effort.</p>
+<p><img loading="lazy" src="/projects/crtrm/sketchhills1.png" alt="hills"></p>
+<div style="clear:both"></div>
+<p>I really like this sketchy effect I'm getting due to Moire interference, so a future project will be emulating it in a shader.</p>
+<p><img loading="lazy" src="/projects/crtrm/sketchhills4.png" alt="fortress hills"></p>
+<p><img loading="lazy" src="/projects/crtrm/sketchhills2.png" alt="regular hills and valleys">
+<img loading="lazy" src="/projects/crtrm/sketchhills3.png" alt="regular hills">
+<img loading="lazy" src="/projects/crtrm/sketchhills5.png" alt="fortress hills">
+<img loading="lazy" src="/projects/crtrm/sketchhills6.png" alt="hills">
+<img loading="lazy" src="/projects/crtrm/sketchhills7.png" alt="opera house">
+<img loading="lazy" src="/projects/crtrm/sketchhills11.png" alt="">
+<img loading="lazy" src="/projects/crtrm/sketchhills12.png" alt="">
+<img loading="lazy" src="/projects/crtrm/sketchhills14.png" alt="">
+<img loading="lazy" src="/projects/crtrm/sketchhills17.png" alt=""></p>
+
+			</article>
+			</html>
+			

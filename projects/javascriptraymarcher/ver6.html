@@ -1,0 +1,449 @@
+<html>
+<head>
+<title>Canvas tutorial</title>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+
+var ctx;
+var canvas;
+var outWin;
+function setup(){
+	//Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph('canvasdiv');
+	outWin.erase(ctx);
+//sun = new Vector (outWin.width,outWin.height,10);
+sun = new Vector (150,150,1);
+sun_colour = [ 0, 1024, 0];
+moon = new Vector (100,100,1);
+moon_colour = [ 0, 0, 512];
+lights = [
+new Light(1, 40, -20, 512,0,0),
+new Light(80, 40, -20, 0,512,0),
+new Light(160, 40, -20, 0,0,512),
+];
+//for (i=0;i<5;i++)
+//  { lights[i]=new Light(80*i, 40, -20, 512,0,0)}
+//sun = sun.normalise();
+	//Kick off the render
+	renderImage();
+}
+
+function Light ( xx, yy, zz, rr, gg, bb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.g = gg;
+this.b = bb;
+}
+
+
+var phase=1;
+var x = phase;
+var y = 1;
+function renderImage () {
+	//If we try to draw the entire picture in one go, the browser will freeze.  So instead we draw one pixel at a time.
+	x+=11;
+	if (x>=outWin.width) {
+		x=phase;
+		y+=1;
+		if (y>=outWin.height) {
+		   y=1;
+		   phase++;
+      if(phase>11) {
+			//finished
+			return;
+			alert("Finished");
+		}}
+	}
+	ray = new Ray( x, y );
+	intersect = castRay( ray.origin, ray.direction ) ;
+  
+	//The ray object contains the position and direction of the ray.  castRay walks along the ray, looking for terrain.
+	if( intersect )
+   { outWin.setPixel(x,y,terrainColour( intersect, ray.direction )); }  //We hit the terrain, draw the ground colour
+	else
+   { outWin.setPixel( x, y,   skyColour()); }  //We missed the terrain, draw the sky colour
+
+	//Give the browser some time to do other processing
+	setTimeout("renderImage()", 10);
+}
+
+//This is the function that sets the shape of the ground.  Simple for now, it will get very complicated soon.
+function ground(x,y,z) { return z*2+1;ret=0; if (z>90) { ret=200;};return ret;}
+//function ground(x,z) { ret= 90*Math.sin(x/5)*Math.sin(z/5); return ret; ;}
+//function ground(x,z) { ret= 60*Math.sin(x*x+z*z); return ret; ;}
+//function ground(x,y,z) { ret= 50*Math.sin(x/20)*Math.sin(z/10); return ret; ;}
+//function ground(x,z) { ret= 150-(x-100)*(x-100)/32-z*z; return ret; ;}
+//Math.sin(x)*Math.sin(x)+
+function sphere(x,y,z) { ret = (x-120)*(x-120) + (y-140)*(y-140) + (z-21)*(z-21); return ret; }
+function gen_sphere(cx,cy,cz,x,y,z) { ret = (x-cx)*(x-cx) + (y-cy)*(y-cy) + (z-cz)*(z-cz); return ret; }
+function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+function sphere3(x,y,z) { ret = (x-180)*(x-180) + (y-70)*(y-70) + (z-21)*(z-21); return ret; }
+function sun_sphere(x,y,z) { ret = (x-sun.x)*(x-sun.x) + (y-sun.y)*(y-sun.y) + (z-sun.z)*(z-sun.z); 
+
+//setDiv('debugdiv',"!Hit sun sphere!");
+return ret; }
+function moon_sphere(x,y,z) { ret = (x-moon.x)*(x-moon.x) + (y-moon.y)*(y-moon.y) + (z-moon.z)*(z-moon.z); 
+//setDiv('debugdiv',"!Hit moon sphere!");
+return ret; }
+
+//function sphere(x,y,z) { ret = (x-50)*(x-50) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+//function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+//function sphere3(x,y,z) { ret = (x-150)*(x-150) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+
+
+function castRay(   ro,  rd ) {
+     delt = 0.001;
+     mint = 0.0001;
+     maxt = 400.0;
+    //Step along the ray 
+    
+    for( t = mint; t < maxt; t += delt )
+    {
+      delt=delt*1.07;
+      p =  jQuery.extend(true, {}, ro);
+      dir = jQuery.extend(true, {}, rd);
+      dir.mult(t);
+      p=p.add(dir);
+      p.object="something";
+      if (sphere(p.x,p.y,p.z) < 400) {p.object="sphere";return p;    }
+      for(ii=0;ii<lights.length;ii++){
+        if (gen_sphere(lights[ii].x, lights[ii].y, lights[ii].z, p.x,p.y,p.z) < 400) {p.object="light";return p;}
+        }
+      if (sphere2(p.x,p.y,p.z) < 900) {p.object="sphere";return p;}
+      if (sphere3(p.x,p.y,p.z) < 400) {p.object="sphere";return p;}
+      if (sun_sphere(p.x,p.y,p.z) < 100) {p.object="sun_sphere";return p;}
+      if (moon_sphere(p.x,p.y,p.z) < 100) {p.object="moon_sphere";return p;}
+      if (p.z>50){p.object="terrain";return p;}
+//        if( p.y < ground( p.x, 0, p.z ) ) {
+//       //We've sunk into the ground. 
+//            return p;
+//        }
+    }
+    return false;
+}
+
+//Clumsy attempt at a vector object
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.object="uninited";
+this.add = function (aVec) {
+newx =this.x + aVec.x;
+newy =this.y + aVec.y;
+newz =this.z + aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.vsub = function (aVec) {
+newx =this.x - aVec.x;
+newy =this.y - aVec.y;
+newz =this.z - aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+}
+
+this.magnitude = function () {
+return Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+}
+
+this.normalise = function ( p ) {
+newx = this.x/this.magnitude();
+newy = this.y/this.magnitude();
+newz = this.z/this.magnitude();
+return new Vector(newx, newy, newz);
+}
+
+this.cross = function ( p ) {
+newx = this.y*p.z - this.z*p.y;
+newy = this.z*p.x - this.x*p.z;
+newz = this.x*p.y - this.y*p.x;
+return new Vector(newx, newy, newz);
+}
+
+this.innerProduct = function(p) {
+res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+ret = res;
+return ret;
+}
+this.toString = function() {
+return "x: " + this.x + "  y: " + this.y + "  z: " + this.z + " object: " + this.object; 
+}
+
+this.clone = function() {
+ret = new Vector(this.x, this.y, this.z);
+return ret;
+}
+
+}
+
+//This creates a ray, pointing in the right direction
+
+
+
+
+
+function Ray (x,y) {
+//y=100-y;
+this.origin = new Vector (outWin.width/2,outWin.height/4,-1);
+offset = new Vector(0,outWin.height/3,0);
+this.origin = this.origin.add(offset);
+//this.direction = new Vector (0.1,-0.5+y/200,0.1);
+this.viewport = new Vector(x,y,0);
+this.viewport = this.viewport.add(offset);
+this.direction = this.origin.vsub(this.viewport);
+this.direction = this.direction.normalise();
+this.origin = new Vector (x,y,0);
+this.direction = new Vector (0,0,1);
+//this.direction = new Vector (0,-y/100,1);
+//setDiv("debugdiv", printVec(this.direction)); 
+
+}
+
+function printVec(v) {
+return "" + v.x + ", " + v.y + ", " + v.z;
+}
+
+//var sun = new Vector (1,1,0);
+var sun;
+
+
+function normalColour(p, direction) {
+   to_sun = p.vsub(sun);
+   to_sun = to_sun.normalise();
+    n = interpolate_normal(p, direction);
+    n.mult(256);
+    n.x=int(n.x);
+    n.y=int(n.y);
+    n.z=int(n.z);
+//  setDiv('debugdiv',"!!"+n.toString()+"!");
+     ret = rgb(n.x,n.y,n.z);
+     return ret;   
+}
+
+function terrainColour(p, direction) {
+   hit=p.clone();
+
+   //p = p.normalise();
+   to_sun = p.vsub(sun);
+   to_sun = to_sun.normalise();
+   
+   n = interpolate_normal(p, direction);
+   q = new Vector(p.x, p.y, p.z);
+   q = q.vsub(direction);
+   qd = new Vector(to_sun.x, to_sun.y, to_sun.z);
+   qd.mult(-1);
+   see_sun = castRay(q, qd);
+
+   to_moon = p.vsub(moon);
+   to_moon = to_moon.normalise();
+  
+    m = new Vector(p.x, p.y, p.z);
+   m = m.vsub(direction);
+   md = new Vector(to_moon.x, to_moon.y, to_moon.z);
+   md.mult(-1);
+   see_moon = castRay(m, md);
+   red=0;green=0;blue=0;
+  ret = rgb(0,0,0);
+    if (see_sun) {
+      if (see_sun.object=="sun_sphere") {
+      distance = to_sun.vsub(p);
+      distance = distance.magnitude();
+          
+   //t = n.innerProduct(p)
+   //t1 = n.mult(2*t);
+    //            reflected = p.vsub(n);
+   intensity = n.innerProduct(to_sun)/distance;
+  refvec=new Vector(1,0,0);
+  nmap = n.innerProduct(refvec);
+//    intensity=intensity+1;
+//    intensity=intensity/2;
+    if (intensity<0) {intensity=0} 
+    //intensity = intensity * 256;
+  //  intensity = 256-intensity;
+  //setDiv('debugdiv',"!!"+n.toString()+"!");
+     red=intensity*sun_colour[0]/255; green=intensity*sun_colour[1]/255; blue=intensity*sun_colour[2]/255;
+    
+		  //if ( intensity<50 ) { ret = rgb(50,50,50)};
+//setDiv('debugdiv',"!!"+ret+"!");
+}}
+
+if (see_moon) {
+      if (see_moon.object=="moon_sphere") {
+      distance = to_moon.vsub(p);
+      distance = distance.magnitude();
+        intensity = n.innerProduct(to_moon)/distance;
+        refvec=new Vector(1,0,0);
+        nmap = n.innerProduct(refvec);
+        if (intensity<0) {intensity=0} 
+        red=red+intensity*moon_colour[0]/255; green=green+intensity*moon_colour[1]/255; blue=blue+intensity*moon_colour[2]/255;
+       
+
+}}
+for(i=0;i<lights.length;i++) {
+    h = hit.clone();
+    m = new Vector(h.x, h.y, h.z); 
+   m = m.vsub(direction);
+  m = m.vsub(direction);
+  //setDiv('debugdiv', "Checking light " +i+ " at " + lights[i].x);
+     to_light = m.vsub(lights[i]);
+   to_light = to_light.normalise();
+   //to_light.mult(0.01);  
+   
+   md = new Vector(to_light.x, to_light.y, to_light.z);
+   md.mult(-1);
+   see_moon = castRay(m, md);
+  //setDiv('debugdiv', "Hit light " + see_moon);
+if (see_moon) {
+      if (see_moon.object=="light") {
+      distance = to_light.vsub(lights[i]);
+      distance = distance.magnitude();
+      n = interpolate_normal(h, direction);
+        intensity = n.innerProduct(to_light)/distance;
+        if (intensity<0) {intensity=0} 
+        red=red+intensity*lights[i].r/255; green=green+intensity*lights[i].g/255; blue=blue+intensity*lights[i].b/255;
+         //setDiv('debugdiv', "Added colour"); 
+
+}}  
+  }
+     return rgb(red*256, green*256, blue*256);
+		
+}
+
+function skyColour () { return "#0000FF"}
+
+function interpolate_normal (p, direction) {
+eps = 1;
+
+no = new Vector(p.x, p.y, p.z);
+  nd = jQuery.extend(true, {}, direction);
+  no = no.vsub(nd);
+  no = no.vsub(nd);
+  nd.mult(0.1);
+  n = castRay(no, nd);
+  
+qo = new Vector(p.x+eps, p.y, p.z);
+  qd = jQuery.extend(true, {}, direction);
+  qo = qo.vsub(qd);
+  qo = qo.vsub(qd);
+  qd.mult(0.1);
+  q = castRay(qo, qd);
+
+
+ro = new Vector(p.x, p.y+eps, p.z);
+  rd = jQuery.extend(true, {}, direction);
+  ro = ro.vsub(rd);
+  ro = ro.vsub(rd);
+  rd.mult(0.1);
+  r = castRay(ro, rd);
+  
+
+    xvec = new Vector ( n.x - q.x, n.y - q.y, n.z - q.z);
+    zvec = new Vector ( n.x - r.x, n.y - r.y, n.z - r.z);
+    xvec=xvec.normalise();
+    zvec=zvec.normalise();
+         n = xvec.cross(zvec); 
+		  normal = n.normalise();
+   
+//    setDiv('debugdiv', " " + normal.x +", "+ normal.y +", "+ normal.z);
+    return normal;
+}
+
+function Graph(aCanvas ) {
+	this.canvas = document.getElementById('canvasdiv');
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	function redraw (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		for ( ii=0;ii<myLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	this.redraw=redraw;
+
+	this.setPixel = function (x, yy, aColor) {
+		var y =  yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = aColor;
+		aCtx.beginPath();
+		aCtx.moveTo(x-1,y-1);
+		aCtx.lineTo(x,y);
+		aCtx.stroke();
+
+	};
+
+
+	function erase () {
+		aCtx = this.ctx;
+		aCtx.fillStyle = "#000000";
+		aCtx.globalAlpha=1;
+		aCtx.strokeStyle ='#FFFFFF';
+		aCtx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+	this.erase = erase;
+}
+
+
+
+
+function int (x) { return Math.abs(Math.floor(x)) }
+function int2hex (x) {
+t = x.toString(16);
+if (t.length ==1 ) {
+t = t + "0";
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(red, green, blue)
+{
+  
+  if(red>255){red=255;}
+//  blue=int(blue);
+//  green=int(green);
+  
+  var decColor = int(red) + 256 * int(green) + 65536 * int(blue);
+  ret = '#'+int2hex(int(red))+int2hex(int(green))+int2hex(int(blue));
+//  setDiv('debugdiv', "ret: " + ret); 
+  return ret; 
+}
+
+
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+
+
+</script>
+</head>
+<body onload="setup();">
+<canvas id="canvasdiv" width="400" height="200"></canvas>
+<div id="debugdiv"></div>
+<div>
+Now it looks like a real ray-tracer.  Coloured lights are the start of the colour system, and a great way to test that everything else is working just fine.  In this case, everything is not fine due to the colour banding, but I'll hammer that out when I deal with things like the maximum brightness and materials.
+
+
+</div>
+</body>
+</html>

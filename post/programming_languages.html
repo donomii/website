@@ -1,0 +1,70 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Programming languages I have written</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Programming languages I have written</h1>
+			</header>
+			<div class="summary">
+<p>I can't stop writing programming languages.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>I wrote my first programming language, <a href="/projects/throff/index.html">throff</a>, as some kind of meisterwork, to prove to myself that I was, in fact, a real programmer.  It is a version of Forth, with modern features like closures and garbage collection.  Mainly it is written in itself.</p>
+<p><a href="/projects/xsh/index.html">xsh</a> is command shell with a focus on clearly defined semantics that won't screw you over.</p>
+<p><a href="/projects/quonverter/index.html">quonverter</a> is an experiment in a self-hosting transpiler that can convert itself to multiple languages.</p>
+<p>With the improvements in AI, it is now possible to ask the AI to implement concepts in programming languages, and have something ready and working within an hour.</p>
+<p><a href="/projects/zipper/index.html">zipper</a> is a concept language that takes the idea of &quot;interpreters work on text&quot; literally.  The interpreter rewrites parts of the source code as it runs, until it has reduced the entire program to the correct output.  Since the entire program is kept strictly as text, it is possible to step through the program, edit parts of it, continue, rewind, and try again.</p>
+<p>Finally, the common problem with all these languages is that they are mostly useless.  They would require many libraries to be implemented, to do something useful, like graphics libraries, database connectors, and so on.  So instead I have created the extensionEngine, a portable library and protocol for extending languages.  It runs over http, tcp+json, or even just stdin/stdout like the Model Context Protocol.</p>
+<p>So long as a language can parse JSON, it can access this large library of extensions without having to write thousands of lines of bindings.</p>
+<p><a href="/projects/extensionEngine/index.html">extensionEngine</a> is a library that allows you to write extensions to any language, without having to write a parser or a compiler.</p>
+
+			</article>
+			</html>
+			

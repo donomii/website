@@ -1,0 +1,1140 @@
+<html>
+ 
+<head>
+<title>Window into...</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<script
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+  
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+
+<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+<script type="text/javascript" src="webgl-utils.js"></script>
+
+<script type="text/javascript" src="gldebug.js"></script>
+<script type="text/javascript">
+	/*This code requires a bit of explanation.  It consists of two main parts, a basic lsystem engine, and a basic webgl engine that draws triangles and squares.  The main complication is that it uses multiple shaders to draw textures on the triangles and sqaures, which is done by having each different shader in a different program.  This might not have been the best way to do it. 
+	
+	Currently, the options for drawing something are:
+	
+	* A triangle, with default colours
+	* A square with default colours
+	* A square with a texture
+	* A square using a shader program to colour it
+	
+	The graphics are drawn in "immediate" mode, i.e. as the lsystem processes each triangle or square command, it draws it immediately.  This results in thousands of gl calls per frame, and completely ruins the performance.
+	
+	*/
+	
+	
+	var fov = 90;
+	var animFrame=0;
+	var polyCount=0;
+	var clock=0.0;
+    var current_shader="default-fs";
+    var texture = [];
+    var gl;
+
+    var mouseDown = false;
+    var lastMouseX = null;
+    var lastMouseY = null;
+	//shaderProgram holds the handles to compiled shaders on to the GPU
+	var shaderProgram = [];
+	//Smooth out the motion tracking, back when we had motion tracking
+	var lastgamma=0;
+
+	//Setup all the matrices we will need
+    var mvMatrix = mat4.create();  	//ModelView matrix
+    var mvMatrixStack = [];			//The recall stack, to support pushing and popping in lsystems
+    var pMatrix = mat4.create();	//The perspective matrix
+    moonRotationMatrix = mat4.create();	//The rotation matrix for the user's viewpoint
+    mat4.identity(moonRotationMatrix);
+
+	
+//Buffers!  Hooray
+    var squareVertexPositionBuffer;
+    var squareVertexColorBuffer;
+    var triangleVertexPositionBuffer;
+    var triangleVertexColorBuffer;
+
+      
+	if(window.DeviceOrientationEvent) {
+	  //Doesn't work
+	  //window.addEventListener("deviceorientation", process, false);
+	} else {
+	  // Le navigateur ne supporte pas l'événement deviceorientation
+	}
+
+	function degToRad(degrees) {
+        return degrees * Math.PI / 180;
+    }
+
+
+
+function process(event) {
+	  animFrame+=1;
+	  var vflip = document.getElementById("VerticalFlip").checked;
+	  var hflip = document.getElementById("HorizontalFlip").checked;
+	  var alpha = event.alpha;
+	  if(hflip){alpha=alpha*-1;}
+	  var beta = event.beta;
+	  if(vflip){beta=beta*-1;}
+	  var gamma = event.gamma;
+	mat4.identity(moonRotationMatrix);
+
+	mat4.rotate(moonRotationMatrix, degToRad(beta ), [1, 0, 0]);
+			
+	mat4.rotate(moonRotationMatrix, degToRad(alpha ), [0, 0, 1]);
+	mat4.rotate(moonRotationMatrix, degToRad((gamma+lastgamma)/2), [0, 1, 0]);
+	lastgamma=(gamma+lastgamma)/2;
+}
+
+//Here be fragment shaders
+</script>
+
+<script id="chaser-line" type="x-shader/x-fragment">
+precision highp float;
+#define PI 3.1415927
+
+uniform float time;
+ vec2 resolution = vec2(1.0,1.0);
+varying vec2 vTextureCoord;
+
+float r = 0.006;
+float speed = 0.5;
+float tail = 0.3;
+vec3 col =  vec3(1.0, 0.2, 0.2);
+vec3 color ; 
+vec2 center(float k) {
+	vec2 cen = vec2(0.0);
+	cen.x = fract(k * time);
+	//cen.y = fract(time);
+	cen.y=0.5;
+	return cen;
+}
+
+void main( void ) {
+	
+	vec2 position =  (2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x ;
+	//vec2 position =  vTextureCoord.xy / resolution.x ;
+	float aspect = resolution.x / resolution.y;
+	vec2 c = center(speed);
+	c.y  /=  aspect;
+	float d = distance(position, c);
+	if( d < r) {
+		color = col;
+	}else
+	if(  abs(position.y - c.y) < r){
+	color = vec3(1.0);
+		color  = col * ( max ( 0.8 - min ( pow ( d - r , tail ) , 0.9 ) , -0.2 ) );
+		color = vec3(2.0*sin(3.14159*2.0*position.s-4.0*time), 0.0, 0.0);
+	//color = vec3(vTextureCoord.s, 0.0, 0.0);
+	}else{
+		color = vec3(0.0);
+	}	
+        
+	gl_FragColor = vec4( color , 1.0 );
+
+}
+</script>
+<script id="lazer-line" type="x-shader/x-fragment">
+precision highp float;
+#define PI 3.1415927
+
+uniform float time;
+ vec2 resolution = vec2(1.0,1.0);
+varying vec2 vTextureCoord;
+
+
+
+vec3 lazer(vec2 pos, vec3 clr, float mult)
+{
+	
+	float x = time/5.5 * 2.0;
+	float w = fract(x*0.7);
+	w = sin(3.14156*w);
+	w *= 1.5+pos.x;
+	w *= 2.0;
+        vec3 color = clr * mult * w / abs(pos.y);
+
+	float d = distance(pos,vec2(-1.0+fract(x*0.5)*2.,0.0));
+	color += (clr * 0.25*w/d);
+	return color;
+}
+
+void main()
+{
+	vec2 pos = ((2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x  * 2.0 ) - 1.0;
+	pos.s = abs(pos.s);
+	vec3 color = max(vec3(0.), lazer(pos, vec3(1.75, 0.2, 3.), 0.25));
+	gl_FragColor = vec4(color * 0.05, 1.0);
+}
+
+
+</script>
+<script id="solar-storm" type="x-shader/x-fragment">
+precision highp float;
+#define PI 3.1415927
+
+uniform float time;
+ 
+varying vec2 vTextureCoord;
+
+
+
+void main(void)
+{
+vec2 resolution = vec2(1.0,1.0);
+  // Be Cool
+  vec2 p = -1.0 + 2.0 * (2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x;
+ 
+  float a = atan(p.y, p.x);
+  float r = length(p) + 0.0001;
+ 
+  float b = 1.9 * sin(8.0 * r - time - 2.0 * a);
+  b = 0.3125 / r + cos(7.0 * a + b * b) / (100.0 * r);
+  b *= smoothstep(0.2, 0.8, b);
+ 
+  gl_FragColor = vec4(b, 0.67 * b + 0.1 * sin(a + time), 0.0, 1.0);
+}
+
+
+</script>
+
+<script id="burngrid" type="x-shader/x-fragment">
+precision highp float;
+#define PI 3.1415927
+
+uniform float time;
+float stime = time * 10.0;
+vec2 resolution;
+varying vec2 vTextureCoord;
+
+
+
+void main( void ) {
+	resolution = vec2(1.0,1.0);
+	vec2 position = (2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x ;
+
+	float color = 0.0;
+	color += sin( position.x * cos( stime / 15.0 ) * 80.0 ) + cos( position.y * cos( stime / 15.0 ) * 10.0 );
+	color += sin( position.y * sin( stime / 10.0 ) * 40.0 ) + cos( position.x * sin( stime / 25.0 ) * 40.0 );
+	color += sin( position.x * sin( stime / 5.0 ) * 10.0 ) + sin( position.y * sin( stime / 35.0 ) * 80.0 );
+	color *= sin( stime / 10.0 ) * 0.5;
+
+	gl_FragColor = vec4( vec3( color, color * 0.5, sin( color + stime / 3.0 ) * 0.75 ), 1.0 );
+
+}</script>
+
+<script id="ripples2" type="x-shader/x-fragment">
+precision highp float;
+#define PI 3.1415927
+
+uniform float time;
+float stime = time * 10.0;
+ vec2 resolution = vec2(1.0,1.0);
+varying vec2 vTextureCoord;
+
+// water turbulence effect by joltz0r 2013-07-04, improved 2013-07-07
+// Altered
+
+#define MAX_ITER 11
+void main( void ) {
+vec2 position = (2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x ;
+	vec2 p = position*8.0- vec2(20.0);
+	vec2 i = p;
+	float c = 1.0;
+	float inten = .05;
+
+	for (int n = 0; n < MAX_ITER; n++) 
+	{
+		float t = time * (1.0 - (3.0 / float(n+1)));
+		i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+		c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
+	}
+	c /= float(MAX_ITER);
+	c = 1.5-sqrt(c);
+	gl_FragColor = vec4(vec3( 0.0, 0.0,c*c*c*c), 1.0);
+
+}
+</script>
+
+<script id="ripples" type="x-shader/x-fragment">
+precision highp float;
+#define PI 3.1415927
+
+uniform float time;
+float stime = time * 10.0;
+ vec2 resolution = vec2(1.0,1.0);
+varying vec2 vTextureCoord;
+
+// water turbulence effect by joltz0r 2013-07-04, improved 2013-07-07
+// Altered
+
+#define MAX_ITER 11
+void main( void ) {
+vec2 position = (2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x ;
+vec2 p = position*8.0- vec2(20.0);
+	vec2 i = p;
+	float c = 1.0;
+	float inten = .05;
+
+	for (int n = 0; n < MAX_ITER; n++) 
+	{
+		float t = time * (1.0 - (3.0 / float(n+1)));
+		i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+		c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
+	}
+	c /= float(MAX_ITER);
+	c = 1.5-sqrt(c);
+	gl_FragColor = vec4(vec3(0.0,0.0,c*c*c*c+0.2), 1.0);
+
+}
+</script>
+
+<script id="stars" type="x-shader/x-fragment">
+#define PI 3.1415927
+
+uniform float time;
+float stime = time * 10.0;
+ vec2 resolution = vec2(1.0,1.0);
+varying vec2 vTextureCoord;
+
+// CBS
+// ported from https://www.shadertoy.com/view/lslGWr
+// Added some stars: Thanks to http://glsl.heroku.com/e#6904.0
+
+
+
+// http://www.fractalforums.com/new-theories-and-research/very-simple-formula-for-fractal-patterns/
+float field(in vec3 p) {
+	float strength = 7. + .03 * log(1.e-6 + fract(sin(time) * 4373.11));
+	float accum = 0.;
+	float prev = 0.;
+	float tw = 0.;
+	for (int i = 0; i < 32; ++i) {
+		float mag = dot(p, p);
+		p = abs(p) / mag + vec3(-.5, -.4, -1.5);
+		float w = exp(-float(i) / 7.);
+		accum += w * exp(-strength * pow(abs(mag - prev), 2.3));
+		tw += w;
+		prev = mag;
+	}
+	return max(0., 5. * accum / tw - .7);
+}
+
+vec3 nrand3( vec2 co )
+{
+	vec3 a = fract( cos( co.x*8.3e-3 + co.y )*vec3(1.3e5, 4.7e5, 2.9e5) );
+	vec3 b = fract( sin( co.x*0.3e-3 + co.y )*vec3(8.1e5, 1.0e5, 0.1e5) );
+	vec3 c = mix(a, b, 0.5);
+	return c;
+}
+
+
+void main() {
+	vec2 uv = 2. * (2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x - 1.;
+	vec2 uvs = uv * resolution.xy / max(resolution.x, resolution.y);
+	vec3 p = vec3(uvs / 4., 0) + vec3(1., -1.3, 0.);
+	p += .2 * vec3(sin(time / 16.), sin(time / 12.),  sin(time / 128.));
+	float t = field(p);
+	float v = (1. - exp((abs(uv.x) - 1.) * 6.)) * (1. - exp((abs(uv.y) - 1.) * 6.));
+	
+	
+	//Let's add some stars
+	//Thanks to http://glsl.heroku.com/e#6904.0
+	vec2 seed = p.xy * 1.2;	
+	seed = floor(seed * resolution);
+	vec3 rnd = nrand3( seed );
+	vec4 starcolor = vec4(pow(rnd.y,40.0));
+
+	gl_FragColor = mix(.4, 1., v) * vec4(1.8 * t * t * t, 1.4 * t * t, t, 1.0)+starcolor;
+	
+}
+
+</script>
+<script id="plastique" type="x-shader/x-fragment">
+	precision highp float;
+    uniform float time;
+
+    vec2 resolution = vec2(1.0,1.0);
+    varying vec2 vTextureCoord;
+    varying vec3 vLightWeighting;
+
+    uniform sampler2D uSampler;
+    float borderWidth=0.02;
+    void main(void) {
+    vec2 pos = (2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x;
+       if ((pos.x<borderWidth) || (pos.x>(1.0-borderWidth)) || (pos.y<borderWidth) || (pos.y>(1.0-borderWidth))) {
+        gl_FragColor = vec4(0.0,0.0,0.0,1.0);
+       } else {
+        gl_FragColor = vec4(1.0);
+    }}
+</script>
+
+<script id="wireframe" type="x-shader/x-fragment">
+    precision highp float;
+    uniform float time;
+
+    vec2 resolution = vec2(1.0,1.0);
+    varying vec2 vTextureCoord;
+    varying vec3 vLightWeighting;
+
+    uniform sampler2D uSampler;
+    float borderWidth=0.02;
+    void main(void) {
+    vec2 pos = (2.0*(vTextureCoord.xy-vec2(0.5,0.5)))/ resolution.x;
+       if ((pos.x<borderWidth) || (pos.x>(1.0-borderWidth)) || (pos.y<borderWidth) || (pos.y>(1.0-borderWidth))) {
+        gl_FragColor = vec4(1.0);
+       } else {
+        vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
+    }}
+</script>
+
+<script id="default-fs" type="x-shader/x-fragment">
+    precision highp float;
+    uniform float time;
+
+    varying vec2 vTextureCoord;
+    varying vec3 vLightWeighting;
+	varying vec3 vVertexColor;
+
+    uniform sampler2D uSampler;
+
+    void main(void) {
+        vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        gl_FragColor = vec4(textureColor.rgb, textureColor.a);
+    }
+</script>
+<script id="shader-vs" type="x-shader/x-vertex">
+	//Here be the vertex shader
+	precision highp float;
+    attribute vec3 aVertexPosition;
+	attribute vec3 aVertexColor;
+    attribute vec3 aVertexNormal;
+    attribute vec2 aTextureCoord;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    uniform vec3 uAmbientColor;
+
+    uniform vec3 uLightingDirection;
+    uniform vec3 uDirectionalColor;
+    uniform float time;
+
+    uniform bool uUseLighting;
+
+    varying vec2 vTextureCoord;
+    varying vec3 vLightWeighting;
+	varying vec3 vVertexColor;
+
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vTextureCoord = aTextureCoord;
+		vVertexColor = aVertexColor;
+		
+    }
+</script>
+
+
+<script type="text/javascript">
+
+//Initialise webgl
+    function initGL(canvas) {
+        try {
+            gl = canvas.getContext("experimental-webgl");
+			WebGLDebugUtils.init(gl);
+            gl.viewportWidth = canvas.width;
+            gl.viewportHeight = canvas.height;
+        } catch (e) {
+        }
+        if (!gl) {
+            alert("Could not initialise WebGL, sorry :-(");
+        }
+    }
+
+//Compiles and returns a shader.
+//Don't call it twice on the same shader
+    function getShader(gl, id) {
+        var shaderScript = document.getElementById(id);
+        if (!shaderScript) {
+            return null;
+        }
+
+        var str = "";
+        var k = shaderScript.firstChild;
+        while (k) {
+            if (k.nodeType == 3) {
+                str += k.textContent;
+            }
+            k = k.nextSibling;
+        }
+
+		console.log("Compiling shader " + id);
+        var shader;
+        if (shaderScript.type == "x-shader/x-fragment") {
+            shader = gl.createShader(gl.FRAGMENT_SHADER);
+        } else if (shaderScript.type == "x-shader/x-vertex") {
+            shader = gl.createShader(gl.VERTEX_SHADER);
+        } else {
+			alert("failed");
+            return null;
+        }
+
+        gl.shaderSource(shader, str);
+        gl.compileShader(shader);
+		console.log(gl.getShaderInfoLog(shader));
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            alert(gl.getShaderInfoLog(shader));
+            return null;
+        }
+		console.log(shader);
+		console.log("Compile complete");
+        return shader;
+    }
+
+
+    function initShaders(name) {
+		console.log("Initialising shader " + name);
+        var fragmentShader = getShader(gl, name);//"shader-fs");
+        //var fragmentShader = getShader(gl, "shader-fs");
+        var vertexShader = getShader(gl, "shader-vs");
+        //var chaserShader = getShader(gl, "chaser-line");
+
+		//Compile and link a shader to a program
+        shaderProgram[name] = gl.createProgram();
+        gl.attachShader(shaderProgram[name], vertexShader);
+        gl.attachShader(shaderProgram[name], fragmentShader);
+        gl.linkProgram(shaderProgram[name]);
+		console.log(name + ":" + gl.getProgramInfoLog(shaderProgram[name]));
+		gl.validateProgram(shaderProgram[name]);
+
+		//Find and active all attributes
+		if ( !gl.getProgramParameter( shaderProgram[name], gl.LINK_STATUS) ) {
+		  var info = gl.getProgramInfoLog(shaderProgram[name]);
+		  console.log('Could not compile WebGL program. \n\n', info);
+            console.log("Could not initialise shaders: " + WebGLDebugUtils.glEnumToString(gl.getError()));
+        }
+
+			gl.useProgram(shaderProgram[name]);
+
+			//Locate and save attributes
+			shaderProgram[name].vertexPositionAttribute = gl.getAttribLocation(shaderProgram[name], "aVertexPosition");
+			gl.enableVertexAttribArray(shaderProgram[name].vertexPositionAttribute);
+
+			console.log("Locating vertex color shader for fs ", name)
+			shaderProgram[name].vertexColorAttribute = gl.getAttribLocation(shaderProgram[name], "aVertexColor");
+			if (shaderProgram[name].vertexColorAttribute == -1) { 
+				console.log("Failed to init attrib aVertexColor for ", name) 
+			} else {
+				gl.enableVertexAttribArray(shaderProgram[name].vertexColorAttribute);
+			}
+
+			shaderProgram[name].textureCoordAttribute = gl.getAttribLocation(shaderProgram[name], "aTextureCoord");
+			gl.enableVertexAttribArray(shaderProgram[name].textureCoordAttribute);
+
+			//Locate and save uniforms
+			shaderProgram[name].pMatrixUniform = gl.getUniformLocation(shaderProgram[name], "uPMatrix");
+			shaderProgram[name].time = gl.getUniformLocation(shaderProgram[name], "time");
+			shaderProgram[name].mvMatrixUniform = gl.getUniformLocation(shaderProgram[name], "uMVMatrix");
+			shaderProgram[name].nMatrixUniform = gl.getUniformLocation(shaderProgram[name], "uNMatrix");
+			shaderProgram[name].samplerUniform = gl.getUniformLocation(shaderProgram[name], "uSampler");
+			shaderProgram[name].useLightingUniform = gl.getUniformLocation(shaderProgram[name], "uUseLighting");
+			shaderProgram[name].ambientColorUniform = gl.getUniformLocation(shaderProgram[name], "uAmbientColor");
+			shaderProgram[name].lightingDirectionUniform = gl.getUniformLocation(shaderProgram[name], "uLightingDirection");
+			shaderProgram[name].directionalColorUniform = gl.getUniformLocation(shaderProgram[name], "uDirectionalColor");
+		}
+
+function power_of_2(n) {
+ if (typeof n !== 'number') 
+    return 'Not a number'; 
+    return n && (n & (n - 1)) === 0;
+}
+	//Creates a new texture on the gpu and uploads the data
+function makeTexture(filename, extension) {
+	console.log("Creating texture from ", filename);
+	var newTexture = gl.createTexture();
+		newTexture.image = new Image();
+		newTexture.image.onload = function () {
+			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+			gl.bindTexture(gl.TEXTURE_2D, newTexture);
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, newTexture.image);
+			if (power_of_2(newTexture.image.width) && power_of_2(newTexture.image.height)) {				
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+				gl.generateMipmap(gl.TEXTURE_2D);
+			} else {
+				console.log(filename + " is NOT a power of 2");
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+			}
+		}
+	newTexture.image.src = filename + "." + extension;
+	return newTexture;
+}
+
+//Setup our textures for rendering
+function initAllTextures() {
+	texture["dirt_tile"] = makeTexture("dirt_tile", "png");
+	texture["bush_tile"] = makeTexture("bush_tile", "png");
+	texture["grass_tile"] = makeTexture("grass_tile", "png");
+	texture["cement_tile"] = makeTexture("cement_tile", "png");
+    }
+
+
+	//For the lsystem push command.  Push the current MV matrix onto the stack, create a copy to continue using, for now 
+    function mvPushMatrix(aMatrix) {
+        var copy = mat4.create();
+        mat4.set(aMatrix, copy);
+        mvMatrixStack.push(copy);
+    }
+
+	//Restore the MV matrix from the stack.  Supports the lsystem pop command
+    function mvPopMatrix(aMatrix) {
+        if (mvMatrixStack.length == 0) {
+            console.log( "Invalid popMatrix, stack is empty!");
+        } else {
+			var copy = mvMatrixStack.pop();
+			mat4.set(copy, aMatrix);
+			return aMatrix;
+		}
+    }
+
+	//Sends the MVP and normal matrices to the GPU
+	//Also 'global' unforms like time
+    function setMatrixUniforms(name) {
+        if (! name) {name = "default-fs"};
+        gl.uniformMatrix4fv(shaderProgram[name].pMatrixUniform, false, pMatrix);
+        gl.uniformMatrix4fv(shaderProgram[name].mvMatrixUniform, false, mvMatrix);
+		gl.uniform1i(shaderProgram[name].samplerUniform, 0);
+		gl.uniform1f(shaderProgram[name].time, clock);
+
+    }
+
+	//UI handler functions
+    function handleMouseDown(event) {
+        mouseDown = true;
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
+    }
+
+    function handleMouseUp(event) {
+        mouseDown = false;
+    }
+
+    function handleMouseMove(event) {
+        if (!mouseDown) {
+            return;
+        }
+        var newX = event.clientX;
+        var newY = event.clientY;
+
+        var deltaX = newX - lastMouseX
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+
+        var deltaY = newY - lastMouseY;
+        mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+
+        mat4.multiply(newRotationMatrix, moonRotationMatrix, moonRotationMatrix);
+
+        lastMouseX = newX
+        lastMouseY = newY;
+    }
+
+
+
+    
+//Create and upload the vertex, colour and texture arrays to draw triangles and squares
+    function initBuffers() {            
+            //Vertexes
+        squareVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+        vertices = [
+            1.0,  1.0,  0.0,
+           -1.0,  1.0,  0.0,
+            1.0, -1.0,  0.0,
+			1.0, -1.0,  0.0,
+           -1.0, -1.0,  0.0,
+		   -1.0,  1.0,  0.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        squareVertexPositionBuffer.itemSize = 3;	//We need this for the draw command
+        squareVertexPositionBuffer.numItems = 6;	//We need this for the draw command
+
+		//TexCoords
+        squareTexCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, squareTexCoordBuffer);
+        texcoords = [
+            1.0,  1.0,  0.0,
+            0.0,  1.0,  0.0,
+            1.0,  0.0,  0.0,
+			1.0,  0.0,  0.0,
+            0.0,  0.0,  0.0,
+			0.0,  1.0,  0.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
+        squareTexCoordBuffer.itemSize = 3;
+        squareTexCoordBuffer.numItems = 6;
+		
+		//Vertex colours, will be interpolated across the square
+		squareVertexColorBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+			var colors = [
+				1.0, 0.0, 0.0, 1.0,
+				0.0, 1.0, 0.0, 1.0,
+				0.0, 0.0, 1.0, 1.0,
+				0.0, 0.0, 1.0, 1.0,
+				1.0, 0.0, 0.0, 1.0,
+				0.0, 1.0, 0.0, 1.0,
+				
+			];	
+        
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+        squareVertexColorBuffer.itemSize = 4;
+        squareVertexColorBuffer.numItems = 6;
+        
+        
+		triangleVertexPositionBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
+		trvertices = [
+			 0.0,  0.9,  0.0,
+			-1.0,  1.0,  0.0,
+			 1.0, 1.0,  0.0
+		];
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(trvertices), gl.STATIC_DRAW);
+		triangleVertexPositionBuffer.itemSize = 3;
+		triangleVertexPositionBuffer.numItems = 3;
+		
+		triangleVertexColorBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
+		var colors = [
+			1.0, 0.0, 0.0, 1.0,
+			0.0, 1.0, 0.0, 1.0,
+			0.0, 0.0, 1.0, 1.0
+		];	
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+		triangleVertexColorBuffer.itemSize = 4;
+		triangleVertexColorBuffer.numItems = 3;
+    }
+
+
+
+function drawTriangle() {
+		polyCount +=2;
+		gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture['dirt_tile']);
+		var name = current_shader;
+		gl.useProgram(shaderProgram[name]);  //FIXME whooops
+        gl.uniform1i(shaderProgram[name].samplerUniform, 0);
+        
+		gl.bindBuffer(gl.ARRAY_BUFFER, squareTexCoordBuffer);
+		gl.vertexAttribPointer(shaderProgram[name].textureCoordAttribute, squareTexCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram[name].vertexPositionAttribute, triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram[name].vertexColorAttribute, triangleVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        setMatrixUniforms(name);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, triangleVertexPositionBuffer.numItems);
+}
+
+function drawSquare() {
+	polyCount +=2;
+	gl.activeTexture(gl.TEXTURE0);
+	var name = current_shader;
+	
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+	gl.vertexAttribPointer(shaderProgram[name].vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	if (shaderProgram[current_shader].vertexColorAttribute != -1 ) {
+		gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+		gl.vertexAttribPointer(shaderProgram[name].vertexColorAttribute, squareVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+	}
+
+	setMatrixUniforms(name);
+	gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+}
+
+function drawShader(name) {
+	if (!shaderProgram[name]) { return; }
+	gl.activeTexture(gl.TEXTURE0);
+	if (!(name==current_shader)) { current_shader=name; }
+	gl.useProgram(shaderProgram[current_shader]);
+
+	drawSquare(name);
+}
+
+function drawPanel(tex) {
+	polyCount +=2;
+		gl.activeTexture(gl.TEXTURE0);
+		var t = texture[tex];
+		if (!t) {console.log("Texture " + tex + " not loaded");}
+		gl.bindTexture(gl.TEXTURE_2D, t);
+		gl.useProgram(shaderProgram["default-fs"]);
+		current_shader = "default-fs";
+
+
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, squareTexCoordBuffer);
+	gl.vertexAttribPointer(shaderProgram[current_shader].textureCoordAttribute, squareTexCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+	gl.vertexAttribPointer(shaderProgram[current_shader].vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	if (shaderProgram[current_shader].vertexColorAttribute != -1 ) {
+		gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+		gl.vertexAttribPointer(shaderProgram[current_shader].vertexColorAttribute, squareVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+	}
+	
+	setMatrixUniforms(name);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+
+	//Replace the above calls with a call to drawsquare, later
+	
+}
+
+
+
+function doLsys(oldArray, startMatrix) {
+clock=clock+0.01;
+//alert(oldArray);
+var transMatrix = mat4.create();
+var markMatrix = mat4.create();
+mat4.set(startMatrix,transMatrix);
+//mvPushMatrix(transMatrix);  
+//mat4.multiply(transMatrix, startMatrix);
+mat4.scale(transMatrix, [0.5,0.5,0.5]);
+//Arrow:  [ s s s f f f f f F  [ y f f ]  [ Y f f ] F [ y f f  f  ] [ Y f  f f ] F [ y f f f f  ] [ Y f f f f ]  ]
+var procedures = [] ;
+procedures["arrow"] = "[ fh s s s ff  pbush_tile ff pbush_tile ff pbush_tile ff pbush_tile ff pbush_tile F  [ y ff pbush_tile ff pbush_tile ]  [ Y ff pbush_tile ff pbush_tile ] F [ y ff pbush_tile ff pbush_tile  ff pbush_tile  ] [ Y ff pbush_tile  ff pbush_tile ff pbush_tile ] F [ y ff pbush_tile ff pbush_tile ff pbush_tile ff pbush_tile  ] [ Y ff pbush_tile ff pbush_tile ff pbush_tile ff pbush_tile ]  ]".split(" ");
+//procedures["rows"] = "[ [ f [ cube ] ff f [ cube ] ff f [ cube ] ff f [ cube ] ff ] y ff Y [  [ cube ] ff f [ cube ] ff f [ cube ] ff f [ cube ] ff f ] ]".split(" ");
+procedures["water_tile"] =  "shader_ripples ff".split(" ") ;
+procedures["burn_tile"] =  "shader_burngrid".split(" ") ;
+procedures["rows"] = "[ [ water_tile burn_tile ff water_tile burn_tile ff water_tile burn_tile ff water_tile burn_tile ff ] y ff Y [  burn_tile ff water_tile burn_tile ff water_tile burn_tile ff water_tile burn_tile ff water_tile ] ]".split(" ");
+procedures["board"] = "[ rows [ y ff ff Y rows ] [ y ff  ff ff ff Y rows ] [ y ff  ff ff ff ff ff Y rows ] ]".split(" ");
+procedures["cube"] = "[ fh [ p fh Y fh P fh z ] [ p fh y fh P fh z ] [ p fh z fh P fh z fh P fh z fh P fh z ] ]".split(" ");
+procedures["rise"] = "u s s ff S S U".split(" ");
+ procedures["figure"] = " set_shader_solar-storm p ff ff ff ff ff Y ff ff  ff Y Y   ff [  [ ff ff Y cube  ]  [ cube ff cube ff cube ff ff ] y ff Y   [ cube ff set_shader_solar-storm cube set_shader_default-fs set_shader_solar-storm ff cube ff ff ] y ff Y  [ cube ff cube ff cube ff ff ]  ] [ ff y y cube  ff cube ff cube ]  [ ff ff ff cube ff cube ff cube ] [ ff y ff ff cube ff cube ff  ] [ ff ff ff y ff ff cube ff cube ff  ]".split(" ");
+procedures["lower"] = "U s s ff S S u".split(" ");
+procedures["a"] = "pdirt_tile ff".split(" ");
+procedures["b"] = "pbush_tile ff".split(" ");
+procedures["c"] = "pgrass_tile ff".split(" ");
+procedures["d"] = "pmoon ff".split(" ");
+procedures["pipe_strip"] = " [ stretch_0.5,8.0,0.5 p ff ff P pdirt_tile ] ".split(" ");
+procedures["pipe"] = " [ s s s pipe_strip r pipe_strip r pipe_strip r  pipe_strip r pipe_strip r pipe_strip r  pipe_strip r pipe_strip r pipe_strip r  pipe_strip r pipe_strip r pipe_strip r ]  ".split(" ");
+procedures["pipe_step"] = " fh pipe  fh  ".split(" ");
+
+procedures["peano1"] = " [ s s  pipe_step Y pipe_step y pipe_step pipe_step y pipe_step Y pipe_step ] ff r r ".split(" ");
+procedures["peano2"] = "  [ s  y peano1 Y peano1 Y peano1 peano1 y peano1 y peano1 ] ff  ".split(" ");
+procedures["peano3"] = "  [ s  y peano2 Y peano2 Y peano2 peano2 y peano2 y peano2 ] ff   ".split(" ");
+procedures["peano4"] = "  [ s  y peano3 Y peano3 Y peano3 peano3 y peano3 y peano3 ] ff   ".split(" ");
+
+var texMatch = /^p(.*)/;
+var current_shaderMatch = /^set_shader_(.*)/;
+var shaderMatch = /^shader_(.*)/;
+var stretchMatch = /^stretch_(.*),(.*),(.*)/;
+
+//var map = "[raababacd]f[rdddcddaa]f[rbdabbdcc]f[rabaaabbb]f[rcddcdacbb]f[rccdbadbcaa]f[rcabaccdac]f[rabadddac]";
+//oldArray = "U ff ff ff p f".split(" ");
+//oldArray.push.apply(oldArray, map.split(""));
+document.getElementById("debug").innerHTML=oldArray;
+var commandArray=[];
+  for (var j=0; j<10; j++) {
+  commandArray=[];
+  for (var i=0; i<oldArray.length ; i++) {
+      if ( procedures[oldArray[i]] ) {
+	commandArray.push.apply(commandArray, procedures[oldArray[i]]);
+	} else {
+	commandArray.push(oldArray[i]);
+	}
+  }
+  oldArray=commandArray;
+  }
+  
+  
+  
+  
+  document.getElementById("debug").innerHTML=commandArray;
+  for (var i = 0; i < commandArray.length; i++) {
+	if (commandArray[i] == 'fh') {
+	  mat4.translate(transMatrix, [0, 0.5, 0]);
+	} else if (commandArray[i] == 'ff') {
+	  mat4.translate(transMatrix, [0, 1.0, 0]);
+	} else if (commandArray[i] == 'tr') {
+	  drawTriangle();
+	} else if (commandArray[i] == 'f') {
+	  mat4.translate(transMatrix, [0, 1.0, 0]);
+	  drawPanel("dirt_tile");;
+	} else if (commandArray[i] == 'y') {
+	  mat4.rotate(transMatrix, degToRad(-90), [0, 0, 1]);
+	} else if (commandArray[i] == 'p') {
+	  mat4.rotate(transMatrix, degToRad(90), [1, 0, 0]);
+	  } else if (commandArray[i] == 'r') {
+	  mat4.rotate(transMatrix, degToRad(45), [0, 1, 0]);
+	} else if (commandArray[i] == 'F') {
+	  mat4.translate(transMatrix, [0, -1.0, 0]);
+	  drawSquare();
+	} else if (commandArray[i] == 'z') {
+	  drawShader(current_shader);
+	} else if (commandArray[i].match(texMatch)) {
+	  var ret = commandArray[i].match(texMatch);
+	  drawPanel(ret[1]);
+	} else if (commandArray[i].match(shaderMatch)) {
+	  var ret = commandArray[i].match(shaderMatch);
+	  drawShader(ret[1]);
+	} else if (commandArray[i].match(current_shaderMatch)) {
+	  var ret = commandArray[i].match(current_shaderMatch);
+	  if (shaderProgram[ret[1]]) { current_shader=ret[1]; gl.useProgram(shaderProgram[current_shader]); }
+	} else if (commandArray[i].match(stretchMatch)) {
+	  var ret = commandArray[i].match(stretchMatch);
+	  mat4.scale(transMatrix,  [ret[1], ret[2], ret[3]]);
+	}  else if (commandArray[i] == 'Y') {
+	  mat4.rotate(transMatrix, degToRad(90), [0, 0, 1]);
+	} else if (commandArray[i] == 'P') {
+	  mat4.rotate(transMatrix, degToRad(-90), [1, 0, 0]);
+	} else if (commandArray[i] == 's') {
+	  mat4.scale(transMatrix,  [0.5, 0.5, 0.5]);
+	} else if (commandArray[i] == 'S') {
+	  mat4.scale(transMatrix,  [2, 2, 2]);
+	} else if (commandArray[i] == 't') {
+	  mat4.rotate(transMatrix, degToRad(-30), [0, 1, 0]);
+	} else if (commandArray[i] == 'T') {
+	  mat4.rotate(transMatrix, degToRad(30), [0, 1, 0]);
+	} else if (commandArray[i] == '[') {
+	  mvPushMatrix(transMatrix);
+	} else if (commandArray[i] == ']') {
+	  transMatrix = mvPopMatrix(transMatrix);
+	} else if (commandArray[i] == 'mark') {
+	  mat4.set(transMatrix,markMatrix);
+	}
+	
+    //Do something
+
+ // gl.uniform3f(
+ //               shaderProgram["wireframe"].ambientColorUniform,
+ //               parseFloat(1.0),
+ //               parseFloat(1.0),
+ //               parseFloat(1.0)
+ // );
+  //	mat4.identity(mvMatrix);
+	
+  //mat4.translate(mvMatrix, [0, 0, -6]);
+	
+  //mat4.multiply(mvMatrix, moonRotationMatrix);
+  mat4.set(transMatrix, mvMatrix);
+  mat4.scale(mvMatrix, [0.5,0.5,0.5]);
+
+
+  }
+//mvPopMatrix(transMatrix);
+return transMatrix;
+}
+
+
+
+
+function drawScene() {
+	gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+	mat4.perspective(fov, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+	mat4.identity(mvMatrix);
+	mat4.multiply(mvMatrix, moonRotationMatrix);
+	//mat4.translate(mvMatrix, [0,0,-5]);
+			
+	mat4.scale(mvMatrix, [5,5,5]);
+	//drawSquare();
+	var lsystem = document.getElementById("lsystem").value;
+	var commandArray=lsystem.split(" ");  
+
+	doLsys(commandArray, mvMatrix);
+ 
+}
+
+
+    function tick() {
+        requestAnimFrame(tick);
+		polyCount=0;
+        drawScene();    
+		document.getElementById("log").innerHTML = "<ul><li>PolyCount : " + polyCount + "</li></ul>"; 
+    }
+
+//The main routine 
+    function webGLStart() {
+        var canvas = document.getElementById("lesson11-canvas");
+        initGL(canvas);
+        
+        initBuffers();
+        initAllTextures();
+
+		initShaders("plastique");
+        initShaders("wireframe");
+        initShaders("solar-storm");
+        initShaders("burngrid");
+        initShaders("ripples");
+        initShaders("ripples2");
+        initShaders("lazer-line");
+        initShaders("default-fs");
+		
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.enable(gl.DEPTH_TEST);	
+
+        canvas.onmousedown = handleMouseDown;
+        document.onmouseup = handleMouseUp;
+        document.onmousemove = handleMouseMove;
+
+		//List the available shaders, for the user to choose
+		document.getElementById("shaders").innerHTML = Object.keys(shaderProgram);
+		
+		//List the available textures, for the user to choose
+		document.getElementById("textures").innerHTML = Object.keys(texture);
+		
+		
+        tick();
+    }
+
+</script>
+
+
+</head>
+
+
+<body onload="webGLStart();">
+<div class="well" style="float:right">
+<p>version 8</p>
+    <input type="checkbox" id="lighting" checked /> Use lighting<br/>
+    <input type="checkbox" id="VerticalFlip" checked /> Flip horizontal<br/>
+    <input type="checkbox" id="HorizontalFlip" checked /> Flip vertical<br/>
+    </div>
+   
+   
+   <div class="row">
+   <div class="col-sm-8">
+    <canvas id="lesson11-canvas" style="border: none;" width="800" height="600"></canvas>
+
+<input type="text" id="lsystem" size="100" value="P t t t Y   ff ff ff p f y ff ff ff ff ff y y S [ pgrass_tile [ Y board ] [ board ] ] F pcement_tile F pcement_tile S rise F F set_shader_lazer-line cube" />
+
+
+ <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Shader List</div>
+  <div class="panel-body" id=shaders>
+    
+  </div>
+  </div>
+
+  
+ <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Texture List</div>
+  <div class="panel-body" id=textures>
+    
+  </div>
+  </div>
+
+
+  <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Log Output</div>
+  <div class="panel-body" id=log>
+    </div>
+  </div>
+</div>
+
+       <div class="col-sm-4">
+    <div class="panel panel-default" >
+  <!-- Default panel contents -->
+  <div class="panel-heading">Commands</div>
+  <div class="panel-body">
+    
+    
+    
+    <table class="table table-sm table-inverse" style="border: 0; padding: 10px;">
+        <tr><th>ff</th><td>Forwards one step</td></tr>
+        <tr><td>fh</td><td>Forwards half step</td></tr>
+        <tr><td>p</td><td>Pitch up 90 degrees</td></tr>
+        <tr><td>P</td><td>Pitch down 90 degrees</td></tr>
+        <tr><td>s</td><td>Shrink</td></tr>
+        <tr><td>S</td><td>Expand</td></tr>
+        
+        <tr><td>y</td><td>Turn right 90 degrees</td></tr>
+        <tr><td>Y</td><td>Turn left 90 degrees</td></tr>
+        
+        <tr><td>r</td><td>Tilt 45 degrees</td></tr>
+        <tr><td>R</td><td>Tilt 45 degrees</td></tr>
+        
+        <tr><td>rise</td><td>Move up without changing direction</td></tr>
+        <tr><td>lower</td><td>Descend without changing direction</td></tr>
+        
+        <tr><td>tr</td><td>Draw a triangle</td></tr>
+        <tr><td>cube</td><td>Draw a cube</td></tr>
+        <tr><td>figure</td><td>Draw a stick figure</td></tr>
+        <tr><td>board</td><td>Draw a chess board</td></tr>
+        <tr><td>arrow</td><td>Draw an arrow</td></tr>
+		<tr><td>pipe</td><td>Draw a length of pipe</td></tr>
+        
+        <tr><td>pNAME</td><td>Draw a texture panel.  Try: pgrass_tile, pbush_tile, pgrass_tile, pmoon</td></tr>
+        <tr><td>shader_NAME</td><td>Draw a panel with a shader.  Use set_shader_NAME to change the current shader without drawing anything.</td></tr>
+		<tr><th>peano2</th><td>Draw some peano curves.  Also: peano1, peano3, peano4.  4 is slow.</td></tr>
+        </table>
+    
+  </div>
+        
+    
+    
+    <div  style="display:none">
+    <h2>Directional light:</h2>
+
+    <table style="border: 0; padding: 10px;">
+        <tr>
+            <td><b>Direction:</b>
+            <td>X: <input type="text" id="lightDirectionX" value="-1.0" />
+            <td>Y: <input type="text" id="lightDirectionY" value="-1.0" />
+            <td>Z: <input type="text" id="lightDirectionZ" value="-1.0" />
+        </tr>
+        <tr>
+            <td><b>Colour:</b>
+            <td>R: <input type="text" id="directionalR" value="0.8" />
+            <td>G: <input type="text" id="directionalG" value="0.8" />
+            <td>B: <input type="text" id="directionalB" value="0.8" />
+        </tr>
+    </table>
+</div>
+
+    
+  
+  
+
+
+    
+    <div class="panel panel-default" style="display:none">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Debug Output</div>
+  <div class="panel-body" id=debug>
+    
+  </div>
+  </div>
+
+  </div>
+    </div>
+	</div>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</body>
+
+</html>

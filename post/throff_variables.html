@@ -1,0 +1,138 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog/ Lexical Environments in Throff</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog/ Lexical Environments in Throff</h1>
+			</header>
+			<div class="summary">
+<p><a href="../../projects/throff/">Throff</a> has extra rules for variables.  Here's why, and how.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>=== Binding Rules</p>
+<p>Variables in most languages are very simple.  You type</p>
+<pre><code>	x = &quot;hello world&quot;
+
+	print x
+</code></pre>
+<p>And you see &quot;hello world&quot;.  Easy.  Or is it?</p>
+<pre><code>	x = &quot;hello world&quot;
+
+	
+	function sayHi () {
+		x = &quot;goodbye world&quot;
+		print x
+	}
+</code></pre>
+<p>There is a potential bug here.  Did you really mean to overwrite, or &quot;shadow&quot; x?  Maybe you did, and the code is correct.  But maybe you really wanted to set <em>z</em> to &quot;goodbye world&quot;, and accidentally typed <em>x</em> instead.</p>
+<p>Throff provides a way to avoid this bug, and in addition, speed up your program by helping the JIT compiler.</p>
+<pre><code>	DEFINE  sayHi =&gt; [
+		PRINTLN x
+		REBIND x =&gt; &quot;goodbye world&quot;
+	]
+	
+	: x =&gt; &quot;hello world&quot;
+</code></pre>
+<p>In Throff, the colon : declares a variable for the <em>first</em> time.  If you want to &quot;change&quot; the binding later, you must use <em>REBIND</em>.  REBIND only works if x is already bound.  If x is not bound, REBIND quits with an error.  <em>:</em> does the opposite.  It binds a variable only if it was never bound before.  If x is already bound, <em>:</em> quits with an error.</p>
+<pre><code>	DEFINE  sayHi =&gt; [
+		PRINTLN x
+		: x =&gt; &quot;goodbye world&quot;		&lt;- ERROR
+	]
+	
+	: x =&gt; &quot;hello world&quot; 
+</code></pre>
+<pre><code>	DEFINE  sayHi =&gt; [
+		PRINTLN x
+		REBIND x =&gt; &quot;goodbye world&quot;
+	]
+	
+	REBIND x =&gt; &quot;hello world&quot; 		&lt;- ERROR
+</code></pre>
+<p>Note that rebinding screws up referential transparency, and will usually cause the optimiser to fail.  Where possible, declare a new variable rather than rebinding.</p>
+<p>=== Mutation - not</p>
+<p>All data in Throff is <em>immutable</em>.  This is required for referential transparency, which is a good thing.  However namespaces are not totally immutable, like in functional languages.  Instead, you can alter variable bindings with REBIND.  The change is then visible in your current scope, and all child scopes.  However, it is impossible to alter variables in the parent scope.  A quick example demonstrates:</p>
+<pre><code>	PRINTLN X
+	
+	CALL [ REBIND X =&gt; CHANGED ]
+	
+	: X ORIGINAL
+</code></pre>
+<p>will always print</p>
+<pre><code>	ORIGINAL
+</code></pre>
+<p>the changes to X are only visible inside the [ ] brackets.  Outside, X keeps its original value.</p>
+<p>In general, you must not alter variables outside of the scope they are declared in.  However there are two legitimate ways to do this</p>
+<p>=== Thin functions and Macros</p>
+<p>Normally, every time you see [ ] brackets in Throff, they will create a new scope inside.  Changes in this scope are not visible outside of the [ ] brackets.  But there are two ways to alter bindings outside of the current scope.</p>
+<p>==== Macros</p>
+<p>Macros are functions that don't have any scope.  Instead, they run in the <em>caller's</em> scope.  Macros are heavily used in Throff to implement namespace functions, such as the WITH keyword:</p>
+<pre><code>	PRINTLN C
+	
+	WITH [ A B C ] FROM H[ A =&gt; 1 B =&gt; 2 C =&gt; 3 ]H
+</code></pre>
+<p>will print &quot;3&quot;.</p>
+<p>Macros are defined with the MACRO function</p>
+<pre><code>	DEFINE SETX =&gt; MACRO [ : X =&gt; 10 ]
+</code></pre>
+<p>This will set X to 10 in the <em>caller's</em> namespace, not in the place where the macro is defined.</p>
+<p>Macros are good candidates for JIT optimisations, unfortunately the optimiser is not written yet.</p>
+<p>==== THIN functions</p>
+<p>THIN functions re-use their parent's namespace, instead of creating a new one for themselves.  They are most useful in constructs like if statements and loops.</p>
+<pre><code>	PRINTLN X
+	
+	CALL THIN [ REBIND X =&gt; CHANGED ]
+	
+	: X ORIGINAL
+</code></pre>
+<p>will print &quot;CHANGED&quot;</p>
+
+			</article>
+			</html>
+			

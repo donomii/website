@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html manifest="application.manifest">
+<head>
+
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=5.0, minimum-scale=0.2"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="stars_icon.png"/>
+	<link rel="apple-touch-icon" sizes="72x72" href="stars-icon-ipad.png" />  
+	<link rel="apple-touch-icon" sizes="114x114" href="stars-icon-iphone4.png" />  
+
+
+    <link rel="apple-touch-startup-image" href="startup.png" />
+    <link rel="stylesheet" href="stars.css" type="text/css" media="screen, mobile" title="main" charset="utf-8">
+	<script src="processing.js"></script>
+	<script src="jquery.js"></script>
+	<script src="datasets.js"></script>
+	<script type="text/javascript" src="stars.js"></script>
+<script type="text/javascript" >
+	window.scrollTo(0,1);
+	</script>
+    <title>Stars</title>
+</head>
+<body onLoad="forceToTop();doStartup();"  >
+
+<div width=320 height=460 ><p>
+<img src="../images/220px-Ssc2005-01b.jpg" align=left width=64 height=64 />
+<h2>Ragnarock</h2>Ultimate Space Warfare tech</p>
+
+<p><img src="../images/margin-knot-vertical.png" align=left width=40 height=200 />Destroys all life on a planet, and makes it Barren.</p>
+<p>Research this now/Missing Prerequisite/Research Complete</p></div>
+
+</body>
+</html>
+

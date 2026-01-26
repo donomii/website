@@ -1,0 +1,97 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog / Compilers make me :(</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog / Compilers make me :(</h1>
+			</header>
+			<div class="summary">
+<p>Forcing GCC to emit the correct SIMD code</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>I was adding SIMD support to <a href="../../projects/crtrm/index.html">crtrm</a>.  <a href="http://en.wikipedia.org/wiki/SIMD">SIMD</a> is a CPU feature that gives a speed boost to mathematics by doing 4 maths operations at the same time, instead of the more usual 1.  Today everybody's computer has some version of SIMD, so sooner or later I would have to support it.</p>
+<p>After some fooling around with compiler options and C definitions, I got something that compiled fine.  Until I looked at the actual display window, that is.  It was completely corrupted.  More than a little bit concerned, I switched off SIMD, and everything looked perfect.  SIMD on, corrupted.  SIMD off, fine.</p>
+<p>Luckily I had enough experience to be sure that my code was solid, and so I started trying to figure out what was wrong.  As it turned out, the problem was neither my code, nor SIMD, but GCC.  After fewer hours than I expected, I found the answer in my debug output:</p>
+<pre><code>Subtracting two vectors:
+&lt;1 1 1 1&gt; -
+&lt;1 1 1 1&gt; 
+-------------------
+ 0 0 0 0
+
+Adding two vectors:
+&lt;1 1 1 1&gt; +
+&lt;1 1 1 1&gt;
+-------------------
+ 2 1 1 1
+</code></pre>
+<p>That's not right.</p>
+<p>GCC was not emitting SIMD instructions when adding vectors (but oddly, it was getting subtract correct).  In effect, GCC thought that the vector was just one number, so it only added the first number in the vector.  The &quot;Multiple&quot; part of <a href="http://en.wikipedia.org/wiki/SIMD">&quot;Single Instruction, Multiple Data&quot;</a> wasn't happening.</p>
+<p>Another few hours with the manuals and I was able to force GCC to use the correct SIMD.  I'm happy that I didn't spend days combing through my code for my mistake, as I would have in years past.  Sometimes, the problem really is the compiler.</p>
+<h3 id="the-solution">The solution</h3>
+<p>Here's how to force GCC to emit the correct SIMD instructions.  This uses GCC-only extensions to the C language, which are relatively well documented, once you realise that you need them.</p>
+<pre><code>INLINE simd vAdd ( simd a, simd b) {
+	simd c;
+	float __attribute__ ((vector_size(16))) v1  = a.v;
+	float __attribute__ ((vector_size(16))) v2  = b.v;
+  
+	c.v = __builtin_ia32_addps(v1, v2);
+	return c;
+}
+</code></pre>
+<p>or, if you have declared your vectors as unions of SIMD and float arrays</p>
+<pre><code>	INLINE simd vAdd ( simd a, simd b) {
+		c.v = __builtin_ia32_addps(a.v, b.v);
+		return c;
+	}
+</code></pre>
+
+			</article>
+			</html>
+			

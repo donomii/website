@@ -1,0 +1,68 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>The Extension Engine</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>The Extension Engine</h1>
+			</header>
+			<div class="summary">
+<p>The universal library for all languages everywhere.  Maybe.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p><a href="https://gitlab.com/donomii/executionengine">extensionEngine</a> is a library that provides multiple libraries to any language, without having to write a parser or a compiler.</p>
+<p>I love looking at experimental languages, especially ones that explore <a href="https://en.wikipedia.org/wiki/Esoteric_programming_language">unusual concepts</a>.  But programming languages exist to be used, and can only be truely appreciated by writing a significant program with them.  But it's effectively impossible to write a program in a language that doesn't have I/O functions, or networking, or graphics, or a database.</p>
+<p>So I wrote an extension engine, that provides multiple libraries for any language that can speak its protocol, which is JSON, for now.  Using the extension engine, even new, small languages can provide serious functionality, giving programmers the chance to appreciate the new and interesting concepts that are being explored.</p>
+<p>The extension engine  runs as a separate program, and can work with any programming language that has i/o.  They communicate via a simple protocol, over any kind of socket or pipe.  At the moment it supports HTTP, TCP+JSON, and even stdin/stdout like the Model Context Protocol.</p>
+<p>The extension engine can run independently and allow many clients to connect at the same time, or a programming language can start a private child instance, and communicate with it over a socket or stdin/stdout.</p>
+<p>It is a protocol as much as an implementation.  It could be reimplemented quickly in any language, making every part of it replaceable.</p>
+
+			</article>
+			</html>
+			

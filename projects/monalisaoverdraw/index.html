@@ -1,0 +1,774 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>2D Optimiser</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>2D Optimiser</h1>
+			</header>
+			<div class="summary">
+<p>Optimisation algorithms demonstrated by redrawing famous pictures.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" /> 
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" charset="utf-8">
+window.addEventListener('load', function() {
+  document.querySelector('input[type="file"]').addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        var img = document.querySelector('#myImg');
+		console.log("Found image tag: ", img);
+		var value = URL.createObjectURL(this.files[0]);
+        img.src =  value;
+		filediv.src = value;
+		
+  setTimeout("init_graphics()", 2000);
+      }
+  });
+});
+
+  function download() {
+    var link = document.createElement('a');
+    link.download = 'optimisedpicture.png';
+    link.href = document.getElementById('bestdiv').toDataURL('image/png')
+    link.click();
+  }
+
+</script>
+<script type="text/javascript" charset="utf-8">
+var shape="triangle"	//triangle,circle,text
+var bestx;
+var workctx;
+var origx;
+var graphctx;
+var canvas;
+var monitor;
+var data = [];
+var img = false;
+var respectAlpha=false;
+var active=true
+
+var width = -1;
+var height= -1;
+var orig;
+var pop = 50;
+var poplen = 10;
+
+genomes = [];
+
+
+var current_fit = -1;
+var last_fit;
+var currind = pop*poplen-1;
+var currmod = 0;
+var candidate=-1;
+//var mode='genetic' //'anneal', 'extremal';
+var mode='anneal';//, 'extremal';
+
+function setShape (aString) {
+shape=aString;
+//circle and triangle use different data structures, which is a shame because it would be awesome to be able to switch between them and see the picture in different shapes.
+setup();
+}
+
+
+function init_genomes () {
+	genomes = [];
+	while (genomes.length<50) {
+		genomes.push(init_data());}
+		
+}
+
+function cull_genomes() {
+	var prev=99999999999;
+	for ( var p=0;p<50;p++) {
+	
+		var s = score(genomes[p]);
+		//alert(s);
+		if(s>(prev+10000)){
+		//alert("deleting " + p);
+		delete genomes[p];
+		}
+		else {prev=s;}
+	}
+	//alert("finished loop");
+}
+
+function drawRandom (anArray) {
+return anArray[Math.floor(Math.random()*anArray.length)];
+}
+
+function breed (genomes) {
+	var candidates = genomes.filter(function(x){return x});
+	var a = drawRandom(candidates);
+	var b = drawRandom(candidates);
+	var x = Math.floor(Math.random()*50*poplen);
+	var newp=[];
+	for(i=0;i<pop*poplen;i++){
+	if(i<x){newp[i]=jQuery.extend(true, [], a[i]);}
+	else {newp[i]=jQuery.extend(true, [],b[i]);}
+	}
+	var y = Math.floor(Math.random()*50);
+	randomise_triangle(newp, y*poplen);
+	return newp;
+	
+}
+
+function nextGen(){
+	for ( var p=0;p<50;p++) {
+		if (!genomes[p]) {
+		genomes[p]=breed(genomes);}
+	}
+}
+
+function init_graphics() {
+
+current_fit = 99999999999;
+	width = filediv.width;
+	height = filediv.height;
+	monitordiv.width = width;
+	monitordiv.height = height;
+	bestdiv.width = width;
+	bestdiv.height = height;
+	originaldiv.width = width;
+	originaldiv.height = height;
+	canvasdiv.width = width;
+	canvasdiv.height = height;
+	canvas = document.getElementById('canvasdiv');
+	if (canvas.getContext){
+		workctx = canvas.getContext('2d');
+	}
+	var graphdiv = document.getElementById('graphdiv');
+        graph = new Graph(graphdiv, 1001);
+
+	var orig = document.getElementById('originaldiv');
+	if (orig.getContext){
+		origx = orig.getContext('2d');
+	}
+	var monitor = document.getElementById('monitordiv');
+	if (monitor.getContext){
+		monitorx = monitor.getContext('2d');
+	}
+	var best = document.getElementById('bestdiv');
+	if (best.getContext){
+		bestx = best.getContext('2d');
+	}
+	img = document.getElementById('filediv');
+	origx.drawImage(img,0,0);
+}
+
+function setup(){
+	init_graphics();
+	data = init_data();
+	
+	randomise(data);
+	setTimeout("manager()", 1000);
+	setTimeout("displayConvergence()", 1001);
+	setTimeout("reactComboBox(document.querySelector('select'))");
+}
+
+function genetic() {
+	genomes.sort(function(a,b){var x = score(a)-score(b);return x;});
+	//cull_genomes();
+	for ( p=10;p<50;p++) {
+	delete genomes[p];}
+	//assert("Culled array to 10 best: " + genomes.length, genomes.length==10);
+	for ( p=10;p<50;p++) {
+	if(!genomes[p]){genomes[p]=breed(genomes);}
+	for (var i; i<pop*poplen;i++){
+	genomes[p]=calculate(genomes[p],i);}
+	//console.log(genomes);
+	assert("New genome has been created", genomes[p]);
+	assert("New genome has length 500 : " + genomes[p],genomes[p].length==500 );}
+}
+
+var fit_history=[0,0,0,0,0,0,0,0,0,0,0];
+var hist_index = 0;
+function displayConvergence() {
+	var sum = 0;
+	for (var sum_i=0;sum_i<10;sum_i++) {
+	sum +=fit_history[sum_i];
+	}
+	$('#difference').html("<div>Fitness: " +Math.round(current_fit)+"</div><div>Delta: "+(sum/10.0).toFixed(1)+"/s</div><div>Mode: "+mode+"</div>");
+	
+	fit_history[hist_index++]=last_fit-current_fit;
+	if (hist_index>9) { hist_index=0;}
+	last_fit = current_fit;
+	setTimeout("displayConvergence()", 1000);
+}
+
+function calculate (data,currind) {
+	var newdata = jQuery.extend(true, {}, data);
+	//mod = [5,4,3,2,1,-1,-2,-3,-4,-5];
+	mod = [100,50, 10,5,1,-1,-5, -10, -50, 100];
+	if (++currmod >= mod.length) { 
+	  currmod=0;
+	  
+	}
+
+	mutate(newdata,currind, mod[currmod]);
+	draw(workctx, newdata, currind);
+	graph.redraw(newdata, pop*poplen);
+
+	var newfit = diff(workctx, origx);
+	if (newfit<current_fit) { 
+		current_fit = newfit;
+		data = newdata;
+		return newdata}
+	//$('#debugdiv').html(Dumper(data));
+	return data;
+}
+
+
+function anneal (data,variation) {
+	var newdata = jQuery.extend(true, {}, data);
+	
+	for (var i=0; i<pop*poplen;i++){
+		var step = 1.0*data[i][3]/10;
+		var y = Math.floor(Math.random()*step-step/2);
+		randomMutate(newdata,i, 2+width*currind/pop/poplen/10);
+	}
+	draw(workctx, newdata, currind);
+	graph.redraw(newdata, pop*poplen);
+
+	var newfit = diff(workctx, origx);
+	if (newfit<current_fit) { current_fit = newfit; data = newdata;return newdata}
+	//$('#debugdiv').html(Dumper(data));
+	return data;
+}
+
+var variate=10;
+var cycle=30;
+
+
+function manager () {
+if (!(!active && !(currind <0))) {
+
+if (mode=='extremal'){
+	--currind;
+	if (currind <0 ) { 
+		currind=pop*poplen-1;
+		mode='anneal';
+}}
+if (mode=='anneal'){
+	--currind;
+	if (currind < 0) { 
+		currind=pop*poplen-1;
+		mode='hillclimb';
+	}
+} 
+
+if (mode=='hillclimb'){
+	if(--cycle<0){--currind;cycle=variate;}
+	if (currind <0 ) {
+		draw(bestx,data,0);
+		currind=poplen-1; 
+		mode='extremal';
+}}
+if (mode == 'anneal' ) {data=anneal(data, currind);}
+if(mode == 'extremal') { extremal(data,currind)}
+if(mode == 'hillclimb') { data=calculate(data,currind)}
+
+	}
+	if(variate>0){setTimeout("manager()", 1);}
+}
+
+function dissappear (somedata, ind) {
+	//$('#difference').html("index: " + ind);
+	for ( i=0;i<poplen;i++) {
+		somedata[ind+i][2] = -1;
+	}
+}
+
+
+
+function to_front (data, ind1) {
+	for (var i=ind1; i>0; i--) {
+		data  = swap(data, i, i-1);
+	}
+	return data;
+}
+
+
+function swap(old_data, ind1, ind2) {
+	var newdata = jQuery.extend(true, {}, data);
+	if ((ind1>0)&&(ind2>0)) {
+		for (var i=0; i<poplen;i++) {
+			var pos1 = ind1+i;
+			var pos2 = ind2+i;
+			newdata[pos2] = old_data[pos1];
+			newdata[pos1] = old_data[pos2];
+		}
+	}
+	return newdata;
+}
+//Performs one step of extremal optimisation (on one triangle)
+function extremal (data, currind) {
+	var newdata = jQuery.extend(true, {}, data);
+
+	//draw(newdata,currind*poplen);
+	dissappear(newdata,currind*poplen);
+	draw(workctx, newdata,currind*poplen);
+	graph.redraw(newdata, pop*poplen);
+	var newfit = diff(workctx, origx);
+	//$('#difference').html(newfit+ " / " + current_fit);
+	if ((current_fit-newfit>-1)&&(current_fit-newfit<20)) { 
+		console.log("Repositioning number " + currind);
+		randomise_triangle(data, currind*poplen);
+		data = to_front(data, currind);
+		draw(workctx, data,currind*poplen);
+		graph.redraw(data, pop*poplen);
+		current_fit = diff(workctx, origx);
+		
+	}
+	//$('#debugdiv').html(Dumper(data));
+}
+
+function score (data) {
+	if (data){draw (data, 0);
+	graph.redraw(data,pop*poplen);
+	return diff(workctx, origx);
+}}
+
+function assert(description, test) {
+if(!test) {
+console.log("assert failed: " + description);
+}
+}
+
+function draw(ctx,data, cind) {
+	erase(ctx);
+	for ( p=pop-1;p>-0;p--){
+		var i=p*poplen;
+		assert(data,data[i+6]&&data[i+7]&&data[i+8]&&data[i+9]);
+		//Draw the actual picture
+		var i=p*poplen;
+		if (respectAlpha){
+		ctx.fillStyle = "rgba( "+data[i+6][2] +" , " + data[i+7][2]+" ,"+ data[i+8][2]+","+ data[i+9][2]+")";
+		} else {
+		ctx.fillStyle = "rgba( "+data[i+6][2] +" , " + data[i+7][2]+" ,"+ data[i+8][2]+",255)";	
+		}
+		ctx.strokeStyle="black";
+		ctx.beginPath();
+		if (shape=="triangle"){
+			ctx.moveTo(data[i][2],data[i+1][2]);
+			ctx.lineTo(data[i+2][2],data[i+3][2]);
+			ctx.lineTo(data[i+4][2],data[i+5][2]);
+			ctx.fill();
+		} else {
+			if (shape=="text") {
+				ctx.font=Math.round(data[i+2][2])+"px Arial";
+				ctx.save();
+				ctx.translate(data[i+0][2], data[i+1][2]);
+				ctx.rotate((data[i+4][2]-180)* Math.PI/180);
+				ctx.fillText(String.fromCharCode(data[i+3][2]), 0,0);
+				//ctx.strokeText(String.fromCharCode(data[i+3][2]), 0,0);
+				ctx.restore();
+			} else {
+				if (shape=="image") {
+					jimg = document.getElementById('juliadiv');
+					ctx.save();
+					ctx.translate(data[i+0][2], data[i+1][2]);
+					ctx.rotate((data[i+2][2]-180)* Math.PI/180);
+					ctx.drawImage(jimg,0,0,259,194,0,0,data[i+3][2],data[i+4][2]);
+					ctx.restore();
+				} else {
+					if (data[i+2][2]>0) {
+						ctx.arc(data[i][2],data[i+1][2], data[i+2][2], 0, 2 * Math.PI, false);
+						ctx.fill();
+					}
+				}
+			}
+		}
+		
+		//Draw the genome on the webpage
+		erase(monitorx);
+		monitorx.drawImage(img,0,0);
+		var i=Math.floor(cind/poplen)*poplen;
+		monitorx.fillStyle = "rgba( "+data[i+6][2] +" , " + data[i+7][2]+" ,"+ data[i+8][2]+","+ data[i+9][2]/100+")";
+		monitorx.beginPath();
+		
+		if (shape=="triangle"){
+			monitorx.moveTo(data[i][2],data[i+1][2]);
+			monitorx.lineTo(data[i+2][2],data[i+3][2]);
+			monitorx.lineTo(data[i+4][2],data[i+5][2]);
+			monitorx.fill();
+		} else {
+		if (shape=="text") {
+				monitorx.font=Math.round(data[i+2][2])+"px Arial";
+				monitorx.save();
+				monitorx.translate(data[i+0][2], data[i+1][2]);
+				monitorx.rotate((data[i+4][2]-180)* Math.PI/180.0);
+				monitorx.fillText(String.fromCharCode(data[i+3][2]), 0,0);
+				monitorx.restore();
+			} else {
+				if (shape=="image") {
+					jimg = document.getElementById('juliadiv');
+					monitorx.save();
+					monitorx.translate(data[i+0][2], data[i+1][2]);
+					monitorx.rotate((data[i+2][2]-180)* Math.PI/180);
+					monitorx.drawImage(jimg,0,0,259,194,0,0,data[i+3][2],data[i+4][2]);
+					monitorx.restore();
+				} else {
+					if (data[i+2][2]>0) {
+						monitorx.arc(data[i][2],data[i+1][2], data[i+2][2], 0, 2 * Math.PI, false);
+						monitorx.fillStyle = "rgba( "+data[i+6][2] +" , " + data[i+7][2]+" ,"+ data[i+8][2]+","+ data[i+9][2]/100+")";
+						monitorx.fill();
+					}
+				}
+			}
+		}
+	}
+}
+
+
+function Graph(aCanvas, aLength) {
+this.canvas = aCanvas;
+if (aCanvas.getContext){
+	this.ctx = aCanvas.getContext('2d');
+}
+this.length = aLength;
+
+
+function redraw (somedata, aLength) {
+	gr = this.ctx;
+	this.erase();
+	myLength = somedata.length || aLength;
+	for ( ii=0;ii<myLength;ii++) {
+		if ((currind == ii) && (mode == 'anneal')) {
+			gr.fillStyle = "#00FF00";
+		} else {
+			gr.fillStyle = "#FF0000";
+		}
+		gr.fillRect( ii, 0, 1, somedata[ii][2] );
+	};
+}
+this.redraw=redraw;
+function erase () {	
+        aCtx = this.ctx;
+	aCtx.fillStyle = "#000000";
+	aCtx.globalAlpha=1;
+	aCtx.strokeStyle ='#FFFFFF';
+	aCtx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+}
+
+this.erase = erase;
+}
+
+function erase (aCtx) {
+	aCtx.fillStyle = "#000000";
+	aCtx.globalAlpha=1;
+	aCtx.strokeStyle ='#FFFFFF';
+	aCtx.fillRect( 0, 0, canvas.width, canvas.height);
+}
+
+
+
+
+//Build the correct CSS colour string
+function rgb(red, green, blue){
+	var decColor = red + 256 * green + 65536 * blue;
+	return '#'+decColor.toString(16);
+}
+
+
+function init_data () {
+	pop=0;
+	var data=[];
+	w=20;
+	h=10;
+	for (var i=0;i*w<width;i++) {
+	
+	for (var j=0;j*h<height;j++) {
+	pop=pop+1;
+	if (shape=="triangle") {
+		data.push( [ 0, 0, i*w, width],
+				[ 0, 0, j*h, height],
+				[ 0, 0, i*w+10, width],
+				[ 0, 0, j*h+10, height],
+				[ 0, 0, i*w+10, width],
+				[ 0, 0, j*h, height],
+				[ 0, 0, 255, 255],  //Red
+				[ 0, 0, 0, 255],  //Green
+				[ 0, 0, 0, 255], //Blue
+				[ 0, 0, 0, 255]   //Alpha
+			 );
+	} else {
+		if (shape=="text") {
+		data.push(
+				[ 0, 0, i*w, width],
+				[ 0, 0, j*h, height],
+				[ 0, 0, i*w+10, width],
+				[ 0, 33, j*h+10, 200],
+				[ 0, 0, 300, 360],
+				[ 0, 0, j*h, height],
+				[ 0, 0, 255, 255],  //Red
+				[ 0, 0, 255, 255],  //Green
+				[ 0, 0, 255, 255], //Blue
+				[ 0, 128, 0, 255]   //Alpha
+			 );
+			 } else {
+		if (shape=="image") {
+		data.push(
+				[ 0, 0, i*w, width],
+				[ 0, 0, j*h, height],
+				[ 0, 0, 45, 360],
+				[ 0, 0, 20, width/2],
+				[ 0, 0, 20, width/2],
+				[ 0, 0, j*h, height],
+				[ 0, 0, 255, 255],  //Red
+				[ 0, 0, 255, 255],  //Green
+				[ 0, 0, 255, 255], //Blue
+				[ 0, 128, 0, 255]   //Alpha
+			 );
+		} else {
+		data.push(
+				[ 0, 0, i*w, width],
+				[ 0, 0, j*h, height],
+				[ 0, 10, 15, 20],
+				[ 0, 0, j*h+10, height],
+				[ 0, 0, i*w+10, width],
+				[ 0, 0, j*h, height],
+				[ 0, 0, 255, 255],  //Red
+				[ 0, 0, 255, 255],  //Green
+				[ 0, 0, 255, 255], //Blue
+				[ 0, 128, 0, 255]   //Alpha
+			 );
+		} }
+	}
+	}};      
+	 
+return data;
+}
+
+function randomise_triangle(somedata, ind) {
+for (i=ind;i<ind+poplen;i++){
+randomise_one(somedata, i);}
+}
+function randomise_one(somedata, ind) {
+		somedata[ind][2]=Math.round(somedata[ind][3]*Math.random());
+		clamp(somedata[ind]);
+}
+function randomise(somedata) {
+	for (i=0; i<(pop*poplen);i++) {
+        randomise_one(somedata, i);
+	}
+	//$('#debugdiv').innerHTML = Dumper.write(data);
+}
+function mutate(somedata, ind, mod) {
+	if (somedata[ind]){
+	//$('#debugdiv').innerHTML = Dumper(somedata);
+		somedata[ind][2]=somedata[ind][2] + mod;
+		clamp(somedata[ind]);
+}}
+
+function randomMutate(somedata, ind, max) {
+	if (somedata[ind]){
+	//$('#debugdiv').innerHTML = Dumper(somedata);
+		somedata[ind][2]=somedata[ind][2]+Math.round(2*max*Math.random()-max);
+		clamp(somedata[ind]);
+}}
+
+function clamp (arr) {
+	if (arr[2]<arr[1]) { arr[2]=arr[1]; }
+	if (arr[2]>arr[3]) { arr[2]=arr[3]; }
+}
+function diff ( ccc, ooo ) {
+	var canvasData = ccc.getImageData(0,0,width-1,height-1);
+	var origData = ooo.getImageData(0,0,width-1,height-1);
+	var diffnum = 0;
+	for (var x = 0; x < canvasData.width; x++)  {
+		for (var y = 0; y < canvasData.height; y++)  {
+
+			// Index of the pixel in the array
+			var idx = (x + y * width) * 4;
+
+			// Check the colour channels
+			var r = canvasData.data[idx + 0] - origData.data[idx + 0];
+			var g = canvasData.data[idx + 1] - origData.data[idx + 1];
+			var b = canvasData.data[idx + 2] - origData.data[idx + 2];
+			//var a = canvasData.data[idx + 3] - origData.data[idx + 3];
+
+			var pixeldiff = r*r + b*b + g*g ;
+			//alert(pixeldiff+","+ x+","+ y);
+			if(!isNaN(pixeldiff)){
+			diffnum = diffnum + pixeldiff;}
+		}
+	}
+	return Math.sqrt(diffnum);
+}
+
+function reactComboBox(sel) {
+  var value = sel.options[sel.selectedIndex].value; 
+  filediv.src = value;
+  originaldiv.src = value;
+  current_fit=9999999999999;
+  setTimeout("init_graphics()", 2000);
+  //setTimeout("randomise(data)", 4000);
+  //img = document.getElementById('filediv');
+  //origx.drawImage(img,0,0);	
+}
+
+function reset() {
+	data=init_data();
+	current_fit=9999999999999;
+	currind=pop*poplen-1;
+	mode="anneal";
+}
+
+function doRandomise() {
+	randomise(data);
+	current_fit=9999999999999;
+	currind=pop*poplen-1;
+	mode="anneal";
+}
+
+</script>
+<div class=content id=content>
+<DIV>
+<p><img loading="lazy" src="/projects/monalisaoverdraw/mona_lisa_small.png" alt="Original"></p>
+<p><img loading="lazy" src="/projects/monalisaoverdraw/jscript_triangles.png" alt="Approximation"></p>
+<p><img loading="lazy" src="/projects/monalisaoverdraw/vang.png" alt="Original"></p>
+<p><img loading="lazy" src="/projects/monalisaoverdraw/vangogh2.png" alt="Approximation"></p>
+</DIV>
+<!--
+<div style="clear:both"></div>
+
+<DIV>
+
+![Original](/projects/monalisaoverdraw/afghan-woman.jpg)
+
+![Approximation](/projects/monalisaoverdraw/afghan-woman1.png)
+
+</DIV>
+
+<div style="clear:both"></div>
+
+<DIV>
+
+![Original](/projects/monalisaoverdraw/abbey-a.jpg)
+
+![Approximation](/projects/monalisaoverdraw/abbeyroad.png)
+
+</DIV>
+-->
+<div style="clear:both"></div>
+<h3 id="live-demo">Live Demo</h3>
+<div style="margin-top:1em;">
+<div class="container center-block" style=";margin-left:2em">
+<div class="btn-group-horizontal" role="toolbar" aria-label="...">
+<button type="button" class="btn btn-lg btn-primary"  onClick="active=false">Stop</button>
+<button type="button" class="btn btn-lg btn-primary"  onClick="active=true">Start</button>
+<button type="button" class="btn btn-lg btn-primary" onClick="doRandomise();">Randomise</button>
+<button type="button" class="btn btn-lg btn-primary" onClick="reset();">Reset</button>
+<button type="button" class="btn btn-lg btn-primary"  onClick="download()">Save</button>
+</div>
+</div>
+<div style="margin:3em">
+<canvas id="canvasdiv" width="400" height="323"></canvas>
+<canvas id="originaldiv" width="400" height="323"></canvas>
+<canvas id="monitordiv" width="400" height="323"></canvas>
+<img loading="lazy" style="display:none" id="filediv" src="mona_lisa_small.png"  />
+<canvas id="bestdiv" width="400" height="323"></canvas>
+<img loading="lazy" style="display:none" id="juliadiv" src="redjulia.png" />
+<div id="difference"></div>
+<div id="debugdiv"></div>
+<canvas id="graphdiv" width="500" height="100" style="display:none"></canvas>
+<div style="display:none">The green line shows which part of the data is being adjusted.</div>
+<div style="border-style:solid;border-width:1px">
+<div class="container center-block" style="margin-left:0em">
+<div class="btn-group-horizontal" role="toolbar" aria-label="...">
+<button type="button" class="btn btn-lg btn-primary"  onClick="setShape('circle')">Circles</button>
+<button type="button" class="btn btn-lg btn-primary"  onClick="setShape('triangle')">Triangles</button>
+<button type="button" class="btn btn-lg btn-primary"  onClick="setShape('text')">Letters</button>
+</div>
+</div>
+<br/>
+Choose an image to optimise.
+<select onchange="reactComboBox(this)">
+  <option value="mona_lisa_small.png">Mona Lisa</option>
+  <option value="vang.png">Van Gough <img loading="lazy" src="vang.png" /></option>
+  <option value="afghan-woman.png">Woman</option>
+  <option value="abbeyroadSMALL.png">Abbey Road</option>
+  <option value="vermeer.png">Vermeer</option>
+  <option value="parrot.png">Parrot</option>
+</select>
+<br/>
+Upload your own image.
+<input type='file' />
+<br><img loading="lazy" id="myImg" src="#" width=100 height=100 style="display:none">
+</div>
+</div>
+</div>
+<p>Approximating the Mona Lisa with mathematics</p>
+<h3 id="description">Description</h3>
+<p>Optimisation algorithms find approximate solutions to problems that are too difficult to solve using normal techniques.  They are a last-resort solution, because they are slow and will not always give a useful result.</p>
+<p>You would choose an optimisation heuristic when</p>
+<ul>
+<li>you can't think of the correct formula</li>
+<li>the problem is too big or complex to use traditional modelling</li>
+<li>There isn't one correct solution</li>
+</ul>
+<p>The demonstration on this page solves a trivial problem: to re-create a picture, using only coloured triangles.</p>
+<p>The computer starts off with a random selection of triangles, then moves them around one by one until it has the best copy it can make.  You can watch this happening above, as the computer draws each triangle over the picture to see how it fits, then moves it and tries again.</p>
+<p>The demonstration switches between three modes.  The &quot;hill climber&quot; algorithm, a simulated anneal, and an &quot;extremal&quot; algorithm, which finds any triangles which have disappeared and moves them to a random position.</p>
+<h3 id="background">Background</h3>
+<p>In 2008, Roger Alsing posted his code to <a href="http://rogeralsing.com/2008/12/07/genetic-programming-evolution-of-mona-lisa/">draw the Mona Lisa</a> using Genetic Evolution techniques.  This is my response, inspired by his project.  I made some minor changes to the original design; I use triangles instead of random polygons, and I use a different optimisation technique.  Despite this, or perhaps because of it, I get a pleasant abstracted picture.</p>
+<p>I use two optimisation techniques, a <a href="http://en.wikipedia.org/wiki/Hill_climbing">hill climber</a>, and an <a href="http://en.wikipedia.org/wiki/Extremal_optimization">extremal</a> algorithm.  The hill climber examines nearby positions in the solution space, and picks the one that gives the greatest improvement to the picture.  You can see this process in the picture above, as each corner of the triangle moves around to find a better fit.  Hill climbers are easy to understand and implement, but they have a drawback - they get stuck on a local maxima, resulting in a picture that is only half done.  For instance, a triangle might work better on the other side of the picture, but there is no way for it to jump all the way across.</p>
+<p>To improve on the hill-climber, I do a round of extremal optimisation in between each round of hill-climbing.  The extremal algorithm finds the triangles that aren't contributing much to the picture, and randomly moves them to a new part of the picture.  This catches triangles that the hill-climber has made invisible, sometimes by making them into thin lines, sometimes by turning them completely transparent.   Randomising the values allows a triangle to escape the local maximas, and thus moves the result closer to the 'ideal' picture.</p>
+<p>The original program uses genetic algorithms to adjust the polygons, and according to the author's report, the genetic algorithm converges faster than this hill climber.  This is what we would normally expect.  Hill climbers tend to converge slowly, but are easier to understand.</p>
+</div>
+<script>setup();</script>
+
+			</article>
+			</html>
+			

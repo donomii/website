@@ -1,0 +1,84 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog / Compilers make me :(</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog / Compilers make me :(</h1>
+			</header>
+			<div class="summary">
+<p>C needs to tighten up its syntax</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<pre><code>mapset *ent_create_mapset() {
+	mapset * mset;
+	
+	mset = ent_calloc(1, sizeof(mapset));
+	mset-&gt;map = ent_calloc(9000, sizeof(int *));
+	mset-&gt;max_index=8999;
+	mset-&gt;last_index=-1;
+	mset-&gt;map_bytes = (mset-&gt;max_index+1)*sizeof(int*);	
+	printf(&quot;created mset at %d\n&quot;, mset);
+	return mset;
+}
+
+void ent_set_allmaps(mapset * mset) {
+	allmaps.map-mset-&gt;map;
+	allmaps.max_index=mset-&gt;max_index;
+	allmaps.last_index=mset-&gt;last_index;
+	allmaps.map_bytes=mset-&gt;map_bytes;
+}
+</code></pre>
+<p>'-' and the '=' are on the same physical key.  If I miss shift and don't notice, then I type a '-' instead of a '='.  And the C complier doesn't care.  And then my program segfaults in a completely different file.</p>
+<p>On the upside, that was the last (self inflicted) bug I had to fix to get <a href="/projects/entirety/index.html">Entirety</a> working on 64 bit machines.  This is the program I wrote 13 years ago,when 64 bit machines were extremely expensive and only used at research institutions and large companies.  And it took less than a day to convert to 64bit.</p>
+<p>Installing MinGW/MSYS took 2 days, unfortunately :(</p>
+
+			</article>
+			</html>
+			

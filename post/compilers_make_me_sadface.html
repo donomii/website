@@ -1,0 +1,107 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog / Compilers make me :(</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog / Compilers make me :(</h1>
+			</header>
+			<div class="summary">
+<p>An insignificant change in the code causes a 30x slowdown.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<h4 id="optimisation">Optimisation?</h4>
+<p>This issue cost me about a day of work.  What worries me is that if I had hit this bug to begin with, I probably would have given up the entire project.</p>
+<p>The problem started when I rewrote the code to <a href="/projects/crtrm/index.html">crtrm</a>.  I rewrote the critical path, so I can pass an extra vector through it.  This is vital for supporting textures.  Like this.</p>
+<p><img loading="lazy" src="../../static/pics/crtrm/spike-textured-shaded.jpg" alt="Textured objects"></p>
+<p>The frame rate dropped by 30x.</p>
+<h4 id="before-my-improvements">Before my &quot;improvements&quot;</h4>
+<pre><code>crtrm$ time ./benchmark 
+Starting engine...
+Engine initialised!
+Internal resolution:  64x64
+Starting glut engine...done!
+
+real	0m3.636s
+user	0m3.540s
+sys	0m0.030s
+</code></pre>
+<h4 id="after-my-improvements">After my &quot;improvements&quot;</h4>
+<pre><code>crtrm$ time ./benchmark 
+Starting engine...
+Engine initialised!
+Internal resolution:  64x64
+Starting glut engine...done!
+
+real	1m39.917s		&lt;---  30x slowdown!
+user	1m39.750s
+sys	0m0.080s
+</code></pre>
+<h4 id="debugging">Debugging</h4>
+<p>I start running profilers and cachegrind to see what's going on.  The tools point out various issues, like my homemade sine function appears to be taking a ludicrous amount of time to be read in, or that my main loop is taking too long (how helpful).  I fix all the reported problems, but the slowdown remains.</p>
+<p>In desperation, I grab an old version and start reverting my code, line by line, until I get to the most minor change that I made.</p>
+<h4 id="the-culprit">The culprit</h4>
+<p>The last line of the critical path was:</p>
+<pre><code>  intersection i = {start, point_s, dir, dist, count, FALSE, zeroVec};  //no_intersection
+  return i;
+}
+</code></pre>
+<p>If the ray being cast doesn't hit any part of the  scenery, we build an <em>intersection</em> struct and return it with nothing in it (<em>FALSE</em>).  This is the last part of the critical path for a raymarcher, and it handles the case where the ray misses every object in the scene and hits nothing.  It gets called around 80 million times per second.</p>
+<p>This &quot;no-hit&quot; structure has to be created in several different parts of the codebase, so I turned it into a function, and returned a call to the no-hit function.</p>
+<pre><code>  return no_intersection();
+}
+</code></pre>
+<p>where <em>no_intersection()</em> holds the original lines to build an <em>intersection</em> data structure and return it.</p>
+<p>That one change slowed the code by <em>30</em> times.  Apparently GCC didn't inline a function when the result is immediately used by a return call.  They've probably fixed this by now, I really should go back and check one day.</p>
+<h4 id="summary">Summary</h4>
+<p>In summary, C can bite me.</p>
+
+			</article>
+			</html>
+			

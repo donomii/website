@@ -1,0 +1,108 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog/ Tail Call Optimisations</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog/ Tail Call Optimisations</h1>
+			</header>
+			<div class="summary">
+<p>Recursion is good</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Functional programming languages love recursion, it makes some beautiful, neat, algorithms possible.  But the common complaint is that recursion can chew up all the memory in a system, and crash.</p>
+<p>Tail call optimisation fixes the problem.  The classic example is rewriting a simple loop.</p>
+<pre><code class="language-code">	for (i=0;i&lt;10;i++) {
+		printf(&quot;%s\n&quot;, some_list[i]);
+	}
+</code></pre>
+<p>can be rewritten recursively</p>
+<pre><code class="language-code">	void * printRecursive(int i, some_list) {
+		if (i&lt;10) {
+			printf(&quot;%s\n&quot;, some_list[i++]);
+			printRecursive(i,some_list);
+		}
+	}
+</code></pre>
+<ul>
+<li>C programmers learn that recursive functions are bad, which is a shame because GCC now has TCO optimisations.</li>
+</ul>
+<p>Perhaps the recursive code seems a bit pointless.  It's longer, harder to understand, and is vulnerable to a <em>stack overflow</em>*.  The real benefit comes from more complex cases that require recursion.</p>
+<p>Most parsers benefit from TCO.  An HTML parser, for instance, has to recursively build a data structure.  And because there is no limit to how many tags a HTML page can have, the parser has to be able to cope with a page that has 1 million nested DIV tags.  You could still argue a loop is better, but what about a page that looks like this?</p>
+<pre><code class="language-code">	&lt;span&gt;
+	 &lt;div&gt;
+	  &lt;span&gt;
+	   &lt;div&gt;
+		&lt;p&gt;
+		 &lt;div&gt;
+		  &lt;div&gt;
+	       ...
+</code></pre>
+<p>the easiest way to cope with this is recursive functions.</p>
+<pre><code class="language-code">	function parseDIV (html) {
+		parseSPAN(html) || parseDIV(html) || parseP(html)
+	}
+	
+	function parseSPAN(html) {
+		parseDIV(html) || parseP(html) || parseSPAN(html)
+	}
+</code></pre>
+<p>There's no sane way to deal with this using just a loop.  Even if you can write a loop for these three functions, you will soon have to support the hundreds of other html tags that could be nested.</p>
+<p>TCO doesn't just work for self-recursive functions, it also works for mutually recursive functions.  So it is possible to parse millions of nested tags, while only using the memory of one.</p>
+<p>TCO fixes the <em>stack overflow</em> problem.  If the function is recursive, the compiler can re-use the original function's memory (stack space) for each extra function call, rather than allocating new memory for each recursive call. This only works if the recursive call is the last call in the function (the tail call).  In our example, this seems a bit pointless.  The original loop is smaller, and might be faster.</p>
+<h4 id="tco-in-throff">TCO in Throff</h4>
+<p><a href="/projects/throff/">Throff</a> excels at Tail Call Optimisations.</p>
+<p>Instead of the more usual ways of interpreting a program, like a parse tree, Throff uses a stack.  A program to be executed is pushed, one instruction at a time, onto the code stack.  For each &quot;step&quot; of the interpreter, one instruction is popped off the stack and activated.</p>
+<p>When Throff activates a function, there is no &quot;stack frame&quot;.  Throff pushes all the instructions of that function onto the code stack, and then execution continues as usual.  Throff gets to the end of the function by executing all the instructions that were pushed onto the code stack.  There is no clear marker to indicate &quot;the stack ends here&quot;.</p>
+<p>The effect of this is that no matter how complicated the function is, Throff always performs a correct TCO.  Normally, this requires some analysis of the function to identify the &quot;tail&quot; position, and there are situations where it is very difficult to detect it correctly.</p>
+<p>Using a code stack gets TCO for free, and was a major reason in choosing a code stack in the first place.</p>
+
+			</article>
+			</html>
+			

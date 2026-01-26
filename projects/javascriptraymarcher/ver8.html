@@ -1,0 +1,723 @@
+<html>
+<head>
+<title>Canvas tutorial</title>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+var up = new Vector(0,1,0);
+var PI=3.14159;
+var ctx;
+var canvas;
+var outWin;
+var scene_brightness=1.000;
+function setup(){
+	//Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph('canvasdiv');
+	outWin.erase(ctx);
+
+lights = [
+new Light(0, 0, -40, 20, 2000.0,2000.0,2000.0),
+//new Light(-50, 0, -20, 20, 0,2000.0,0),
+//new Light(0, -50, -20, 20, 0,0,2000.0),
+//new Light(0, 50, -20, 20, 1.0,1.0,1.0),
+];
+//for (i=0;i<5;i++)
+//  { lights[i]=new Light(80*i, 40, -20, 512,0,0)}
+  //Kick off the render
+	renderImage();
+}
+
+function Light ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.rad = rr;
+this.r = cr;
+this.g = cg;
+this.b = cb;
+this.colour = new Colour( cr, cg, cb);
+this.name = "Light";
+
+this.surrounds = 
+function (point) { 
+if (gen_sphere(this.x, this.y, this.z, point.x,point.y,point.z) < this.rad*this.rad) {
+  point.object=this;
+  return point;
+ } else { return false; }
+
+
+}
+
+}
+
+
+var phase=0;
+var yphase=0;
+var x = phase;
+var y = yphase;
+function renderImage () {
+	//If we try to draw the entire picture in one go, the browser will freeze.  So instead we draw one pixel at a time.
+	x+=11;
+	if (x>=outWin.width) {
+		x=phase;
+   y+=11;
+   if (y>=outWin.height) {
+      y=yphase;
+		   phase++;
+      if(phase>11) {
+      yphase++;
+      phase=0;
+      if(yphase>11) {
+      
+      
+			//finished
+     
+      alert("Finished");
+      return;
+     
+   }}}
+	}
+	ray = new Ray( x, y );
+	ray.origin.rotateX(60*PI/180);
+        ray.direction.rotateX(60*PI/180);
+	ray.origin.rotateZ(60*PI/180);
+        ray.direction.rotateZ(60*PI/180);
+	intersection = castRay( ray.origin, ray.direction ) ;
+    
+	//The ray object contains the position and direction of the ray.  castRay walks along the ray, looking for terrain.
+if((phase==0) && (yphase==0)) {
+    
+             
+      outWin.setBox(x,y,calculate_colour(intersection, false));}
+else {
+outWin.setPixel(x,y,calculate_colour(intersection, false));}
+	//Give the browser some time to do other processing
+	setTimeout("renderImage()", 10);
+}
+
+function calculate_colour(intersection, reflected) {
+	if( intersection )
+   { 
+  
+    
+  
+       return terrainColour( intersection, ray.direction, reflected ); }  //We hit the terrain, draw the ground colour  
+ 
+ else
+   { return skyColour(); }  //We missed the terrain, draw the sky colour
+}
+
+//This is the function that sets the shape of the ground.  Simple for now, it will get very complicated soon.
+function ground(x,y,z) { return z*2+1;ret=0; if (z>90) { ret=200;};return ret;}
+//function ground(x,z) { ret= 90*Math.sin(x/5)*Math.sin(z/5); return ret; ;}
+//function ground(x,z) { ret= 60*Math.sin(x*x+z*z); return ret; ;}
+//function ground(x,y,z) { ret= 50*Math.sin(x/20)*Math.sin(z/10); return ret; ;}
+//function ground(x,z) { ret= 150-(x-100)*(x-100)/32-z*z; return ret; ;}
+//Math.sin(x)*Math.sin(x)+
+function sphere(x,y,z) { ret = (x-120)*(x-120) + (y-140)*(y-140) + (z-21)*(z-21); return ret; }
+function gen_sphere(cx,cy,cz,x,y,z) { ret = (x-cx)*(x-cx) + (y-cy)*(y-cy) + (z-cz)*(z-cz); return ret; }
+function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+function sphere3(x,y,z) { ret = (x-180)*(x-180) + (y-70)*(y-70) + (z-21)*(z-21); return ret; }
+
+//function sphere(x,y,z) { ret = (x-50)*(x-50) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+//function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+//function sphere3(x,y,z) { ret = (x-150)*(x-150) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+
+//Objects for display on screen
+function Sphere ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.colour = new Colour( cr, cg, cb);
+this.name = "Sphere";
+
+this.surrounds = 
+function (point) { 
+dist_squared = (this.x-point.x)*(this.x-point.x) + (this.y-point.y)*(this.y-point.y) + (this.z-point.z)*(this.z-point.z);
+if (this.r*this.r>dist_squared) {
+//  p.object=this;
+  return p;
+ } else { return false; }
+}
+
+}
+function Colour ( rr, gg, bb) {
+this.r = rr;
+this.g = gg;
+this.b = bb;
+this.darken = function () {
+this.r = this.r*0.9;
+this.g = this.g*0.9;
+this.b = this.b*0.9; 
+}
+
+}
+function Terrain ( xx, yy, zz, rr, cr, cg, cb) {
+this.colour = new Colour( cr, cg, cb);
+this.name = "Terrain";
+this.surrounds = function (point) { 
+if (point.z>30){point.object=this;return point;}
+else{return false;}
+}
+}
+function Square ( xx, yy, zz, rr, cr, cg, cb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.colour = new Colour( cr, cg, cb);
+this.name = "Sphere";
+
+this.surrounds = 
+function (point) { 
+xdis = (this.x-point.x)*(this.x-point.x);
+ydis = (this.y-point.y)*(this.y-point.y);
+zdis = (this.z-point.z)*(this.z-point.z);
+if (this.r*this.r>xdis) {
+if (this.r*this.r>ydis) {
+if (this.r*this.r>zdis) {
+//  p.object=this;
+  return p;
+ }}}
+return false;
+}
+
+}
+
+function Grid ( xx, yy, zz, rr) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.scale = 1/rr;
+this.sphere = new Sphere(xx,yy,zz,rr);
+this.name = "Mandelbrot";
+
+this.surrounds = function (point) { 
+for(ix=-2;ix<3;ix++){
+for(iy=-2;iy<3;iy++){
+ tx = (point.x-this.x+ix*100)*this.scale;
+ ty = (point.y-this.y+iy*100)*this.scale;
+ tz = (point.z-this.z)*this.scale;
+// if(this.sphere.surrounds(point)) {
+   if(in_mandelbrot(tx,ty,tz)) { 
+   point.object=this;
+   return point;}
+//   }
+ }
+}
+return false;
+}
+}
+
+
+function Mandelbrot ( xx, yy, zz, rr) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.scale = 1/rr;
+this.sphere = new Sphere(xx,yy,zz,rr);
+this.name = "Mandelbrot";
+
+this.surrounds = function (point) { 
+tx = (point.x-this.x)*this.scale;
+ty = (point.y-this.y)*this.scale;
+tz = (point.z-this.z)*this.scale;
+
+if(this.sphere.surrounds(point)) {
+lv = new Vector(tx,ty,tz);
+lv.rotateY(45*PI/180);
+if (lv.z*lv.z<0.1) {
+  if(in_mandelbrot(lv.x,lv.y,lv.z)) { 
+  point.object=this;
+  return point;} else { return false;}
+  }
+}
+return false;
+}
+}
+
+objects = [
+new Terrain(),
+new Sphere(0  ,-50,-21,10,1,1,1),
+new Sphere(-10,-70,-21,10,1,1,1),
+new Sphere(10 ,-100,-21,10,1,1,1),
+//new Sphere( 0,0,21,10),
+//new Mandelbrot(0,0,21,30),
+//new Sphere(30,30,21,10),
+new Sphere(-30,-30,21,10,1,0,0),
+//new Square(-30,30,21,10),
+new Square(30,-30,21,10,0,1,0),
+//new Square(40,40,21,10)
+//new Sphere(150,100,21,20),
+//new Grid(100,100,10,20)
+//new Sphere(100,100,10,20)
+];
+
+function castRay(   ro,  rd ) {
+     delt = 0.001;
+     mint = 0.0001;
+     maxt = 100.0;
+     maxdelt = 0.2;
+    //Step along the ray 
+    
+    for( t = mint; t < maxt; t += delt )
+    {
+      delt=delt*1.01;
+      if (delt>maxdelt){delt=maxdelt}
+      p =  jQuery.extend(true, {}, ro);
+      dir = jQuery.extend(true, {}, rd);
+      dir.mult(t);
+      p=p.add(dir);
+//Check for impact with a light.        
+      for(ii=0;ii<lights.length;ii++){
+        if (lights[ii].surrounds(p)) {p.object=lights[ii];return p;}
+        }
+//Otherwise check if we have hit an object
+      for(ii=0;ii<objects.length;ii++){
+        if (objects[ii].surrounds(p)) {p.object=objects[ii];return p;}
+        }
+
+      
+      
+//        if( p.y < ground( p.x, 0, p.z ) ) {
+//       //We've sunk into the ground. 
+//            return p;
+//        }
+    }
+    return false;
+}
+
+//Clumsy attempt at a vector object
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.object="uninited";
+this.add = function (aVec) {
+newx =this.x + aVec.x;
+newy =this.y + aVec.y;
+newz =this.z + aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.vsub = function (aVec) {
+newx = this.x - aVec.x;
+newy = this.y - aVec.y;
+newz = this.z - aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+}
+this.smult = function (aScalar) {
+newx = this.x * aScalar;
+newy = this.y * aScalar;
+newz = this.z * aScalar;
+return new Vector(newx, newy, newz);
+}
+
+this.vmult = function (aVec) {
+newx = this.x * aVec.x;
+newy = this.y * aVec.y;
+newz = this.z * aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.magnitude = function () {
+return Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+}
+
+this.normalise = function ( p ) {
+newx = this.x/this.magnitude();
+newy = this.y/this.magnitude();
+newz = this.z/this.magnitude();
+return new Vector(newx, newy, newz);
+}
+
+this.cross = function ( p ) {
+newx = this.y*p.z - this.z*p.y;
+newy = this.z*p.x - this.x*p.z;
+newz = this.x*p.y - this.y*p.x;
+return new Vector(newx, newy, newz);
+}
+
+this.innerProduct = function(p) {
+res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+ret = res;
+return ret;
+}
+this.toString = function() {
+return "x: " + this.x + "  y: " + this.y + "  z: " + this.z + " object: " + this.object; 
+}
+
+this.clone = function() {
+ret = new Vector(this.x, this.y, this.z);
+return ret;
+}
+
+this.rotateZ = function(q) {
+nx = this.x*Math.cos(q) - this.y*Math.sin(q);
+ny = this.x*Math.sin(q) + this.y*Math.cos(q);
+nz = this.z;
+this.x = nx; this.y = ny; this.z = nz;
+}
+
+
+this.rotateY = function(q) {
+nx = this.z*Math.sin(q) + this.x*Math.cos(q);
+ny = this.y;
+nz = this.z*Math.cos(q) - this.x*Math.sin(q);
+this.x = nx; this.y = ny; this.z = nz;
+}
+
+
+this.rotateX = function(q) {
+nx = this.x;
+ny = this.y*Math.cos(q) - this.z*Math.sin(q)
+nz = this.y*Math.sin(q) + this.z*Math.cos(q)
+this.x = nx; this.y = ny; this.z = nz;
+}
+
+}
+
+//This creates a ray, pointing in the right direction
+
+
+
+
+
+function Ray (x,y) {
+//y=100-y;
+this.origin = new Vector (outWin.width/2,outWin.height/4,-1);
+offset = new Vector(0,outWin.height/3,0);
+this.origin = this.origin.add(offset);
+//this.direction = new Vector (0.1,-0.5+y/200,0.1);
+this.viewport = new Vector(x,y,0);
+this.viewport = this.viewport.add(offset);
+this.direction = this.origin.vsub(this.viewport);
+this.direction = this.direction.normalise();
+this.origin = new Vector (x/2,y/2,0);
+b = new Vector(0,0,-50);
+this.origin = this.origin.add(b);
+this.direction = new Vector (0,0,1);
+
+this.origin = new Vector (0,0, -40);
+this.viewport = new Vector(x/8-25,y/8-25,-14);
+this.direction = this.origin.vsub(this.viewport);
+this.direction = this.viewport.vsub(this.origin);
+this.direction = this.direction.normalise();
+this.origin = this.viewport; 
+//setDiv('debugdiv', "direction: " + this.direction.toString());
+
+//this.direction = new Vector (0,-y/100,1);
+//setDiv("debugdiv", printVec(this.direction)); 
+
+}
+
+function printVec(v) {
+return "" + v.x + ", " + v.y + ", " + v.z;
+}
+
+//var sun = new Vector (1,1,0);
+var sun;
+
+
+function normalColour(p, direction) {
+   to_sun = p.vsub(sun);
+   to_sun = to_sun.normalise();
+    n = interpolate_normal(p, direction);
+    n.mult(256);
+    n.x=int(n.x);
+    n.y=int(n.y);
+    n.z=int(n.z);
+//  setDiv('debugdiv',"!!"+n.toString()+"!");
+     ret = new Colour(n.x,n.y,n.z);
+     return ret;   
+}
+
+function terrainColour(p, direction, reflected) {
+   hit=p.clone();
+   
+   n = interpolate_normal(p, direction);
+  
+   red=0;green=0;blue=0;
+//Fire a ray towards each light.  If we hit a light, this point is illuminated by that light.
+//The combination of all the lights is the colour we draw.
+//Later we will add colours to the objects, these will be calculated here as well.
+for(i=0;i<lights.length;i++) {
+    l = lights[i];
+    h = hit.clone();
+    m = new Vector(h.x, h.y, h.z); 
+   m = m.vsub(direction);
+  m = m.vsub(direction);
+  //setDiv('debugdiv', "Checking light " +i+ " at " + lights[i].x);
+     to_light = m.vsub(l);
+   to_light = to_light.normalise();
+   //to_light.mult(0.01);  
+   
+   md = new Vector(to_light.x, to_light.y, to_light.z);
+   md.mult(-1);
+   see_light = castRay(m, md);
+  //setDiv('debugdiv', "Hit light " + see_moon);
+if (see_light) {
+      if (see_light.object==l) {
+      distance = p.vsub(l);
+      distance = distance.magnitude();
+//setDiv('debugdiv',"!! distance "+distance+"!");
+
+//distance=1;
+//      n = interpolate_normal(h, direction);
+//        intensity = n.innerProduct(to_light)/distance;
+
+intensity = 1/distance/distance;
+//setDiv('debugdiv',"!! intensity "+intensity+"!");
+
+        //if (intensity<0) {intensity=0} 
+//intensity=1;
+        red=red+intensity*l.r*p.object.colour.r; 
+//setDiv('debugdiv',"!! red "+intensity+"!");
+
+green=green+intensity*l.g*p.object.colour.g;
+blue=blue+intensity*l.b*p.object.colour.b;
+         //setDiv('debugdiv', "Added colour"); 
+
+}}
+  }
+//Reflected light
+if(!reflected){
+//if (false){
+if(p.object.name=="Terrain"){
+//setDiv('debugdiv',"!! match "+p.object+"!");
+//The last attempt:
+
+//avec = n.cross(direction);
+//reflected = direction.cross(avec);
+
+//And it actually should have been:
+
+//avec = n.cross(direction);
+//reflected = avec.cross(n);
+
+a = direction.innerProduct(n);
+b = n.smult(a);
+c = b.smult(2);
+reflected = direction.vsub(c);
+
+aHit = castRay(m, reflected);
+
+col =  calculate_colour(aHit, reflected, true);
+col.darken();
+col.darken();
+return col;
+}
+ 
+}
+     return new Colour(red*scene_brightness, green*scene_brightness, blue*scene_brightness);
+		
+}
+
+function skyColour () { return new Colour(0,0,1);}
+
+function interpolate_normal (hit, direction) {
+eps = 1;
+qo = new Vector(p.x, p.y-eps, p.z);
+ro = new Vector(p.x, p.y, p.z+eps);
+
+ey = new Vector ( 0, 1, 0);
+ez = new Vector ( 0, 0, 1);
+crossy = Math.abs(ey.cross(p));
+crossz = Math.abs(ez.cross(p));
+
+if (crossy>0.6) {
+qo = new Vector(p.x+eps, p.y, p.z);
+ro = new Vector(p.x, p.y, p.z+eps);
+}
+
+if (crossz>0.6) {
+qo = new Vector(p.x+eps, p.y, p.z);
+ro = new Vector(p.x, p.y+eps, p.z);
+}
+
+no = new Vector(p.x, p.y, p.z);
+  nd = jQuery.extend(true, {}, direction);
+  no = no.vsub(nd);
+  no = no.vsub(nd);
+  nd.mult(0.1);
+  n = castRay(no, nd);
+  
+//qo = new Vector(p.x, p.y-eps, p.z);
+  qd = jQuery.extend(true, {}, direction);
+  qo = qo.vsub(qd);
+  qo = qo.vsub(qd);
+  qd.mult(0.1);
+  q = castRay(qo, qd);
+
+
+//ro = new Vector(p.x, p.y, p.z+eps);
+  rd = jQuery.extend(true, {}, direction);
+  ro = ro.vsub(rd);
+  ro = ro.vsub(rd);
+  rd.mult(0.1);
+  r = castRay(ro, rd);
+  
+
+    xvec = new Vector ( n.x - q.x, n.y - q.y, n.z - q.z);
+    zvec = new Vector ( n.x - r.x, n.y - r.y, n.z - r.z);
+    xvec=xvec.normalise();
+    zvec=zvec.normalise();
+         n = xvec.cross(zvec); 
+		  normal = n.normalise();
+   
+//    setDiv('debugdiv', " " + normal.x +", "+ normal.y +", "+ normal.z);
+    return normal;
+}
+
+function Graph(aCanvas ) {
+	this.canvas = document.getElementById('canvasdiv');
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	function redraw (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		for ( ii=0;ii<myLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	this.redraw=redraw;
+
+	this.setPixel = function (x, yy, aColor) {
+		var y =  yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = rgb(aColor);
+		aCtx.beginPath();
+		aCtx.moveTo(x-1,y-1);
+		aCtx.lineTo(x,y);
+		aCtx.stroke();
+
+	};
+  this.setLine = function (x, yy, aColor) {
+		var y =  yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = aColor;
+		aCtx.beginPath();
+   aCtx.moveTo(x-5,y-5);
+   aCtx.lineTo(x+5,y+5);
+		aCtx.stroke();
+	};
+  this.setBox = function (x, yy, aColor) {
+		var y =  yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = rgb(aColor);
+   aCtx.beginPath();
+   for(ii=0;ii<11;ii++){ 
+   aCtx.moveTo(x,y+ii);
+   aCtx.lineTo(x+10,y+ii);}
+		aCtx.stroke();
+	};
+
+
+	function erase () {
+		aCtx = this.ctx;
+		aCtx.fillStyle = "#000000";
+		aCtx.globalAlpha=1;
+		aCtx.strokeStyle ='#FFFFFF';
+		aCtx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+	this.erase = erase;
+}
+
+
+
+
+function int (x) { return Math.abs(Math.floor(x)) }
+function int2hex (x) {
+t = x.toString(16);
+if (t.length ==1 ) {
+t = "0" + t ;
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(aCol)
+{
+  red = aCol.r*255;
+blue = aCol.b*255;
+green = aCol.g*255;
+  if(red>254){red=254;}
+  if(blue>254){blue=254;}
+  if(green>254){green=254;}
+//  blue=int(blue);
+//  green=int(green);
+  
+  var decColor = int(red) + 256 * int(green) + 65536 * int(blue);
+  ret = '#'+int2hex(int(red))+int2hex(int(green))+int2hex(int(blue));
+//  setDiv('debugdiv', "ret: " + ret); 
+  return ret; 
+}
+
+
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+
+function in_mandelbrot (x, y, z) {
+  x0 = x-0.3;
+  y0 = y;
+
+  x = 0;
+  y = 0;
+
+  iteration = 0;
+  max_iteration = 1000;
+
+  while ( (x*x + y*y <= (2*2)) && ( iteration < max_iteration) )  {
+    xtemp = x*x - y*y + x0;
+    y = 2*x*y + y0;
+
+    x = xtemp;
+
+    iteration = iteration + 1;
+  }
+
+  if ( iteration == max_iteration ) { return true;}
+  return false;
+  
+}
+
+
+</script>
+</head>
+<body onload="setup();">
+<canvas id="canvasdiv" width="400" height="400"></canvas>
+<div id="debugdiv"></div>
+<div>
+Cleanup time.  I've added Javsacript objects to hold the raytracer objects.  Now all the properties for the objects are in the same place, and adding new ones is much easier.
+
+A few changes to the display routine means it should now do a low-res pass across the whole picture before filling in the details.
+
+Added rotation to vectors, and the code to rotate the camera.
+
+![Colourful](/projects/javascriptraymarcher/8.6.png) Showing off the colours
+
+![Colourful fractals](/projects/javascriptraymarcher/8.8.png) Fractals, colours, spheres, we have it all now.
+</div>
+</body>
+</html>

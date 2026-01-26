@@ -1,0 +1,225 @@
+<html>
+<head>
+<title>Canvas tutorial</title>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+
+var ctx;
+var canvas;
+var outWin;
+function setup(){
+	//Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph('canvasdiv');
+	outWin.erase(ctx);
+	//Kick off the render
+	renderImage();
+}
+
+var x = 0;
+var y = 0;
+function renderImage () {
+	//If we try to draw the entire picture in one go, the browser will freeze.  So instead we draw one pixel at a time.
+	x++;
+	if (x>=outWin.width) {
+		x=0;
+		y++;
+		if (y>=outWin.height) {
+			//finished
+			return;
+			alert("Finished");
+		}
+	}
+	ray = new Ray( x, y );
+	intersect = castRay( ray.origin, ray.direction ) ;
+	
+	//The ray object contains the position and direction of the ray.  castRay walks along the ray, looking for terrain.
+	if( intersect )
+		{ outWin.setPixel(x,y,terrainColour( intersect )); }  //We hit the terrain, draw the ground colour
+	else
+		{ outWin.setPixel( x, y,  skyColour()); }  //We missed the terrain, draw the sky colour
+
+	//Give the browser some time to do other processing
+	setTimeout("renderImage()", 10);
+}
+
+//This is the function that sets the shape of the ground.  Simple for now, it will get very complicated soon.
+//function f(x,z) { return 2;}
+function ground(x,z) { ret= 8*Math.sin(x/10)*Math.sin(z/10); return ret; ;}
+
+//Math.sin(x)*Math.sin(x)+
+function castRay(   ro,  rd ) {
+     delt = 0.01;
+     mint = 0.001;
+     maxt = 100.0;
+    //Step along the ray 
+    for( t = mint; t < maxt; t += delt )
+    {
+	p =  jQuery.extend(true, {}, ro);
+	dir = jQuery.extend(true, {}, rd);
+	dir.mult(t);
+        p.add(dir);
+
+        if( p.y < ground( p.x, p.z ) )
+	//We've sunk into the ground.  
+        {
+            return p;
+        }
+    }
+    return false;
+}
+
+//Clumsy attempt at a vector object
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+
+this.add = function (aVec) {
+this.x =this.x + aVec.x;
+this.y =this.y + aVec.y;
+this.z =this.z + aVec.z;
+}
+
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+}
+
+this.magnitude = function () {
+return Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+}
+
+this.normalise = function ( p ) {
+newx = this.x/this.magnitude();
+newy = this.y/this.magnitude();
+newz = this.z/this.magnitude();
+return new Vector(newx, newy, newz);
+}
+
+this.innerProduct = function(p) {
+res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+ret = res;
+return ret;
+}
+
+}
+
+//This creates a ray, pointing in the right direction
+function Ray (x,y) {
+this.origin = new Vector (x,y,0);
+this.direction = new Vector (0.1,-0.5+y/200,1);
+}
+
+function printVec(v) {
+return "" + v.x + ", " + v.y + ", " + v.z;
+}
+
+var sun = new Vector (0.5,0.5,0.5);
+sun = sun.normalise();
+
+function terrainColour(p) {
+ 		n = interpolate_normal(p);
+		  n.mult(256);
+		  ret = rgb( Math.abs(n.x),Math.abs(n.y),Math.abs(n.z));
+		  if ( p.y<0.1 ) { ret = rgb(0,0,0)};
+		  return ret;
+		
+}
+function skyColour () { return "#0000FF"}
+
+function interpolate_normal (p) {
+eps = 0.00001;
+n = new Vector ( ground(p.x-eps, p.z) - ground(p.x + eps, p.z),
+		  2*eps,
+		  ground(p.x, p.z-eps) - ground(p.x, p.z + eps));
+		  normal = n.normalise();
+		  return normal;
+		  //setDiv('debugdiv', " " + normal.x +", "+ normal.y +", "+ normal.z);
+}
+
+function Graph(aCanvas ) {
+	this.canvas = document.getElementById('canvasdiv');
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	function redraw (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		for ( ii=0;ii<myLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	this.redraw=redraw;
+
+	this.setPixel = function (x, yy, aColor) {
+		var y = this.height - yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = aColor;
+		aCtx.beginPath();
+		aCtx.moveTo(x-1,y-1);
+		aCtx.lineTo(x,y);
+		aCtx.stroke();
+
+	};
+
+
+	function erase () {
+		aCtx = this.ctx;
+		aCtx.fillStyle = "#000000";
+		aCtx.globalAlpha=1;
+		aCtx.strokeStyle ='#FFFFFF';
+		aCtx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+	this.erase = erase;
+}
+
+
+
+
+function int (x) { return Math.abs(Math.floor(x)) }
+function int2hex (x) {
+t = x.toString(16);
+if (t.length ==1 ) {
+t = t + "0";
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(red, green, blue)
+{
+	red = int(red);
+	green = int(green);
+	blue = int(blue);
+	var decColor = int(red) + 256 * int(green) + 65536 * int(blue);
+	return '#'+int2hex(red)+int2hex(green)+int2hex(blue);
+}
+
+
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+
+
+</script>
+</head>
+<body onload="setup();">
+<canvas id="canvasdiv" width="100" height="100"></canvas>
+<div id="debugdiv"></div>
+<div>
+Here I've displayed the normal map.  The normal map is coloured by the shape of the surface.  The parts pointing directly up are green, east and west facing slopes are red, and north-south slopes are blue .  I've also added a basic projection, giving a real horizon.
+</div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog/ Throff Interpreter Internals</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog/ Throff Interpreter Internals</h1>
+			</header>
+			<div class="summary">
+<p>The <a href="../../projects/throff/">Throff</a> execution model, explained.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Throff was designed to be as simple as possible to implement and understand, for multiple reasons.</p>
+<p>The faster, and easier, the interpreter is to implement, the more progress I can make with it.  And the simpler it is, the easier it is to program, which should make it a good choice for new users, who usually just want to get something working quickly.</p>
+<p>However at some point, it becomes necessary to know the exact details of how the interpreter operates.  So this page brings together all the reference material on the interpreter.  If you don't understand how a certain piece of code works (or doesn't work), this page may help.</p>
+<h2 id="design-goals">Design Goals</h2>
+<p>Throff has clear design goals.  One was to evolve Forth as far as possible, to see what it would look like with lexical scopes and modern-day conveniences, like hashes.</p>
+<p>The other goal was to take as much from functional and catenative languages as I could, without turning a simple task like</p>
+<pre><code>PRINTLN READLINE OPEN testfile.txt
+</code></pre>
+<p>into some nightmarish theoretical math problem.  So the design restrictions are:</p>
+<ul>
+<li>Immutable data structures.  Never mutate data.  Except when we think we can get away with it</li>
+<li>Referential transparency.  Variables can't change after you assign them.</li>
+<li>Simple execution model.  I'm too dumb to write a complicated one.</li>
+</ul>
+<p>And some slightly more vague guidlines.</p>
+<ul>
+<li>Remove clumsy idioms. If a programmer can describe the task clearly in one sentence, it should take one line of code</li>
+<li>Design so it will be possible to get large speed-ups from JIT and memoisation</li>
+<li>Remove the ability to write bugs, wherever possible</li>
+<li>Support advanced debugging.  And by advanced I mean helpful features, not &quot;inspect memory&quot;</li>
+<li>Pure functions wherever possible</li>
+</ul>
+<h3 id="lexical-scopingthroff-lexical-environmentshtml"><a href="throff_lexical_environments.html">Lexical scoping</a></h3>
+<p>At the start of the parse, a scope is created.  This becomes the parent, or root, lexical environment.  During the parse, the input text is turned into a stream of TOKENs.  Each token is given a reference to the scope.  As the program runs, other scopes will be created as descendents of this scope.</p>
+<p>The stream of TOKENs is pushed onto the code stack.  At the same time, one scope reference per TOKEN is pushed onto the codeLex stack.  This stack moves in sync with the code stack, and contains the execution environment for each token.  For now, it contains references to the same scope that the TOKENs point to, but soon it will be holding dynamic scopes.</p>
+<p>Execution starts, instructions are popped off the code stack, and scopes are popped off the codeLex stack.  Each TOKEN is executed using the scope from the codeLex pop.</p>
+<p>Eventually functions are created.  When a function is created, it is given a reference to the current scope, which becomes the parent scope for that function.  When the function is activated, a new scope is created, based on the parent lexical scope that it has a reference to.  This new scope is the dynamic scope of the function (to support recursion of functions).  The function pushes its component instructions onto the code stack, and a reference to the dynamic scope is pushed onto the codeLex stack for each instruction pushed onto the code stack.  Then the execution proceeds as usual, popping instructions and scopes off the stacks and executing them.</p>
+<p>All this is done so that when a function is created inside another function, it will hold a reference to the &quot;outer&quot; function's dynamic scope, which is what you would expect to happen.</p>
+<p>There is no accompanying dataLex stack for the data stack - because data items do not have scopes (except for TOKEN, CODE and LAMBDA which manage their own scopes).</p>
+<h3 id="program-execution">Program execution</h3>
+<p>Throff programs are written backwards.  This isn't a style choice, it is a fundamental requirement of the interpreter, because underneath all the features, Throff is just Forth.  In Forth, there is a strict execution order.  Forth programs run left to right, top to bottom.  In Forth, the function arguments go <em>before</em> the function.</p>
+<pre><code>1 1 ADD
+
+2
+</code></pre>
+<p>These backwards functions (postfix notation) are one of the major complaints from people learning Forth - every other language puts the arguments <em>after</em> the function</p>
+<pre><code>ADD 1 1
+
+2
+</code></pre>
+<p>So I reversed the order of the program.  In Throff, arguments still come before the function, but now the program is read <em>backwards</em>.  So functions look normal, but the entire program is now backwards.</p>
+<p>So the program execution is very simple.  The input stream is broken into tokens, separated by spaces.  Each token is then fed directly into the code stack.  The interpreter advances one step by popping an instruction off the code stack and executing it.  The entire interpreter operation can be written simply:</p>
+<pre><code>E&lt;sub&gt;1&lt;/sub&gt; = Step(E)
+</code></pre>
+<p>Or more completely</p>
+<pre><code>(code1, environment1, state1) = Step(code, environment, state)
+</code></pre>
+<p>Throff is heavily influenced by Felleison's work on CESK machines, although I had started work long before his paper.</p>
+
+			</article>
+			</html>
+			

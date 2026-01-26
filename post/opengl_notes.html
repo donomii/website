@@ -1,0 +1,81 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog / OpenGl Notes</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog / OpenGl Notes</h1>
+			</header>
+			<div class="summary">
+<p>Mostly what <em>not</em> to do</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<ul>
+<li>
+<p><em>glColor</em> The last glColor call is multiplied against every subsequent texture.  This means that if you accidentally call glColor(1.0, 1.0, 10.0), everything will get a blue tint.  And you'll spend hours trying to figure out why.</p>
+</li>
+<li>
+<p><em>glColor</em> again.  Sending colours outside the 0.0 .. 1.0 range to GL appears to cause a large slowdown.  Not sure if that's the graphics card or the drivers, but it's worth taking the effort to make sure it doesn't happen.  Especially when the SIMD version of fmin() is available.</p>
+</li>
+</ul>
+<ul>
+<li>
+<p>Compile with -pg to profile, then run gprof</p>
+</li>
+<li>
+<p>To get assembler output from GCC, try gcc -c -g -Wa,-a,-ad  or just -S</p>
+</li>
+<li>
+<p>Remember to reset all openGL modes each frame: GL_PROJECTION,GL_MODELVIEW,GL_COLOR,GL_TEXTURE.  If you miss one, you get weird effects like the picture disappearing into the distance shortly after your program starts.</p>
+</li>
+</ul>
+
+			</article>
+			</html>
+			

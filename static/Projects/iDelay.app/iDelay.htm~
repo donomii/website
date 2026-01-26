@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html manifest="application.manifest"><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=5.0, minimum-scale=0.2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="http://praeceptamachinae.com/iDelay.app/icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://praeceptamachinae.com/iDelay.app/icon-ipad.png">  
+    <link rel="apple-touch-icon" sizes="114x114" href="http://praeceptamachinae.com/iDelay.app/icon-iphone4.png">  
+
+    <link rel="stylesheet" href="iDelay_files/colourful.css" type="text/css" media="screen, mobile" title="main" charset="utf-8">
+	<script type="text/javascript" src="iDelay_files/iDelay.js"></script>
+	
+<script type="text/javascript">
+
+	window.scrollTo(0,1);
+    function getVal(an_id) {
+    	return document.getElementById(an_id).value;
+}
+    function deleteParent(elem) {
+        var target = elem.parentNode;
+        target.parentNode.removeChild(target);
+}
+
+    function load_events() {
+      var json = localStorage['Events.events'];
+      var eventList = new Array;
+			try {
+				eventList = JSON.parse(json);
+			} catch (err1) {
+				console.log("Corrupt saved data: ", json);
+				localStorage.removeItem('Events.events');
+			}
+	for(i=0;i<eventList.length;i++) {
+	  var newDate = new Date(eventList[i].time);
+	  var obj=document.getElementById('event_template').cloneNode(true);
+	  obj.style.display = 'block';
+	  obj.firstChild.innerHTML = 'Starting...';
+	  obj.firstChild.nextSibling.innerHTML = newDate;
+	  obj.lastChild.innerHTML=eventList[i].text;
+	  document.getElementById('display').appendChild(obj);
+	  javascript_countdown = new countdown_obj();
+	  newTimer(newDate, obj.firstChild);sortEvents();
+	}
+	
+	
+    }
+
+    function save_events () {
+      var some_events=new Array;
+      var eventList = document.getElementById('display').childNodes;
+      var i;
+      for(i=0;i<eventList.length;i++) {	
+	  try {
+	    var e1 = eventList.item(i);
+	    var t1 = e1.firstChild.nextSibling.innerHTML;
+	    var m1 = e1.lastChild.innerHTML;
+	    some_events.push( { "time" : t1 , "text" : m1  } );
+	  } catch (err1) {
+	  
+	  }
+      }
+      some_events.shift();
+      some_events.shift();
+      localStorage['Events.events'] = JSON.stringify(some_events);
+    }
+    
+    function hideAll() {
+        hideEle('display_pane');
+        hideEle('create_event');
+        hideEle('examine');
+}
+    function hideEle(an_id) {
+    	document.getElementById(an_id).style.display = "none";
+}
+    function showEle(an_id) {
+    	document.getElementById(an_id).style.display = "block";
+}
+    function setClick(element) {
+    	document.getElementById("display").onclick = function (){alert('foo');};
+}
+
+
+    function getInputDate() {
+    myDate = "2013"+"/" + ( 1+ parseInt(getVal("month"))) + "/" + getVal("day") + " " +
+    getVal("hour") + ":" + getVal("minute");
+    return myDate;
+}
+
+    function sortEvents() {
+      var eventList = document.getElementById('display').childNodes;
+      var i;
+      for(i=0;i<eventList.length-1;i++) {
+      try {
+      var e1 = eventList.item(i);
+      var e2 = eventList.item(i+1);
+      var t1 = e1.firstChild.nextSibling.innerHTML;
+      var t2 = e2.firstChild.nextSibling.innerHTML; 
+      if (calcSecs(new Date(t1)) > calcSecs(new Date(t2))) {
+	  e2.parentNode.removeChild(e2);
+	  e1.parentNode.insertBefore(e2, e1);
+      }
+      } catch (err) {
+      }
+      }
+    }
+
+    function show_create_box () {
+    var today=new Date();
+
+    var s=today.getSeconds();
+    document.getElementById("hour").value=today.getHours();
+    document.getElementById("minute").value=today.getMinutes();
+    document.getElementById("day").value=today.getDate();
+    document.getElementById("month").value=today.getMonth();
+hideEle('display_pane');showEle('create_event');
+}
+    function startSort() {
+        sortEvents();
+        setTimeout("startSort();", 5000);
+}
+
+  function show_display () {
+    hideAll();
+    showEle('display_pane');
+  }
+
+  function startListeners() {
+    document.addEventListener("deviceready", onDevReady, false);
+}
+
+function onDevReady() { 
+    document.addEventListener("backbutton", backKeyDown, false);
+}
+
+function backKeyDown() {
+   show_display();
+}
+	</script>
+    <title>Life on Rails</title>
+</head>
+<body onload="forceToTop();startTimers();startSort();startListeners();hideEle('create_event');load_events();" >
+
+
+<div id="display_pane"><div id="display" ><div id="event_template" style="display: none; "><span id="timespan_template"  onclick="deleteParent(this);save_events();">0 mins</span><span id="seconds" style="display:none">0</span><div id="event_display" >Template Event</div></div>
+<div id="header_line"><span id="time_header"  onclick="deleteParent(this);save_events();">Time Left</span><span id="seconds" style="display:none">0</span><div id="event_header">Next Event</div></div></div>
+<div>
+<hr>
+<div onclick="show_create_box();">Add an event</div>
+</div>
+</div>
+
+<div id="create_event" style="display: none;" class="inputform">
+<div>Event<div><input id="event_text"  type="text"></div></div>
+<div><span id="date_header">Date</span>
+<div>
+<select id="month">
+
+	<option selected="selected" id="0" value="0">January</option>
+	<option id="1" value="1">February</option>
+	<option id="2" value="2">March</option>
+	<option id="3" value="3">April</option>
+	<option id="4" value="4">May</option>
+	<option id="5" value="5">June</option>
+	<option id="6" value="6">July</option>
+	<option id="7" value="7">August</option>
+	<option id="8" value="8">September</option>
+	<option id="9" value="9">October</option>
+	<option id="10" value="10">November</option>
+	<option id="11" value="11">December</option>
+
+</select>
+
+<select id="day">
+<option selected="selected" value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+</div></div>
+<div>
+<span id="time_header">Time</span>
+<div>
+<select id="hour">
+<option selected="selected" value="0">0</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+</select>
+
+<select id="minute">
+<option selected="selected" value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30">30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+</select>
+</div></div>
+<hr>
+<div onclick="hideEle('create_event');showEle('display_pane');
+var newDate = new Date(getInputDate());
+var obj=document.getElementById('event_template').cloneNode(true);
+obj.style.display = 'block';
+obj.firstChild.innerHTML = 'Starting...';
+obj.firstChild.nextSibling.innerHTML = newDate;
+obj.lastChild.innerHTML=document.getElementById('event_text').value;
+document.getElementById('display').appendChild(obj);
+javascript_countdown = new countdown_obj();
+newTimer(newDate, obj.firstChild);sortEvents();save_events();">Add Event</div>
+<div onclick="show_display()" style="float:right">Cancel</div>
+
+</div>
+
+<div id="examine">
+<div id="examine_display"></div>
+</div>
+
+</body></html>

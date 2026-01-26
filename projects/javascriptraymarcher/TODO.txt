@@ -1,0 +1,4 @@
+Add input text field so users can enter config and run tracer from the webpage
+
+Add High Speed Surface Crawl, finda point on the surface of each object, and find adjacent pixels based on the depth of that pixel.  Compare depths to a depth buffer, update the buffer if depth is closer to the camera.
+

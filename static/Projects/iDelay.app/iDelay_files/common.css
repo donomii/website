@@ -1,0 +1,32 @@
+
+	   input, select   {
+	    margin-top: 0.8em;
+	    font-size: 150%;}
+
+	   div.inputform { font-size: 200% }
+	   
+	   div#header_line {
+	    display:none
+	   }
+	   
+	    
+
+	    
+	    
+	    
+	    body {
+		height:100%; 
+		background-color: white;
+		font-weight: bold;
+		font-family:Arial,sans-serif;
+	    }
+	    
+
+	    
+	    
+
+	    
+	    div#display {
+	     height:100%; 
+	     background-color: white
+	    }

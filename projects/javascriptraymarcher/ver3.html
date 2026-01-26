@@ -1,0 +1,290 @@
+<html>
+<head>
+<title>Canvas tutorial</title>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+
+var ctx;
+var canvas;
+var outWin;
+function setup(){
+	//Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph('canvasdiv');
+	outWin.erase(ctx);
+//sun = new Vector (outWin.width,outWin.height,10);
+sun = new Vector (100,100,-5);
+//sun = sun.normalise();
+	//Kick off the render
+	renderImage();
+}
+
+var phase=1;
+var x = phase;
+var y = 1;
+function renderImage () {
+	//If we try to draw the entire picture in one go, the browser will freeze.  So instead we draw one pixel at a time.
+	x+=11;
+	if (x>=outWin.width) {
+		x=phase;
+		y+=1;
+		if (y>=outWin.height) {
+		   y=1;
+		   phase++;
+      if(phase>11) {
+			//finished
+			return;
+			alert("Finished");
+		}}
+	}
+	ray = new Ray( x, y );
+	intersect = castRay( ray.origin, ray.direction ) ;
+	
+	//The ray object contains the position and direction of the ray.  castRay walks along the ray, looking for terrain.
+	if( intersect )
+		{ outWin.setPixel(x,y,terrainColour( intersect )); }  //We hit the terrain, draw the ground colour
+	else
+		{ outWin.setPixel( x, y,  skyColour()); }  //We missed the terrain, draw the sky colour
+
+	//Give the browser some time to do other processing
+	setTimeout("renderImage()", 10);
+}
+
+//This is the function that sets the shape of the ground.  Simple for now, it will get very complicated soon.
+//function ground(x,z) { return 2;}
+//function ground(x,z) { ret= 90*Math.sin(x/5)*Math.sin(z/5); return ret; ;}
+//function ground(x,z) { ret= 60*Math.sin(x*x+z*z); return ret; ;}
+function ground(x,z) { ret= 20*Math.sin(x/20)*Math.sin(z/10); return ret; ;}
+//function ground(x,z) { ret= 150-(x-100)*(x-100)/32-z*z; return ret; ;}
+//Math.sin(x)*Math.sin(x)+
+function castRay(   ro,  rd ) {
+     delt = 0.001;
+     mint = 0.0001;
+     maxt = 100.0;
+    //Step along the ray 
+    for( t = mint; t < maxt; t += delt )
+    {
+      delt=delt*1.05;
+      p =  jQuery.extend(true, {}, ro);
+      dir = jQuery.extend(true, {}, rd);
+      dir.mult(t);
+      p=p.add(dir);
+
+        if( p.y < ground( p.x, p.z ) ) {
+        //We've sunk into the ground. 
+            return p;
+        }
+    }
+    return false;
+}
+
+//Clumsy attempt at a vector object
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+
+this.add = function (aVec) {
+newx =this.x + aVec.x;
+newy =this.y + aVec.y;
+newz =this.z + aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.vsub = function (aVec) {
+newx =this.x - aVec.x;
+newy =this.y - aVec.y;
+newz =this.z - aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+}
+
+this.magnitude = function () {
+return Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+}
+
+this.normalise = function ( p ) {
+newx = this.x/this.magnitude();
+newy = this.y/this.magnitude();
+newz = this.z/this.magnitude();
+return new Vector(newx, newy, newz);
+}
+
+this.cross = function ( p ) {
+newx = this.y*p.z - this.z*p.y;
+newy = this.z*p.x - this.x*p.z;
+newz = this.x*p.y - this.y*p.x;
+return new Vector(newx, newy, newz);
+}
+
+this.innerProduct = function(p) {
+res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+ret = res;
+return ret;
+}
+
+}
+
+//This creates a ray, pointing in the right direction
+function Ray (x,y) {
+//y=100-y;
+this.origin = new Vector (outWin.width/2,outWin.height/4,-1);
+offset = new Vector(0,outWin.height/3,0);
+this.origin = this.origin.add(offset);
+//this.direction = new Vector (0.1,-0.5+y/200,0.1);
+this.viewport = new Vector(x,y,0);
+this.viewport = this.viewport.add(offset);
+this.direction = this.origin.vsub(this.viewport);
+this.direction = this.direction.normalise();
+this.origin = new Vector (x,y,0);
+this.direction = new Vector (0,-0.1,0.1);
+this.direction = new Vector (0,-y/100,1);
+//setDiv("debugdiv", printVec(this.direction)); 
+}
+
+function printVec(v) {
+return "" + v.x + ", " + v.y + ", " + v.z;
+}
+
+//var sun = new Vector (1,1,0);
+var sun;
+
+
+function terrainColour(p) {
+   //p = p.normalise();
+   to_sun = p.vsub(sun);
+   to_sun = to_sun.normalise();
+    n = interpolate_normal(p);
+      
+   //t = n.innerProduct(p)
+   //t1 = n.mult(2*t);
+    //            reflected = p.vsub(n);
+   intensity = n.innerProduct(to_sun);
+		  if( intensity<0) { intensity=0;}
+		  intensity = intensity * 256;
+    intensity = 256-intensity;
+		  ret = rgb( intensity,intensity,intensity);
+		  //if ( intensity<50 ) { ret = rgb(50,50,50)};
+//setDiv('debugdiv',"!!"+ret+"!");
+		  return ret;
+		
+}
+function skyColour () { return "#0000FF"}
+
+function interpolate_normal (p) {
+eps = 0.01;
+xvec = new Vector ( eps,
+     ground(p.x, p.z) - ground(p.x + eps, p.z),
+     0);
+zvec = new Vector ( 0,
+     ground(p.x, p.z) - ground(p.x, p.z + eps),
+     eps);
+    //x=xvec.normalise();
+    //z=zvec.normalise();
+         n = xvec.cross(zvec); 
+		  normal = n.normalise();
+   
+//    setDiv('debugdiv', " " + normal.x +", "+ normal.y +", "+ normal.z);
+    return normal;
+}
+
+function Graph(aCanvas ) {
+	this.canvas = document.getElementById('canvasdiv');
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	function redraw (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		for ( ii=0;ii<myLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	this.redraw=redraw;
+
+	this.setPixel = function (x, yy, aColor) {
+		var y =  yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = aColor;
+		aCtx.beginPath();
+		aCtx.moveTo(x-1,y-1);
+		aCtx.lineTo(x,y);
+		aCtx.stroke();
+
+	};
+
+
+	function erase () {
+		aCtx = this.ctx;
+		aCtx.fillStyle = "#000000";
+		aCtx.globalAlpha=1;
+		aCtx.strokeStyle ='#FFFFFF';
+		aCtx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+	this.erase = erase;
+}
+
+
+
+
+function int (x) { return Math.abs(Math.floor(x)) }
+function int2hex (x) {
+t = x.toString(16);
+if (t.length ==1 ) {
+t = t + "0";
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(red, green, blue)
+{
+	red = int(red);
+	green = int(green);
+	blue = int(blue);
+	var decColor = int(red) + 256 * int(green) + 65536 * int(blue);
+	return '#'+int2hex(red)+int2hex(green)+int2hex(blue);
+}
+
+
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+
+
+</script>
+</head>
+<body onload="setup();">
+<canvas id="canvasdiv" width="200" height="200"></canvas>
+<div id="debugdiv"></div>
+<div>
+Here I have finally added diffuse reflections, giving a soft, nicely lit, render of the landscape.  The render process now works as follows:
+
+* Find the point where the ray hits the terrain.
+* Calculate the vector of the surface (the normal) at that point
+* Calculate the vector from the point to the sun, and normalise it
+* Take the dot product of the normal and vector pointing to the sun
+* Color the point, where 0 is white and 1 is black
+
+The bit that doesn't usually get explained is calculating the surface normal.  In an analytic situation, we could simply take the derivative of the surface to find the gradient.  But we don't always know the formula for the surface - it could be a fractal surface, or a random cloud of points, or a density object that doesn't have edges, but rather fades out slowly at the edges.  So how do we do it?  The solution is simple in concept, but expensive in CPU terms.
+
+To get the normal, we take the ray that has just hit the surface, rewind it one step, then fire two more rays into the surface.  But one of the new rays is shifted sideways a little, the other is shifted up a little.  These two rays hit the surface, and the vectors from the original point to the two new rays form the basis for the surface (or rather, for the gradient of the surface around the point), and their cross product is the normal vector that we want.
+
+</div>
+</body>
+</html>

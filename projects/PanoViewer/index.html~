@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <meta charset = "utf-8" />
+   <title>Device Orientation API</title>
+<script type="text/javascript">
+var fov = 6000/180;
+var alphaoffset=0;
+var betaoffset=0;
+var alpha=0;
+var beta=0;
+var gamma=0;
+var targetAlpha=0;
+var targetBeta=0;
+
+function showAndClearField(frm){
+  if (frm.fov_value.value)
+      {fov=frm.fov_value.value;}
+ 
+}
+
+   function draw(xpos,ypos){
+        var canvas = document.getElementById('tutorial');
+        if (canvas.getContext){
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = "rgb(200,200,200)";
+          ctx.clearRect ( 0 , 0 , 720 , 720 );
+  ctx.canvas.width  = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
+       ctx.drawImage(document.getElementById('pano'),xpos,ypos);
+        }
+      }
+      
+      
+if(window.DeviceOrientationEvent) {
+  window.addEventListener("deviceorientation", process, false);
+} else {
+  // Le navigateur ne supporte pas l'événement deviceorientation
+}
+
+function process(event) {
+if (alphaoffset==0) {alphaoffset=-event.alpha*fov;}  
+  targetAlpha = -event.alpha*fov;
+  if (betaoffset==0) {betaoffset=event.beta*fov;}
+  targetBeta=event.beta*fov
+//alert(beta);
+
+  gamma = event.gamma;
+  
+
+  //document.getElementById("log").innerHTML = "<ul><li>Alpha : " + alpha + "</li><li>Beta : " + beta + "</li><li>Gamma : " + gamma + "</li></ul>"; 
+}
+
+function resetOffsets() {
+alphaoffset=alpha;
+betaoffset=beta;
+}
+
+function converge() {
+  alpha = (alpha+targetAlpha)/10;
+  beta = (beta+targetBeta)/10;
+}
+
+
+function Update() {
+setTimeout("Update();", 100);
+converge();
+draw(alpha-alphaoffset-3000,beta-betaoffset-500);
+}
+
+</script>
+  </head>
+  <body onLoad="Update();">
+   
+   <canvas id="tutorial" width="720" height="720" onClick="resetOffsets();"></canvas>
+<img id=pano style="display:none" src="satellite.jpg">
+<div id="log"></div>
+</body>
+</html>

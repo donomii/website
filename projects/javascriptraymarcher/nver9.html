@@ -1,0 +1,92 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Javascript Ray Marcher  v0.9</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Javascript Ray Marcher  v0.9</h1>
+			</header>
+			<div class="summary">
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Unfortunately, the code for this version no longer works.  I took a detour to see if I could render models created by other programs.  The answer turned out to be yes, but it takes too much work to tune and maintain.</p>
+<p>I used a MD2 converter to take a model of an alien from the free XCOM project, and render it in this raytracer.  The attempt started rather badly.  I tried to use thin triangles to render the alien, much like OpenGL does.  This did not work for several reasons.  Many of the triangles were not properly displayed, because they were too thin and the rays stepped right through them without triggering a &quot;hit&quot; in the raycaster.  I was also not handling the format correctly, so there were many mis-aligned triangles sticking out of the figure.</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/9.1.png" alt="Alien model attempt"></p>
+<div style="clear:both"></div>
+<p>Ignoring all the actual problems, I work on getting the shading correct.  It's still a mess, but now it's a well shaded mess.</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/9.2.png" alt="Shading correction"></p>
+<div style="clear:both"></div>
+<p>I lower the step distance for the raycaster.  This slows the render, but helps the rays to hit more triangles.  It's still not great.</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/9.3.png" alt="Lower step distance"></p>
+<div style="clear:both"></div>
+<p>I correct the file loader.  Now there are no stray triangles, and the legs have appeared!</p>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/9.4.png" alt="File loader corrected"></p>
+<div style="clear:both"></div>
+<p>Upper half in shadow, for no good reason that I can recall.</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/9.5.png" alt="Upper half in shadow"></p>
+<div style="clear:both"></div>
+<p>More shadow, but now I have also changed the triangles into tetrahedrons.  This provides the necessary thickness for the rays to hit the model, and suddenly we have a model with no gaps in it.</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/9.6.png" alt="Triangles to tetrahedrons"></p>
+<div style="clear:both"></div>
+<p>Finally a good render.  No stray shadows, no holes in the model, and no stray triangles.</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/9.7.png" alt="Good render, no stray shadows"></p>
+<div style="clear:both"></div>
+<p>And here's our final model, silhouetted against the moon.  Spooky, no?</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/9.8.png" alt="Final model silhouetted against the moon"></p>
+
+			</article>
+			</html>
+			

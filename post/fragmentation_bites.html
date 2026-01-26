@@ -1,0 +1,75 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog/ Fragmentation Bites</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog/ Fragmentation Bites</h1>
+			</header>
+			<div class="summary">
+<p>An old problem, that I thought had gone forever</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Defragmenting your drives used to be a big thing.  There were lots of utilities you could buy that promised to make your drive go faster, work more efficiently and store more.</p>
+<p>Long, excruciatingly boring articles in print magazines warned naive users that we should defragment our drives weekly, or daily, or whatever.  Users would advise each other constantly.  &quot;You should defragment your drives daily&quot; &quot;Oh yes, that's very important&quot;.</p>
+<p>It wasn't important, but people did it anyway.  And then Operating Systems got better and nobody ever had to do it again.  Until today.</p>
+<p>My faithful SQLite database, which I had been using for several years, stopped working with a &quot;disk I/O error&quot;.  When I enabled more logging with</p>
+<pre><code>.log stderr
+</code></pre>
+<p>I saw</p>
+<pre><code>(1034) os_win.c:32118: (665) winSync(H:\mydb\json.sqlite) - The requested operation could not be completed due to a file system limitation
+</code></pre>
+<p>Panicking just a little bit, because it held 125 Gib of data that wasn't backed up, I checked on line to discover that &quot;A heavily fragmented file in an NTFS volume may not grow beyond a certain size &quot;.</p>
+<p>So for the first time in 20 years, I am actually running &quot;defrag&quot;.  But now I'm doing it on a 2 Tb USB drive, so it is actually taking longer than my original 2Mib hard drive.</p>
+<p>Progress!</p>
+<p>PostScript: It took more than a week!</p>
+
+			</article>
+			</html>
+			

@@ -1,0 +1,417 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>code / Seating groups at tables</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>code / Seating groups at tables</h1>
+			</header>
+			<div class="summary">
+<p>Seating random groups of people at a random number of tables</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Download the <a href="../../static/resources/c_exercises/tree.c">code</a> and
+download the supporting library <a href="../../static/resources/c_exercises/utlist.h">utlist.h</a></p>
+<h3 id="the-challenge">The challenge</h3>
+<p>The final challenge for my coding test was to write an algorithm to seat groups of random size at a limited number of tables.  We are allowed to seat two groups at the same table, provided there are enough chairs.</p>
+<p>This looks like it should be simple - restaurants do this every day.  But it gets more complicated when it scales up.  When we have, say, 100 tables (of different sizes), and 10,000 customers, it becomes extremely difficult.</p>
+<p>The complexity of the solution will be around O(n), depending on the exact algorithm I use.  Good implementations can get down to O(logn), and I think I can do better for this particular problem.</p>
+<h4 id="context">Context</h4>
+<p>Luckily, this is a common problem, which appears in situations like allocating memory and disk space in computers.  Your computer is doing this hundreds of times per second while reading this article.  A lot of people have written about the <a href="http://g.oswego.edu/dl/html/malloc.html">solutions to this problem</a> e.g. <a href="http://en.wikipedia.org/wiki/Memory_pool">memory pools</a>, <a href="http://en.wikipedia.org/wiki/Free_list">free lists</a> and the <a href="http://en.wikipedia.org/wiki/Buddy_memory_allocation">buddy memory allocator</a>, and <a href="http://lwn.net/Articles/229984/">SLUB allocators</a>.</p>
+<h4 id="strategy-none">Strategy: None</h4>
+<p>The default strategy is to not have a strategy.  Every time you need to seat a new group at a table, just walk along the tables until you find one that has enough spaces, then seat the new group there.  This has the appeal of not needing any extra data structures or complicated code.</p>
+<p>Unfortunately this strategy guarantees that eventually you will have a couple of people lingering at every table, which will prevent the largest groups from being seated, <em>even though you have enough seats for them</em>.  But those seats are scattered across many tables, and the group insists on being seated together at the same table.</p>
+<h4 id="strategy-moving-the-diners">Strategy: Moving the diners</h4>
+<p>You can fix this by asking current diners to move to a nearby table and share with another group, until you have made an empty table to seat your large group.</p>
+<p>This is slow when the restaurant is nearly full, which is the exact time when you don't want to be doing extra work.  It is possible to get to the point where the computer spends more time trying to organise the tables than actually doing any work.</p>
+<h4 id="strategy-the-free-list">Strategy: The free list</h4>
+<p>A popular solution is to keep a &quot;free list&quot;.  We will note which tables are free, and cross them off the list as people come in.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">4 seats</th>
+<th style="text-align:center">8 seats</th>
+<th style="text-align:center">16 seats</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Table A</td>
+<td style="text-align:center">Table D</td>
+<td style="text-align:center">Table G</td>
+</tr>
+<tr>
+<td style="text-align:center">Table B</td>
+<td style="text-align:center">Table E</td>
+<td style="text-align:center">Table H</td>
+</tr>
+<tr>
+<td style="text-align:center">Table C</td>
+<td style="text-align:center">Table F</td>
+<td style="text-align:center">Table I</td>
+</tr>
+</tbody>
+</table>
+<p>When a group of 5 comes in, we can immediately find a table large enough for them (at table D which has 8 seats).  Now we adjust our free lists, noting that Table D has 3 free seats left.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">3 seats</th>
+<th style="text-align:center">4 seats</th>
+<th style="text-align:center">8 seats</th>
+<th style="text-align:center">16 seats</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Table D</td>
+<td style="text-align:center">Table A</td>
+<td style="text-align:center">Table E</td>
+<td style="text-align:center">Table G</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Table B</td>
+<td style="text-align:center">Table F</td>
+<td style="text-align:center">Table H</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Table C</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">Table I</td>
+</tr>
+</tbody>
+</table>
+<p>This takes a little bit of time, but this amount of time doesn't get longer no matter how many tables or people we have (in theory). Seating people is always fast with free lists, which is important for providing services quickly in a computer.</p>
+<h4 id="good-enough">Good enough</h4>
+<p>This was the solution I chose to submit.  It is acceptably fast, doesn't use too much memory, and should not have any &quot;worst case scenarios&quot; that cause it to lock up or become unacceptably slow.  In practise, it will get slower the more tables you have, and will spend a lot of memory storing the lists, but it only wastes a lot of memory if you already have a lot of memory to keep track of, so that works out nicely.</p>
+<p>The algorithm has bad <a href="http://en.wikipedia.org/wiki/Locality_of_reference">locality of reference</a>, which means it will cause physical caches to function slowly.  But I can't tune that until I know what kind of machine it would be running on, so the solution ends here.</p>
+<h4 id="a-malloc-library">A malloc library</h4>
+<p>Recently I've been thinking of turning it into a user space malloc library, so the first change I would have to make would be to switch the table sizes into multiples of 2.  Because in base 2, we can reduce the number of free lists by breaking everything down to a power of 2.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">1 seat</th>
+<th style="text-align:center">2 seats</th>
+<th style="text-align:center">4 seats</th>
+<th style="text-align:center">8 seats</th>
+<th style="text-align:center">16 seats</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Table D</td>
+<td style="text-align:center">Table D</td>
+<td style="text-align:center">Table A</td>
+<td style="text-align:center">Table E</td>
+<td style="text-align:center">Table G</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">Table B</td>
+<td style="text-align:center">Table F</td>
+<td style="text-align:center">Table H</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">Table C</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">Table I</td>
+</tr>
+</tbody>
+</table>
+<p>This cuts down the number of free lists to log2(n), where n is the largest group we will accept.  To keep track of all the possible free memory in my computer, I only need 64 free lists to account for 17000000000000 Mib of memory.  Of course, those lists might get a bit long....</p>
+<h3 id="the-full-solution">The full solution</h3>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;assert.h&gt;
+#include &quot;utlist.h&quot;
+
+#define maxTables  100
+#define maxCustomers 100000
+#define log //printf  //Uncomment  printf to print debug messages
+
+typedef void* pointer;
+
+typedef struct Table {
+	char	name[20];
+	int	size;
+	int	vacant;
+} Table;
+
+enum counters_enum {
+	ARRIVED,
+	ENQUEUED,
+	QUEUE_SCANS,
+	QUEUE_HOPS,
+	PERFECT_FIT,
+	NOT_PERFECT_FIT,
+	MAX_QUEUE_LENGTH,
+	LEFT_WITHOUT_BEING_SEATED,
+	LEFT_FROM_TABLE,
+	QUEUE_TO_TABLE
+};
+int counter[20]; //Collect some statistics
+
+typedef  struct CustomerGroup {
+	int 	id;
+	int 	size;
+	Table*	table;
+	struct CustomerGroup *next, *prev;
+} CustomerGroup;
+struct CustomerGroup* customers= NULL;
+CustomerGroup* customerPool[maxCustomers];
+
+Table* tables[7][maxTables];  	//We could have almost all the tables end up in queue 2
+CustomerGroup *waiting = NULL;  	//The groups-waiting queue
+int maxTableSize=6;
+int queue_length=0;
+
+int lastTable[7];			//Pointer to the last free table in free list
+int initted = 0;			//Safety check that data structure have been initialised.
+
+
+
+
+
+
+/* Seat a group, either at a table or on the waiting list */ 
+void arrives(CustomerGroup* aGroup) {
+	int i;
+	assert(initted);
+	
+	log(&quot;Seating group of size %d\n&quot;, aGroup-&gt;size);
+	int tablesize = canSeat(aGroup);
+	assert(tablesize&lt;maxTableSize+1);
+	log(&quot;canSeat recommends a table of size %d, and there are %d tables of size %d free.\n&quot;, tablesize, lastTable[tablesize], tablesize);
+	if(tablesize) {
+		if (tablesize == aGroup-&gt;size) {
+			aGroup-&gt;table = tables[aGroup-&gt;size][lastTable[aGroup-&gt;size]--];
+			aGroup-&gt;table-&gt;vacant-=aGroup-&gt;size;
+			counter[PERFECT_FIT]++;		
+			log(&quot;Assigned group %d of size %d to table %s, vacant seats: %d, lastTable: %d\n&quot;, aGroup-&gt;id, aGroup-&gt;size, aGroup-&gt;table-&gt;name, aGroup-&gt;table-&gt;vacant, lastTable[aGroup-&gt;size]);
+		} else {
+			aGroup-&gt;table = tables[tablesize][lastTable[tablesize]--];
+			aGroup-&gt;table-&gt;vacant-=aGroup-&gt;size;
+			log(&quot;Assigned group %d to table %s, vacant seats: %d, lastTable: %d\n&quot;, aGroup-&gt;id,  aGroup-&gt;table-&gt;name, aGroup-&gt;table-&gt;vacant, lastTable[tablesize]);
+			counter[NOT_PERFECT_FIT]++;
+			return;
+		}
+	} else {
+		//We're out of tables, add the customer group to the queue
+		log(&quot;Adding customers to wait queue\n&quot;);
+		DL_APPEND(waiting, aGroup);
+		counter[ENQUEUED]++;
+		queue_length++;
+		counter[MAX_QUEUE_LENGTH]=(queue_length)&gt;counter[MAX_QUEUE_LENGTH]?queue_length:counter[MAX_QUEUE_LENGTH];
+	}
+	log(&quot;arrived: %d, fit: %d, partial fit: %d, queue_length %d\n&quot;, counter[ARRIVED], counter[PERFECT_FIT] , counter[NOT_PERFECT_FIT] , queue_length);
+	assert(counter[ARRIVED] == counter[PERFECT_FIT] + counter[NOT_PERFECT_FIT] + queue_length+counter[LEFT_WITHOUT_BEING_SEATED]);
+	
+}
+
+CustomerGroup* scanForMaxSize(CustomerGroup* aList,int size) {
+	counter[QUEUE_SCANS]++;
+	for (aList=aList-&gt;next;aList;aList=aList-&gt;next) {
+		counter[QUEUE_HOPS]++;
+		if (aList-&gt;size&lt;=size) { return aList;}
+	}
+	return NULL;
+}
+
+/* Check the free lists to see if there are any tables, at all, that can hold the group */
+int canSeat (CustomerGroup* aGroup) {
+	int i;
+	log(&quot;Checking if we can seat group %d of size %d\n&quot;, aGroup-&gt;id, aGroup-&gt;size);
+	if(lastTable[aGroup-&gt;size]&lt;1) {
+		log(&quot;Attempting to seat group at a larger table\n&quot;);
+		if (aGroup-&gt;size&lt;maxTableSize) {
+			//Maybe we can fit the group at a bigger table
+			for (i=aGroup-&gt;size; i&lt;maxTableSize+1;i++) {
+				if (lastTable[i]&gt;0) return i;
+			}
+		}
+	} else {
+		return aGroup-&gt;size;
+	}
+	return 0;
+}
+
+/* See if we can seat any groups from the waiting list.  Groups can &quot;jump the queue&quot; if they are smaller than the groups in front */
+void reSeat() {
+	int i;
+	CustomerGroup* candidate;
+	if(queue_length) {
+		//Attempt to seat the first group on the list
+		counter[QUEUE_SCANS]++;
+		for (candidate=waiting;candidate;candidate=candidate-&gt;next) {
+			counter[QUEUE_HOPS]++;
+			if(canSeat(candidate)) {
+				queue_length--;
+				DL_DELETE(waiting, candidate);
+				arrives(candidate);
+				counter[QUEUE_TO_TABLE]++;
+				return;
+			}
+			
+		}
+
+	}
+}
+
+/* A group leaves their table (or the waiting list - NOT GOOD).  Adjust the lists appropriately */
+void leaves(CustomerGroup* aGroup) {
+	assert(initted);
+	if(aGroup-&gt;table) {
+		//If the party was seated
+		log(&quot;Removing group %d from table %s(%d), next: %d, prev: %d\n&quot;, aGroup-&gt;id,   aGroup-&gt;table-&gt;name, aGroup-&gt;table, aGroup-&gt;next, aGroup-&gt;prev);
+		aGroup-&gt;table-&gt;vacant+=aGroup-&gt;size;
+		tables[aGroup-&gt;table-&gt;vacant][++lastTable[aGroup-&gt;table-&gt;vacant]]=aGroup-&gt;table;
+		aGroup-&gt;table=NULL;
+		//Now we have an empty table, let's try to reseat someone from the queue
+		reSeat();
+		counter[LEFT_FROM_TABLE]++;
+	} else {
+		//They are still in the queue
+		log(&quot;Removing group of size %d from queue, next: %d, prev: %d\n&quot;, aGroup-&gt;size, aGroup-&gt;next, aGroup-&gt;prev);
+		DL_DELETE(waiting,aGroup);
+		queue_length--;
+		counter[LEFT_WITHOUT_BEING_SEATED]++;
+		assert(queue_length&gt;=0);
+	}
+	log(&quot;Queue length: %d\n&quot;, queue_length);
+}
+
+/* Returns the table that a group is seated at */
+/* I chose to modify the customer data structure to add a table value, so finding the table is trivial.  If I couldn't alter the data structure, I could always just wrap the customer struct in a new struct to keep track of data.  I think both these solutions are better than yet another list to track groups-&gt;tables. */
+Table* locate(CustomerGroup* aGroup){
+	assert(initted);
+	return aGroup-&gt;table;
+
+}
+
+
+/* Make sure it all works (it didn't the first time!).  Create a lot of customer groups (customers), have them all arrive at the restaurant, then leave. */
+int test (int customers) {
+	int i;
+	int leaveGroup = 0;
+	for (i=0;i&lt;customers/2;i++) {
+		counter[ARRIVED]++;
+		CustomerGroup* testGroup =(CustomerGroup*)calloc(1, sizeof(CustomerGroup));
+		testGroup-&gt;size = rand()%6+1;
+		testGroup-&gt;id = i;
+		customerPool[i] = testGroup;
+		/* Group arrives at restaurant */
+		log(&quot;Customer group %d is arriving...\n&quot;, i);
+		arrives(testGroup);
+		assert(customerPool[0]-&gt;table);
+	}
+	
+	/* Simulate churn - one group leaves, another group arrives */
+	for (i=customers/2;i&lt;customers;i++) {
+		counter[ARRIVED]++;
+		CustomerGroup* testGroup =(CustomerGroup*)calloc(1, sizeof(CustomerGroup));
+		testGroup-&gt;size = rand()%6+1;
+		testGroup-&gt;id = i;
+		customerPool[i] = testGroup;
+		
+		/* Group arrives at restaurant */
+		arrives(testGroup);
+		
+		
+		/* Another group leaves */
+		log(&quot;Customer group %d is leaving...\n&quot;, leaveGroup);
+		leaves(customerPool[leaveGroup]);
+		free(customerPool[leaveGroup]);
+		leaveGroup++;
+	}
+	
+	/* Customers leave */
+	while (leaveGroup&lt;customers) {
+		log(&quot;Customer group %d is leaving...\n&quot;, leaveGroup);
+		leaves(customerPool[leaveGroup]);
+		free(customerPool[leaveGroup]);
+		leaveGroup++;
+	}
+}
+
+/* Allocate structures */
+void init() {
+	int i,t;
+	srand(time(NULL));
+	for(t=2;t&lt;7;t++) {
+		for (i=1; i&lt;maxTables; i++) {
+			tables[t][i]=(Table*)calloc(1,sizeof(Table));;
+			tables[t][i]-&gt;size=t;
+			tables[t][i]-&gt;vacant=t;
+			snprintf(tables[t][i]-&gt;name, 19, &quot;%d-%d&quot;, t, i);
+		}
+		lastTable[t]=maxTables-1;
+	}
+	initted=1;
+}
+
+
+int main(int argc, char* argv[])
+{
+	init();
+	test(90000);
+	/* At first my implementation didn't work, so I started added debugging information to track what was going on.  It made a nice summary */
+	printf(&quot;%d groups arrived.  Seated %d groups at a table of the same size, and %d at a larger table than was necessary.  %d groups had to wait in queue, and the maximum queue length was %d.  %d moved from the queue to a table.  %d queue scans performed, visiting %d list elements in total, for an average of %d items per scan.  %d groups left without being seated, %d left from a table.\n&quot;, counter[ARRIVED], counter[PERFECT_FIT], counter[NOT_PERFECT_FIT], counter[ENQUEUED], counter[MAX_QUEUE_LENGTH], counter[QUEUE_TO_TABLE], counter[QUEUE_SCANS], counter[QUEUE_HOPS],  counter[QUEUE_HOPS]/(1+counter[QUEUE_SCANS]), counter[LEFT_WITHOUT_BEING_SEATED], counter[LEFT_FROM_TABLE]);
+}
+
+
+</code></pre>
+
+			</article>
+			</html>
+			

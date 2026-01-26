@@ -1,0 +1,72 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Perl LiveObjects System</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Perl LiveObjects System</h1>
+			</header>
+			<div class="summary">
+<p>The worst parts of Perl, Self and SmallTalk mashed into one mindbending mess.</p>
+<p>Also the largest known <a href="http://en.wikipedia.org/wiki/Quine_%28computing%29">quine</a> for Perl.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p><a href="/projects/liveobjects/liveobjects.pl.txt">Download just the Perl Code</a>
+<a href="/projects/liveobjects/liveobjects.py.txt">Download the Python Version</a></p>
+<p>Smalltalk had many interesting features, one of the most notable was its &quot;system image&quot;.  Instead of keeping all its code in text files, smalltalk loads and saves an &quot;image&quot;.  The image is the entire running system.  Source code, data, pointers, objects, everything.  When you add new code, you add it to the running smalltalk image, and this gets dumped to disk when smalltalk quits.  When you start Smalltalk again, it loads the image and you resume from where you left off.</p>
+<p>This image is what gives smalltalk its amazing portability.  To run it on a new system, you just have to port the part that loads the image and does the graphics.  Nothing else has to change, because smalltalk is basically its own operating system.  This is genuinely cool.</p>
+<p>I decided I wanted this image ability in my favourite language, Perl.  So I wrote Perl LiveObjects.  Perl LiveObjects is a &quot;save and restore&quot; system that works in a similar way to smalltalk's image system.  Perl can't actually save its memory representations directly, so I use some tricks to save as much as I can.  The result is not quite an image system like smalltalk.  Instead, it ends up being a collection of application objects that are saved and loaded.  It doesn't save every part of the running system, but it does save the important parts and then restarts them again.</p>
+<p>This version is a bit different in implementation.  Instead of a class system, like Smalltalk, there is a Prototype system (like Self or Javascript).  There is a list of System Prototypes, that can be cloned and modified.  Objects tend to be &quot;heavier&quot; than usual, because Perl's excellent library system CPAN already provides most of the objects needed for a program.  As a result, the objects in LiveObjects tend to focus on creating and managing these libarary objects.</p>
+<p>This also fits the definition of a <a href="http://en.wikipedia.org/wiki/Quine_%28computing%29">quine</a>, so not only is this the largest quine I have seen so far, in Perl, it is also the only quine that I have seen which actually does something useful, as a consequence of being a quine.</p>
+<p>Thesedays, I would have implemented this as a web application, using jQuery and BootStrap for the front end, and one of Perl's many excellent web frameworks for the backend.  If I get a lot of free time, I might just do it.  In addition, I would avoid saving everything to one file.  It certainly makes it convenient to distribute, but it is a nightmare to debug.  It is almost, but not quite, impossible to find an error in the image file that prevents it from booting.  I would much rather have the objects saved into their own files, and some bootstrap code in its own file that I can debug using normal tools.</p>
+<p>On the other hand, it's kinda unique, and fun.  Using AI, I managed to translate it to Python, which has better support.  So now I'm wondering how far I can take it.</p>
+
+			</article>
+			</html>
+			

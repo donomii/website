@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html manifest="application.manifest">
+<head>
+
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=5.0, minimum-scale=0.2"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="icon.png"/>
+	<link rel="apple-touch-icon" sizes="72x72" href="icon-ipad.png" />  
+	<link rel="apple-touch-icon" sizes="114x114" href="icon-iphone4.png" />  
+
+    <link rel="stylesheet" href="index.css" type="text/css" media="screen, mobile" title="main" charset="utf-8">
+	<script type="text/javascript" src="iDelay.js"></script>
+<script type="text/javascript" >
+
+	window.scrollTo(0,1);
+    function getVal(an_id) {
+    	return document.getElementById(an_id).value;
+}
+    function deleteParent(elem) {
+        var target = elem.parentNode;
+        target.parentNode.removeChild(target);
+}
+
+    function hideAll() {
+        hideEle('display');
+        hideEle('create_event');
+        hideEle('examine');
+}
+    function hideEle(an_id) {
+    	document.getElementById(an_id).style.display = "none";
+}
+    function showEle(an_id) {
+    	document.getElementById(an_id).style.display = "block";
+}
+    function setClick(element) {
+    	document.getElementById("display").onclick = function (){alert('foo');};
+}
+
+
+    function getInputDate() {
+    myDate = "2013/" + getVal("month") + "/" + getVal("day") + " " +
+    getVal("hour") + ":" + getVal("minute");
+    return myDate;
+}
+
+    function sortEvents() {
+    var eventList = document.getElementById('display').childNodes;
+    var i;
+    for(i=0;i<eventList.length-1;i++) {
+    var e1 = eventList.item(i);
+    var e2 = eventList.item(i+1);
+    var t1 = e1.firstChild.nextSibling.innerHTML;
+    var t2 = e2.firstChild.nextSibling.innerHTML; 
+    if (parseInt(t1) > parseInt(t2)) {
+        e2.parentNode.removeChild(e2);
+        e1.parentNode.insertBefore(e2, e1);
+        }
+    }
+}
+
+    function startSort() {
+        sortEvents();
+        setTimeout("startSort();", 5000);
+}
+
+	</script>
+    <title>iDelay</title>
+</head>
+<body onLoad="forceToTop();startTimers();startSort();hideEle('create_event');" style="height:100%; background-color: #0000FF;font-weight: bold;font-family:Arial,sans-serif;" >
+
+
+<div id=display style="height:100%; background-color: #0000FF"><div
+id=event_template style="display: none; "><span id="timespan" style="background-color: #0000FF; float: left;
+color: #E0E0E0; padding-top:0em;padding-bottom: 2em;"
+onClick='deleteParent(this);'>0 mins</span><span id=seconds
+style="display:none">0</span><div id=event_display style="height:100%;
+margin-left: 25%;margin-right:25%; margin-top: 0;
+padding-top:0em;padding-bottom: 2em; padding-left: 2em; background-color:
+#000080; color: #E0E0E0" >Template Event</div></div><div id=event><span
+id="timespan" style="background-color: #0000FF; float: left; color: #E0E0E0;
+padding-top:0em;padding-bottom: 2em;" onClick='deleteParent(this);'>Time
+Left</span><span id=seconds style="display:none">0</span><div id=event_display
+style="height:100%; margin-left: 25%;margin-right:25%; margin-top: 0;
+padding-top:0em;padding-bottom: 2em; padding-left: 2em; background-color:
+#000080; color: #E0E0E0" >Next Event</div></div></div>
+<hr/>
+<div onClick="hideEle('display');showEle('create_event');">Add an event</div>
+<div id=create_event>
+
+<select id="month">
+
+	<option id="1" value="1">January</option>
+	<option id="2" value="2">February</option>
+	<option id="3" value="3">March</option>
+	<option id="3" value="4">April</option>
+	<option id="5" value="5">May</option>
+	<option id="6" value="6">June</option>
+	<option id="7" value="7">July</option>
+	<option id="8" value="8">August</option>
+	<option id="9" value="9">September</option>
+	<option id="10" value="10">October</option>
+	<option id="11" value="11">November</option>
+	<option id="12" value="12">December</option>
+
+</select>
+
+<select id="day">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+
+
+<select id="hour">
+<option value="0">0</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+</select>
+
+<select id="minute">
+<option value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30">30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>>
+</select>
+Event:<input type="text" id="event_text" />
+<div onClick="hideEle('create_event');showEle('display');
+var newDate = new Date(getInputDate());
+var obj=document.getElementById('event_template').cloneNode(true);
+obj.style.display = 'block';
+obj.firstChild.innerHTML = 'Starting...';
+obj.firstChild.nextSibling.innerHTML = calcSecs(newDate);
+obj.lastChild.innerHTML=document.getElementById('event_text').value;
+document.getElementById('display').appendChild(obj);
+javascript_countdown = new countdown_obj();
+newTimer(newDate, obj.firstChild);sortEvents();">Add Event</div>
+
+</div>
+
+<div id=examine>
+<div id=examine_display></div>
+</div>
+
+</body>
+</html>
+

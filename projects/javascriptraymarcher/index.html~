@@ -1,0 +1,46 @@
+<html>
+<head>
+<script src="../templates/showdown.js" type="text/javascript" ></script>
+<script src="../templates/templateengine.js" type="text/javascript" ></script>
+<link href="../templates/style.css" rel="stylesheet" type="text/css" />
+<title>PraeceptaMachinae</title>
+<script src="../templates/jquery.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body   onload="TemplateEngine.start();">
+
+<div class=content id=content>
+<h2>Javascript Raymarcher</h2>
+<pre id=markdown>
+
+##Raymarcher
+
+This is a javascript raymarcher.  It marches rays.  This is in contrast to a raytracer, which traces rays.  Raytracers are much faster than raymarchers, often several thousand times faster.  However, raymarchers can easily render non-continuous surfaces or even disconnected sets, such as fractals or point clouds.
+
+This is an [ online demo ](ver12.html) and [showcase] (gallery.html).
+
+In addition, all the previous versions are available online, with commentary.  I have been trying to turn them into a mini tutorial, as each version is still functional and shos off a new feature.
+
+1. We draw [a plane](ver1.html).  We have to start somewhere.
+2. [Something to look at](ver2.html).  Colouring by normals, a projection and a wavy plane.
+3. [Diffuse shading](ver3.html).  It is beginning to look like a real renderer now.
+4. [Render primitives](ver4.html).  I add the ability to render spheres, and tidy up the code so that it will be easier to add more in the future.
+5. [Shadows](ver5.html).  Things in the scene now cast shadows.
+6. [Coloured lights](ver6.html).  Any surface not in shadow takes on the colours of the lights shining on it.
+7. [Fractals](ver7.html).  Added the Mandelbrot fractal as a render primitive.
+8. [Rotations](ver8.html). Added rotation code for camera and vectors.  Code cleanup to make primitives into javascript objects.
+9. [MD2 Loader](ver9.html).  Added routines to load and render quake MD2 models.  Runs slowly but renders correctly.  Textures not supported.
+10. [Diagnostic displays](ver10.html).  Added display window to show rendering hotspots (areas that take longer to render are brighter red).  Also a normal map.
+
+jsRayMarch uses object polymorphism for all its display primitives, which simplifies the code.  All render primitives accept the following arguments.
+
+Primitive (x,y,z,scale,Red,Green,Blue)
+
+
+
+
+
+</pre></div>
+
+</body>
+</html>

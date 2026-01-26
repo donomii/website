@@ -1,0 +1,84 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog/ Internal Actions</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog/ Internal Actions</h1>
+			</header>
+			<div class="summary">
+<p>How do functions work in the Throff engine?</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Everything in Throff is a function.  So understanding how they work is the key to understanding throff.  This article started as a my notes on how to re-implement throff for a new platform.</p>
+<p>Throff works by treating each word in the program as a function.  In order to do this, each word has a default &quot;action&quot;, provided by a function.</p>
+<p>The default function is to take one element from the code stack, and push it onto the data stack, unchanged.  The data stack is the &quot;argument&quot; stack, so this means that the TOKEN will be an argument to the next function.</p>
+<p>In fact, this is not quite true.  Before moving the TOKEN from code stack to data stack, throff looks up the TOKEN in the current namespace.  If throff can find the TOKEN in the current namespace, then the result of that lookup is fetched and pushed onto the codestack (and if you make the mistake of binding a token to itself, throff will go into an infinite loop).</p>
+<h5 id="basic-functions">Basic functions</h5>
+<p>Below is a list of every basic NATIVE function that the interpreter provides.  The list is short, because throff is simple.</p>
+<p>All the functions take a throff interpreter state, and return a new interpreter state, and internally they are all called 'stepper functions', because internally the code looks like</p>
+<pre><code>state2 = step(state1)
+</code></pre>
+<p>The functions are named after what they do, kind of.</p>
+<p>TOKEN(default)
+looks up this token in the current namespace.  If the TOKEN is bound to a value(it's a variable name), that value is pushed onto the codestack, where it will be activated on the next step.  Otherwise, the TOKEN will be pushed onto the datastack, possibly with an error about an unknown variable.</p>
+<p>NULLSTEP
+Does nothing</p>
+<p>BUILDMODE or ']'
+Buildmode sets the engine into build function mode.  In this mode, all TOKENs are moved onto the data stack until a matching '[' is found.  Nested [ ] are allowed.</p>
+<p>BUILDFUNC or '['
+BUILDFUNC travels down the data stack, moving each TOKEN into an array, until it finds a matching ']'.  Nested [ ] are allowed.  When buildfunc finds the matching ']', it creates a function from the array, by adding a namespace and setting its action function to the INTERPRETED function.  Unfortunately this has to be hard coded into the engine.  I plan to have a way to add more &quot;function close&quot; markers, so that people can define their own functions.</p>
+<p>INTERPRETED
+All user functions have this.  It pushes each TOKEN from its array onto the codestack.  These tokens will be looked up and activated like normal.  Because of this, there is no &quot;return&quot; or end-of-function marker.  When all the TOKENs from the function have been used up, the throff continues down the code stack, which holds the rest of the calling function.  This gives us tail calls for free.</p>
+<p>NATIVE
+All the builtin throff functions.  These include functions to open/close files, print to the screen, and so on.</p>
+
+			</article>
+			</html>
+			

@@ -1,0 +1,148 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>code / Port Relay</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>code / Port Relay</h1>
+			</header>
+			<div class="summary">
+<p>Relay incoming connections to any target server</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p><a href="../../resources/racket_port_relay.rkt">Download</a></p>
+<p>Fork it on <a href="https://github.com/donomii/racket-port-relay">github</a></p>
+<p>I needed to FTP some files between two servers.  The servers could not talk to each other, because of a firewall.  My laptop, however, could talk to both servers.  All I needed to do was to find a program for my laptop that could relay the connection from server 1 to server 2.</p>
+<p>Finding this program turned out to be very hard, so I wrote my own in Racket Scheme.  It took me less time to finish this than it took my coworker to find a suitable program, although that might say more about my coworker's ability to use Google than my programming skills.</p>
+<p>This port relay can also save the relayed data to disk, allowing you to spy on the connections.  This is <em>extremely</em> useful for debugging and developing network apps.  If you want to capture HTTP traffic, the best way is to set your browser's proxy to this port relay, and set the target server address to a real proxy server.  You will also want to switch off &quot;keep-alive&quot; in your broswer to force it to create a new connection for each new request, otherwise your browser will send multiple requests through the same connection, which would be logged to the same file.</p>
+<pre><code>#lang racket
+
+; Port Relay
+;
+; Listen on a port, and relay all connections to a different port
+;
+; Optional: save all the data that is relayed to log files.  
+; Two files will be created per connection, a &quot;server&quot; and 
+; &quot;client&quot; file, with a unique number for that connection.
+;
+; To save the traffic, set capture_traffic to #t, and set 
+; log_dir to the directory you want to save the files to.
+
+
+[define [debug text]
+  [displayln text]
+  #t]
+
+[define capture_traffic #t]
+[define log_dir &quot;c:\\&quot;]  ;You'll be wanting to change this
+
+[define serial_num 1]
+[define [get_num] [set! serial_num [add1 serial_num]] [sub1 serial_num]]
+[define [make-buffer] (make-bytes [* 8 1024] (char-&gt;integer #\_)) ]
+
+
+;We need our own port copy to handle flushing the output correctly
+[define [my-copy-port buffer source target fileport]
+  ;[debug [format &quot;Reading source port ~a&quot; source]]
+  [let [[data [read-bytes-avail!  buffer source]]]
+    [if  [not [eof-object? data]]
+         [begin 
+           ;[debug [format &quot;Relaying ~a bytes from ~a to ~a ()&quot; data source target ]]
+           [write-bytes buffer target 0 data]
+           [when fileport [write-bytes buffer fileport 0 data] [flush-output fileport]]
+           [flush-output target]
+           [my-copy-port buffer source target fileport]]
+         [begin
+           [debug &quot;Port closed!&quot;]
+           [close-input-port source]
+           [close-output-port  target]
+           [when fileport [close-output-port fileport]]]]]]
+
+;Start the relay threads for a incoming connection
+[define [relay filename server-readp server-writep client-readp client-writep]
+  [list [thread [thunk [with-handlers ([[thunk* #t] [lambda [err] [displayln [format &quot;Thread closed: ~a&quot; err] ]#f]]) 
+                         [my-copy-port 
+                          [make-buffer] 
+                          server-readp 
+                          client-writep 
+                          [if filename 
+                              [begin [debug [format &quot;Writing to file ~a&quot; [format &quot;~a_server.http&quot; filename]]][open-output-file [format &quot;~a_server.http&quot; filename] #:exists 'truncate]]
+                              #f] ]]]]
+        [thread [thunk (with-handlers ([[thunk* #t] [thunk* #f]]) [my-copy-port 
+                                                                   [make-buffer] 
+                                                                   client-readp 
+                                                                   server-writep 
+                                                                   [if filename 
+                                                                       [open-output-file [format &quot;~a_client.http&quot; filename] #:exists 'truncate]
+                                                                       #f] ])]]]
+  
+  ]
+
+
+;Monitor a listener.  When a connection is opened, start the relay threads and then return to listening for connections
+[define listenloop [lambda [local_port remote_ip remote_port listener] 
+                     [let-values [[[client-readp client-writep][tcp-accept listener]]]
+                       [let-values [[[server-readp server-writep] (tcp-connect	 	remote_ip remote_port)]]
+                         [displayln [format &quot;Relaying connection localhost:~a -&gt; ~a:~a&quot; local_port remote_ip remote_port]]
+                         [relay [if capture_traffic [format &quot;~aconnection_~a&quot; log_dir [get_num]] #f] server-readp server-writep client-readp client-writep]
+                         [listenloop local_port remote_ip remote_port listener]
+                         ]]]]
+
+;Listen on a local port.  Relay connections to the remote IP address and remote port
+[define [relay-port local_port remote_ip remote_port ]
+  [listenloop local_port remote_ip remote_port  (tcp-listen local_port 1 #t #f)]
+  [debug &quot;Finished listening&quot;]]
+
+; Start a listener on port 81 that will relay connections to localhost 8080
+[relay-port 81 &quot;localhost&quot; 1313]
+</code></pre>
+
+			</article>
+			</html>
+			

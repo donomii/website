@@ -1,0 +1,92 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Stars and Ships</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Stars and Ships</h1>
+			</header>
+			<div class="summary">
+<p><img loading="lazy" src="/projects/starsandships/summaryimage.png" alt="StarsAndShips"> A HTML5/Javascript/Processing engine for an unfinished game.  This is a HTML5 canvas powered demo for a kind of space trading/management game.  The demo show the ships moving to destinations.  The graphics are all vector based, so it scales smoothly to any display size.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<h2 id="javascript--processing">Javascript + Processing</h2>
+<p>Try the <a href="/projects/starsandships/webview.html?loc=starsandships">Fullscreen version</a>!</p>
+<p>Click on the ships or stars or drag the background to see more.</p>
+<script src="/projects/starsandships/processing.js"></script>
+<script src="/projects/starsandships/jquery.js"></script> <script src="/projects/starsandships/datasets.js"></script> <script type="text/javascript" src="/projects/starsandships/stars.js"></script>
+<script type="text/javascript" >
+	window.scrollTo(0,1);
+	</script>
+<pre><code>&lt;canvas id=&quot;sketch&quot; data-processing-sources=&quot;/projects/starsandships/stars.pde&quot; width=500 height=500&gt;&lt;/canvas&gt;
+&lt;script type=&quot;application/javascript&quot;&gt;  
+    var processingInstance;  
+    function startSketch() {  
+        switchSketchState(true);  
+    }  
+    function stopSketch() {  
+        switchSketchState(false);  
+    }  
+    function switchSketchState(on) {  
+        if (!processingInstance) {  
+            processingInstance = Processing.getInstanceById('sketch');  
+        }  
+        if (on) {  
+            processingInstance.loop();  // call Processing loop() function  
+        } else {  
+            processingInstance.noLoop(); // stop animation, call noLoop()  
+        }  
+    }  
+    setTimeout(&quot;console.log('halfsize');halfSizeCanvas('sketch');&quot;, 1000);
+</code></pre>
+<p></script></p>
+
+			</article>
+			</html>
+			

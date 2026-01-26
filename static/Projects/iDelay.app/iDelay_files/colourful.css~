@@ -1,0 +1,82 @@
+
+	   input, select   {
+	    margin: 0.8em;
+	    font-size: 150%;}
+
+	   div.inputform { font-size: 200% }
+	   
+	   div#header_line {
+	    display:none
+	   }
+	   
+	    span#time_header {
+	    background-color: white; 
+	    
+	    color: red; 
+	    
+	    padding-top:1em;
+	    padding-bottom: 1em;
+	    padding-right: 1em;
+	    padding-left: 1em;
+	    } 
+	    
+
+	    
+	    span#timespan_template {
+	      
+	      margin-left: 10%;
+	      margin-right:25%; 
+	    background-color: red; 
+	    float: left; 
+	    color: white; 
+	    padding-top:1em;
+	    padding-bottom: 1em;
+	    padding-right: 1em;
+	    padding-left: 1em;
+	    
+	    }
+	    
+	    
+	    	    	    span#event_header {
+	    
+	      margin-left: 10%;
+	      margin-right:25%; 
+	      margin-top: 0;
+	      background-color: white; 
+	    
+	    color: red; 
+	    
+	    padding-top:1em;
+	    padding-bottom: 1em;
+	    padding-right: 2em;
+	    padding-left: 2em;
+	    } 
+	    
+	    div#event_display {
+	      height:100%;  
+	      margin-left: 25%;
+	      margin-right:25%; 
+	      margin-top: 1em;
+	      margin-bottom: 1em;
+	      padding-top:1em;
+	      padding-bottom: 2em; 
+	      padding-left: 2em; 
+	      background-color: pink;
+	      color: red;
+	    }
+	    body {
+		height:100%; 
+		background-color: white;
+		font-weight: bold;
+		font-family:Arial,sans-serif;
+	    }
+	    
+
+	    
+	    
+
+	    
+	    div#display {
+	     height:100%; 
+	     background-color: white
+	    }

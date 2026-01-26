@@ -1,0 +1,417 @@
+<html>
+<head>
+<title>Canvas tutorial</title>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+
+
+var ctx;
+var canvas;
+var outWin;
+var scene_brightness=3;
+function setup(){
+	//Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph('canvasdiv');
+	outWin.erase(ctx);
+
+lights = [
+new Light(50, 50, -20, 255,0,0),
+new Light(150, 50, -20, 0,255,0),
+new Light(50, 150, -20, 0,0,255),
+new Light(150, 150, -20, 255,255,255),
+];
+//for (i=0;i<5;i++)
+//  { lights[i]=new Light(80*i, 40, -20, 512,0,0)}
+  //Kick off the render
+	renderImage();
+}
+
+function Light ( xx, yy, zz, rr, gg, bb) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.r = rr;
+this.g = gg;
+this.b = bb;
+}
+
+
+var phase=1;
+var x = phase;
+var y = 1;
+function renderImage () {
+	//If we try to draw the entire picture in one go, the browser will freeze.  So instead we draw one pixel at a time.
+	x+=11;
+	if (x>=outWin.width) {
+		x=phase;
+		y+=1;
+		if (y>=outWin.height) {
+		   y=1;
+		   phase++;
+      if(phase>11) {
+			//finished
+     
+      alert("Finished");
+      return;
+     
+		}}
+	}
+	ray = new Ray( x, y );
+	intersect = castRay( ray.origin, ray.direction ) ;
+  
+	//The ray object contains the position and direction of the ray.  castRay walks along the ray, looking for terrain.
+	if( intersect )
+   { outWin.setPixel(x,y,terrainColour( intersect, ray.direction )); }  //We hit the terrain, draw the ground colour
+	else
+   { outWin.setPixel( x, y,   skyColour()); }  //We missed the terrain, draw the sky colour
+
+	//Give the browser some time to do other processing
+	setTimeout("renderImage()", 10);
+}
+
+//This is the function that sets the shape of the ground.  Simple for now, it will get very complicated soon.
+function ground(x,y,z) { return z*2+1;ret=0; if (z>90) { ret=200;};return ret;}
+//function ground(x,z) { ret= 90*Math.sin(x/5)*Math.sin(z/5); return ret; ;}
+//function ground(x,z) { ret= 60*Math.sin(x*x+z*z); return ret; ;}
+//function ground(x,y,z) { ret= 50*Math.sin(x/20)*Math.sin(z/10); return ret; ;}
+//function ground(x,z) { ret= 150-(x-100)*(x-100)/32-z*z; return ret; ;}
+//Math.sin(x)*Math.sin(x)+
+function sphere(x,y,z) { ret = (x-120)*(x-120) + (y-140)*(y-140) + (z-21)*(z-21); return ret; }
+function gen_sphere(cx,cy,cz,x,y,z) { ret = (x-cx)*(x-cx) + (y-cy)*(y-cy) + (z-cz)*(z-cz); return ret; }
+function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+function sphere3(x,y,z) { ret = (x-180)*(x-180) + (y-70)*(y-70) + (z-21)*(z-21); return ret; }
+
+//function sphere(x,y,z) { ret = (x-50)*(x-50) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+//function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+//function sphere3(x,y,z) { ret = (x-150)*(x-150) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+
+
+function castRay(   ro,  rd ) {
+     delt = 0.001;
+     mint = 0.0001;
+     maxt = 1200.0;
+    //Step along the ray 
+    
+    for( t = mint; t < maxt; t += delt )
+    {
+      delt=delt*1.07;
+      p =  jQuery.extend(true, {}, ro);
+      dir = jQuery.extend(true, {}, rd);
+      dir.mult(t);
+      p=p.add(dir);
+      p.object="something";
+      if(gen_sphere(100,100,40,p.x,p.y,p.z)<(50*50)){
+      if(in_mandelbrot(p.x,p.y,p.z)){p.object="mandelbrot"; return p}}
+      if (sphere(p.x,p.y,p.z) < 400) {p.object="sphere";return p;    }
+      for(ii=0;ii<lights.length;ii++){
+        if (gen_sphere(lights[ii].x, lights[ii].y, lights[ii].z, p.x,p.y,p.z) < 400) {p.object="light"+ii;return p;}
+        }
+      if (sphere2(p.x,p.y,p.z) < 900) {p.object="sphere";return p;}
+      if (sphere3(p.x,p.y,p.z) < 400) {p.object="sphere";return p;}
+      if (p.z>30){p.object="terrain";return p;}
+//        if( p.y < ground( p.x, 0, p.z ) ) {
+//       //We've sunk into the ground. 
+//            return p;
+//        }
+    }
+    return false;
+}
+
+//Clumsy attempt at a vector object
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.object="uninited";
+this.add = function (aVec) {
+newx =this.x + aVec.x;
+newy =this.y + aVec.y;
+newz =this.z + aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.vsub = function (aVec) {
+newx =this.x - aVec.x;
+newy =this.y - aVec.y;
+newz =this.z - aVec.z;
+return new Vector(newx, newy, newz);
+}
+
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+}
+
+this.magnitude = function () {
+return Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+}
+
+this.normalise = function ( p ) {
+newx = this.x/this.magnitude();
+newy = this.y/this.magnitude();
+newz = this.z/this.magnitude();
+return new Vector(newx, newy, newz);
+}
+
+this.cross = function ( p ) {
+newx = this.y*p.z - this.z*p.y;
+newy = this.z*p.x - this.x*p.z;
+newz = this.x*p.y - this.y*p.x;
+return new Vector(newx, newy, newz);
+}
+
+this.innerProduct = function(p) {
+res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+ret = res;
+return ret;
+}
+this.toString = function() {
+return "x: " + this.x + "  y: " + this.y + "  z: " + this.z + " object: " + this.object; 
+}
+
+this.clone = function() {
+ret = new Vector(this.x, this.y, this.z);
+return ret;
+}
+
+}
+
+//This creates a ray, pointing in the right direction
+
+
+
+
+
+function Ray (x,y) {
+//y=100-y;
+this.origin = new Vector (outWin.width/2,outWin.height/4,-1);
+offset = new Vector(0,outWin.height/3,0);
+this.origin = this.origin.add(offset);
+//this.direction = new Vector (0.1,-0.5+y/200,0.1);
+this.viewport = new Vector(x,y,0);
+this.viewport = this.viewport.add(offset);
+this.direction = this.origin.vsub(this.viewport);
+this.direction = this.direction.normalise();
+this.origin = new Vector (x,y,0);
+this.direction = new Vector (0,0,1);
+//this.direction = new Vector (0,-y/100,1);
+//setDiv("debugdiv", printVec(this.direction)); 
+
+}
+
+function printVec(v) {
+return "" + v.x + ", " + v.y + ", " + v.z;
+}
+
+//var sun = new Vector (1,1,0);
+var sun;
+
+
+function normalColour(p, direction) {
+   to_sun = p.vsub(sun);
+   to_sun = to_sun.normalise();
+    n = interpolate_normal(p, direction);
+    n.mult(256);
+    n.x=int(n.x);
+    n.y=int(n.y);
+    n.z=int(n.z);
+//  setDiv('debugdiv',"!!"+n.toString()+"!");
+     ret = rgb(n.x,n.y,n.z);
+     return ret;   
+}
+
+function terrainColour(p, direction) {
+   hit=p.clone();
+   
+   n = interpolate_normal(p, direction);
+  
+   red=0;green=0;blue=0;
+
+for(i=0;i<lights.length;i++) {
+    l = lights[i];
+    h = hit.clone();
+    m = new Vector(h.x, h.y, h.z); 
+   m = m.vsub(direction);
+  m = m.vsub(direction);
+  //setDiv('debugdiv', "Checking light " +i+ " at " + lights[i].x);
+     to_light = m.vsub(l);
+   to_light = to_light.normalise();
+   //to_light.mult(0.01);  
+   
+   md = new Vector(to_light.x, to_light.y, to_light.z);
+   md.mult(-1);
+   see_moon = castRay(m, md);
+  //setDiv('debugdiv', "Hit light " + see_moon);
+if (see_moon) {
+      if (see_moon.object=="light"+i) {
+      distance = to_light.vsub(l);
+      distance = distance.magnitude();
+      n = interpolate_normal(h, direction);
+        intensity = n.innerProduct(to_light)/distance;
+        if (intensity<0) {intensity=0} 
+        red=red+intensity*lights[i].r/255; green=green+intensity*lights[i].g/255; blue=blue+intensity*lights[i].b/255;
+         //setDiv('debugdiv', "Added colour"); 
+
+}}  
+  }
+     return rgb(red*256*scene_brightness, green*256*scene_brightness, blue*256*scene_brightness);
+		
+}
+
+function skyColour () { return "#0000FF"}
+
+function interpolate_normal (p, direction) {
+eps = 1;
+
+no = new Vector(p.x, p.y, p.z);
+  nd = jQuery.extend(true, {}, direction);
+  no = no.vsub(nd);
+  no = no.vsub(nd);
+  nd.mult(0.1);
+  n = castRay(no, nd);
+  
+qo = new Vector(p.x+eps, p.y, p.z);
+  qd = jQuery.extend(true, {}, direction);
+  qo = qo.vsub(qd);
+  qo = qo.vsub(qd);
+  qd.mult(0.1);
+  q = castRay(qo, qd);
+
+
+ro = new Vector(p.x, p.y+eps, p.z);
+  rd = jQuery.extend(true, {}, direction);
+  ro = ro.vsub(rd);
+  ro = ro.vsub(rd);
+  rd.mult(0.1);
+  r = castRay(ro, rd);
+  
+
+    xvec = new Vector ( n.x - q.x, n.y - q.y, n.z - q.z);
+    zvec = new Vector ( n.x - r.x, n.y - r.y, n.z - r.z);
+    xvec=xvec.normalise();
+    zvec=zvec.normalise();
+         n = xvec.cross(zvec); 
+		  normal = n.normalise();
+   
+//    setDiv('debugdiv', " " + normal.x +", "+ normal.y +", "+ normal.z);
+    return normal;
+}
+
+function Graph(aCanvas ) {
+	this.canvas = document.getElementById('canvasdiv');
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	function redraw (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		for ( ii=0;ii<myLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	this.redraw=redraw;
+
+	this.setPixel = function (x, yy, aColor) {
+		var y =  yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = aColor;
+		aCtx.beginPath();
+		aCtx.moveTo(x-1,y-1);
+		aCtx.lineTo(x,y);
+		aCtx.stroke();
+
+	};
+
+
+	function erase () {
+		aCtx = this.ctx;
+		aCtx.fillStyle = "#000000";
+		aCtx.globalAlpha=1;
+		aCtx.strokeStyle ='#FFFFFF';
+		aCtx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+	this.erase = erase;
+}
+
+
+
+
+function int (x) { return Math.abs(Math.floor(x)) }
+function int2hex (x) {
+t = x.toString(16);
+if (t.length ==1 ) {
+t = t + "0";
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(red, green, blue)
+{
+  
+  if(red>255){red=255;}
+  if(blue>255){blue=255;}
+  if(green>255){green=255;}
+//  blue=int(blue);
+//  green=int(green);
+  
+  var decColor = int(red) + 256 * int(green) + 65536 * int(blue);
+  ret = '#'+int2hex(int(red))+int2hex(int(green))+int2hex(int(blue));
+//  setDiv('debugdiv', "ret: " + ret); 
+  return ret; 
+}
+
+
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+
+function in_mandelbrot (x, y, z) {
+if(z>9){
+  if (z<30) {
+  x0 = (x-100)/50-0.3;
+  y0 = (y-100)/50;
+
+  x = 0;
+  y = 0;
+
+  iteration = 0;
+  max_iteration = 100;
+
+  while ( (x*x + y*y <= (2*2)) && ( iteration < max_iteration) )  {
+    xtemp = x*x - y*y + x0;
+    y = 2*x*y + y0;
+
+    x = xtemp;
+
+    iteration = iteration + 1;
+  }
+
+  if ( iteration == max_iteration ) { return true;}
+  return false;
+  
+}}}
+
+
+</script>
+</head>
+<body onload="setup();">
+<canvas id="canvasdiv" width="400" height="400"></canvas>
+<div id="debugdiv"></div>
+<div>
+Now I've added a fractal object - the classic 2D mandelbrot set.  This shows off the strongest feature of the ray-marcher - it can display any shape at all, provided I can find a formula that says whether a point is inside or outside the fractal.  Happily, the mandelbrot fractal does exactly this.
+
+</div>
+</body>
+</html>

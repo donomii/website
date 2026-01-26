@@ -1,0 +1,347 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Javascript Ray Marcher  v0.4</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Javascript Ray Marcher  v0.4</h1>
+			</header>
+			<div class="summary">
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+var ctx;
+var canvas;
+var outWin;
+function setup(){//Graph is a handy wrapper object for dealing with the output window.
+outWin = new Graph('canvasdiv');
+outWin.erase(ctx);
+sun = new Vector (100,100,-100);
+//Kick off the render
+renderImage();
+}
+var phase=1;
+var x = phase;
+var y = 1;
+function renderImage () {
+	//If we try to draw the entire picture in one go, the browser will freeze.  So instead we draw one pixel at a time.
+	x+=11;
+	if (x>=outWin.width) {
+		x=phase;
+		y+=1;
+		if (y>=outWin.height) {
+		   y=1;
+		   phase++;
+      if(phase>11) {
+			//finished
+			return;
+			alert("Finished");
+		}}
+	}
+	ray = new Ray( x, y );
+	intersect = castRay( ray.origin, ray.direction ) ;
+	//The ray object contains the position and direction of the ray.  castRay walks along the ray, looking for terrain.
+	if( intersect )
+   { outWin.setPixel(x,y,terrainColour( intersect, ray.direction )); }  //We hit the terrain, draw the ground colour
+	else
+   { outWin.setPixel( x, y,   skyColour()); }  //We missed the terrain, draw the sky colour
+	//Give the browser some time to do other processing
+	setTimeout("renderImage()", 1);
+}
+//This is the function that sets the shape of the ground.  Simple for now, it will get very complicated soon.
+//function ground(x,y,z) { return 2;}
+//function ground(x,z) { ret= 90*Math.sin(x/5)*Math.sin(z/5); return ret; ;}
+//function ground(x,z) { ret= 60*Math.sin(x*x+z*z); return ret; ;}
+function ground(x,y,z) { ret= 100*Math.sin(x/20)*Math.sin(z/20); return ret; ;}
+//function ground(x,z) { ret= 150-(x-100)*(x-100)/32-z*z; return ret; ;}
+//Math.sin(x)*Math.sin(x)+
+function sphere(x,y,z) { ret = (x-90)*(x-90) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+function sphere3(x,y,z) { ret = (x-110)*(x-110) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+//function sphere(x,y,z) { ret = (x-50)*(x-50) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+//function sphere2(x,y,z) { ret = (x-100)*(x-100) + (y-50)*(y-50) + (z-21)*(z-21); return ret; }
+//function sphere3(x,y,z) { ret = (x-150)*(x-150) + (y-100)*(y-100) + (z-21)*(z-21); return ret; }
+function castRay(   ro,  rd ) {
+     delt = 0.001;
+     mint = 0.0001;
+     maxt = 100.0;
+    //Step along the ray 
+    for( t = mint; t < maxt; t += delt )
+    {
+      delt=delt*1.05;
+      p =  jQuery.extend(true, {}, ro);
+      dir = jQuery.extend(true, {}, rd);
+      dir.mult(t);
+      p=p.add(dir);
+
+      if (sphere(p.x,p.y,p.z) < 400) {
+        return p;
+        }
+      if (sphere2(p.x,p.y,p.z) < 900) {return p;}
+      if (sphere3(p.x,p.y,p.z) < 400) {return p;}
+
+        if( p.y < ground( p.x, 0, p.z ) ) {
+       //We've sunk into the ground. 
+            return p;
+        }
+    }
+    return false;
+}
+//Clumsy attempt at a vector object
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.add = function (aVec) {
+newx =this.x + aVec.x;
+newy =this.y + aVec.y;
+newz =this.z + aVec.z;
+return new Vector(newx, newy, newz);
+}
+this.vsub = function (aVec) {
+newx =this.x - aVec.x;
+newy =this.y - aVec.y;
+newz =this.z - aVec.z;
+return new Vector(newx, newy, newz);
+}
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+}
+this.magnitude = function () {
+return Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+}
+this.normalise = function ( p ) {
+newx = this.x/this.magnitude();
+newy = this.y/this.magnitude();
+newz = this.z/this.magnitude();
+return new Vector(newx, newy, newz);
+}
+this.cross = function ( p ) {
+newx = this.y*p.z - this.z*p.y;
+newy = this.z*p.x - this.x*p.z;
+newz = this.x*p.y - this.y*p.x;
+return new Vector(newx, newy, newz);
+}
+this.innerProduct = function(p) {
+res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+ret = res;
+return ret;
+}
+this.toString = function() {
+return "x: " + this.x + "  y: " + this.y + "  z: " + this.z; 
+}
+}
+//This creates a ray, pointing in the right direction
+function Ray (x,y) {
+//y=100-y;
+this.origin = new Vector (outWin.width/2,outWin.height/4,-1);
+offset = new Vector(0,outWin.height/3,0);
+this.origin = this.origin.add(offset);
+//this.direction = new Vector (0.1,-0.5+y/200,0.1);
+this.viewport = new Vector(x,y,0);
+this.viewport = this.viewport.add(offset);
+this.direction = this.origin.vsub(this.viewport);
+this.direction = this.direction.normalise();
+this.origin = new Vector (x,y,0);
+this.direction = new Vector (0,0,1);
+//this.direction = new Vector (0,-y/100,1);
+//setDiv("debugdiv", printVec(this.direction)); 
+}
+function printVec(v) {
+return "" + v.x + ", " + v.y + ", " + v.z;
+}
+//var sun = new Vector (1,1,0);
+var sun;
+function normalColour(p, direction) {
+   to_sun = p.vsub(sun);
+   to_sun = to_sun.normalise();
+    n = interpolate_normal(p, direction);
+    n.mult(256);
+    n.x=int(n.x);
+    n.y=int(n.y);
+    n.z=int(n.z);
+//  setDiv('debugdiv',"!!"+n.toString()+"!");
+     ret = rgb(n.x,n.y,n.z);
+     return ret;   
+}
+function terrainColour(p, direction) {
+   //p = p.normalise();
+   to_sun = p.vsub(sun);
+   to_sun = to_sun.normalise();
+    n = interpolate_normal(p, direction);
+      
+   //t = n.innerProduct(p)
+   //t1 = n.mult(2*t);
+    //            reflected = p.vsub(n);
+   intensity = n.innerProduct(to_sun);
+  refvec=new Vector(1,0,0);
+  nmap = n.innerProduct(refvec);
+//    intensity=intensity+1;
+//    intensity=intensity/2;
+    if (intensity<0) {intensity=0} 
+    intensity = intensity * 256;
+  //  intensity = 256-intensity;
+  //setDiv('debugdiv',"!!"+n.toString()+"!");
+     ret = rgb(intensity, intensity, intensity);
+    		  //if ( intensity<50 ) { ret = rgb(50,50,50)};
+//setDiv('debugdiv',"!!"+ret+"!");
+		  return ret;
+		
+}
+function skyColour () { return "#0000FF"}
+function interpolate_normal (p, direction) {
+eps = 1;
+no = new Vector(p.x, p.y, p.z);
+  nd = jQuery.extend(true, {}, direction);
+  no = no.vsub(nd);
+  no = no.vsub(nd);
+  nd.mult(0.1);
+  n = castRay(no, nd);
+  qo = new Vector(p.x+eps, p.y, p.z);
+  qd = jQuery.extend(true, {}, direction);
+  qo = qo.vsub(qd);
+  qo = qo.vsub(qd);
+  qd.mult(0.1);
+  q = castRay(qo, qd);
+ro = new Vector(p.x, p.y+eps, p.z);
+  rd = jQuery.extend(true, {}, direction);
+  ro = ro.vsub(rd);
+  ro = ro.vsub(rd);
+  rd.mult(0.1);
+  r = castRay(ro, rd);
+  xvec = new Vector ( n.x - q.x, n.y - q.y, n.z - q.z);
+    zvec = new Vector ( n.x - r.x, n.y - r.y, n.z - r.z);
+    xvec=xvec.normalise();
+    zvec=zvec.normalise();
+         n = xvec.cross(zvec); 
+		  normal = n.normalise(); 
+//    setDiv('debugdiv', " " + normal.x +", "+ normal.y +", "+ normal.z);
+    return normal;
+}
+function Graph(aCanvas ) {
+	this.canvas = document.getElementById('canvasdiv');
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	function redraw (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		for ( ii=0;ii<myLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	this.redraw=redraw;
+	this.setPixel = function (x, yy, aColor) {
+		var y =  this.height-yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = aColor;
+		aCtx.beginPath();
+		aCtx.moveTo(x-1,y-1);
+		aCtx.lineTo(x,y);
+		aCtx.stroke();
+	};
+	function erase () {
+		aCtx = this.ctx;
+		aCtx.fillStyle = "#000000";
+		aCtx.globalAlpha=1;
+		aCtx.strokeStyle ='#FFFFFF';
+		aCtx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+	this.erase = erase;
+}
+function int (x) { return Math.abs(Math.floor(x)) }
+function int2hex (x) {
+t = x.toString(16);
+if (t.length ==1 ) {
+t = t + "0";
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(red, green, blue)
+{
+	red = int(red);
+	green = int(green);
+	blue = int(blue);
+	var decColor = int(red) + 256 * int(green) + 65536 * int(blue);
+	return '#'+int2hex(red)+int2hex(green)+int2hex(blue);
+}
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+</script>
+<p><canvas id="canvasdiv" width="200" height="200"></canvas></p>
+<div id="debugdiv"></div>
+<p>This version's features are spheres and a preview mode.  I now have a sphere floating in mid-air, over the ground.  This required modifying most of the routines to check multiple objects.</p>
+<p>The sphere function is rather easy - I just check to see if the ray satisfies the equation <code>x^2+y^2+z^2 &lt; 1</code>.  If it does, I decide we've hit a surface and stop.  The shading function works exactly the same as for terrain.</p>
+<p>I also changed the display to add a striped preview mode, which made testing much faster.</p>
+<p>Some images taken while building this stage:</p>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/ver4.png" alt="Lighting vector wrong by 180 degrees"> Lighting vector wrong by 180 degrees (shadow and light are swapped)</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/4.1.png" alt="Lighting vector correct 4.1">Lighting vector correct</p>
+<div style="clear:both"></div>
+<p><img loading="lazy" src="/projects/javascriptraymarcher/4.4.png" alt="Lighting vector correct 4.4"> All working now</p>
+<script>setup();</script>
+			</article>
+			</html>
+			

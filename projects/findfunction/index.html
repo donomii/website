@@ -1,0 +1,85 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Function Finder</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Function Finder</h1>
+			</header>
+			<div class="summary">
+<p>Find functions by example in PLT Racket</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<pre><code>(? 2 2) = 4
+Answer: +
+
+(? &quot;My name is ~a&quot; &quot;John&quot;) = &quot;My name is John&quot;
+Answer: format
+</code></pre>
+<p>Enter some inputs and the answer, and Function Finder will find the function that does the that calculation!</p>
+<h3 id="examples">Examples</h3>
+<pre><code> (guess '(1 1) 2)            -&gt;  arithmetic-shift +
+ (guess '( () ) #t)          -&gt;  null? list? ... empty?
+ (guess '(&quot;el&quot; &quot;hello&quot;) #t)  -&gt;  putenv ... regexp-match?
+ (guess-str '( 3 ) '(0 1 2)) -&gt;  iota
+ [guess-str '[[ 0 1 2]] 2]   -&gt;  caddr last third
+</code></pre>
+<p>Function finder finds every function that matches the rules you provide.  So if you tell it that
+the inputs are 1,1 and the answer is 2, FF will tell you that the function you want is addition or '+'.
+And, apparently, arithmetic shift.  Enter 2,2 and 4 for the answer, and it will tell you '*' and 'square'.</p>
+<p>When it starts, it disables filesystem and network access, to prevent you from accidentally erasing your
+hard drive while it runs.  It does crash often, because it is calling random functions, so save your work first!</p>
+<p><em>Status</em><br>
+Complete</p>
+<h3 id="download">Download</h3>
+<p><a href="/projects/findfunction/function-finder.rkt">function finder for PLT racket</a></p>
+
+			</article>
+			</html>
+			

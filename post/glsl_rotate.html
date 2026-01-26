@@ -1,0 +1,81 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Rotating vectors in GLSL</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Rotating vectors in GLSL</h1>
+			</header>
+			<p>I don't understand why, but GLSL doesn't have built in vector rotation functions.  So, for future convenience, here are the basic rotations around the axes</p>
+<pre><code>vec3 rotateY (  in vec3 v,  in float angle) {
+	vec3 ret = vec3 (v.z*sin(angle) + v.x*cos(angle), v.y, v.z*cos(angle) - v.x*sin(angle));
+	return ret;
+}
+
+
+vec3 rotateX ( in vec3 v,  in float angle) { 
+	vec3 ret= vec3 (v.x, v.y*cos(angle) - v.z*sin(angle), v.y*sin(angle) + v.z*cos(angle)); 
+	return ret;
+}
+
+vec3 rotateYX ( in vec3 aVec,  in float angleY,  in float angleX){
+	return rotateX(rotateY(aVec, angleY), angleX);
+}
+
+vec3 rotateXY ( in vec3 aVec,  in float angleY,  in float angleX){
+	return rotateY(rotateX(aVec, angleY), angleX);
+}
+vec3 rotateZ ( in vec3 v,  in float angle) { 
+	return  vec3 (v.x*cos(angle) - v.y*sin(angle), v.x*sin(angle) + v.y*cos(angle), v.z); 
+}
+</code></pre>
+<p>In production code, if I had to repeatedly rotate vectors I would create rotation matrices and then re-use those.  But these are convenient functions for getting started, or when the angle is always different, preventing reuse of matrices.</p>
+
+			</article>
+			</html>
+			

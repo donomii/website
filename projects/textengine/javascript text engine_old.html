@@ -1,0 +1,288 @@
+<html>
+<script src="jquery.js"></script>
+<script src="jQueryRotateCompressed.js"></script>
+
+<script>
+var top_pos = 0;
+var objs = [];
+//var textarr = "This is a demo of a newline manual layout engine in Javascript.".split(/\s+/);  
+var textarr = "+WIDTH if (this.myAngle) { newline return this.height() + 20; } newline else { newline return this.width() + 20; } newline ; newline +REPOSITION (tries)  newline if (tries--<0) { newline return 0; } newline if (thisObj.overlapsAny()) { newline  thisObj.left = thisObj.vleft() + 5; thisObj.rePosition(tries) } } ; newline ".split(/\s+/);  
+var textarr2 = "+OVERLAPS (anindex) newline { newline if (anindex==this.index){return 0;} newline if (anindex==0){return 0;} newline  newline var x11=thisObj.vleft(); newline var y11=thisObj.vtop(); newline var x12=x11+thisObj.vwidth(); newline var y12=y11+thisObj.vheight(); newline var x21=objs[anindex].vleft(); newline var y21=objs[anindex].vtop(); newline var x22=x21+objs[anindex].vwidth(); newline var y22=y21+objs[anindex].vheight(); newline  newline var x_overlap = Math.max(0, Math.min(x12,x22) - Math.max(x11,x21)) newline var y_overlap = Math.max(0, Math.min(y12,y22) - Math.max(y11,y21)); newline //alert([anindex,x21,y21,x_overlap,y_overlap]); newline return x_overlap*y_overlap; newline };".split(/\s+/);  
+
+
+this.rePosition = function (tries) {
+if (tries--<0) {return 0;}
+if (thisObj.overlapsAny()) {thisObj.left=thisObj.vleft()+5;thisObj.rePosition(tries)}
+};
+//var circarr = "It can arrange text in ways that ordinary HTML cannot.".split(/\s+/);
+
+
+
+var viewportWidth = $(window).width()-200;
+var viewportHeight = $(window).height()-200;
+var mousePageCoords = [500,500];
+var mouseClientCoords = [0,0];
+function createDiv(htmlStr) {
+    var frag = document.createDocumentFragment(),
+        temp = document.createElement('div');
+    temp.innerHTML = htmlStr;
+    while (temp.firstChild) {
+        frag.appendChild(temp.firstChild);
+    }
+    document.body.insertBefore(frag, document.body.childNodes[0]);
+    return temp;
+}
+
+
+
+
+function gObj (someText, index) {
+this.index = index;
+this.top=300;
+this.left=100;
+this.oldLeft=0;
+this.oldTop=0;
+this.myAngle=0;
+this.redrawMe=2;
+this.circle=0;
+this.t=this.index;
+this.anchor=false;
+this.tabStops=0;
+this.rowHeight=0;
+this.value=someText;
+this.fragment = $("<div style='font-size:200%;display:block;position: absolute;left:800px;top:800px'>" + someText + "</div>");
+
+$("body").append(this.fragment);
+var thisObj = this;
+this.width=function() { if (thisObj.value=='newline') { return thisObj.tabStops*50; } else {return this.fragment.width();}};
+this.height=function() { return this.fragment.height();};
+
+this.vwidth=function() { 
+if (this.myAngle) {
+return this.height()+20;
+} else {
+return this.width()+20;};
+}
+
+this.vheight=function() { 
+if (this.myAngle) {
+return this.width();
+} else {
+return this.height();};}
+
+this.vtop=function() { if (this.myAngle) {
+//return this.top +this.height()/2 - this.width()/2;
+return this.fragment.offset().top;
+
+} else {
+return this.top;}};
+
+this.vleft=function() { if (this.myAngle) {
+//return this.left + this.width()/2 - this.height()/2;
+return this.fragment.offset().left;
+//return this.left;
+
+} else {
+return this.left;};}
+
+
+this.setText = function (someText) {
+this.fragment.remove();
+this.fragment = $("<div style=' position:fixed;-webkit-transform-origin:0% 0%;transform-origin:0% 0%;-ms-transform-origin:0% 0%;margin:0;left:800px;top:800px'>" + someText + "</div>");
+  this.redrawMe=2;
+};
+
+this.reposition = function () {
+
+};
+
+
+this.overlaps = function (anindex) {
+if (anindex==this.index){return 0;}
+if (anindex==0){return 0;}
+
+var x11=thisObj.vleft();
+var y11=thisObj.vtop();
+var x12=x11+thisObj.vwidth();
+var y12=y11+thisObj.vheight();
+var x21=objs[anindex].vleft();
+var y21=objs[anindex].vtop();
+var x22=x21+objs[anindex].vwidth();
+var y22=y21+objs[anindex].vheight();
+
+var x_overlap = Math.max(0, Math.min(x12,x22) - Math.max(x11,x21))
+var y_overlap = Math.max(0, Math.min(y12,y22) - Math.max(y11,y21));
+//alert([anindex,x21,y21,x_overlap,y_overlap]);
+return x_overlap*y_overlap;
+};
+
+this.overlapsAny = function () {
+var i=0;
+while (i<objs.length) {if (objs[i++].overlaps(thisObj.index)){return true;}};
+return false;
+};
+this.findPreviousAnchor = function () {
+var i = this.index-1;
+while (--i>-1) {
+if(objs[i].anchor){return i;}
+}
+return false;
+};
+
+this.rePosition = function (tries) {
+if (tries--<0) {return 0;}
+if (thisObj.overlapsAny()) {thisObj.left=thisObj.vleft()+10;thisObj.rePosition(tries)}
+};
+
+this.runObj = function () {
+  //$("processing").rotate(-90);
+ if (thisObj.value.match(/.\(/)) {
+ thisObj.fragment.css({ "font-weight" : " bold"});
+  thisObj.fragment.css({ "font-size" : "300%"});
+  
+ }
+ if (thisObj.value.match(/^\+../)) {
+ thisObj.anchor=true;
+  
+ }
+ if (thisObj.redrawMe ){
+  thisObj.redrawMe--;
+
+ 
+ //$( "#processing" ).text( "object : " + thisObj.index );
+  
+  //alert([thisObj.value,objs[thisObj.index].left ]);
+  //if (index>0) {alert([thisObj.value,objs[thisObj.index].left,objs[thisObj.index].top ]);}
+  if (thisObj.index>0) {
+      thisObj.tabStops = objs[thisObj.index-1].tabStops;
+      thisObj.rowHeight = objs[thisObj.index-1].rowHeight;
+      thisObj.left = objs[thisObj.index-1].vleft();// + objs[thisObj.index-1].vwidth();
+      thisObj.top = objs[thisObj.index-1].vtop() ;
+   }
+ if (thisObj.value.match(/\{/)) {
+ thisObj.tabStops+=1;
+ }
+ if (thisObj.value.match(/\}/)) {
+ thisObj.tabStops-=1;
+ }
+ 
+ if(thisObj.anchor) { 
+  thisObj.myAngle=-90; 
+  thisObj.fragment.attr("position", "fixed");
+  thisObj.fragment.rotate({angle : thisObj.myAngle, center: ["0%", "0%"]});
+  thisObj.fragment.css({"color" : "orange"});  
+  thisObj.fragment.css({ "font-weight" : " bold"});
+  thisObj.fragment.css({ "font-size" : "300%"});
+  thisObj.fragment.css({ "border" : "solid"});
+  if (thisObj.index>0) {
+  var prev = thisObj.findPreviousAnchor(); 
+  thisObj.top=Math.max(
+    objs[thisObj.index-1].vtop() + objs[thisObj.index-1].vheight() + this.vheight() + 10,
+    objs[prev].vtop() + objs[prev].vheight() + this.vheight() + 30
+    );
+  thisObj.left=objs[prev].vleft();
+  //alert(thisObj.left);
+  };
+  //
+  } else {
+	thisObj.rowHeight=Math.max(thisObj.rowHeight, thisObj.height());
+       thisObj.rePosition(100);
+       }
+  if (thisObj.value=='newline') {
+	thisObj.fragment.css("display", "none");
+  	thisObj.left=objs[thisObj.findPreviousAnchor()].vleft();
+	thisObj.top=objs[thisObj.index-1].vtop() + thisObj.rowHeight;
+	thisObj.rowHeight=0;
+	thisObj.rePosition(50);
+  }
+        
+      //thisObj.left = thisObj.left + 20*(thisObj.left - mousePageCoords[0])/Math.abs(thisObj.left - mousePageCoords[0]);
+      //thisObj.top += 
+      if (thisObj.vleft() + thisObj.vwidth() > viewportWidth) {
+	thisObj.left=objs[thisObj.findPreviousAnchor()].vleft();
+	thisObj.top=objs[thisObj.index-1].vtop() + thisObj.vheight();
+	thisObj.rePosition(50);
+
+	}
+  
+  //var dist = Math.sqrt((thisObj.top - mousePageCoords[1])*(thisObj.top - mousePageCoords[1]) + (thisObj.left - mousePageCoords[0])*(thisObj.left - mousePageCoords[0]));
+  //alert(dist);
+  //alert([thisObj.value, thisObj.left ]);
+  if (!(thisObj.left==thisObj.oldLeft)) {
+  thisObj.fragment.css("left" , "" + thisObj.left );//+ (thisObj.left - mousePageCoords[0])/Math.abs((thisObj.left - mousePageCoords[0]))* Math.round(150/dist)+"px");
+  thisObj.oldLeft=thisObj.left;
+  }
+  if (!(thisObj.top==thisObj.oldTop)) {
+  thisObj.fragment.css( "top" , "" + thisObj.top );//+ (thisObj.top - mousePageCoords[1])/Math.abs((thisObj.top - mousePageCoords[1]))* Math.round(50/dist) +"px");
+  thisObj.oldTop=thisObj.top
+  }
+  if (thisObj.top>viewportHeight) {
+      thisObj.fragment.attr("display", "hidden");
+  } else {
+      thisObj.fragment.attr("display", "block");
+  }
+  //alert([thisObj.value, thisObj.left]);
+}
+};
+
+//setInterval(this.runObj, 5000);
+
+}
+// You can use native DOM methods to insert the fragment:
+var loopI=0;
+function loopAll () {
+
+//objs.forEach(function (anObj) { anObj.runObj(); } );
+for (var j=0;j<1;j++){
+try {objs[loopI++].runObj();}
+catch {}
+if (!(loopI<objs.length)) {loopI=0;}
+setTimeout(loopAll, 50);
+}
+}
+
+function assignText (start) {
+for (var j = 0; j<1000 ; j++) {
+objs[j].setText(textarr[j+start]);
+}
+}
+
+function start() {
+var lastind=0;
+textarr.forEach(function (aText, index) { lastind=index; objs.push(new gObj(aText, index));} );
+textarr2.forEach(function (aText, index) { objs.push(new gObj(aText, index+lastind+1));} );
+//circarr.forEach(function (aText, index) { var o = new gObj(aText, index); o.circle=1;objs.push(o);} );
+//for ( var j=0;  j<1000; j++ ) { objs.push(new gObj("gObj", j));}
+//assignText(0);
+loopAll();
+$(window).resize(function() {
+viewportWidth = $(window).width();
+viewportHeight = $(window).height();
+});
+
+$("body").mousemove(function(e){
+      //alert(e);
+      var event=e;
+      mousePageCoords = [ e.pageX , e.pageY ];
+      //alert(mousePageCoords);
+      mouseClientCoords = [ e.clientX , e.clientY ];
+      var pageCoords = "( " + event.pageX + ", " + event.pageY + " )";
+  var clientCoords = "( " + event.clientX + ", " + event.clientY + " )";
+  //$( "span:first" ).text( "( event.pageX, event.pageY ) : " + pageCoords );
+  //$( "span:last" ).text( "( event.clientX, event.clientY ) : " + clientCoords );
+     });
+    
+setTimeout(mainLoop, 10);
+}
+
+function mainLoop () {
+
+setTimeout(mainLoop, 10);
+}
+
+</script>
+<body onload="start();">
+
+</body>
+<span>X</span><div id="processing" style="display:none;rotate:-90;">OBJECT</div><span>Y</span>
+</html>

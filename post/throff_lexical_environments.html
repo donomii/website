@@ -1,0 +1,84 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog/ Lexical Environments in Throff</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>blog/ Lexical Environments in Throff</h1>
+			</header>
+			<div class="summary">
+<p>I finally have lexical environments sorted out in <a href="../../projects/throff/">Throff</a>.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Never again.</p>
+<p>Lexical scoping has been by far the hardest part of implementing <a href="../../projects/throff/">Throff</a>.  Each time I think I have it working, I hit an edge case and realise I need to change the design again.  But this time around, I think I have finally got a working design.</p>
+<p>Previously, every data item in Throff held a pointer to its lexical environment.  This was needed, because the current lexical scope was always taken from the current instruction (or previous, in the case of macros).  This was needed to choose the correct environment when Throff created a new data item.  e.g.</p>
+<pre><code>ADD 1 1
+
+2
+</code></pre>
+<p>when Throff created the result &quot;2&quot;, it used the environment from the previous &quot;1&quot;.  Having an environment isn't so useful for numbers, but it was important when evaluating strings.  e.g.</p>
+<pre><code>EVAL STRING-CONCATENATE &quot;PRINTLN&quot; &quot;GREETING&quot;
+SETLEX GREETING =&gt; -&gt;STRING [ PRINTLN HELLO_WORLD ]
+</code></pre>
+<p>EVAL <em>does</em> need a lexical environment to lookup the variable GREETING so it can print out HELLO_WORLD.  Previously, it would use the environment of the string.  But this won't work if the string was created in a different namespace.  The lookup for &quot;GREETING&quot; will happen in a different namespace to the current one.  There are similar problems dealing with continuations and error handling</p>
+<p>Now, EVAL it requires an environment as an argument, which has the benefit of allowing you to evaluate code in a different environment to the one that the code appears in.</p>
+<pre><code>EVAL text IN ENVIRONMENTOF token
+</code></pre>
+<p>Since TOKEN and CODE (and LAMBDA) are now the only datatypes allowed to have an environment, you will have to explicitly get the environment with</p>
+<pre><code>ENVIRONMENTOF abcd TOK
+</code></pre>
+<p>TOK &quot;quotes&quot; abcd, pushing it onto the data stack instead of treating it like a variable to be looked up and replaced with a value.    ENVIRONMENTOF extracts the lexical environment from the TOKEN &quot;abcd&quot;.  Under the hood, an environment is just a HASH, and so you can use ordinary hash functions on it.  So for instance, you can dump the current lexical environment with</p>
+<pre><code>ITERATE [ PRINTLN ] KEYS ENVIRONMENTOF abcd TOK
+</code></pre>
+<p>This is also a handy way to deal with namespaces, although the semantics of updating an immutable namespace get a bit weird.</p>
+
+			</article>
+			</html>
+			

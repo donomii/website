@@ -1,0 +1,231 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Javascript Ray Marcher v0.1</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Javascript Ray Marcher v0.1</h1>
+			</header>
+			<div class="summary">
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<script src="jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+var ctx;
+var canvas;
+var outWin;
+
+// Setup the canvas and start rendering
+function setup() {
+	// Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph('canvasdiv');
+	outWin.erase(ctx);
+	// Kick off the render
+	renderImage();
+}
+
+var x = 0;
+var y = 0;
+
+// Render the image one pixel at a time to avoid freezing the browser
+function renderImage() {
+	x++;
+	if (x >= outWin.width) {
+		x = 0;
+		y++;
+		if (y >= outWin.height) {
+			// Finished rendering
+			return;
+			alert("Finished");
+		}
+	}
+	var ray = new Ray(x, y);
+	// The ray object contains the position and direction of the ray. castRay walks along the ray, looking for terrain.
+	if (castRay(ray.origin, ray.direction)) {
+		outWin.setPixel(x, y, terrainColour(ray)); // We hit the terrain, draw the ground colour
+	} else {
+		outWin.setPixel(x, y, skyColour()); // We missed the terrain, draw the sky colour
+	}
+	// Give the browser some time to do other processing
+	setTimeout(renderImage, 10);
+}
+
+// Ground function: returns the height of the terrain at (x, z)
+function f(x, z) {
+	return 2;
+	// return Math.sin(x) + Math.sin(z);
+}
+
+// Cast a ray into the scene, return true if it hits the ground
+function castRay(ro, rd) {
+	var delt = 0.01;
+	var mint = 0.001;
+	var maxt = 10.0;
+	// Step along the ray
+	for (var t = mint; t < maxt; t += delt) {
+		var p = jQuery.extend(true, {}, ro);
+		var dir = jQuery.extend(true, {}, rd);
+		dir.mult(t);
+		p.add(dir);
+		// We've sunk into the ground
+		if (p.y < f(p.x, p.z)) {
+			// resT = t - 0.5f*delt;
+			return true;
+		}
+	}
+	return false;
+}
+
+// Simple 3D vector object
+function Vector(xx, yy, zz) {
+	this.x = xx;
+	this.y = yy;
+	this.z = zz;
+}
+// Add another vector to this vector
+Vector.prototype.add = function(aVec) {
+	this.x += aVec.x;
+	this.y += aVec.y;
+	this.z += aVec.z;
+};
+// Multiply this vector by a scalar
+Vector.prototype.mult = function(aScalar) {
+	this.x *= aScalar;
+	this.y *= aScalar;
+	this.z *= aScalar;
+};
+
+// Ray object: origin and direction
+function Ray(x, y) {
+	this.origin = new Vector(x, y - outWin.height / 2, 0);
+	this.direction = new Vector(0, 0, 1);
+}
+
+// Return the terrain colour
+function terrainColour() {
+	return "#AAAA00";
+}
+
+// Return the sky colour
+function skyColour() {
+	return "#0000FF";
+}
+
+// Graph object: handles drawing to the canvas
+function Graph(aCanvas, aLength) {
+	this.canvas = document.getElementById('canvasdiv');
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext) {
+		this.ctx = this.canvas.getContext('2d');
+	}
+
+	// Redraw the graph with new data
+	function redraw(somedata, aLength) {
+		var gr = this.ctx;
+		this.erase();
+		var myLength = somedata.length || aLength;
+		for (var ii = 0; ii < myLength; ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect(ii, 0, 1, somedata[ii][2]);
+		}
+	}
+	this.redraw = redraw;
+
+	// Set a pixel on the canvas
+	this.setPixel = function(x, yy, aColor) {
+		var y = this.height - yy;
+		var aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = aColor;
+		aCtx.beginPath();
+		aCtx.moveTo(x - 1, y - 1);
+		aCtx.lineTo(x, y);
+		aCtx.stroke();
+	};
+
+	// Erase the canvas
+	function erase() {
+		var aCtx = this.ctx;
+		aCtx.fillStyle = "#000000";
+		aCtx.globalAlpha = 1;
+		aCtx.strokeStyle = '#FFFFFF';
+		aCtx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+	}
+	this.erase = erase;
+}
+
+// Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(red, green, blue) {
+	var decColor = red + 256 * green + 65536 * blue;
+	return '#' + decColor.toString(16);
+}
+</script>
+<p><canvas id="canvasdiv" width="100%" height="100%"></canvas></p>
+<div id="debugdiv" ></div>
+<p>The start of the raytracer.  It just draws a flat featureless plain, with no objects, no lights, and no shadows.  We have to start somewhere.</p>
+<p>It creates a ray for each pixel in the picture and walks them into the landscape, a tiny step forwards each time.  When it hits the terrain, it is coloured brown, otherwise it gets the skysphere colour(blue).</p>
+<p>Because there isn't any code for the lens of the camera, all the rays are parallel.  I sank the camera halfway into the ground to make the ground appear in the picture.</p>
+<p>Our ground function is currently</p>
+<pre><code>    if( p.y &lt; f( p.x, p.z ) ) {
+            //We've sunk into the ground.
+            return true;
+        }
+    }
+</code></pre>
+<p>This is a nice and simple ground plane, it's going to get very complicated shortly, and then we will use it as our &quot;water&quot; function.</p>
+<script>setup();</script>
+
+			</article>
+			</html>
+			

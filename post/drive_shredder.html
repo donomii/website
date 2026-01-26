@@ -1,0 +1,73 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Terrible, terrible damage</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Terrible, terrible damage</h1>
+			</header>
+			<div class="summary">
+<p>Everything is falling apart.  Especially when I'm involved.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>I started a project(vort) because I was annoyed at the way I kept losing data.  Consumer storage kept failing on me, and I would lose pictures, videos, things I had written.  It was upsetting and frustrating.  I learned a lot on the way, and one of the things I learned was that consumer storage is much, much worse than I had originally thought.</p>
+<p>I've destroyed 2 new drives just by using them, a third is starting to fail.  I have seven more working, and I'm having to be careful about using them, because trying to do unreasonable things, like STORE DATA, can destroy them.  I'm unimpressed.</p>
+<p>The current failure is a brand new 24Gb seagate drive, that is starting to randomly error and disconnect.  It's connected by USB, as are many of the others, so it's not even running at full capacity, but even so, I didn't manage to fill it up before it started to fail.  It looks like you can have consumer high capacity storage, so long as you never use it.</p>
+<p>I'm unaware of what I did to destroy this one.  I'm running my own software on it, which, to be fair, does too many random access seeks.  I feel like that on its own shouldn't be enough to permanently damage a drive, but there's nothing else I can see.  I have checked the temperature logs and it has been operating within its range.  It doesn't have too many starts, and possibly the only real issue is around 2000 hours of operations.</p>
+<p>Contrast it to the second hand enterprise NAS drive I bough on the cheap, and the quality difference is obvious.  The enterprise drive is running 10 degrees hotter, has been running for longer, and doing the same work.  It's fine.  It looks like NAS quality drives handle heat better, and seem to have some kind of heat control that slows them when they approach the limit.  Also, clearly, better quality parts that don't wear out and break anywhere near as quickly.  I was dubious about buying second hand enterprise gear but I'm a convert now.</p>
+<p>The concept of drive failure isn't something that specifically outrages me.  The point of the project was to develop a file store that could detect and (sometimes) repair hardware failures, as they happened.  What I didn't expect was that it would be so common, and that consumer drives would fail so quickly.</p>
+<p>At this point I have to add my voice to the chorus saying &quot;Don't buy large capacity drives&quot;.  Not the consumer ones, anyway.  The capacity has increased, but the reliability hasn't, meaning that we are now approaching the point where you can be at serious risk of the drive failing before you manage to fill it up.</p>
+<p>My advice would be: buy smaller capacity drives, at the best price point you can find.  Buy two, and use them in mirror mode, so that you will at least have some chance to get your data back before they fail entirely.</p>
+<p>Although, it should be pointed out clearly, trying to copy all your data off the drive will stress it badly, and so it will be most likely to fail when it is full and you really don't want it to.  The entire situation appears to be designed for the maximum likelihood of destroying your data.</p>
+<p>What's the answer?  My software, of course!  ClusterF is a distributed file store, with redundancy built in.  It is extrememly simple to use.</p>
+<p>There is also vort, my passion project, which is now operating successfully, and is a completely safe, redundent, checksummed file store that can make consumer hardware much more reliable.  Although sometimes it just destroys the hardware.  But the data is safe!</p>
+
+			</article>
+			</html>
+			

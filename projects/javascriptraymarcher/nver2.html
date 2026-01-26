@@ -1,0 +1,252 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Javascript Ray Marcher  v0.2</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+			</style>
+			<article>
+			<header>
+
+			<h1>Javascript Ray Marcher  v0.2</h1>
+			</header>
+			<div class="summary">
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<style type="text/css">
+canvas { border: 1px solid black; }
+</style>
+<script src="jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script src="Dumper.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+var ctx;
+var canvas;
+var outWin;
+function setup(){
+	//Graph is a handy wrapper object for dealing with the output window.
+	outWin = new Graph("canvasdiv");
+	outWin.erase(ctx);
+	//Kick off the render
+	renderImage();
+}
+var x = 0;
+var y = 0;
+function renderImage () {
+	//If we try to draw the entire picture in one go, the browser will freeze.  So instead we draw one pixel at a time.
+	x++;
+	if (x>=outWin.width) {
+		x=0;
+		y++;
+		if (y>=outWin.height) {
+			//finished
+			return;
+			alert("Finished");
+		}
+	}
+	ray = new Ray( x, y );
+	intersect = castRay( ray.origin, ray.direction ) ;	
+	//The ray object contains the position and direction of the ray.  castRay walks along the ray, looking for terrain.
+	if( intersect )
+		{ outWin.setPixel(x,y,terrainColour( intersect )); }  //We hit the terrain, draw the ground colour
+	else
+		{ outWin.setPixel( x, y,  skyColour()); }  //We missed the terrain, draw the sky colour
+
+	//Give the browser some time to do other processing
+	setTimeout("renderImage()", 10);
+}
+//This is the function that sets the shape of the ground.  Simple for now, it will get very complicated soon.
+function ground(x,z) { ret= 8*Math.sin(x/10)*Math.sin(z/10); return ret; ;}
+
+function castRay(   ro,  rd ) {
+     delt = 0.01;
+     mint = 0.001;
+     maxt = 100.0;
+    //Step along the ray 
+    for( t = mint; t < maxt; t += delt )
+    {
+	p =  jQuery.extend(true, {}, ro);
+	dir = jQuery.extend(true, {}, rd);
+	dir.mult(t);
+        p.add(dir);
+        if( p.y < ground( p.x, p.z ) )
+	//We've sunk into the ground.  
+        {
+            return p;
+        }
+    }
+    return false;
+}
+//Clumsy attempt at a vector object
+function Vector ( xx, yy, zz) {
+this.x = xx;
+this.y = yy;
+this.z = zz;
+this.add = function (aVec) {
+this.x =this.x + aVec.x;
+this.y =this.y + aVec.y;
+this.z =this.z + aVec.z;
+}
+this.mult = function (aScalar) {
+this.x = this.x * aScalar;
+this.y = this.y * aScalar;
+this.z = this.z * aScalar;
+}
+this.magnitude = function () {
+return Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z);
+}
+this.normalise = function ( p ) {
+newx = this.x/this.magnitude();
+newy = this.y/this.magnitude();
+newz = this.z/this.magnitude();
+return new Vector(newx, newy, newz);
+}
+this.innerProduct = function(p) {
+res = this.x * p.x + this.y * p.y +  this.z * p.z;
+//setDiv('debugdiv',"!!"+res+"!");
+ret = res;
+return ret;
+}
+}
+//This creates a ray, pointing in the right direction
+function Ray (x,y) {
+this.origin = new Vector (x,y,0);
+this.direction = new Vector (0.1,-0.5+y/200,1);
+}
+function printVec(v) {
+return "" + v.x + ", " + v.y + ", " + v.z;
+}
+var sun = new Vector (0.5,0.5,0.5);
+sun = sun.normalise();
+function terrainColour(p) {
+ 		n = interpolate_normal(p);
+		  n.mult(256);
+		  ret = rgb( Math.abs(n.x),Math.abs(n.y),Math.abs(n.z));
+		  if ( p.y<0.1 ) { ret = rgb(0,0,0)};
+		  return ret;
+		
+}
+function skyColour () { return "#0000FF"}
+function interpolate_normal (p) {
+eps = 0.00001;
+n = new Vector ( ground(p.x-eps, p.z) - ground(p.x + eps, p.z),
+		  2*eps,
+		  ground(p.x, p.z-eps) - ground(p.x, p.z + eps));
+		  normal = n.normalise();
+		  return normal;
+		  //setDiv('debugdiv', " " + normal.x +", "+ normal.y +", "+ normal.z);
+}
+function Graph(aCanvas ) {
+	this.canvas = document.getElementById('canvasdiv');
+	this.width = this.canvas.width;
+	this.height = this.canvas.height;
+	if (this.canvas.getContext){
+		this.ctx = this.canvas.getContext('2d');
+	}
+	function redraw (somedata, aLength) {
+		gr = this.ctx;
+		this.erase();
+		for ( ii=0;ii<myLength;ii++) {
+			if ((currind == ii) && (mode == 'anneal')) {
+				gr.fillStyle = "#00FF00";
+			} else {
+				gr.fillStyle = "#FF0000";
+			}
+			gr.fillRect( ii, 0, 1, somedata[ii][2] );
+		};
+	}
+	this.redraw=redraw;
+
+	this.setPixel = function (x, yy, aColor) {
+		var y = this.height - yy;
+		aCtx = outWin.ctx;
+		outWin.ctx.strokeStyle = aColor;
+		aCtx.beginPath();
+		aCtx.moveTo(x-1,y-1);
+		aCtx.lineTo(x,y);
+		aCtx.stroke();
+	};
+	function erase () {
+		aCtx = this.ctx;
+		aCtx.fillStyle = "#000000";
+		aCtx.globalAlpha=1;
+		aCtx.strokeStyle ='#FFFFFF';
+		aCtx.fillRect( 0, 0, this.canvas.width, this.canvas.height);
+	}
+	this.erase = erase;
+}
+function int (x) { return Math.abs(Math.floor(x)) }
+function int2hex (x) {
+t = x.toString(16);
+if (t.length ==1 ) {
+t = t + "0";
+}
+return t;
+}
+//Pack 3 numbers into the '#ABCDEF' format needed for html
+function rgb(red, green, blue)
+{
+	red = int(red);
+	green = int(green);
+	blue = int(blue);
+	var decColor = int(red) + 256 * int(green) + 65536 * int(blue);
+	return '#'+int2hex(red)+int2hex(green)+int2hex(blue);
+}
+function setDiv(divName, content)
+{ document.getElementById(divName).innerHTML = content; ;}
+</script>
+<p><canvas id="canvasdiv" width="100" height="100"></canvas></p>
+<div id="debugdiv"></div>
+Here I've added some hills, and coloured them based on their surface angle.  
+<p>To do this I changed the ground function, which now returns the height of the ground (z) based on the (x,y) position.  When a ray hits the ground <code>(z &lt; ground(x, y))</code>, I check the ground at a few points close to the impact point、by adding a very small number <code>e</code> to the position of the impact site, <code>ground(x, y+e)</code> and <code>ground(x+e, y)</code> .  The vectors from the impact point to the two nearby points are the plane vectors of the ground at the impact point, and the cross product of the vectors is the normal vector.</p>
+<p>I use this normal vector to colour the surface -  The parts pointing directly up are green, east and west facing slopes are red, and north-south slopes are blue.  In practise, I just use the (normalised) normal vector as the RGB values for the texture, <code>(r,g,b) = (x,y,z)</code>.</p>
+<p>I've also added a basic projection to the camera, so rays now diverge as they travel.  This emulates a very basic lens, and lets me show the horizon without having to sink the camera into the ground.</p>
+<p>My ground function is now</p>
+<pre><code>function ground(x,z) { ret = 8*Math.sin(x/10)*Math.sin(z/10); return ret; ;}
+</code></pre>
+<p>Some nice looking harmonic hills!</p>
+<script>setup();</script>
+			</article>
+			</html>
+			

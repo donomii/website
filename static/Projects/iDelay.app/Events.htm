@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://supermatty.com/WebEventDatabase/ -->
+<html class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" style=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Events</title>
+<link rel="stylesheet" media="screen" href="http://supermatty.com/lib/jquery-ui/jquery-ui-1.10.2.custom.min.css">
+<link rel="stylesheet" media="screen" href="http://supermatty.com/lib/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.css">
+<link rel="stylesheet" media="screen" href="http://supermatty.com/WebEventDatabase/events.css">
+<script type="text/javascript" src="./Events_files/Modernizr-latest.js"></script>
+<script type="text/javascript" src="./Events_files/jquery.min.js"></script>
+<script type="text/javascript" src="./Events_files/jquery-ui-1.10.2.custom.min.js"></script>
+<script type="text/javascript" src="./Events_files/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="./Events_files/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="./Events_files/debug.js"></script>
+<script type="text/javascript" src="./Events_files/assert.js"></script>
+<script type="text/javascript" src="./Events_files/textarea.js"></script>
+<script type="text/javascript" src="./Events_files/dates.js"></script>
+<script type="text/javascript" src="./Events_files/events.js"></script>
+<script type="text/javascript" src="./Events_files/scripts.js"></script>
+</head>
+<body style="">
+
+<h1>Events</h1>
+
+<button id="addEvent" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Add new</span></button>
+<button id="editEvent" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-disabled ui-state-disabled" role="button" aria-disabled="true" disabled=""><span class="ui-button-text">Edit</span></button>
+<button id="deleteEvent" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-disabled ui-state-disabled" role="button" aria-disabled="true" disabled=""><span class="ui-button-text">Delete</span></button>
+<button id="showJSON" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Show JSON</span></button>
+<button id="editJSON" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Edit JSON</span></button>
+
+<br class="clearfloat">
+
+<table class="eventList zebra">
+<caption>Event List</caption>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Start Time</th>
+    <th>End Time</th>
+    <th>Time Remaining</th>
+  </tr>
+</thead>
+<tfoot>
+  <tr>
+    <th>Name</th>
+    <th>Start Time</th>
+    <th>End Time</th>
+    <th>Time Remaining</th>
+  </tr>
+</tfoot>
+<tbody id="events"></tbody>
+</table>
+
+<table>
+<caption>Gantt Chart</caption>
+<tbody id="ganttChart"></tbody>
+</table>
+
+
+
+
+
+
+<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div><div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-resizable" tabindex="-1" role="dialog" aria-describedby="eventDialog" aria-labelledby="ui-id-1" style="display: none; position: absolute;"><div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span id="ui-id-1" class="ui-dialog-title">&nbsp;</span><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button" aria-disabled="false" title="close"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span><span class="ui-button-text">close</span></button></div><div id="eventDialog" class="dialog ui-dialog-content ui-widget-content" style="display: block;">
+  <fieldset id="eventForm">
+    <legend>Event details</legend>
+    <fieldset>
+      <legend>Event Name</legend>
+      <input id="eventName" type="text" size="40">
+    </fieldset>
+    <fieldset>
+      <legend>Start Time</legend>
+      <input id="startDate" type="datetime" placeholder="YYYY-MM-DD HH:MM:SS +Z" size="35" class="hasDatepicker">
+    </fieldset>
+    <fieldset>
+      <legend>End Time</legend>
+      <input id="endDate" type="datetime" placeholder="YYYY-MM-DD HH:MM:SS +Z" size="35" class="hasDatepicker">
+    </fieldset>
+  </fieldset>
+</div><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-e" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-s" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-sw" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-ne" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90;"></div></div><div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-resizable" tabindex="-1" role="dialog" aria-describedby="jsonDialog" aria-labelledby="ui-id-2" style="display: none; position: absolute;"><div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span id="ui-id-2" class="ui-dialog-title">JSON</span><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button" aria-disabled="false" title="close"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span><span class="ui-button-text">close</span></button></div><div id="jsonDialog" class="dialog ui-dialog-content ui-widget-content" style="display: block;">
+  <textarea id="jsonDisplay"></textarea>
+</div><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-e" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-s" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-sw" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-ne" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90;"></div></div></body></html>
