@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.praeceptamachinae.pocketBonsai",
+      "sha256_cert_fingerprints":
+        ["A0:D5:73:E2:99:1D:2C:44:08:EB:9D:D0:F3:F5:C4:35:77:3C:84:F0:B4:C9:C9:AF:9D:A2:65:0B:46:67:0D:D5"]
+    }
+  }
+]
