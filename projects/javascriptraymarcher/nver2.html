@@ -313,11 +313,9 @@ Here I've added some hills, and coloured them based on their surface angle.
 					});
 				});
 				
-				// Close on overlay click
-				overlay.addEventListener('click', function(e) {
-					if (e.target === overlay || e.target === closeBtn) {
-						overlay.classList.remove('active');
-					}
+				// Close on any click
+				overlay.addEventListener('click', function() {
+					overlay.classList.remove('active');
 				});
 				
 				// Close on escape key

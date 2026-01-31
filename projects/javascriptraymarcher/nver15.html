@@ -2394,11 +2394,9 @@ function in_mandelbulb1 (nx, ny, nz) {
 					});
 				});
 				
-				// Close on overlay click
-				overlay.addEventListener('click', function(e) {
-					if (e.target === overlay || e.target === closeBtn) {
-						overlay.classList.remove('active');
-					}
+				// Close on any click
+				overlay.addEventListener('click', function() {
+					overlay.classList.remove('active');
 				});
 				
 				// Close on escape key
