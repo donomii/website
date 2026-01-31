@@ -108,8 +108,8 @@
 				var lightboxImg = document.getElementById('lightbox-img');
 				var closeBtn = document.getElementById('lightbox-close');
 				
-				// Add click handler to all images in the article
-				document.querySelectorAll('article img').forEach(function(img) {
+				// Add click handler to all images in the article (skip linked images)
+				document.querySelectorAll('article img:not(.no-lightbox)').forEach(function(img) {
 					img.addEventListener('click', function(e) {
 						e.preventDefault();
 						lightboxImg.src = this.src;
