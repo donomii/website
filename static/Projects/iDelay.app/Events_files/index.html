@@ -90,7 +90,28 @@
 				.lightbox-close:hover {
 					color: #ccc;
 				}
+				.home-link {
+					position: absolute;
+					top: 0.5em;
+					left: 0.5em;
+					text-decoration: none;
+					color: #888;
+					font-size: 1.5em;
+					transition: color 0.2s;
+				}
+				.home-link:hover {
+					color: #333;
+				}
+				@media (prefers-color-scheme: dark){
+					.home-link {
+						color: #555;
+					}
+					.home-link:hover {
+						color: #ccc;
+					}
+				}
 			</style>
+			<a href="../../../../index.html" class="home-link" title="Home">↑</a>
 			<article>
 			<header>
 
