@@ -784,7 +784,7 @@ function doRandomise() {
 <canvas id="canvasdiv" width="400" height="323"></canvas>
 <canvas id="originaldiv" width="400" height="323"></canvas>
 <canvas id="monitordiv" width="400" height="323"></canvas>
-<img loading="lazy" style="display:none" id="filediv" src="mona_lisa_small.png"  />
+<img loading="lazy" style="display:none" id="filediv" src="mona_lisa_small.png" onload="if(!window.setupDone){window.setupDone=true;setup();}" />
 <canvas id="bestdiv" width="400" height="323"></canvas>
 <img loading="lazy" style="display:none" id="juliadiv" src="redjulia.png" />
 <div id="difference"></div>
@@ -834,7 +834,6 @@ Upload your own image.
 <p>To improve on the hill-climber, I do a round of extremal optimisation in between each round of hill-climbing.  The extremal algorithm finds the triangles that aren't contributing much to the picture, and randomly moves them to a new part of the picture.  This catches triangles that the hill-climber has made invisible, sometimes by making them into thin lines, sometimes by turning them completely transparent.   Randomising the values allows a triangle to escape the local maximas, and thus moves the result closer to the 'ideal' picture.</p>
 <p>The original program uses genetic algorithms to adjust the polygons, and according to the author's report, the genetic algorithm converges faster than this hill climber.  This is what we would normally expect.  Hill climbers tend to converge slowly, but are easier to understand.</p>
 </div>
-<script>setup();</script>
 
 			</article>
 			<div class="lightbox-overlay" id="lightbox">
