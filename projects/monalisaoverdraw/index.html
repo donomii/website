@@ -137,7 +137,7 @@ window.addEventListener('load', function() {
 		var value = URL.createObjectURL(this.files[0]);
         img.src =  value;
 		filediv.src = value;
-		
+		cachedOrigData = null;
   setTimeout("init_graphics()", 2000);
       }
   });
@@ -252,14 +252,14 @@ current_fit = 99999999999;
 	canvasdiv.height = height;
 	canvas = document.getElementById('canvasdiv');
 	if (canvas.getContext){
-		workctx = canvas.getContext('2d');
+		workctx = canvas.getContext('2d', { willReadFrequently: true });
 	}
 	var graphdiv = document.getElementById('graphdiv');
         graph = new Graph(graphdiv, 1001);
 
 	var orig = document.getElementById('originaldiv');
 	if (orig.getContext){
-		origx = orig.getContext('2d');
+		origx = orig.getContext('2d', { willReadFrequently: true });
 	}
 	var monitor = document.getElementById('monitordiv');
 	if (monitor.getContext){
@@ -689,36 +689,32 @@ function clamp (arr) {
 	if (arr[2]<arr[1]) { arr[2]=arr[1]; }
 	if (arr[2]>arr[3]) { arr[2]=arr[3]; }
 }
+var cachedOrigData = null;
 function diff ( ccc, ooo ) {
 	var canvasData = ccc.getImageData(0,0,width-1,height-1);
-	var origData = ooo.getImageData(0,0,width-1,height-1);
+	if (!cachedOrigData) {
+		cachedOrigData = ooo.getImageData(0,0,width-1,height-1);
+	}
+	var origData = cachedOrigData;
 	var diffnum = 0;
-	for (var x = 0; x < canvasData.width; x++)  {
-		for (var y = 0; y < canvasData.height; y++)  {
-
-			// Index of the pixel in the array
-			var idx = (x + y * width) * 4;
-
-			// Check the colour channels
-			var r = canvasData.data[idx + 0] - origData.data[idx + 0];
-			var g = canvasData.data[idx + 1] - origData.data[idx + 1];
-			var b = canvasData.data[idx + 2] - origData.data[idx + 2];
-			//var a = canvasData.data[idx + 3] - origData.data[idx + 3];
-
-			var pixeldiff = r*r + b*b + g*g ;
-			//alert(pixeldiff+","+ x+","+ y);
-			if(!isNaN(pixeldiff)){
-			diffnum = diffnum + pixeldiff;}
-		}
+	var cData = canvasData.data;
+	var oData = origData.data;
+	var len = cData.length;
+	for (var i = 0; i < len; i += 4) {
+		var r = cData[i] - oData[i];
+		var g = cData[i + 1] - oData[i + 1];
+		var b = cData[i + 2] - oData[i + 2];
+		diffnum += r*r + g*g + b*b;
 	}
 	return Math.sqrt(diffnum);
 }
 
 function reactComboBox(sel) {
-  var value = sel.options[sel.selectedIndex].value; 
+  var value = sel.options[sel.selectedIndex].value;
   filediv.src = value;
   originaldiv.src = value;
   current_fit=9999999999999;
+  cachedOrigData = null;
   setTimeout("init_graphics()", 2000);
   //setTimeout("randomise(data)", 4000);
   //img = document.getElementById('filediv');
