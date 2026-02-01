@@ -91,13 +91,14 @@
 					color: #ccc;
 				}
 				.home-link {
-					position: absolute;
-					top: 0.5em;
-					left: 0.5em;
+					position: fixed;
+					top: 1rem;
+					left: 1rem;
 					text-decoration: none;
 					color: #888;
-					font-size: 1.5em;
+					font-size: 0.9em;
 					transition: color 0.2s;
+					z-index: 1000;
 				}
 				.home-link:hover {
 					color: #333;
@@ -111,7 +112,7 @@
 					}
 				}
 			</style>
-			<a href="../../../../index.html" class="home-link" title="Home">↑</a>
+			<a href="../../../../index.html" class="home-link" title="Home">(↑)</a>
 			<article>
 			<header>
 
