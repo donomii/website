@@ -8,12 +8,19 @@ xmax = width * 8;
 dragging = false;
 
 //User can "zoom out" to see the full map, or in to see the local view.
-viewscale = 2;
+viewscale = 1;
 overview=false;
+float worldMult = 1.5;
+float overviewScale; // Calculated in setup
+float normalScale = 2.0; // Desired zoom level for gameplay
+
+//Game State: 0 = Title, 1 = Game
+int gameState = 0;
+TitleScreen titleScreen;
 
 //Name, speed, owner
-Ship[] ships = new Ship[10];
-Planet[] planets = new Planet[10];
+Ship[] ships = new Ship[20];
+Planet[] planets = new Planet[20];
 
 //Name, flag colour
 player=[["Neutral", #AAAAAA], ["Bob", #FF0000], ["Tom", #009900], ["Harry", #0000FF]  ];
@@ -30,7 +37,7 @@ PlanetX = 200;
 PlanetY = 200;
 
 function makePlanets () {
-	for(i=0;i<10;i++) {
+	for(i=0;i<20;i++) {
 		//PositionX, PositionY, owner, planetname
 		float[] res = [Math.random()*20, Math.random()*20,Math.random()*20,Math.random()*20,Math.random()*20];
 		planets[i] = new Planet(Math.random()*xmax, Math.random()*ymax, int(Math.random()*4), nextPlanet(), res);
@@ -38,7 +45,7 @@ function makePlanets () {
 }
 
 function makeShips () {
-	for(i=0;i<10;i++) {
+	for(i=0;i<20;i++) {
 			//PositionX, PositionY, owner, shipname
 			ships[i] = new Ship(nextShip(), 10, int(Math.random()*4), Math.random()*xmax, Math.random()*ymax, Math.random()*xmax, Math.random()*ymax);
 	}
@@ -50,10 +57,27 @@ HandleBox handlebox;
 
 void setup(){  
 	background(48);
-	//size( 320, 460 );  
+	//Set size to window dimensions to fix "postage stamp" issue
+	size( window.innerWidth, window.innerHeight );  
 
 	strokeWeight( 10 );  
 	frameRate( 30 );  
+	
+	//Recalculate world boundaries based on new size
+	//Reduced multipliers to keep planet density reasonable on large screens
+	xmax = width * worldMult;
+	ymax = height * worldMult;
+	
+	//Calculate Scale required to fit World into Screen
+	// ScreenWidth = WorldWidth * EffectiveScale
+	// width = xmax * (viewscale/2)
+	// viewscale/2 = width/xmax = 1/worldMult
+	// viewscale = 2/worldMult
+	overviewScale = 2.0 / worldMult;
+	
+	//Start in Normal Scale
+	viewscale = normalScale;
+
 	X = width / 2;  
 	Y = height / 2;  
 	nX = X;  
@@ -62,6 +86,7 @@ void setup(){
 	makeShips(); 
 	handlebox = new HandleBox();
 	handlebox.visible=true;
+	titleScreen = new TitleScreen();
 }  
 
 void drawOutlineText(astring, xpos, ypos){
@@ -90,9 +115,19 @@ boolean closeTo(x1,y1,x2,y2,dist) {
 }
 
 void mouseClicked() {
+	if (gameState == 0) {
+		gameState = 1; // Start Game
+		return;
+	}
+
 	if (mouseButton == RIGHT) { 
 		toggleOverview();
 	} else {
+		//If we are in overview mode, any click zooms in
+		if(overview){
+			toggleOverview();
+			return;
+		}
 		//Account for view scaling when calculating world coordinates
 		var scaleFactor = viewscale / 2.0;
 		var worldMouseX = mouseX / scaleFactor;
@@ -101,7 +136,7 @@ void mouseClicked() {
 		var selected=false;
 		//deselect();
 		
-			for(i=0;i<10;i++) {
+			for(i=0;i<20;i++) {
 				Planet p = planets[i];
 				if(Math.abs(p.x-(worldMouseX-offSetX)) < 15){
 						if(Math.abs(p.y-(worldMouseY-offSetY)) < 15){
@@ -116,7 +151,7 @@ void mouseClicked() {
 			PlanetY = worldMouseY-offSetY;
 			//selected_ship = -1;
 			//Currently ship selection is disabled
-			for(i=0;i<10;i++)
+			for(i=0;i<20;i++)
 					{
 						Ship ship = ships[i];
 						if(Math.abs(ship.x-(worldMouseX-offSetX)) < 15){
@@ -147,24 +182,29 @@ void mouseDragged()
 
 
 void toggleOverview() {
+	float currentEffectiveScale = viewscale / 2.0;
+	
 	if(overview){
-		//Zoom in to the mouse position
-		viewscale=2.0; // Scale 1.0 (viewscale/2)
-		//Current Mouse World Pos (from Overview state where scale was 0.25)
-		//mouseX is screen pos. scaling is 0.25. World = mouseX / 0.25 = mouseX * 4
-		float worldX = mouseX * 4;
-		float worldY = mouseY * 4;
+		//Zoom IN to Normal
+		viewscale = normalScale; 
+		float newEffectiveScale = viewscale / 2.0;
 		
-		//We want worldX to be at the center of the screen (width/2)
-		//Screen = (World + Offset) * Scale
-		//width/2 = (worldX + offSetX) * 1
-		//offSetX = width/2 - worldX
-		offSetX = (width/2) - worldX;
-		offSetY = (height/2) - worldY;
+		//Calculate World Position under Mouse
+		//Mouse Screen Pos = (WorldPos + Offset) * OldScale
+		//WorldPos = (MouseScreen / OldScale) - Offset
+		//Since Offset is 0 in Overview:
+		float worldMouseX = mouseX / currentEffectiveScale;
+		float worldMouseY = mouseY / currentEffectiveScale;
+		
+		//Recenter View on World Position
+		//CenterScreen = (WorldPos + NewOffset) * NewScale
+		//NewOffset = (CenterScreen / NewScale) - WorldPos
+		offSetX = (width/2.0 / newEffectiveScale) - worldMouseX;
+		offSetY = (height/2.0 / newEffectiveScale) - worldMouseY;
 
 	} else {
-		//Zoom out to overview
-		viewscale=0.5; // Scale 0.25
+		//Zoom OUT to Overview
+		viewscale = overviewScale;
 		offSetX=0;offSetY=0;
 	}
 overview=!overview;
@@ -424,6 +464,9 @@ void drawArrow(x,y,destx,desty,owner,bp_cost)
 void Clear() { fill(0);rect(0,0,xmax,ymax);}
 
 void draw(){  
+	if (gameState == 0) {
+		titleScreen.draw();
+	} else {
 		pushMatrix();
 		Clear();
 		scale(viewscale/2);
@@ -433,7 +476,7 @@ void draw(){
 
 			if(closeTo(X,Y,PlanetX,PlanetY, 30)){
 				//Pick a new planet
-				var p = int(Math.random()*10);
+				var p = int(Math.random()*20);
 				PlanetX = planets[p].x;
 				PlanetY = planets[p].y;
 			}
@@ -456,7 +499,7 @@ void draw(){
 			
 			//Draw all stars
 			var i=0;
-			for(i=0;i<10;i++) {
+			for(i=0;i<20;i++) {
 				var pdata = planets[i];
 				drawStar(offSetX+pdata.x,offSetY+pdata.y,pdata.name, pdata.owner);
 			}
@@ -477,7 +520,7 @@ void draw(){
 				var desty =ships[i].destY;
 				if(closeTo(xx,yy,destx,desty, 30)){
 					//Pick a new planet
-					var p = int(Math.random()*10);
+					var p = int(Math.random()*20);
 					ships[i].destX = planets[p].x;
 					ships[i].destY = planets[p].y;
 				}
@@ -502,6 +545,7 @@ void draw(){
 	
 
 		popMatrix();
+	}
 	}
 
 
@@ -575,8 +619,12 @@ void drawStar(x, y, name, owner) {
 	translate(x,y);
 	stroke(255);
 	strokeWeight(1);
+	
+	//Restore "flag" style label to the right
+	textAlign(LEFT);
 	xpos = 25;
 	ypos = 20;
+	
 	pushMatrix();
 	translate(xpos, ypos);
 	//scale(0.5);
@@ -584,14 +632,19 @@ void drawStar(x, y, name, owner) {
 	fill(200)
 	drawText(name, 0, 0);
 	popMatrix();
+	
 	if(owner == "PLAYERNAME")
 		{fill(50,200,50);}
 	else 
 		{fill(200,50,50);}
+		
 	fill(player[owner][1]);
 	stroke(player[owner][1]);
+	
+	//Draw guide lines
 	line(11,11,xpos,ypos+5);
 	line(xpos,ypos+5,xpos+50,ypos+5);
+	
 	ellipse(0, 0, 10, 10);
 	for (i=0; i<9; i++)
 	{

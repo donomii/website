@@ -48,13 +48,3 @@ function halfSizeCanvas(aName) {
 		//actuallyPlay();
 	}
 }
-
-
-
-function doStartup() {
-	$("#splashimg").hide();
-	$("#sketch").show();
-}
-
-
-
