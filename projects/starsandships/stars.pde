@@ -12,10 +12,8 @@ viewscale = 2;
 overview=false;
 
 //Name, speed, owner
-ship = [["Explorer", 10, 1]];
-shipPos = [1,2,3,4,5,6,7,8,9,10];
-planet=[1,2,3,4,5,6,7,8,9,10];
-resources=[1,2,3,4,5,6,7,8,9,10];
+Ship[] ships = new Ship[10];
+Planet[] planets = new Planet[10];
 
 //Name, flag colour
 player=[["Neutral", #AAAAAA], ["Bob", #FF0000], ["Tom", #009900], ["Harry", #0000FF]  ];
@@ -34,16 +32,15 @@ PlanetY = 200;
 function makePlanets () {
 	for(i=0;i<10;i++) {
 		//PositionX, PositionY, owner, planetname
-		planet[i] = [Math.random()*xmax, Math.random()*ymax, int(Math.random()*4), nextPlanet()];
-		resources[i] = [Math.random()*20, Math.random()*20,Math.random()*20,Math.random()*20,Math.random()*20];
+		float[] res = [Math.random()*20, Math.random()*20,Math.random()*20,Math.random()*20,Math.random()*20];
+		planets[i] = new Planet(Math.random()*xmax, Math.random()*ymax, int(Math.random()*4), nextPlanet(), res);
 	}
 }
 
 function makeShips () {
 	for(i=0;i<10;i++) {
 			//PositionX, PositionY, owner, shipname
-			shipPos[i] = [Math.random()*xmax, Math.random()*ymax, Math.random()*xmax, Math.random()*ymax ];
-			ship[i] = [ nextShip(),int(Math.random()*4)];
+			ships[i] = new Ship(nextShip(), 10, int(Math.random()*4), Math.random()*xmax, Math.random()*ymax, Math.random()*xmax, Math.random()*ymax);
 	}
 }
 
@@ -53,10 +50,10 @@ HandleBox handlebox;
 
 void setup(){  
 	background(48);
-	size( 320, 460 );  
+	//size( 320, 460 );  
 
 	strokeWeight( 10 );  
-	frameRate( 15 );  
+	frameRate( 30 );  
 	X = width / 2;  
 	Y = height / 2;  
 	nX = X;  
@@ -96,14 +93,18 @@ void mouseClicked() {
 	if (mouseButton == RIGHT) { 
 		toggleOverview();
 	} else {
-		console.log("mouseclick at "+mouseX + "," + mouseY);
+		//Account for view scaling when calculating world coordinates
+		var scaleFactor = viewscale / 2.0;
+		var worldMouseX = mouseX / scaleFactor;
+		var worldMouseY = mouseY / scaleFactor;
+		console.log("mouseclick at "+mouseX + "," + mouseY + " world: " + worldMouseX + "," + worldMouseY);
 		var selected=false;
 		//deselect();
 		
 			for(i=0;i<10;i++) {
-				my p = planet[i];
-				if(Math.abs(p[0]-(mouseX-offSetX)) < 15){
-						if(Math.abs(p[1]-(mouseY-offSetY)) < 15){
+				Planet p = planets[i];
+				if(Math.abs(p.x-(worldMouseX-offSetX)) < 15){
+						if(Math.abs(p.y-(worldMouseY-offSetY)) < 15){
 						
 							select_planet(i); selected=true;swirlie.visible=true;
 							console.log("planet " + i + " chosen");
@@ -111,15 +112,15 @@ void mouseClicked() {
 			}
 			if(selected==false) { deselect(); }
 
-			PlanetX = mouseX-offSetX;
-			PlanetY = mouseY-offSetY;
+			PlanetX = worldMouseX-offSetX;
+			PlanetY = worldMouseY-offSetY;
 			//selected_ship = -1;
 			//Currently ship selection is disabled
 			for(i=0;i<10;i++)
 					{
-						my ship = shipPos[i];
-						if(Math.abs(ship[0]-(mouseX-offSetX)) < 15){
-								if(Math.abs(ship[1]-(mouseY-offSetY)) < 15){
+						Ship ship = ships[i];
+						if(Math.abs(ship.x-(worldMouseX-offSetX)) < 15){
+								if(Math.abs(ship.y-(worldMouseY-offSetY)) < 15){
 									if (selected_ship==i) {
 											selected_ship=-1;
 											console.log("ship " + i + " deselected");
@@ -134,8 +135,10 @@ void mouseClicked() {
 
 void mouseDragged() 
 {
-	deltaX = mouseX-pmouseX;
-	deltaY = mouseY-pmouseY
+	//Account for view scaling when calculating drag deltas
+	var scaleFactor = viewscale / 2.0;
+	deltaX = (mouseX-pmouseX) / scaleFactor;
+	deltaY = (mouseY-pmouseY) / scaleFactor;
 	offSetX = offSetX+deltaX;
 	offSetY = offSetY+deltaY;
 	if((deltaX+deltaY)>5){dragging = true}
@@ -144,16 +147,25 @@ void mouseDragged()
 
 
 void toggleOverview() {
-	//alert("mouse: " + mouseX + " " + mouseY );
 	if(overview){
-	
-	viewscale=2.0;
-	offSetX=-mouseX*4.0;offSetY=-mouseY*4.0;
+		//Zoom in to the mouse position
+		viewscale=2.0; // Scale 1.0 (viewscale/2)
+		//Current Mouse World Pos (from Overview state where scale was 0.25)
+		//mouseX is screen pos. scaling is 0.25. World = mouseX / 0.25 = mouseX * 4
+		float worldX = mouseX * 4;
+		float worldY = mouseY * 4;
+		
+		//We want worldX to be at the center of the screen (width/2)
+		//Screen = (World + Offset) * Scale
+		//width/2 = (worldX + offSetX) * 1
+		//offSetX = width/2 - worldX
+		offSetX = (width/2) - worldX;
+		offSetY = (height/2) - worldY;
 
 	} else {
-	viewscale=0.5;
-	offSetX=0;offSetY=0;
-			
+		//Zoom out to overview
+		viewscale=0.5; // Scale 0.25
+		offSetX=0;offSetY=0;
 	}
 overview=!overview;
 }
@@ -169,8 +181,8 @@ void select_planet(num)
 	
 	if (newnum>-1){
 		swirlie.selected = num;
-		swirlie.x = planet[num][0] + offSetX;
-		swirlie.y = planet[num][1] +offSetY;
+		swirlie.x = planets[num].x + offSetX;
+		swirlie.y = planets[num].y +offSetY;
 		}
 	//update_planetbars();
 	handlebox.visible=true;	
@@ -422,19 +434,19 @@ void draw(){
 			if(closeTo(X,Y,PlanetX,PlanetY, 30)){
 				//Pick a new planet
 				var p = int(Math.random()*10);
-				PlanetX = planet[p][0];
-				PlanetY = planet[p][1];
+				PlanetX = planets[p].x;
+				PlanetY = planets[p].y;
 			}
 		
 
 //Draw the selected ship halo
 			if(selected_ship>-1){
-				my x = offSetX+shipPos[selected_ship][0];
-				my y = offSetY+shipPos[selected_ship][1];
+				my x = offSetX+ships[selected_ship].x;
+				my y = offSetY+ships[selected_ship].y;
 				my destx = offSetX+PlanetX;
 				my desty = offSetY+PlanetY;
 				//drawArrow(x,y,destx,desty, 1, "250");
-				drawHalo(x,y,destx,desty,ship[selected_ship][1])
+				drawHalo(x,y,destx,desty,ships[selected_ship].owner)
 				//drawShip(x,y,selected_ship, true);
 			}
 			
@@ -445,8 +457,8 @@ void draw(){
 			//Draw all stars
 			var i=0;
 			for(i=0;i<10;i++) {
-				var pdata = planet[i];
-				drawStar(offSetX+pdata[0],offSetY+pdata[1],pdata[3], pdata[2]);
+				var pdata = planets[i];
+				drawStar(offSetX+pdata.x,offSetY+pdata.y,pdata.name, pdata.owner);
 			}
 			
 			//Special selected ship movement
@@ -458,29 +470,29 @@ void draw(){
 			Y=Y+-inv_ratio*(Y-PlanetY)/Math.abs(Y-PlanetY);
 			drawShip(offSetX+X,offSetY+Y,0, false );
 }
-			for(i=0;i<shipPos.length;i++) {
-				var xx = shipPos[i][0];
-				var yy = shipPos[i][1];
-				var destx =shipPos[i][2];
-				var desty =shipPos[i][3];
+			for(i=0;i<ships.length;i++) {
+				var xx = ships[i].x;
+				var yy = ships[i].y;
+				var destx =ships[i].destX;
+				var desty =ships[i].destY;
 				if(closeTo(xx,yy,destx,desty, 30)){
 					//Pick a new planet
 					var p = int(Math.random()*10);
-					shipPos[i][2] = planet[p][0];
-					shipPos[i][3] = planet[p][1];
+					ships[i].destX = planets[p].x;
+					ships[i].destY = planets[p].y;
 				}
 
 				var ratio = min(Math.abs(xx-destx)/Math.abs(yy-desty), 10)/10.0;
 				var inv_ratio = min(10, 1/ratio)/10.0;
-				shipPos[i][0]=xx+-ratio*(xx-destx)/Math.abs(xx-destx);
-				shipPos[i][1]=yy+-inv_ratio*(yy-desty)/Math.abs(yy-desty);
+				ships[i].x=xx+-ratio*(xx-destx)/Math.abs(xx-destx);
+				ships[i].y=yy+-inv_ratio*(yy-desty)/Math.abs(yy-desty);
 				
 				if (keyPressed){
-					drawArrow(offSetX+shipPos[i][0],offSetX+shipPos[i][1],shipPos[i][2],shipPos[i][3], 1, "250");
-					drawHalo(offSetX+shipPos[i][0],offSetX+shipPos[i][1],destx,desty,ship[i][1])
+					drawArrow(offSetX+ships[i].x,offSetX+ships[i].y,ships[i].destX,ships[i].destY, 1, "250");
+					drawHalo(offSetX+ships[i].x,offSetX+ships[i].y,destx,desty,ships[i].owner)
 				}
 				
-				drawShip(offSetX+shipPos[i][0],offSetY+shipPos[i][1],i);
+				drawShip(offSetX+ships[i].x,offSetY+ships[i].y,i);
 			}
 			
 
@@ -503,7 +515,7 @@ void drawText(astring, xpos, ypos){
 //Vector commands for ship
 void drawShip(x,y,shipnum, showDetails)
 	{
-		my playerColour = player[ship[shipnum][1]][1];
+		my playerColour = player[ships[shipnum].owner][1];
 		//console.log("Drawing ship number ", shipnum);
 		pushMatrix();
 		//deltax = 1*sign(destx-x);
@@ -551,9 +563,9 @@ void drawShipDetail(shipnum) {
 	ypos = int(0)+20;
 	line(12.5,12.5,xpos,ypos+5);
 	line(xpos,ypos+5,xpos+50,ypos+5);
-	drawOutlineText(ship[shipnum][0] + " ("+ship[shipnum][1]+ ")", xpos, ypos);
+	drawOutlineText(ships[shipnum].name + " ("+ships[shipnum].owner+ ")", xpos, ypos);
 	fill(200)
-	drawText(ship[shipnum][0] + " (" + player[ship[shipnum][1]][0] + ")" , xpos, ypos);
+	drawText(ships[shipnum].name + " (" + player[ships[shipnum].owner][0] + ")" , xpos, ypos);
 	popMatrix();
 }
 
@@ -588,10 +600,3 @@ void drawStar(x, y, name, owner) {
 	}
 	popMatrix();
 }
-
-
-
-
-
-
-
