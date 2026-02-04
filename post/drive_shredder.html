@@ -5,7 +5,7 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<meta name="color-scheme" content="light dark">
 			<link rel="icon" type="image/png" href="data:image/png;base64,">
-			<title>Terrible, terrible damage</title>
+			<title>Buy, break, buy again</title>
 			<style>
 				@media (prefers-color-scheme: dark){
 					body {
@@ -116,10 +116,10 @@
 			<article>
 			<header>
 
-			<h1>Terrible, terrible damage</h1>
+			<h1>Buy, break, buy again</h1>
 			</header>
 			<div class="summary">
-<p>Everything is falling apart.  Especially when I'm involved.</p>
+<p>Everything fails eventually.</p>
 </div>
 <div style="clear:both"></div>
 <div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
@@ -128,7 +128,7 @@
 <p>The current failure is a brand new 24Gb seagate drive, that is starting to randomly error and disconnect.  It's connected by USB, as are many of the others, so it's not even running at full capacity, but even so, I didn't manage to fill it up before it started to fail.  It looks like you can have consumer high capacity storage, so long as you never use it.</p>
 <p>I'm unaware of what I did to destroy this one.  I know what I did to destroy the first two - don't run ZFS over USB, kids.  For the 24Gb one, I'm running my own software on it, which, to be fair, does too many random access seeks.  I feel like that on its own shouldn't be enough to permanently damage a drive, but there's nothing else I can see.  I have checked the temperature logs and it has been operating within its range.  It doesn't have too many starts, and possibly the only real issue is around 2000 hours of operations.</p>
 <p>Contrast it to the second hand enterprise NAS drive I bough on the cheap, and the quality difference is obvious.  The enterprise drive is running 10 degrees hotter, has been running for longer, and doing the same work.  It's fine.  It looks like NAS quality drives handle heat better, and seem to have some kind of heat control that slows them when they approach the limit.  The consumer grade ones clearly do not.  Also, clearly, NAS grade has better quality parts that don't wear out and break anywhere near as quickly.  I was dubious about buying second hand enterprise gear but I'm a convert now.</p>
-<p>The concept of drive failure isn't something that specifically outrages me.  The point of the project was to develop a file store that could detect and (sometimes) repair hardware failures, as they happened.  What I didn't expect was that it would be so common, and that consumer drives would fail so quickly.</p>
+<p>The concept of drive failure isn't something that specifically outrages me.  Everything fails eventually, sooner when I'm involved.  The point of the project was to develop a file store that could detect and (sometimes) repair hardware failures, as they happened.  What I didn't expect was that it would be so common, and that consumer drives would fail so quickly.</p>
 <p>At this point I have to add my voice to the chorus saying &quot;Don't buy large capacity drives&quot;.  Not the consumer ones, anyway.  The capacity has increased, but the reliability hasn't, meaning that we are now approaching the point where you can be at serious risk of the drive failing before you manage to fill it up.</p>
 <p>My advice would be: buy smaller capacity drives, at the best price point you can find.  Buy two, and use them in mirror mode, so that you will at least have some chance to get your data back before they fail entirely.</p>
 <p>Although, it should be pointed out clearly, trying to copy all your data off the drive will stress it badly, and so it will be most likely to fail when it is full and you really don't want it to.  The entire situation appears to be designed for the maximum likelihood of destroying your data.</p>
