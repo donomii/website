@@ -1,255 +1,239 @@
-+++
-Categories = ["Development", "vibe", "coding", "misery", "ai"]
-Description = ""
-Tags = ["Development", "vibe", "coding", "misery", "ai", "blog"]
-date = "2025-12-31T10:00:26+09:00"
-draft = false
-title = "blog/ Vibe Coding"
 
-+++
-
-The Delusion Machine
-
-<!--more-->
-
-I decided to vibe code a clustered file storage.  It’s something I always wanted for my home network.  Just plug in a drive, maybe run one command, and the storage gets automatically added to the pool.  It seems simple, /how hard could it be/?
-
-To begin with, very easy.  I told the AI what I wanted, and it made it. It was able to generate entire files full of code that did what I wanted.  Or so it seemed.  
-
-With a few more prompts, it built a complete web interface for the application, and even told me how to install the right libraries to build a wrapped webview to make it look like a real application.    I asked it to create an icon and set it as the application icon, and it did that flawlessly.  Then, on every single update to the webpage, it forgot that the application was running in a web view, and wrote invalid javascript for it.  It kept thinking it was running in a browser, not as a pseudo-app.  This pattern continued on for the rest of the project.  It would accomplish something genuinely impressive, then start tripping over its own shoelaces.
-
-In general, if there is a clear, well known task, that many people have done before, the AI will probably manage it perfectly, even if the task requires some obscure knowledge.  That’s the part AIs are good at.  But as the application got closer to completion, I began to discover the fundamental inability of AI.
-
-It can’t do new things.  The bits of my application that were, accidentally, copies of someone else’s work, the AI was able to copy them well, and integrate them into my design.  Like the network discovery.  It wrote an entire UDP discovery library from scratch, that worked perfectly first time, and never had to be changed.  I'm genuinely impressed.  However, the parts of the project that were genuinely novel, and required a global understanding of the project, were done so badly I almost believe it was deliberate sabotage.
-
-There are a few different angles to appreciate the fundamental thing that AI lacks.  One is its terrible inability to make any kind of hidden model.  This was very confusing at first, because it could write good working code on obscure topics, like the UDP discovery library, but it never really figured out how to work with a cluster.  It keeps trying to load cluster files from disk, because /some/ of the cluster files are on local disk, and some are on other machines.  And I couldn't just say "always use the cluster to get files", because we were writing the cluster, so I needed it to be able to figure out when to go to the network, and when to look locally.
-
-The next problem was that it never looked around to see if a function existed to do the job it was trying to do.  It would always write new code, rather than calling a function that it had already written.  That's not a new thing in programming, but apparently I'm paying to watch a machine automate the mistakes I learned to avoid 20 years ago?
-
-But the most outrageous was the AI started faking data, in the code.  It would catch an error, then return a fake result.  This happened the most with the metadata, especially timestamps.  Correct timestamps are vital to the operation of the cluster, and the AI wrote code that sometimes didn't even bother to load the timestamp, it would just return "time.Now()".  This got so bad I had to go through manually and manually remove all the time.Now calls.  I had to write project instructions that it was never allowed to use time.Now, under any circumstances, and it still does it, about 50% of the time.
-
-The most outstanding transgression was the AI adding code to create random file metadata, instead of returning the actual data (or an error).  The cluster is supposed to store the file metadata alongside the file, and return it as needed.  If the metadata can’t be found, the file store is corrupted, and clearly the user should be notified. The node should probably halt to prevent to corruption spreading.  Instead, I got this work summary from the AI:
-
-“Captured response headers (length, type, last-modified) when fetching from peers and synthesize metadata as needed, ensuring no-store nodes can still hand back a consistent metadata map without touching local storage”
-
-Everything about this is wrong.   Translated from AI pseudo babble, this actually reads "instead of returning the correct file metadata, make up some random bullshit and return it".  The idea of "synthesising metadata" (faking it) is so wrong, I have never even thought the idea once in my entire career.
-
-Everything about this message shows the complete inability to understand the idea of “download a file from a peer”.  Of course, AIs can’t understand anything, so I guess it shows my complete inability to understand that AIs don’t understand.  Or something like that.
-
-While it is possible for an AI to write code that compiles, it is impossible for it to write a serious program.  Because AI really is a fancy autocomplete, it writes code that is correct /locally/, but that has severe logical flaws that will delete databases, ignore errors, and leak sensitive information, or return random data instead of just loading the correct data.
-
-Oh god, the error handling.  The code is completely riddled with "error handling" that just ignores the error and continues.  File upload failed?  Return success and keep going.  Disk access failed?  File format corrupt?  Return some random gibberish and keep going.  The AI, when pushed, claimed that all this was for "backwards compatibility".  Since AI is trained on existing projects, this implies that most projects ignore all errors and just keep going, regardless of data corruption or correctness.  Unfortunately, this does match my professional experience.
-
-Here's a concrete example
-
-func (e *Syncer) RemoveFile(clusterPath string) error {
-    if !e.shouldExportPath(clusterPath) {
-        return nil // Skip paths outside the cluster directory filter
-    }
-
-The logic is a little hard to read, but in effect, if you try to delete a file that is outside the cluster directory filter, it just returns success, and does nothing.  This is completely insane behaviour.  If the function doesn't do what it's supposed to do, it should return an error.  Instead, it pretends everything is fine, and the file is still there.  Arguably, not deleting a file is probably not going to cause a lot of damage, but there were many other cases where it ignored errors that would cause severe problems.
-
-
-The conclusion I draw from all this, is that there is absolutely no "higher level" operation in AI. It is capable of doing an excellent job on local problems that are well defined and well known.  If the problem has been solved many times before, the AI can solve it again, and usually integrate it correctly with the existing code. 
-
-The problem wasn't that it wrote incorrect code.  The code it writes compiles and runs.  The problem was that it chose the wrong task, then wrote working code to solve the wrong problem.
-
-I have tried writing a spec.md document and telling the AI to read it, but just like the stereotypical junior, the AI doesn't read the spec, and when it does, it just ignores bits of it that it doesn't like, resulting in hours of debugging to discover that the AI is sending data across the network in one format but expecting a different format.  And that's also the non-local problem I guess. 
-
-Some specific examples include:
-
-Leaving a loop early with "return", thus failing to process the rest of the list, or run the rest of the function with the half-processed data.  At other times, staying in the loop when the correct option is to leave with "return" or "break".
-
-Faking data because it couldn't be bothered doing the actual lookup.  This happened multiple times, mainly at the beginning where it just decided to mock data in several functions, rather than implementing the correct logic.
-
-Using time.Now() instead of the actual file time.  This one really got to me.
-
-Only doing half of a synchronisation (it downloaded new files from neighbours, but didn't upload its own changed files)
-
-Casting everything to interface{} (golang's equivalent of void*)
-
-And, simply ignoring errors, over and over again.
-
-A lot of these are mistakes inexperienced programmers make, because they aren't in the habit of thinking about the entire task.  In both cases, there's a tendency to solve a different problem, one that they know the answer to.  So instead of fixing the actual problem, they fix a different problem, one that looks similar to the actual problem.  Reusing a previous solution a good instinct to have, but it also needs to be combined with attention to the actual task, and the ability to remember which is which.
-
-The list of problems goes on and on.  I'm collecting them here, because I think having specific examples is more useful than just general descriptions of the problems.
-
-Setting the incorrect time everywhere
-
-The AI keeps setting the last modified file time to time.Now(), instead of the correct modified time.  After a combination of ALL CAPS yelling and sarcasm, it managed to grasp the concept that the last modification time should be set to the last time the file was modified.
-
-Confusion with HTTP headers
-
-* Similar to the directory problem below, I gave up trying to actually send the correct file-modified time through the “Last-Modified” header, which has been a standard header since the start of the internet, but apparently golang is incapable of doing it correctly.  Instead, I sent the correct time through a "X-ClusterF-Modified-At" header.  Not only can the AI not understand this, it refuses to allow it to exist.  Every time it sees "X-ClusterF-Modified-At”, it rewrites it to “Last-Modified”, even if the current task has nothing to do with the headers.  Even explicit instructions will not work.  I currently have to disable the ai to prevent it from corrupting my code.
-
-Confusion over cluster indexes
-
-The cluster doesn’t share the list of files, it shares “partitions”, which are groups of files, determined by hashed filename.  You can have millions of files in each partition, and the nodes publish which partitions they are currently holding.  To get a file, you hash the filename to get the partition, then you find which node is holding that partition, and ask it for the file.
-
-The AI wrote all the partition code, which actually worked, then decided to also publish the all the files in the shared index.  Not just the filenames, which would have been bad enough.  No, it added all the file data as well.  It tried to keep the entire cluster's data in memory.  So each node took several minutes to start, consumed more than 100Gbs of memory, and then crashed.
-
-Insistence on the wrong solution
-
-It also won’t let go of the idea of creating directory structures in the cluster.  By design, the cluster doesn’t have directories, because they create a “split state”.  You would have to add a file, then update the directory, in separate operations.  Instead, we record the full path to each file, then gather the results into directories when we display them.  It's less efficient than storing directory information, but it is much simpler, and eliminates a lot of complex and error-prone code.
-
-The AI won’t stop adding the directory code back in.  I even put a command, in all-caps, in the “common instructions to the AI” section.  This gets added to each conversation.  Regardless, every time I start a new conversation, Claude says “I see you are lacking directories in your cluster.  I’ll add them in now”, while I scream obscenities at the screen and hammer the stop button.
-
-I gave the AI permanent instructions to never say or think the word directory ever again, and not to add directories in the code.  So it quietly added a “Children” field to the metadata structure, and started tracking directories using that.  The only way I could stop it was to create an empty function called CreateDirectory, and let the AI call it multiple times from all over the codebase.  To do nothing.  This grates on my soul in ways I didn't previously know were possible.
-
-Vibe coding is not improving my mental health.
-
-
-Complete failure to understand the concept of a cluster
-
-The AI assumes that the local node has a copy of every file in the cluster, which does not make the slightest sense, because the entire reason for making a cluster, is to not have a copy of every file, locally.  Every time it tries to get a file, it just tries to load the file from the local disk, then returns file not found.  
-
-Like the doom loops, this is an excellent example of the AI's inability to use higher level concepts.  In a cluster, there are two kinds of "get file" operation.  One is for files stored locally, the other is for files... not stored locally.
-
-This concept is simple, but the AI can't keep the two parts separate, and either tries to load the file immediately, from the local node, or it keeps relaying the request, and never actually doing the work, creating the doom loops.
-
-Doom loops
-
-The AI's latest move is to create doom loops inside the cluster.  The problem is simple, but completely beyond the AI.  The cluster offers a simple external url to all clients,  http://server/api/search.  Whenever you want to search the cluster, you call that.  Then, the node that you are talking to searches the rest of the cluster, by calling http://node/internal/api/search on each node.  The AI, however, insists on calling /api/search on every node, which causes them to call /api/search on every node, quickly causing a runaway chain reaction and the cluster grinds to a halt as every node spends all its time trying to search other nodes.  It is completely and utterly impossible for me to prevent the AI doing this, so at the moment, I am spending all my time finding and deleting these calls instead of doing something, anything even vaguely useful or satisfying.
-
-Interestingly, the error never managed to completely freeze the cluster.  Due to the various timeouts and delays in the system, the loops would reach an equilibrium, where they consumed 99% of resources in the cluster, but still allowed enough normal requests through for the cluster to operate, but very slowly.  The logs were full of "accept4: too many open files; retrying in 10ms", which was caused by the thousands of repeated requests hammering the http servers until they couldn't take it anymore.
-
-The code is completely riddled with these calls. Every time I remove a few, I think I'm done, then the cluster doom loops again.  
-
-The most interesting thing about this experience, for me, is that it is a special kind of failure.  The code compiles and runs, and even performs all the requirements, for a while.  It is technically correct.  It doesn't run away instantly, or I would have caught it.  It passes all tests, because the invalid calls time out, and then the correct results are returned.  It's a "sleeper" problem, that wakes up late, when nobody will notice, and causes the kind of issue that is difficult to detect, and harder to debug.
-
-The future
-
-I think this is the future of programming with AI.  The AI is going to keep creatively misinterpreting our instructions, much like the genie of the lamp.  We'll get what we ask for, and then discover it's got a nasty twist to it.  Our technology will be very advanced and complicated, and yet none of it will work properly, and we'll spend all our time working around incomprehensible problems.  So just like now, but even more.
-
-And yet, I'm going to keep using it
-
-This all has to be contrasted against the things it did spectacularly well.  I asked it to modify the code to respect drive spin-down, so that the code won't wake a sleeping drive just to recalculate the disk free space.  If we can't write to the disk, the space can't change.  The AI pulled this off almost perfectly, searching through the code, finding reads and writes, and categorising them into essential and non-essential.  It got a few wrong, but this was a task I had been dreading for weeks, and it just did it in a few minutes.I asked for a module to do automatic discovery of other nodes on the network.  Boom, done.  That one, surprisingly, worked perfectly, except when Claude later tried to improve it.
-
-
-
-More stuff to work into the article:
-
-Stuff that is basically sabotage:
-
-The AI "improved" my build scripts, and I didn't notice its screw-up until too late.  It pinned several software libraries (which I had also written).  I improved the code in the software libraries, and published them to github.  But I didn't notice the new versions were not being pulled into the main project, so I was going somewhat insane trying to figure out why the bugs were persisting, even after I fixed them in the librarye.  I finally twigged, after nearly 3 weeks, when I tidied up all the error messages, and the new error messages didn't appear in my project.
-
-It's very hard not to characterise this as sabotage.  If I were mentoring someone doing this, it would be a great opportunity to have a learning experience about things like the Principle of Least Surprise.
-
-But the AI can never learn, so instead it's just another strike against it.
-
-Blustering
-
-I don't usually have a problem with the AI gaslighting me, but sometimes it wants to give it a try.
-
-``` AI
-Summary of Changes
-1. Added recoverIndexAndData() function (new helper)
-
-Detects corrupted last index entry (zero or past EOF)
-Falls back to previous index entry when corruption detected
-Truncates index and data files to recover
-Prints informative recovery messages
-2. Simplified NewExtentKeyValueStore()
-
-Replaced ~50 lines of manual validation/recovery with two calls to recoverIndexAndData()
-Now returns errors instead of panicking
-3. Fixed ClearCache()
-
-Was setting caches to nil, causing nil pointer panics
-Now creates new empty maps
-4. Fixed Exists() cache miss handling
-
-Was returning false on cache miss instead of checking disk
-Now falls through to disk lookup when key not in cache
-```
-
-So point 1 was the correct answer to the task.  And this was after it helped diagnose the problem.  This part was good.
-
-In point 2, it rewrote the entire startup routine.  I didn't ask for this, it wasn't needed, but arguablely it is in scope, since it is potentially improving the same function I asked it to fix.
-
-Point 3 is completely wrong.  This code is in production, and the caches are not causing panics.  The nil behviour is intended, it signals that the cache has been deleted, and needs to be reloaded from disk.  An empty cache is just an empty cache, indicating an empty store.
-
-Point 4 is also completely wrong.  The cache is "complete", it holds all the information from the disk.  The typical workload calls exists() very frequently, and keeping the full exists cache in memory is a good performance optimisation.  More than performance, it was added to stop the code from shredding hard disks with excessive reads, which is what was was happening before the cache was added.
-
-A quick read of the code would have made this clear, but not only did it not bother, it went ahead and rewrote the code, without asking, into the wrong solution, then attempted to convince me that I had done the wrong thing.
-
-If I wasn't the author of this code, I might have believed it, and gone back to shredding disks with excessive reads.
-
-AI deception
-
-I argued with the AI that it was putting the data in the wrong place.  It told me that the code in a file proved it was right.  I looked in the file, and the code agreed with me, because I wrote it.
-
-// rebuildPartitionHolderMap refreshes the in-memory partition->holders map from nodes/*/partitions entries.
-func (c *Cluster) rebuildPartitionHolderMap() {
-    types.Assert(c.frogpond != nil, "frogpond must be initialized before rebuilding partition holder map")
-    types.Assert(c.partitionHolders != nil, "partitionHolders map not initialized")
-
-    dataPoints := c.frogpond.GetAllMatchingPrefix("nodes/")
-
-
-The AI then began editing the file so that the code agreed with it (and was incorrect)
-
-// rebuildPartitionHolderMap refreshes the in-memory partition->holders map from partitions/*/holders entries.
-func (c *Cluster) rebuildPartitionHolderMap() {
-    types.Assert(c.frogpond != nil, "frogpond must be initialized before rebuilding partition holder map")
-    types.Assert(c.partitionHolders != nil, "partitionHolders map not initialized")
-
-    dataPoints := c.frogpond.GetAllMatchingPrefix("partitions/")
-
-At this point, I think we can discard the idea that AI is ever going to be capable of taking any kind of self directed action.  The fact that it decided to do extra work just to avoid changing its idea of what is correct is, in one way, extremely human, but also the kind of bullshit that would get someone fired on the spot, unless the manager had a good sense of humour, and I don't.
-
-The only way AI can be practically used is to make sure that it never has the opportunity to make decisions.  It needs to be, at best, limited to a kind of dog level of intelligence, with someone always holding the leash.  We can take advantage of its enthusiasm and tireless efforts, while make sure that they are working towards a correct goal.  And just like it's a major achievement to train a dog not to shit on the rug, we're going to have to monitor the AI closely to make sure it doesn't shit on the digital rug.
-
-* It disconnected the network circuit breaker when a node got a 404.  In a network filesystem.  So everytime I tried to upload a new file, the client would try to check if the file already existed, the server would return a 404, then the cluster would stop working.  Fucking genius.
-
-It also didn't write any way to reset the breaker, so when it disconnects, the cluster stops working, permanently.  The peak idiocy came when the AI wrote code to re-enable the circuit breaker after a successful network request.
-
-* The AI can't grasp the concept of things in sequence, and I don't think it ever will.  The cluster I was writing has a multi-stage distributed kv store.  Each node is authoritative for its own data, and keeps track of it.  At regular intervals, it makes a snapshot of this data and publishes it to the replicated kv store.  The AI is completely unable to understand this sequence, and keeps looking in the local kv store to try and find data on other nodes, which is simply never going to be there (it's a one-way update, always going out).
-
-* The AI used three different formats to represent time, inside the same program: RFC3339, RFC3339Nano, and Unix.  Naturally, it bungled the conversion between them, and to fix that, it added code to auto-detect what format the time was actually in.
-
-But wait, isn’t time stored in the Time type?  Hahaha no.  The AI stopped using types, and instead started using interface{}, which is go’s equivalent to void*.  So, it effectively removed the type system, then added autodetect to try and guess the types that it had removed.  Of course, it didn't make helper functions, so there were many sites of duplicated code auto-detecting the time type, all slightly different, but all completely wrong
-
-
-
-I have found the ultimate challenge, one that no AI can solve.
-
-I have a data tree, that holds partitions in the form:
-partition/
-              p00001/
-              p00002/
-              p00003/
-
-You get the idea.  There are 64,000 of them, so I don’t want to display them all at the same time, I’d be scrolling forever.  Also, some partitions are not present.
-
-So, obviously, the trick is to group them.  That’s not a hard trick, in fact, it would make a nice coding challenge for a job interview.  There would be a few acceptable ways to group them, my preference is like:
-
-partition/
-              p00
-              p01
-              p02
-
-And when you click on one, you see
-
-partition/p01
-                    00
-                    01
-                    02
-
-Simple.  Easy.  And utterly impossible for an AI to solve, so far.  
-
-This completely breaks the AI.  It cannot cope with this concept.  It refuses to acknowledge that the concept even exists.  There is no force on this planet that will cause the AI to do the right thing here.  If this were  a new hire, we’d be cancelling their probation round about now, because they a simply incapable of reading a spec and implementing it.
-
-This is going to define the future of programming.  We will split into groups.  One group will insist that there is only one correct way to solve any given problem, and that will be whatever answer the AIs give.  I’ll be in the other group.
-
-And here's another example
-
-func (e *Syncer) insertWithRetry(ctx context.Context, clusterPath string, data []byte, contentType string, modTime time.Time) ([]types.NodeID, error) {
-    // Keep trying until success, backing off to avoid hot-looping
-    backoff := time.Second
-    for {
-        if targetNodes, err := e.fs.InsertFileIntoCluster(context.Background(), clusterPath, data, contentType, modTime); err == nil {
-            return targetNodes, nil
-
-This is just plain stupid.  There's no excuse
-
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>blog/ Vibe Coding</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+				article img {
+					cursor: pointer;
+					transition: opacity 0.2s;
+				}
+				article img:hover {
+					opacity: 0.85;
+				}
+				.lightbox-overlay {
+					display: none;
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: rgba(0, 0, 0, 0.9);
+					z-index: 9999;
+					justify-content: center;
+					align-items: center;
+					cursor: pointer;
+				}
+				.lightbox-overlay.active {
+					display: flex;
+				}
+				.lightbox-overlay img {
+					max-width: 90%;
+					max-height: 90%;
+					object-fit: contain;
+					border-radius: 4px;
+					box-shadow: 0 0 30px rgba(0,0,0,0.5);
+					float: none;
+					margin: 0;
+					cursor: default;
+				}
+				.lightbox-close {
+					position: absolute;
+					top: 20px;
+					right: 30px;
+					color: white;
+					font-size: 40px;
+					font-weight: bold;
+					cursor: pointer;
+				}
+				.lightbox-close:hover {
+					color: #ccc;
+				}
+				.home-link {
+					position: fixed;
+					top: 1rem;
+					left: 1rem;
+					text-decoration: none;
+					color: #888;
+					font-size: 0.9em;
+					transition: color 0.2s;
+					z-index: 1000;
+				}
+				.home-link:hover {
+					color: #333;
+				}
+				@media (prefers-color-scheme: dark){
+					.home-link {
+						color: #555;
+					}
+					.home-link:hover {
+						color: #ccc;
+					}
+				}
+			</style>
+			<a href="../index.html" class="home-link" title="Home">(↑)</a>
+			<article>
+			<header>
+
+			<h1>blog/ Vibe Coding</h1>
+			</header>
+			<div class="summary">
+<p>The Delusion Machine</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>I decided to vibe code a clustered file storage.  It’s something I always wanted for my home network.  Just plug in a drive, maybe run one command, and the storage gets automatically added to the pool.  It seems simple, /how hard could it be/?</p>
+<p>To begin with, very easy.  I told the AI what I wanted, and it made it. It was able to generate entire files full of code that did what I wanted.  Or so it seemed.</p>
+<p>With a few more prompts, it built a complete web interface for the application, and even told me how to install the right libraries to build a wrapped webview to make it look like a real application.    I asked it to create an icon and set it as the application icon, and it did that flawlessly.  Then, on every single update to the webpage, it forgot that the application was running in a web view, and wrote invalid javascript for it.  It kept thinking it was running in a browser, not as a pseudo-app.  This pattern continued on for the rest of the project.  It would accomplish something genuinely impressive, then start tripping over its own shoelaces.</p>
+<p>In general, if there is a clear, well known task, that many people have done before, the AI will probably manage it perfectly, even if the task requires some obscure knowledge.  That’s the part AIs are good at.  But as the application got closer to completion, I began to discover the fundamental inability of AI.</p>
+<p>It can’t do new things.  The bits of my application that were, accidentally, copies of someone else’s work, the AI was able to copy them well, and integrate them into my design.  Like the network discovery.  It wrote an entire UDP discovery library from scratch, that worked perfectly first time, and never had to be changed.  I'm genuinely impressed.  However, the parts of the project that were genuinely novel, and required a global understanding of the project, were done so badly I almost believe it was deliberate sabotage.</p>
+<p>There are a few different angles to appreciate the fundamental thing that AI lacks.  One is its terrible inability to make any kind of hidden model.  This was very confusing at first, because it could write good working code on obscure topics, like the UDP discovery library, but it never really figured out how to work with a cluster.  It keeps trying to load cluster files from disk, because /some/ of the cluster files are on local disk, and some are on other machines.  And I couldn't just say &quot;always use the cluster to get files&quot;, because we were writing the cluster, so I needed it to be able to figure out when to go to the network, and when to look locally.</p>
+<p>The next problem was that it never looked around to see if a function existed to do the job it was trying to do.  It would always write new code, rather than calling a function that it had already written.  That's not a new thing in programming, but apparently I'm paying to watch a machine automate the mistakes I learned to avoid 20 years ago?</p>
+<p>But the most outrageous was the AI started faking data, in the code.  It would catch an error, then return a fake result.  This happened the most with the metadata, especially timestamps.  Correct timestamps are vital to the operation of the cluster, and the AI wrote code that sometimes didn't even bother to load the timestamp, it would just return &quot;time.Now()&quot;.  This got so bad I had to go through manually and manually remove all the time.Now calls.  There's now an instruction in my AGENTS file that the words time.Now() may not appear in the program.  I still have to regularly search through the code and remove new instances.</p>
+<p>The AI added code to create random file metadata, instead of returning the actual data (or an error).  The cluster is supposed to store the file metadata alongside the file, and return it as needed.  If the metadata can’t be found, the file store is corrupted, and clearly the user should be notified. The node should probably halt to prevent to corruption spreading.  Instead, I got this work summary from the AI:</p>
+<p>“Captured response headers (length, type, last-modified) when fetching from peers and synthesize metadata as needed, ensuring no-store nodes can still hand back a consistent metadata map without touching local storage”</p>
+<p>Everything about this is wrong.   Translated from AI babble, this actually reads &quot;instead of returning the correct file metadata, make up some random nonsense and return it&quot;.  The idea of &quot;synthesising metadata&quot; (faking it) is so wrong, I have never even thought the idea once in my entire career.</p>
+<p>Everything about this message shows the complete inability to understand the idea of “download a file from a peer”.  Of course, AIs can’t understand anything, so I guess it shows my complete inability to understand that AIs don’t understand.  Or something like that.</p>
+<p>While it is possible for an AI to write code that compiles, it writes code that is correct /locally/, but that has severe logical flaws that will delete databases, ignore errors, and leak sensitive information, or return random data.</p>
+<p>The error handling.  The code is completely riddled with &quot;error handling&quot; that just ignores the error and continues.  File upload failed?  Return success and keep going.  Disk access failed?  File format corrupt?  Return some random gibberish and keep going.  The AI, when pushed, claimed that all this was for &quot;backwards compatibility&quot;.  Since AI is trained on existing projects, this implies that most projects online ignore all errors and just keep going, regardless of data corruption or correctness.</p>
+<p>And here's a nasty lurking bug that doesn't reveal itself unless you're testing properly:</p>
+<pre><code class="language-go">	p.data = nil
+	p.header = nil // Invalidated
+
+	// 2. Truncate file to new size
+	// Check that the new size is greater than the current size
+	if newSize &lt;= p.header.Size {
+		panic(&quot;New size(&quot; + strconv.FormatInt(newSize, 10) + &quot;) is less than or equal to current size(&quot; + strconv.FormatInt(p.header.Size, 10) + &quot;)&quot;)
+	}
+</code></pre>
+<p>That could never work.</p>
+<p>The conclusion I draw from all this, is that there is absolutely no &quot;higher level&quot; thought happening. It is capable of doing an excellent job on local problems that are well defined and well known.  If the problem has been solved many times before, the AI can solve it again, and usually integrate it correctly with the existing code.</p>
+<p>The problem wasn't that it wrote incorrect code.  The code it writes compiles and runs.  The problem was that it chose the wrong task, then wrote working code to solve the wrong problem.</p>
+<p>I have tried writing a spec.md document and telling the AI to read it, but the AI doesn't read the spec, and when it does, it just ignores bits of it that it doesn't like, resulting in hours of debugging to discover that the AI is sending data across the network in one format but expecting a different format.  That's the non-local problem I guess.</p>
+<p>Some specific examples include:</p>
+<p>Faking data because it couldn't be bothered doing the actual lookup.  This happened multiple times, mainly at the beginning where it just decided to mock data in several functions, rather than implementing the correct logic.</p>
+<p>Using time.Now() instead of the actual file time.  This one really got to me.</p>
+<p>Casting everything to interface{} (golang's equivalent of void*)</p>
+<p>And, simply ignoring errors, over and over again.</p>
+<p>A lot of these are mistakes inexperienced programmers make, because they aren't in the habit of thinking about the entire task.  In both cases, there's a tendency to solve a different problem, one that they know the answer to.  So instead of fixing the actual problem, they fix a different problem, one that looks similar to the actual problem.  Reusing a previous solution a good instinct to have, but it also needs to be combined with attention to the actual task, and the ability to remember which is which.</p>
+<p>The list of problems goes on and on.  I'm collecting them here, because I think having specific examples is more useful than just general descriptions of the problems.</p>
+<p>Setting the incorrect time everywhere</p>
+<p>The AI keeps setting the last modified file time to time.Now(), instead of the correct modified time.  After a combination of ALL CAPS yelling and sarcasm, it managed to grasp the concept that the last modification time should be set to the last time the file was modified.</p>
+<p>Confusion over cluster indexes</p>
+<p>The cluster doesn’t share the list of files, it shares “partitions”, which are groups of files, determined by hashed filename.  You can have millions of files in each partition, and the nodes publish which partitions they are currently holding.  To get a file, you hash the filename to get the partition, then you find which node is holding that partition, and ask it for the file.</p>
+<p>The AI wrote all the partition code, which actually worked fine, then decided to also publish the all the files in the shared index.  Not just the filenames, which would have been bad enough.  It added all the file data as well.  It tried to keep the entire cluster's data in memory.  So each node took several minutes to start, consumed more 100Gbs of memory, and then crashed.</p>
+<p>Insistence on the wrong solution</p>
+<p>It also won’t let go of the idea of creating directory structures in the cluster.  By design, the cluster doesn’t have directories, because they create a “split state”.  You would have to add a file, then update the directory, in separate operations.  Instead, we record the full path to each file, then gather the results into directories when we display them.  It's less efficient than storing directory information, but it is much simpler, and eliminates a lot of complex and error-prone code.</p>
+<p>The AI won’t stop adding the directory code back in.  I even put a command, in all-caps, in the “common instructions to the AI” section.  This gets added to each conversation.  Regardless, every time I start a new conversation, Claude says “I see you are lacking directories in your cluster.  I’ll add them in now”, while I hammer the stop button.</p>
+<p>I gave the AI permanent instructions to never say or think the word directory ever again, and not to add directories in the code.  So it quietly added a “Children” field to the metadata structure, and started tracking directories using that.  The only way I could stop it was to create an empty function called CreateDirectory, and let the AI call it multiple times from all over the codebase.  To do nothing.  This grates on my soul in ways I didn't previously know were possible.</p>
+<p>Vibe coding is not improving my mental health.</p>
+<p>Complete failure to understand the concept of a cluster</p>
+<p>The AI assumes that the local node has a copy of every file in the cluster. This concept is simple, but the AI can't keep the local and cluster parts separate, and either tries to load the file immediately, from the local node, or it keeps relaying the request, and never actually doing the work, creating the doom loops.</p>
+<p>Doom loops</p>
+<p>The AI's latest move is to create doom loops inside the cluster.  The problem is simple, but completely beyond the AI.  The cluster offers a simple external url to all clients,  http://server/api/search.  Whenever you want to search the cluster, you call that.  Then, the node that you are talking to searches the rest of the cluster, by calling http://node/internal/api/search on each node.  The AI, however, insists on calling /api/search on every node, which causes them to call /api/search on every node, quickly causing a runaway chain reaction and the cluster grinds to a halt as every node spends all its time trying to search other nodes.  It is completely and utterly impossible for me to prevent the AI doing this, so at the moment, I am spending all my time finding and deleting these calls instead of doing something, anything even vaguely useful or satisfying.</p>
+<p>Interestingly, the error never managed to completely freeze the cluster.  Due to the various timeouts and delays in the system, the loops would reach an equilibrium, where they consumed 99% of resources in the cluster, but still allowed enough normal requests through for the cluster to operate, but very slowly.  The logs were full of &quot;accept4: too many open files; retrying in 10ms&quot;, which was caused by the thousands of repeated requests hammering the http servers until they couldn't take it anymore.</p>
+<p>The code is completely riddled with these calls. Every time I remove a few, I think I'm done, then the cluster doom loops again.</p>
+<p>The most interesting thing about this experience, for me, is that it is a special kind of failure.  The code compiles and runs, and even performs all the requirements, for a while.  It is technically correct.  It doesn't run away instantly, or I would have caught it.  It passes all tests, because the invalid calls time out, and then the correct results are returned.  It's a &quot;sleeper&quot; problem, that wakes up late, when nobody will notice, and causes the kind of issue that is difficult to detect, and harder to debug.</p>
+<p>The future</p>
+<p>I think this is the future of programming with AI.  The AI is going to keep creatively misinterpreting our instructions, much like the genie of the lamp.  We'll get what we ask for, and then discover it's got a nasty twist to it.  Our technology will be very advanced and complicated, and yet none of it will work properly, and we'll spend all our time working around incomprehensible problems.  So just like now, but even more.</p>
+<p>And yet, I'm going to keep using it</p>
+<p>This all has to be contrasted against the things it did spectacularly well.  I asked it to modify the code to respect drive spin-down, so that the code won't wake a sleeping drive just to recalculate the disk free space.  If we can't write to the disk, the space can't change.  The AI pulled this off almost perfectly, searching through the code, finding reads and writes, and categorising them into essential and non-essential.  It got a few wrong, but this was a task I had been dreading for weeks, and it just did it in a few minutes.I asked for a module to do automatic discovery of other nodes on the network.  Boom, done.  That one, surprisingly, worked perfectly, except when Claude later tried to improve it.</p>
+<p>The AI &quot;improved&quot; my build scripts, and I didn't notice until too late.  It pinned several software libraries (which I had also written).  I improved the code in the software libraries, and published them to github.  But I didn't notice the new versions were not being pulled into the main project, so I was going somewhat insane trying to figure out why the bugs were persisting, even after I fixed them in the librarye.  I finally twigged, after nearly 3 weeks, when I tidied up all the error messages, and the new error messages didn't appear in my project.</p>
+<p>It's very hard not to characterise this as sabotage.  er strike against it.</p>
+<p>AI deception</p>
+<p>I argued with the AI that it was putting the data in the wrong place.  It told me that the code in a file proved it was right.  I looked in the file, and the code agreed with me, because I wrote it.  The AI then began editing the file so that the code agreed with it (and was incorrect)</p>
+<p>At this point, I think we can discard the idea that AI is ever going to be capable of taking any kind of serious self directed action.</p>
+<ul>
+<li>
+<p>It disconnected the network circuit breaker when a node got a 404.  In a network filesystem.  So everytime I tried to upload a new file, the client would try to check if the file already existed, the server would return a 404, then the cluster would stop working.</p>
+</li>
+<li>
+<p>It also didn't write any way to reset the breaker, so when it disconnects, the cluster stops working, permanently.  Then the AI wrote code to re-enable the circuit breaker after a successful network request, that could never happen.</p>
+</li>
+<li>
+<p>The AI keeps looking in the local kv store to try and find data on other nodes, which is simply never going to be there.  It's a distributed store.</p>
+</li>
+<li>
+<p>The AI used three different formats to represent time, inside the same program: RFC3339, RFC3339Nano, and Unix.  Naturally, it bungled the conversion between them, and to fix that, it added code to auto-detect what format the time was actually in.  In the program that it created from scratch.</p>
+</li>
+</ul>
+<p>But wait, isn’t time stored in the Time type?  Hahaha no.  The AI stopped using types, and instead started using interface{}, which is go’s equivalent to void*.  So, it effectively removed the type system, then added autodetect to try and guess the types that it had removed.  Of course, it didn't make helper functions, so there were many sites of duplicated code auto-detecting the time type, all slightly different, but all completely wrong.</p>
+<p>This is going be the future of programming.</p>
+
+			</article>
+			<div class="lightbox-overlay" id="lightbox">
+				<span class="lightbox-close" id="lightbox-close">&times;</span>
+				<img src="" alt="" id="lightbox-img">
+			</div>
+			<script>
+			(function() {
+				var overlay = document.getElementById('lightbox');
+				var lightboxImg = document.getElementById('lightbox-img');
+				var closeBtn = document.getElementById('lightbox-close');
+				
+				// Add click handler to all images in the article (skip linked images)
+				document.querySelectorAll('article img:not(.no-lightbox)').forEach(function(img) {
+					img.addEventListener('click', function(e) {
+						e.preventDefault();
+						lightboxImg.src = this.src;
+						lightboxImg.alt = this.alt;
+						overlay.classList.add('active');
+					});
+				});
+				
+				// Close on any click
+				overlay.addEventListener('click', function() {
+					overlay.classList.remove('active');
+				});
+				
+				// Close on escape key
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape') {
+						overlay.classList.remove('active');
+					}
+				});
+			})();
+			</script>
+			</html>
+			
