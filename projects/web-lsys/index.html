@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-Lsys | Pocket Bonsai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="glCanvas"></canvas>
+    
+    <div class="ui">
+        <div class="header">
+            <h1 class="title" id="mainLabel">BONSAI</h1>
+            <div class="subtitle" id="subLabel">Dynamic Growth</div>
+        </div>
+        
+        <div class="footer">
+            <div class="mode-box" id="btnGallery"><span>GALLERY</span></div>
+            <div class="mode-box" id="btnSnek"><span>SNEK</span></div>
+            <div class="mode-box active" id="btnPot"><span>POT</span></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="lsys.js"></script>
+    <script src="data.js"></script>
+    <script src="renderer.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Start application
+        window.addEventListener('load', () => {
+            window.app = new App();
+            
+            document.getElementById('btnGallery').addEventListener('click', () => {
+                document.querySelectorAll('.mode-box').forEach(b => b.classList.remove('active'));
+                document.getElementById('btnGallery').classList.add('active');
+                app.setMode('GALLERY');
+            });
+            document.getElementById('btnSnek').addEventListener('click', () => {
+                document.querySelectorAll('.mode-box').forEach(b => b.classList.remove('active'));
+                document.getElementById('btnSnek').classList.add('active');
+                app.setMode('SNEK');
+            });
+            document.getElementById('btnPot').addEventListener('click', () => {
+                document.querySelectorAll('.mode-box').forEach(b => b.classList.remove('active'));
+                document.getElementById('btnPot').classList.add('active');
+                app.setMode('POT');
+            });
+        });
+    </script>
+</body>
+</html>
