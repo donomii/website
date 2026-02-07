@@ -47,10 +47,14 @@ class App {
 
     ensurePot() {
         const name = "RandomBonsai";
-        const meta = { "RandomBonsai": { iterations: 5 } };
-        const commands = LSystemEngine.runRuleset([name], this.potRules, meta);
+        // Recursion depth for the tree is set here in the meta
+        const meta = { "RandomBonsai": { iterations: 6 } };
+        // runRuleset expects a Book of Models (name -> ruleMap)
+        const registry = { "RandomBonsai": this.potRules };
+        const commands = LSystemEngine.runRuleset([name], registry, meta);
         const interp = new LSystemEngine.Interpreter();
         const res = interp.interpret(commands, Math3D.identity(), true, { clock: 0 });
+        if (!res.vertices || res.vertices.length === 0) return;
         const norms = LSystemEngine.calculateNormals(res.vertices);
         this.renderer.buildModel(name, res.vertices, res.colors, norms, "TRIANGLES");
     }
@@ -111,6 +115,7 @@ class App {
             lsys = DATA.PLANT_GALLERY[this.selection]; comp = DATA.PLANT_COMPENSATIONS[this.selection];
         } else if (this.mode === 'POT') {
             lsys = "RandomBonsai"; comp = DATA.POT_COMPENSATION; rot = this.potRotation;
+            this.ensurePot(); // Double check it exists
         } else {
             lsys = DATA.SNEK_L_SYSTEM; comp = [1, 0, 0];
         }
@@ -121,7 +126,9 @@ class App {
         const commands = LSystemEngine.tokenize(lsys);
         const interp = new LSystemEngine.Interpreter();
         interp.interpret(commands, modelFinal, false, { clock: this.clock, hinges: this.hinges }, (trans, name, a) => {
-            this.ensureModel(name);
+            if (name === "RandomBonsai") this.ensurePot();
+            else this.ensureModel(name);
+
             const mvp = Math3D.multiply(proj, Math3D.multiply(view, trans));
             this.renderer.drawModel(name, mvp, trans, [a.red, a.green, a.blue, a.alpha], a.useLighting, DATA.META_DATA[name]?.backfaceCull);
         });
