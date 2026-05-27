@@ -1,0 +1,167 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Crawl of the Beholder</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+				article img {
+					cursor: pointer;
+					transition: opacity 0.2s;
+				}
+				article img:hover {
+					opacity: 0.85;
+				}
+				.lightbox-overlay {
+					display: none;
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: rgba(0, 0, 0, 0.9);
+					z-index: 9999;
+					justify-content: center;
+					align-items: center;
+					cursor: pointer;
+				}
+				.lightbox-overlay.active {
+					display: flex;
+				}
+				.lightbox-overlay img {
+					max-width: 90%;
+					max-height: 90%;
+					object-fit: contain;
+					border-radius: 4px;
+					box-shadow: 0 0 30px rgba(0,0,0,0.5);
+					float: none;
+					margin: 0;
+					cursor: default;
+				}
+				.lightbox-close {
+					position: absolute;
+					top: 20px;
+					right: 30px;
+					color: white;
+					font-size: 40px;
+					font-weight: bold;
+					cursor: pointer;
+				}
+				.lightbox-close:hover {
+					color: #ccc;
+				}
+				.home-link {
+					position: fixed;
+					top: 1rem;
+					left: 1rem;
+					text-decoration: none;
+					color: #888;
+					font-size: 0.9em;
+					transition: color 0.2s;
+					z-index: 1000;
+				}
+				.home-link:hover {
+					color: #333;
+				}
+				@media (prefers-color-scheme: dark){
+					.home-link {
+						color: #555;
+					}
+					.home-link:hover {
+						color: #ccc;
+					}
+				}
+			</style>
+			<a href="../../index.html" class="home-link" title="Home">(↑)</a>
+			<article>
+			<header>
+
+			<h1>Crawl of the Beholder</h1>
+			</header>
+			<div class="summary">
+<p>A first-person, grid-step dungeon crawler that runs in your browser.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p><img loading="lazy" src="beholder_thumb.png" alt="Crawl of the Beholder"></p>
+<p>Crawl of the Beholder is a browser prototype of a classic grid-stepping, first-person dungeon crawler in the style of Eye of the Beholder and Dungeon Master.  It uses monster sprites, tiles, spell data and vault maps from <a href="https://crawl.develz.org/">Dungeon Crawl Stone Soup</a>, so the dungeon is populated with hundreds of monsters, items, and spells right out of the box.</p>
+<p>Like most of my recent projects, this one was vibe coded.  The behaviour scenarios and the high level specs do most of the heavy lifting; the AI fills in the rendering, combat math, monster AI, and the UI.</p>
+<p>Play it in your browser: <a href="demo/index.html">Crawl of the Beholder</a>.</p>
+<p>The source is on <a href="https://gitlab.com/donomii/crawlofthebeholder">GitLab</a>.</p>
+
+			</article>
+			<div class="lightbox-overlay" id="lightbox">
+				<span class="lightbox-close" id="lightbox-close">&times;</span>
+				<img src="" alt="" id="lightbox-img">
+			</div>
+			<script>
+			(function() {
+				var overlay = document.getElementById('lightbox');
+				var lightboxImg = document.getElementById('lightbox-img');
+				var closeBtn = document.getElementById('lightbox-close');
+				
+				// Add click handler to all images in the article (skip linked images)
+				document.querySelectorAll('article img:not(.no-lightbox)').forEach(function(img) {
+					img.addEventListener('click', function(e) {
+						e.preventDefault();
+						lightboxImg.src = this.src;
+						lightboxImg.alt = this.alt;
+						overlay.classList.add('active');
+					});
+				});
+				
+				// Close on any click
+				overlay.addEventListener('click', function() {
+					overlay.classList.remove('active');
+				});
+				
+				// Close on escape key
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape') {
+						overlay.classList.remove('active');
+					}
+				});
+			})();
+			</script>
+			</html>
+			

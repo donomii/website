@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crawl of the Beholder</title>
+    <link rel="stylesheet" href="styles.css?v=0.3.102">
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark">CoB</span>
+          <h1>Crawl of the Beholder</h1>
+          <span id="versionBadge" class="version-badge"></span>
+        </div>
+        <div class="topbar-info">
+          <div id="messageLine" class="message-line" aria-live="polite"></div>
+          <div id="statusLine" class="status-line"></div>
+        </div>
+      </header>
+
+      <main class="shell">
+        <section class="viewport-column" aria-label="Dungeon view">
+          <div id="viewport" class="viewport" tabindex="0"></div>
+          <div class="command-strip" aria-label="Movement">
+            <button type="button" data-action="turnLeft" title="Turn left" aria-label="Turn left">&larr;</button>
+            <button type="button" data-action="moveForward" title="Step forward" aria-label="Step forward">&uarr;</button>
+            <button type="button" data-action="turnRight" title="Turn right" aria-label="Turn right">&rarr;</button>
+            <button type="button" data-action="moveLeft" title="Sidestep left" aria-label="Sidestep left">&#8676;</button>
+            <button type="button" data-action="attack" title="Attack" aria-label="Attack">&#9876;</button>
+            <button type="button" data-action="moveRight" title="Sidestep right" aria-label="Sidestep right">&#8677;</button>
+            <button type="button" data-action="wait" title="Wait" aria-label="Wait">&middot;</button>
+            <button type="button" data-action="moveBack" title="Step back" aria-label="Step back">&darr;</button>
+            <button type="button" data-action="interact" title="Use item, trap, door, fixture, or stairs" aria-label="Use item, trap, door, fixture, or stairs">&gt;</button>
+          </div>
+        </section>
+
+        <aside class="side-panel">
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2>Party</h2>
+              <span id="facingBadge" class="badge"></span>
+            </div>
+            <div id="party" class="party-list"></div>
+          </section>
+
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2>Map</h2>
+              <span id="floorBadge" class="badge"></span>
+            </div>
+            <div id="map" class="map-grid"></div>
+          </section>
+
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2>Inventory</h2>
+              <span id="inventoryCount" class="badge"></span>
+            </div>
+            <div id="inventory" class="inventory-grid"></div>
+          </section>
+
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2>Nearby</h2>
+              <span id="threatBadge" class="badge"></span>
+            </div>
+            <div id="nearby" class="nearby"></div>
+          </section>
+
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2>Log</h2>
+              <span id="logCount" class="badge"></span>
+            </div>
+            <div id="log" class="message-log"></div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="src/resources.generated.js?v=0.3.102"></script>
+    <script src="src/runtime/core.js?v=0.3.102"></script>
+    <script src="src/runtime/monster_traits.js?v=0.3.102"></script>
+    <script src="src/runtime/combat_math.js?v=0.3.102"></script>
+    <script src="src/runtime/messages_and_visibility.js?v=0.3.102"></script>
+    <script src="src/runtime/floor_marks.js?v=0.3.102"></script>
+    <script src="src/runtime/monster_ai.js?v=0.3.102"></script>
+    <script src="src/runtime/party_actions.js?v=0.3.102"></script>
+    <script src="src/runtime/viewport_rendering.js?v=0.3.102"></script>
+    <script src="src/runtime/ui_chrome.js?v=0.3.102"></script>
+    <script src="src/runtime/input.js?v=0.3.102"></script>
+    <script src="src/main.js?v=0.3.102"></script>
+  </body>
+</html>
