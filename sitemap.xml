@@ -182,227 +182,255 @@
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>/projects/crawlofthebeholder/demo/src/runtime/config/index.html</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>/projects/crawlofthebeholder/demo/src/runtime/engine/index.html</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>/projects/crawlofthebeholder/demo/src/runtime/engine/items/index.html</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>/projects/crawlofthebeholder/demo/src/runtime/engine/party/index.html</loc>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>/projects/crawlofthebeholder/demo/src/runtime/io/index.html</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>/projects/crawlofthebeholder/demo/src/runtime/render/index.html</loc>
+    <lastmod>2026-05-31</lastmod>
+  </url>
+  <url>
+    <loc>/projects/crawlofthebeholder/demo/src/runtime/systems/index.html</loc>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/decor/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/doors/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/floor/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/statues/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/traps/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/trees/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/wall/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/dngn/water/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/effect/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/amulet/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/amulet/randarts/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/armour/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/gem/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/gold/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/misc/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/misc/uncollected_runes/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/potion/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/ring/artefact/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/ring/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/ring/randarts/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/scroll/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/talisman/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/wand/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/weapon/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/item/weapon/ranged/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/misc/blood/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/misc/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/amorphous/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/animals/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/aquatic/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/merfolk/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/naga/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/dragons/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/eyes/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/fungi_plants/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/orcs/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/undead/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/source/rltiles/mon/unique/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/index.html</loc>
-    <lastmod>2026-05-30</lastmod>
+    <lastmod>2026-05-31</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/index.html</loc>

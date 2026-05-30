@@ -246,6 +246,28 @@ h2 {
   gap: 6px;
   align-items: center;
   min-height: 19px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.party-row.front-line {
+  background: rgba(78, 60, 36, 0.35);
+}
+
+.party-row.hp-low {
+  background: rgba(155, 63, 54, 0.32);
+  animation: hp-pulse 1.2s ease-in-out infinite;
+}
+
+.party-row.hp-down {
+  background: rgba(36, 30, 26, 0.55);
+  opacity: 0.55;
+}
+
+@keyframes hp-pulse {
+  0%, 100% { background: rgba(155, 63, 54, 0.32); }
+  50% { background: rgba(155, 63, 54, 0.55); }
 }
 
 .party-name {
@@ -254,6 +276,10 @@ h2 {
   color: #f3e4c5;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.party-row.hp-down .party-name {
+  text-decoration: line-through;
 }
 
 .meter {
@@ -268,6 +294,14 @@ h2 {
   height: 100%;
   width: var(--value);
   background: linear-gradient(90deg, #9b3f36, #d6ad59);
+}
+
+.party-row.hp-low .meter-fill {
+  background: linear-gradient(90deg, #c14b3a, #e98a3a);
+}
+
+.party-row.hp-mid .meter-fill {
+  background: linear-gradient(90deg, #b16f3a, #d6ad59);
 }
 
 .hp-text {
@@ -558,20 +592,39 @@ h2 {
   display: grid;
   gap: 2px;
   min-height: 39px;
+  max-height: 168px;
+  overflow-y: auto;
   padding: 4px 9px 6px;
   color: #cdbb9e;
   font-size: 10px;
   line-height: 1.18;
+  scrollbar-width: thin;
 }
 
 .message-log div {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-word;
 }
 
 .message-log div:first-child {
   color: #f1d07a;
+}
+
+.message-log div:nth-child(n + 6) {
+  opacity: 0.78;
+}
+
+.message-log div:nth-child(n + 12) {
+  opacity: 0.58;
+}
+
+/* Mobile tab nav is invisible on desktop layouts. */
+.mobile-tabs {
+  display: none;
+}
+
+/* The "more" button only appears on small screens. */
+.command-strip button[data-tier="more"] {
+  display: none;
 }
 
 @media (max-width: 920px) {
@@ -589,34 +642,948 @@ h2 {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
+  /* Phone layout: single column stacked, sticky controls at the bottom. */
+  html, body {
+    overflow: hidden;
+    /* Prevent iOS rubber-band scrolling on the game shell. */
+    overscroll-behavior: none;
+  }
+
+  body {
+    /* Respect safe-area on notched devices. */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .app {
+    height: 100dvh;
+    grid-template-rows: auto 1fr;
+  }
+
   .topbar {
-    display: grid;
-    gap: 8px;
+    padding: 6px 10px 4px;
+    gap: 6px;
   }
 
   .brand {
     min-width: 0;
+    gap: 6px;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+
+  h1 {
+    font-size: 15px;
   }
 
   .message-line {
+    min-height: 22px;
+    font-size: 12px;
     justify-content: flex-start;
     text-align: left;
   }
 
-  .topbar-info {
-    justify-items: start;
-  }
-
   .status-line {
+    font-size: 10px;
     text-align: left;
   }
 
   .shell {
-    padding: 10px;
+    grid-template-columns: 1fr;
+    padding: 8px;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .viewport-column {
+    grid-template-rows: minmax(0, 45vh) auto;
+    gap: 8px;
+  }
+
+  .viewport {
+    min-height: 220px;
+    touch-action: none; /* let our swipe handler intercept */
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Command strip becomes a fixed bottom bar with a 9-button D-pad layout. */
+  .command-strip {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    max-width: none;
+    width: 100%;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, rgba(14, 17, 15, 0.0), rgba(14, 17, 15, 0.88) 30%, rgba(8, 9, 8, 0.95));
+    backdrop-filter: blur(4px);
+  }
+
+  /* Hide all secondary buttons by default on phones; show the More button. */
+  .command-strip button[data-tier="secondary"] {
+    display: none;
+  }
+
+  .command-strip button[data-tier="more"] {
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+  }
+
+  /* Primary buttons re-flow into a tight 5-wide grid:
+     row 1: turnLeft, moveForward, turnRight, attack, more
+     row 2: moveLeft, moveBack, moveRight, interact, wait */
+  .command-strip button[data-tier="primary"],
+  .command-strip button[data-tier="more"] {
+    min-height: 48px;
+    font-size: 22px;
+    padding: 0;
+    /* Prevent double-tap zoom from delaying the click. */
+    touch-action: manipulation;
+  }
+
+  .command-strip button[data-action="turnLeft"]     { grid-area: 1 / 1 / 2 / 2; }
+  .command-strip button[data-action="moveForward"]  { grid-area: 1 / 2 / 2 / 3; }
+  .command-strip button[data-action="turnRight"]    { grid-area: 1 / 3 / 2 / 4; }
+  .command-strip button[data-action="attack"]       { grid-area: 1 / 4 / 2 / 5; background: linear-gradient(#4a2d1e, #2a1610); border-color: #b34f3a; color: #f1d07a; }
+  .command-strip button[data-action="moreActions"]  { grid-area: 1 / 5 / 2 / 6; }
+  .command-strip button[data-action="moveLeft"]     { grid-area: 2 / 1 / 3 / 2; }
+  .command-strip button[data-action="moveBack"]     { grid-area: 2 / 2 / 3 / 3; }
+  .command-strip button[data-action="moveRight"]    { grid-area: 2 / 3 / 3 / 4; }
+  .command-strip button[data-action="interact"]     { grid-area: 2 / 4 / 3 / 5; background: linear-gradient(#2d4a1e, #16210f); border-color: #80a23a; }
+  .command-strip button[data-action="wait"]         { grid-area: 2 / 5 / 3 / 6; }
+
+  /* Side panel becomes a single visible section with mobile tabs. */
+  .side-panel {
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .mobile-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+    padding: 0 4px;
+  }
+
+  .mobile-tab {
+    min-height: 36px;
+    border: 1px solid #4d3c29;
+    border-radius: 6px;
+    background: linear-gradient(#2a2017, #1a1410);
+    color: #cdbb9e;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px;
+    touch-action: manipulation;
+  }
+
+  .mobile-tab[aria-pressed="true"] {
+    background: linear-gradient(#5b4423, #3a2c1b);
+    color: #f1d07a;
+    border-color: #d1a64d;
+  }
+
+  /* Show only the active panel on mobile; the JS toggles data-active="true". */
+  .side-panel .tool-panel {
+    display: none;
+    overflow: auto;
+  }
+
+  .side-panel .tool-panel[data-active="true"] {
+    display: block;
+  }
+
+  .map-grid {
+    /* Allow the minimap to scale up so cells are tappable. */
+    padding: 8px;
+  }
+
+  .panel-heading {
+    min-height: 28px;
+  }
+
+  /* Bottom-sheet modal styling for phones. */
+  .modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-card {
+    width: 100%;
+    max-width: 100%;
+    max-height: 90dvh;
+    border-radius: 14px 14px 0 0;
+    padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+    border-bottom: 0;
+    box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  .modal-card.sheet {
+    padding-top: 12px;
+  }
+
+  .sheet-handle {
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: #4d3c29;
+    margin: 0 auto 10px;
+  }
+
+  /* The crit flash, toast, compass adjust for safe area. */
+  .toast {
+    top: calc(env(safe-area-inset-top) + 8px);
+    right: 12px;
+    left: 12px;
+    text-align: center;
+  }
+
+  .compass {
+    bottom: calc(env(safe-area-inset-bottom) + 124px);
+    left: 12px;
+    padding: 5px 9px;
+  }
+
+  /* Larger touch targets for inventory items on phones. */
+  .inventory-item button {
+    min-height: 56px;
+  }
+
+  /* Crit screen flash sits above the bottom controls. */
+  .crit-flash {
+    z-index: 19;
+  }
+}
+
+/* More-actions sheet grid */
+.more-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.more-actions-grid button {
+  background: linear-gradient(#283126, #171b17);
+  color: #f4d78b;
+  border: 1px solid #5f6041;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+.more-actions-grid button:hover,
+.more-actions-grid button:active {
+  border-color: #d1a64d;
+  background: linear-gradient(#394832, #1c221c);
+}
+
+@media (max-width: 720px) {
+  .more-actions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .more-actions-grid button {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .topbar h1 {
+    display: none; /* Brand name + version hidden on tiny phones to save vertical room */
+  }
+  .brand-mark {
+    width: 24px;
+    height: 24px;
+  }
+  .version-badge {
+    font-size: 10px;
+  }
+  .command-strip button[data-tier="primary"] {
+    min-height: 44px;
+    font-size: 20px;
+  }
+  .mobile-tab {
+    font-size: 10px;
+    min-height: 32px;
+  }
+}
+
+/* Landscape phone — fit the viewport on the left, side panel on the right,
+   keep the command bar pinned to the bottom across the full width. */
+@media (max-width: 920px) and (orientation: landscape) and (max-height: 540px) {
+  .topbar {
+    padding: 4px 10px;
+    min-height: 28px;
+  }
+
+  .topbar h1 {
+    font-size: 13px;
+  }
+
+  .message-line {
+    min-height: 18px;
+    font-size: 11px;
+  }
+
+  .status-line {
+    font-size: 9px;
+  }
+
+  .shell {
+    grid-template-columns: minmax(0, 1.4fr) minmax(180px, 1fr);
+    gap: 6px;
+    padding: 6px 6px 0;
+    overflow: hidden;
+  }
+
+  .viewport-column {
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 6px;
+    min-height: 0;
+  }
+
+  .viewport {
+    min-height: 0;
   }
 
   .side-panel {
-    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 4px;
   }
+
+  /* In landscape we can show more of the panel at once, so revert the
+     mobile-only single-section view and let everything stack with scroll. */
+  .side-panel .tool-panel {
+    display: block;
+  }
+
+  .mobile-tabs {
+    display: none;
+  }
+
+  /* Command strip stays compact but shorter. */
+  .command-strip {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+  }
+
+  .command-strip button[data-tier="primary"],
+  .command-strip button[data-tier="more"] {
+    min-height: 38px;
+    font-size: 18px;
+  }
+
+  /* Re-pack the grid: D-pad left, action cluster right, more rightmost. */
+  .command-strip button[data-action="turnLeft"]     { grid-area: 1 / 1 / 2 / 3; }
+  .command-strip button[data-action="moveForward"]  { grid-area: 1 / 3 / 2 / 5; }
+  .command-strip button[data-action="turnRight"]    { grid-area: 1 / 5 / 2 / 7; }
+  .command-strip button[data-action="attack"]       { grid-area: 1 / 7 / 2 / 9; }
+  .command-strip button[data-action="interact"]     { grid-area: 1 / 9 / 2 / 11; }
+  .command-strip button[data-action="moveLeft"]     { grid-area: auto; }
+  .command-strip button[data-action="moveBack"]     { grid-area: auto; }
+  .command-strip button[data-action="moveRight"]    { grid-area: auto; }
+  .command-strip button[data-action="wait"]         { grid-area: auto; }
+  .command-strip button[data-action="moreActions"]  { grid-area: auto; }
+}
+
+/* Modal overlay (help + endgame) */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 6, 4, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+  backdrop-filter: blur(2px);
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-card {
+  position: relative;
+  background: #1b1611;
+  border: 1px solid #4d3c29;
+  border-radius: 6px;
+  padding: 22px 26px 24px;
+  max-width: 560px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  color: #e6d4a8;
+  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.6);
+}
+
+.modal-card h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: #f1d07a;
+}
+
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: 0;
+  color: #cdbb9e;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 2px 8px;
+}
+
+.modal-close:hover {
+  color: #f1d07a;
+}
+
+.help-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
+  font-size: 12px;
+  color: #d8c69e;
+}
+
+.help-grid > div:nth-child(odd) {
+  color: #f3e4c5;
+  white-space: nowrap;
+}
+
+kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid #4d3c29;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: #2a2017;
+  color: #f3e4c5;
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  margin: 0 1px;
+}
+
+.modal-hint {
+  margin-top: 14px;
+  font-size: 11px;
+  color: #9a8a6a;
+}
+
+.modal-body {
+  margin: 0 0 10px;
+  color: #d8c69e;
+  font-size: 13px;
+}
+
+.end-stats {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  color: #cdbb9e;
+}
+
+.end-stats li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed #3a2e1f;
+  padding-bottom: 3px;
+}
+
+.end-stats li strong {
+  color: #f3e4c5;
+  font-weight: 600;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-actions button {
+  background: #5b4423;
+  color: #f3e4c5;
+  border: 1px solid #6e5530;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.modal-actions button:hover {
+  background: #6e5530;
+}
+
+/* Item rarity borders */
+.inventory-item.rarity-uncommon button { border-color: #6f8f5b; box-shadow: inset 0 0 0 1px rgba(111, 143, 91, 0.25); }
+.inventory-item.rarity-rare button { border-color: #6c95d6; box-shadow: inset 0 0 0 1px rgba(108, 149, 214, 0.32); }
+.inventory-item.rarity-legendary button { border-color: #e2af3a; box-shadow: inset 0 0 0 1px rgba(226, 175, 58, 0.4), 0 0 8px rgba(226, 175, 58, 0.18); }
+
+/* Legend modal */
+.legend-list, .achievements-list, .history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: #d8c69e;
+}
+
+.legend-glyph {
+  display: inline-block;
+  min-width: 22px;
+  padding: 1px 6px;
+  margin-right: 8px;
+  border: 1px solid #4d3c29;
+  border-radius: 3px;
+  background: #2a2017;
+  color: #f3e4c5;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+  text-align: center;
+}
+
+.legend-glyph.hero-glyph { background: #f1cc62; color: #17120a; border-color: #f1cc62; }
+.legend-glyph.monster-glyph { background: #c65d4d; color: #2b0806; border-color: #c65d4d; }
+
+.settings-list {
+  display: grid;
+  gap: 9px;
+  font-size: 12px;
+  color: #d8c69e;
+  margin-bottom: 16px;
+}
+
+.settings-list label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.achievements-list li,
+.history-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 0;
+  border-bottom: 1px dashed #3a2e1f;
+}
+
+.achievements-list li strong,
+.history-list li strong {
+  color: #f3e4c5;
+  font-size: 13px;
+}
+
+.achievements-list li.locked {
+  opacity: 0.45;
+}
+
+.achievements-list li.locked strong {
+  color: #b0a586;
+}
+
+.achievements-list li span,
+.history-list li span {
+  color: #a89878;
+  font-size: 11px;
+}
+
+/* Toast notifications */
+.toast {
+  position: fixed;
+  top: 78px;
+  right: 24px;
+  background: #2a2017;
+  border: 1px solid #d1a64d;
+  border-radius: 4px;
+  padding: 8px 14px;
+  color: #f3e4c5;
+  font-size: 13px;
+  z-index: 60;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  animation: toast-in 0.25s ease;
+}
+
+.toast.hidden {
+  display: none;
+}
+
+@keyframes toast-in {
+  from { transform: translateY(-12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Compass overlay */
+.compass {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(20, 16, 12, 0.7);
+  border: 1px solid #4d3c29;
+  border-radius: 24px;
+  padding: 6px 12px;
+  color: #f3e4c5;
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.compass-arrow {
+  font-size: 16px;
+  text-align: center;
+}
+
+.compass-coords {
+  text-align: center;
+  color: #cdbb9e;
+}
+
+/* Crit flash overlay */
+.crit-flash {
+  position: fixed;
+  inset: 0;
+  background: rgba(241, 208, 122, 0);
+  pointer-events: none;
+  z-index: 30;
+  transition: background 0.18s ease;
+}
+
+.crit-flash.show {
+  background: rgba(241, 208, 122, 0.16);
+}
+
+/* Low HP screen border (only when leader is critical) */
+body.low-hp-warning::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  border: 8px solid rgba(193, 75, 58, 0.45);
+  pointer-events: none;
+  z-index: 25;
+  animation: low-hp-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes low-hp-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* Character roster */
+.character-list, .shop-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  color: #d8c69e;
+}
+
+.character-list li, .shop-list li {
+  display: grid;
+  gap: 3px;
+  padding: 8px;
+  background: rgba(34, 26, 18, 0.55);
+  border: 1px solid #3a2e1f;
+  border-radius: 5px;
+}
+
+.character-list li strong {
+  color: #f3e4c5;
+  font-size: 13px;
+}
+
+.character-list li em {
+  font-style: normal;
+  color: #b3a37c;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.character-list li span {
+  color: #b3a37c;
+  font-size: 11px;
+}
+
+.party-row.class-warrior .class-tag { color: #d6ad59; }
+.party-row.class-mage .class-tag { color: #6c95d6; }
+.party-row.class-rogue .class-tag { color: #9fb889; }
+.party-row.class-cleric .class-tag { color: #f1d07a; }
+
+.class-tag {
+  display: inline-block;
+  margin-right: 4px;
+}
+
+/* Shop modal */
+.shop-list li {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.shop-list .shop-buy {
+  background: #5b4423;
+  color: #f3e4c5;
+  border: 1px solid #6e5530;
+  border-radius: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.shop-list .shop-buy:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.shop-list .shop-row-name {
+  font-weight: 600;
+  color: #f3e4c5;
+}
+
+.shop-list .shop-row-meta {
+  display: block;
+  font-size: 10px;
+  color: #b3a37c;
+}
+
+/* Character creation */
+.character-create-list {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+.character-create-row {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  background: rgba(34, 26, 18, 0.55);
+  border: 1px solid #3a2e1f;
+  border-radius: 5px;
+}
+.character-create-row label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #f3e4c5;
+}
+.character-create-row select {
+  background: #1f1812;
+  color: #f3e4c5;
+  border: 1px solid #4d3c29;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+.character-create-desc {
+  margin: 0;
+  font-size: 11px;
+  color: #b3a37c;
+}
+
+/* Dialogue choices */
+.dialogue-choices {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+}
+.dialogue-choice {
+  background: #5b4423;
+  color: #f3e4c5;
+  border: 1px solid #6e5530;
+  border-radius: 4px;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+}
+.dialogue-choice:hover {
+  background: #6e5530;
+}
+
+/* Unidentified item rendering */
+.inventory-item.unidentified button {
+  background: linear-gradient(#3a2c1b, #1d160e);
+  border-style: dashed;
+}
+.inventory-item.cursed button {
+  border-color: #8e3a3a;
+  box-shadow: inset 0 0 0 1px rgba(170, 60, 60, 0.35);
+}
+.inventory-item.blessed button {
+  border-color: #d9c46b;
+  box-shadow: inset 0 0 0 1px rgba(217, 196, 107, 0.4), 0 0 6px rgba(217, 196, 107, 0.2);
+}
+
+/* PWA install button */
+.install-button {
+  margin-left: 8px;
+  padding: 4px 10px;
+  border: 1px solid #6e5530;
+  background: linear-gradient(#3a2c1b, #1a1410);
+  color: #f4d78b;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.install-button:hover {
+  border-color: #d1a64d;
+  background: linear-gradient(#5b4423, #3a2c1b);
+}
+.install-button.hidden {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .install-button {
+    margin-left: 4px;
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+}
+
+/* Map zoom + scrollable container */
+.map-scroller {
+  overflow: auto;
+  max-height: 320px;
+  scrollbar-width: thin;
+}
+.map-zoom-controls {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.map-zoom-controls button {
+  background: #2a2017;
+  border: 1px solid #4d3c29;
+  color: #f3e4c5;
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-size: 13px;
+  cursor: pointer;
+  min-width: 22px;
+  touch-action: manipulation;
+}
+.map-zoom-controls button:hover {
+  border-color: #d1a64d;
+}
+
+@media (max-width: 720px) {
+  .map-scroller {
+    max-height: none;
+  }
+}
+
+/* Colorblind-friendly palette: monsters → orange, ranged → blue,
+   hero → bright yellow, items → cyan. Uses distinct hues + shapes-by-glyph
+   that don't rely on red/green discrimination. */
+body.colorblind .map-cell.monster { background: #e08214; color: #1a1205; }
+body.colorblind .map-cell.monster.ranged { background: #2166ac; color: #f4f9ff; }
+body.colorblind .map-cell.monster.boss { background: #d01c8b; color: #fff; }
+body.colorblind .map-cell.hero { background: #fee08b; color: #1a1205; box-shadow: 0 0 0 2px #542788; }
+body.colorblind .map-cell.gold { background: #b8e186; color: #14210a; }
+body.colorblind .map-cell.item { background: #80cdc1; color: #06201c; }
+body.colorblind .map-cell.prize { background: #f7f7f7; color: #111; }
+body.colorblind .map-cell.trap { background: #fdb863; color: #2a1500; }
+body.colorblind .map-cell.seen.floor.lava { background: #d6604d; }
+body.colorblind .map-cell.seen.floor.water { background: #4393c3; }
+body.colorblind .map-cell.seen.floor.deep-water { background: #2166ac; }
+
+/* Visual juice: screen shake + floating combat numbers */
+@keyframes cob-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 2px); }
+}
+@keyframes cob-shake-hard {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(-6px, 3px); }
+  30% { transform: translate(6px, -4px); }
+  45% { transform: translate(-5px, -3px); }
+  60% { transform: translate(5px, 4px); }
+  75% { transform: translate(-3px, 2px); }
+}
+.viewport.shake { animation: cob-shake 0.34s ease; }
+.viewport.shake-hard { animation: cob-shake-hard 0.36s ease; }
+
+@keyframes cob-float {
+  0% { transform: translate(-50%, 0); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(-50%, -48px); opacity: 0; }
+}
+.combat-floater {
+  position: absolute;
+  top: 46%;
+  transform: translate(-50%, 0);
+  z-index: 22;
+  pointer-events: none;
+  font-weight: 800;
+  font-size: 20px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  animation: cob-float 0.9s ease-out forwards;
+}
+.combat-floater.floater-damage { color: #f3e4c5; }
+.combat-floater.floater-crit { color: #ffd23f; font-size: 26px; }
+.combat-floater.floater-hurt { color: #ff6b5e; }
+.combat-floater.floater-heal { color: #8fe08a; }
+
+/* Companion allies on the minimap */
+.map-cell.ally {
+  background: #5fae6b;
+  color: #07210c;
+  box-shadow: 0 0 0 1px rgba(120, 220, 140, 0.45);
+}
+body.colorblind .map-cell.ally { background: #56b4e9; color: #04121d; }
+
+/* Treasure chests on the minimap */
+.map-cell.decor.chest { background: #b8862c; color: #1f1405; }
+.map-cell.decor.chest.spent { background: #4a3c22; }
+
+/* Bestiary: real DCSS monster flavour line. */
+.bestiary-flavour {
+  display: block;
+  margin-top: 3px;
+  font-style: italic;
+  opacity: 0.72;
+  font-size: 0.85em;
+}
+
+/* Character creation: real DCSS background flavour under each class. */
+.character-create-lore {
+  display: block;
+  margin-top: 4px;
+  font-style: italic;
+  opacity: 0.7;
+  font-size: 0.85em;
 }

@@ -1,0 +1,20 @@
+{
+  "name": "Crawl of the Beholder",
+  "short_name": "CoB",
+  "description": "A first-person, grid-step dungeon crawler.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#121110",
+  "theme_color": "#121110",
+  "categories": ["games"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}

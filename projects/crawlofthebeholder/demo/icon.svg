@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="56%" r="55%">
+      <stop offset="0" stop-color="#3a2c1b"/>
+      <stop offset="0.6" stop-color="#1a1410"/>
+      <stop offset="1" stop-color="#050504"/>
+    </radialGradient>
+    <linearGradient id="eye" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" stop-color="#f5cc6a"/>
+      <stop offset="1" stop-color="#b97b2a"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="192" height="192" rx="32" fill="url(#bg)"/>
+  <!-- Eye / beholder iris -->
+  <circle cx="96" cy="96" r="58" fill="url(#eye)" stroke="#7a5a26" stroke-width="3"/>
+  <circle cx="96" cy="96" r="32" fill="#13110d"/>
+  <circle cx="86" cy="86" r="8" fill="#f8e3a8" opacity="0.85"/>
+  <!-- CoB monogram in a thin gold ring -->
+  <circle cx="96" cy="96" r="76" fill="none" stroke="#8d7a45" stroke-width="2" opacity="0.55"/>
+  <text x="96" y="174" text-anchor="middle" font-family="ui-monospace, monospace" font-size="20" font-weight="800" fill="#f5cc6a">CoB</text>
+</svg>

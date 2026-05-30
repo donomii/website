@@ -2,9 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#121110">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon.svg">
     <title>Crawl of the Beholder</title>
-    <link rel="stylesheet" href="styles.css?v=0.3.102">
+    <link rel="stylesheet" href="styles.css?v=0.5.25">
   </head>
   <body>
     <div class="app">
@@ -13,6 +20,7 @@
           <span class="brand-mark">CoB</span>
           <h1>Crawl of the Beholder</h1>
           <span id="versionBadge" class="version-badge"></span>
+          <button type="button" id="installButton" class="install-button hidden" aria-label="Install app">Install</button>
         </div>
         <div class="topbar-info">
           <div id="messageLine" class="message-line" aria-live="polite"></div>
@@ -24,20 +32,46 @@
         <section class="viewport-column" aria-label="Dungeon view">
           <div id="viewport" class="viewport" tabindex="0"></div>
           <div class="command-strip" aria-label="Movement">
-            <button type="button" data-action="turnLeft" title="Turn left" aria-label="Turn left">&larr;</button>
-            <button type="button" data-action="moveForward" title="Step forward" aria-label="Step forward">&uarr;</button>
-            <button type="button" data-action="turnRight" title="Turn right" aria-label="Turn right">&rarr;</button>
-            <button type="button" data-action="moveLeft" title="Sidestep left" aria-label="Sidestep left">&#8676;</button>
-            <button type="button" data-action="attack" title="Attack" aria-label="Attack">&#9876;</button>
-            <button type="button" data-action="moveRight" title="Sidestep right" aria-label="Sidestep right">&#8677;</button>
-            <button type="button" data-action="wait" title="Wait" aria-label="Wait">&middot;</button>
-            <button type="button" data-action="moveBack" title="Step back" aria-label="Step back">&darr;</button>
-            <button type="button" data-action="interact" title="Use item, trap, door, fixture, or stairs" aria-label="Use item, trap, door, fixture, or stairs">&gt;</button>
+            <button type="button" data-action="turnLeft" data-tier="primary" title="Turn left" aria-label="Turn left">&larr;</button>
+            <button type="button" data-action="moveForward" data-tier="primary" title="Step forward" aria-label="Step forward">&uarr;</button>
+            <button type="button" data-action="turnRight" data-tier="primary" title="Turn right" aria-label="Turn right">&rarr;</button>
+            <button type="button" data-action="moveLeft" data-tier="primary" title="Sidestep left" aria-label="Sidestep left">&#8676;</button>
+            <button type="button" data-action="attack" data-tier="primary" title="Attack" aria-label="Attack">&#9876;</button>
+            <button type="button" data-action="moveRight" data-tier="primary" title="Sidestep right" aria-label="Sidestep right">&#8677;</button>
+            <button type="button" data-action="wait" data-tier="primary" title="Wait one turn" aria-label="Wait one turn">&middot;</button>
+            <button type="button" data-action="moveBack" data-tier="primary" title="Step back" aria-label="Step back">&darr;</button>
+            <button type="button" data-action="interact" data-tier="primary" title="Use item, trap, door, fixture, or stairs" aria-label="Use item, trap, door, fixture, or stairs">&gt;</button>
+            <button type="button" data-action="rest" data-tier="secondary" title="Rest until ready (R / 5)" aria-label="Rest until ready">Z</button>
+            <button type="button" data-action="autoExplore" data-tier="secondary" title="Auto-explore the floor (o)" aria-label="Auto-explore the floor">o</button>
+            <button type="button" data-action="travelToStairs" data-tier="secondary" title="Travel to the nearest known stairs (T)" aria-label="Travel to known stairs">T</button>
+            <button type="button" data-action="cycleFormation" data-tier="secondary" title="Cycle party formation (F)" aria-label="Cycle party formation">F</button>
+            <button type="button" data-action="help" data-tier="secondary" title="Help (?)" aria-label="Help">?</button>
+            <button type="button" data-action="legend" data-tier="secondary" title="Map legend (L)" aria-label="Map legend">L</button>
+            <button type="button" data-action="achievements" data-tier="secondary" title="Achievements" aria-label="Achievements">★</button>
+            <button type="button" data-action="history" data-tier="secondary" title="Run history" aria-label="Run history">📜</button>
+            <button type="button" data-action="settings" data-tier="secondary" title="Settings" aria-label="Settings">⚙</button>
+            <button type="button" data-action="charge" data-tier="secondary" title="Charge attack (C)" aria-label="Charge attack">»</button>
+            <button type="button" data-action="sweep" data-tier="secondary" title="Sweep attack (Y)" aria-label="Sweep attack">⌖</button>
+            <button type="button" data-action="dropItem" data-tier="secondary" title="Drop the newest item (P)" aria-label="Drop item">P</button>
+            <button type="button" data-action="examine" data-tier="secondary" title="Examine the cell ahead" aria-label="Examine">i</button>
+            <button type="button" data-action="toggleRun" data-tier="secondary" title="Toggle run mode" aria-label="Run mode toggle">⏵⏵</button>
+            <button type="button" data-action="search" data-tier="secondary" title="Search adjacent walls (N)" aria-label="Search adjacent walls">🔍</button>
+            <button type="button" data-action="signature" data-tier="secondary" title="Trigger leader's class signature (B)" aria-label="Class signature">★B</button>
+            <button type="button" data-action="character" data-tier="secondary" title="View party roster (K)" aria-label="Party roster">K</button>
+            <button type="button" data-action="moreActions" data-tier="more" title="More actions" aria-label="More actions">⋯</button>
           </div>
         </section>
 
         <aside class="side-panel">
-          <section class="tool-panel">
+          <nav class="mobile-tabs" aria-label="Side panel tabs">
+            <button type="button" class="mobile-tab" data-tab="map" aria-pressed="true">Map</button>
+            <button type="button" class="mobile-tab" data-tab="party">Party</button>
+            <button type="button" class="mobile-tab" data-tab="inventory">Pack</button>
+            <button type="button" class="mobile-tab" data-tab="nearby">Near</button>
+            <button type="button" class="mobile-tab" data-tab="log">Log</button>
+          </nav>
+
+          <section class="tool-panel" data-panel="party">
             <div class="panel-heading">
               <h2>Party</h2>
               <span id="facingBadge" class="badge"></span>
@@ -45,15 +79,20 @@
             <div id="party" class="party-list"></div>
           </section>
 
-          <section class="tool-panel">
+          <section class="tool-panel" data-panel="map">
             <div class="panel-heading">
               <h2>Map</h2>
+              <div class="map-zoom-controls">
+                <button type="button" id="mapZoomOut" aria-label="Zoom map out">−</button>
+                <button type="button" id="mapZoomReset" aria-label="Reset map zoom">↺</button>
+                <button type="button" id="mapZoomIn" aria-label="Zoom map in">+</button>
+              </div>
               <span id="floorBadge" class="badge"></span>
             </div>
-            <div id="map" class="map-grid"></div>
+            <div id="mapScroller" class="map-scroller"><div id="map" class="map-grid"></div></div>
           </section>
 
-          <section class="tool-panel">
+          <section class="tool-panel" data-panel="inventory">
             <div class="panel-heading">
               <h2>Inventory</h2>
               <span id="inventoryCount" class="badge"></span>
@@ -61,7 +100,7 @@
             <div id="inventory" class="inventory-grid"></div>
           </section>
 
-          <section class="tool-panel">
+          <section class="tool-panel" data-panel="nearby">
             <div class="panel-heading">
               <h2>Nearby</h2>
               <span id="threatBadge" class="badge"></span>
@@ -69,7 +108,7 @@
             <div id="nearby" class="nearby"></div>
           </section>
 
-          <section class="tool-panel">
+          <section class="tool-panel" data-panel="log">
             <div class="panel-heading">
               <h2>Log</h2>
               <span id="logCount" class="badge"></span>
@@ -80,17 +119,402 @@
       </main>
     </div>
 
-    <script src="src/resources.generated.js?v=0.3.102"></script>
-    <script src="src/runtime/core.js?v=0.3.102"></script>
-    <script src="src/runtime/monster_traits.js?v=0.3.102"></script>
-    <script src="src/runtime/combat_math.js?v=0.3.102"></script>
-    <script src="src/runtime/messages_and_visibility.js?v=0.3.102"></script>
-    <script src="src/runtime/floor_marks.js?v=0.3.102"></script>
-    <script src="src/runtime/monster_ai.js?v=0.3.102"></script>
-    <script src="src/runtime/party_actions.js?v=0.3.102"></script>
-    <script src="src/runtime/viewport_rendering.js?v=0.3.102"></script>
-    <script src="src/runtime/ui_chrome.js?v=0.3.102"></script>
-    <script src="src/runtime/input.js?v=0.3.102"></script>
-    <script src="src/main.js?v=0.3.102"></script>
+    <div id="moreActionsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="moreActionsTitle">
+      <div class="modal-card sheet">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <button type="button" class="modal-close" data-modal-close="moreActionsModal" aria-label="Close actions">&times;</button>
+        <h2 id="moreActionsTitle">More actions</h2>
+        <div class="more-actions-grid">
+          <button type="button" data-action="rest">💤 Rest</button>
+          <button type="button" data-action="autoExplore">🧭 Explore</button>
+          <button type="button" data-action="travelToStairs">🚪 To stairs</button>
+          <button type="button" data-action="cycleFormation">🔄 Formation</button>
+          <button type="button" data-action="signature">★ Signature</button>
+          <button type="button" data-action="ultimate">✸ Ultimate (Lv10)</button>
+          <button type="button" data-action="charge">» Charge</button>
+          <button type="button" data-action="sweep">⌖ Sweep</button>
+          <button type="button" data-action="search">🔍 Search</button>
+          <button type="button" data-action="dropItem">📦 Drop</button>
+          <button type="button" data-action="craft">⚗ Combine</button>
+          <button type="button" data-action="autoEquip">🛡 Auto-equip</button>
+          <button type="button" data-action="examine">👁 Examine</button>
+          <button type="button" data-action="toggleRun">⏵⏵ Run mode</button>
+          <button type="button" data-action="character">🎭 Roster</button>
+          <button type="button" data-action="talents">🎓 Talents</button>
+          <button type="button" data-action="markers">📌 Markers</button>
+          <button type="button" data-action="legend">🗺 Legend</button>
+          <button type="button" data-action="achievements">🏆 Achieve</button>
+          <button type="button" data-action="bestiary">🐉 Bestiary</button>
+          <button type="button" data-action="quests">🎯 Quests</button>
+          <button type="button" data-action="stats">📊 Stats</button>
+          <button type="button" data-action="history">📜 History</button>
+          <button type="button" data-action="settings">⚙ Settings</button>
+          <button type="button" data-action="saveSlots">💾 Saves</button>
+          <button type="button" data-action="help">❓ Help</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="helpModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="helpModal" aria-label="Close help">&times;</button>
+        <h2 id="helpModalTitle">Controls</h2>
+        <div class="help-grid">
+          <div><kbd>W</kbd> <kbd>&uarr;</kbd></div><div>Step forward</div>
+          <div><kbd>S</kbd> <kbd>&darr;</kbd></div><div>Step back</div>
+          <div><kbd>A</kbd> <kbd>&larr;</kbd></div><div>Turn left</div>
+          <div><kbd>D</kbd> <kbd>&rarr;</kbd></div><div>Turn right</div>
+          <div><kbd>Q</kbd> / <kbd>E</kbd></div><div>Sidestep left / right</div>
+          <div><kbd>Space</kbd></div><div>Attack forward</div>
+          <div><kbd>Enter</kbd> <kbd>U</kbd> <kbd>&gt;</kbd></div><div>Use item / stairs / door / fixture</div>
+          <div><kbd>G</kbd> <kbd>,</kbd></div><div>Pick up</div>
+          <div><kbd>X</kbd></div><div>Disarm trap</div>
+          <div><kbd>.</kbd> <kbd>r</kbd></div><div>Wait one turn</div>
+          <div><kbd>R</kbd> <kbd>5</kbd></div><div>Rest until ready</div>
+          <div><kbd>o</kbd></div><div>Auto-explore the floor</div>
+          <div><kbd>T</kbd></div><div>Travel to known stairs</div>
+          <div><kbd>F</kbd></div><div>Cycle party formation</div>
+          <div><kbd>C</kbd></div><div>Charge attack (move + strike)</div>
+          <div><kbd>Y</kbd></div><div>Sweep attack (front three cells)</div>
+          <div><kbd>P</kbd></div><div>Drop the newest inventory item</div>
+          <div><kbd>I</kbd></div><div>Examine the cell ahead</div>
+          <div><kbd>L</kbd></div><div>Open the map legend</div>
+          <div><kbd>[</kbd></div><div>Cycle inventory sort</div>
+          <div><kbd>]</kbd></div><div>Cycle inventory filter</div>
+          <div><kbd>N</kbd></div><div>Search the walls for hidden passages</div>
+          <div><kbd>B</kbd></div><div>Trigger the front-line's class signature</div>
+          <div><kbd>V</kbd></div><div>Trigger the level-10 ultimate ability</div>
+          <div><kbd>J</kbd></div><div>Open talents</div>
+          <div><kbd>M</kbd></div><div>Open map markers</div>
+          <div><kbd>K</kbd></div><div>Open the party roster</div>
+          <div><kbd>1</kbd>&hellip;<kbd>9</kbd> <kbd>0</kbd></div><div>Use inventory slots 1&ndash;10</div>
+          <div><kbd>!</kbd>&hellip;<kbd>)</kbd></div><div>Use inventory slots 11&ndash;20 (Shift + digit)</div>
+          <div><kbd>?</kbd></div><div>Toggle this help</div>
+        </div>
+        <p class="modal-hint">Press <kbd>Esc</kbd> or <kbd>?</kbd> again to dismiss.</p>
+      </div>
+    </div>
+
+    <div id="endModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="endModalTitle">
+      <div class="modal-card">
+        <h2 id="endModalTitle">The run ends.</h2>
+        <p id="endModalBody" class="modal-body"></p>
+        <ul id="endModalStats" class="end-stats"></ul>
+        <div class="modal-actions">
+          <button type="button" id="endModalShare" data-action="share">📋 Copy summary</button>
+          <button type="button" id="endModalNewRun" data-action="newRun">Start a new run</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="legendModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="legendModalTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="legendModal" aria-label="Close legend">&times;</button>
+        <h2 id="legendModalTitle">Map legend</h2>
+        <ul class="legend-list">
+          <li><span class="legend-glyph hero-glyph">@</span> Party</li>
+          <li><span class="legend-glyph monster-glyph">m</span> Monster (first letter)</li>
+          <li><span class="legend-glyph">.</span> Floor · <span class="legend-glyph">x</span> Wall</li>
+          <li><span class="legend-glyph">+</span> Closed door · <span class="legend-glyph">/</span> Open door</li>
+          <li><span class="legend-glyph">&gt;</span> Downstairs · <span class="legend-glyph">&lt;</span> Upstairs</li>
+          <li><span class="legend-glyph">$</span> Gold · <span class="legend-glyph">%</span> Item · <span class="legend-glyph">*</span> Prize</li>
+          <li><span class="legend-glyph">^</span> Trap · <span class="legend-glyph">o</span> Fixture</li>
+          <li><span class="legend-glyph">~</span> Fog · <span class="legend-glyph">p</span> Poison · <span class="legend-glyph">f</span> Fire</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="settingsModal" aria-label="Close settings">&times;</button>
+        <h2 id="settingsModalTitle">Settings</h2>
+        <div class="settings-list">
+          <label><input type="checkbox" id="settingRunMode"> Always-on run mode</label>
+          <label><input type="checkbox" id="settingHighContrast"> High-contrast UI</label>
+          <label><input type="checkbox" id="settingHideFlash"> Hide critical-hit flash</label>
+          <label><input type="checkbox" id="settingHaptics" checked> Haptic feedback (mobile)</label>
+          <label><input type="checkbox" id="settingSound" checked> Sound effects</label>
+          <label><input type="checkbox" id="settingAutoPickup" checked> Auto-pick up items on move</label>
+          <label><input type="checkbox" id="settingColorblind"> Colorblind-friendly map palette</label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" data-action="confirmNewRun">Wipe save &amp; restart</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="achievementsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="achievementsTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="achievementsModal" aria-label="Close achievements">&times;</button>
+        <h2 id="achievementsTitle">Achievements</h2>
+        <ul id="achievementsList" class="achievements-list"></ul>
+      </div>
+    </div>
+
+    <div id="questsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="questsTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="questsModal" aria-label="Close quests">&times;</button>
+        <h2 id="questsTitle">Objectives <span id="questsBadge" class="badge"></span></h2>
+        <ul id="questsList" class="character-list"></ul>
+      </div>
+    </div>
+
+    <div id="bestiaryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="bestiaryTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="bestiaryModal" aria-label="Close bestiary">&times;</button>
+        <h2 id="bestiaryTitle">Bestiary</h2>
+        <ul id="bestiaryList" class="character-list"></ul>
+      </div>
+    </div>
+
+    <div id="statsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="statsModal" aria-label="Close lifetime stats">&times;</button>
+        <h2 id="statsTitle">Lifetime stats</h2>
+        <ul id="statsList" class="end-stats"></ul>
+      </div>
+    </div>
+
+    <div id="historyModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="historyModal" aria-label="Close run history">&times;</button>
+        <h2 id="historyTitle">Recent runs</h2>
+        <ul id="historyList" class="history-list"></ul>
+      </div>
+    </div>
+
+    <div id="characterCreateModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="characterCreateTitle">
+      <div class="modal-card">
+        <h2 id="characterCreateTitle">Choose your party</h2>
+        <p class="modal-body">Assign a class to each member, pick a difficulty, and the dungeon awaits. You can change formation order later with <kbd>F</kbd>.</p>
+        <div id="characterCreateList" class="character-create-list"></div>
+        <div class="character-create-row">
+          <label>
+            <strong>Difficulty</strong>
+            <select id="characterCreateDifficulty">
+              <option value="easy">Easy</option>
+              <option value="normal" selected>Normal</option>
+              <option value="hard">Hard</option>
+            </select>
+          </label>
+          <p class="character-create-desc">Easy: weaker monsters, more gold. Hard: tougher monsters, more XP.</p>
+        </div>
+        <div class="character-create-row">
+          <label>
+            <strong>Patron deity</strong>
+            <select id="characterCreateDeity">
+              <option value="none" selected>No patron</option>
+              <option value="trog">Trog — rage; +party power (no magic)</option>
+              <option value="okawaru">Okawaru — battle; +power &amp; XP</option>
+              <option value="makhleb">Makhleb — carnage; +power &amp; rest</option>
+              <option value="kikubaaqudgha">Kikubaaqudgha — death; +power &amp; XP</option>
+              <option value="the_shining_one">The Shining One — vigour; +power &amp; rest</option>
+              <option value="elyvilon">Elyvilon — healing; +rest</option>
+              <option value="sif_muna">Sif Muna — lore; +XP</option>
+              <option value="gozag">Gozag — gold; +gold (no piety)</option>
+            </select>
+          </label>
+          <p class="character-create-desc">A patron grants a passive boon for the whole run.</p>
+        </div>
+        <div class="character-create-row">
+          <label>
+            <input type="checkbox" id="characterCreateDaily">
+            <strong>Daily seed run</strong>
+          </label>
+          <p class="character-create-desc" id="characterCreateDailyDesc">Use today's date as a deterministic seed for shareable scoring.</p>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="characterCreateRandom">Randomize</button>
+          <button type="button" id="characterCreateStart">Begin</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialogueModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="dialogueTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="dialogueModal" aria-label="Close dialogue">&times;</button>
+        <h2 id="dialogueTitle">…</h2>
+        <p id="dialogueBody" class="modal-body"></p>
+        <div id="dialogueChoices" class="dialogue-choices"></div>
+      </div>
+    </div>
+
+    <div id="markersModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="markersTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="markersModal" aria-label="Close markers">&times;</button>
+        <h2 id="markersTitle">Map markers</h2>
+        <p class="modal-body">Drop a marker at the party's current tile. Use them to flag stairs, shops, or unfinished business.</p>
+        <div class="modal-actions">
+          <button type="button" data-marker-kind="goal">⛳ Goal</button>
+          <button type="button" data-marker-kind="warn">⚠ Warning</button>
+          <button type="button" data-marker-kind="treasure">★ Treasure</button>
+          <button type="button" data-marker-clear="here">Clear marker here</button>
+        </div>
+        <ul id="markersList" class="character-list"></ul>
+      </div>
+    </div>
+
+    <div id="saveSlotsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="saveSlotsTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="saveSlotsModal" aria-label="Close save slots">&times;</button>
+        <h2 id="saveSlotsTitle">Save slots</h2>
+        <p class="modal-body">Switch between three independent saves. Switching slots saves the current run before loading the new one.</p>
+        <ul id="saveSlotList" class="character-list"></ul>
+      </div>
+    </div>
+
+    <div id="talentsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="talentsTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="talentsModal" aria-label="Close talents">&times;</button>
+        <h2 id="talentsTitle">Talents <span id="talentPointsBadge" class="badge"></span></h2>
+        <ul id="talentsList" class="character-list"></ul>
+      </div>
+    </div>
+
+    <div id="characterModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="characterTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="characterModal" aria-label="Close roster">&times;</button>
+        <h2 id="characterTitle">Roster</h2>
+        <ul id="characterList" class="character-list"></ul>
+      </div>
+    </div>
+
+    <div id="shopModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="shopTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="shopModal" aria-label="Close shop">&times;</button>
+        <h2 id="shopTitle">Merchant</h2>
+        <p id="shopGoldLine" class="modal-body"></p>
+        <ul id="shopList" class="shop-list"></ul>
+      </div>
+    </div>
+
+    <div id="tutorialModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-modal-close="tutorialModal" aria-label="Close tutorial">&times;</button>
+        <h2 id="tutorialTitle">Welcome, beholder.</h2>
+        <p class="modal-body">Lead your party through the dungeon below. Step with <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrow keys, attack forward with <kbd>Space</kbd>, and press <kbd>?</kbd> at any time for the full keymap.</p>
+        <p class="modal-hint">Tap any key to begin.</p>
+      </div>
+    </div>
+
+    <div id="critFlash" class="crit-flash"></div>
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+    <div id="compass" class="compass" aria-hidden="true">
+      <span class="compass-arrow"></span>
+      <span class="compass-coords"></span>
+    </div>
+
+    <script src="src/resources.generated.js?v=0.5.25"></script>
+    <script src="src/vaults.generated.js?v=0.5.25"></script>
+    <script src="src/monster_flavour.generated.js?v=0.5.25"></script>
+    <script src="src/lore.generated.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/core.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/monster_traits.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/combat_math.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/messages_and_visibility.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/floor_marks.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/monster_ai.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/party/combat.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/party/movement.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/party/traversal.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/party/interaction.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/party/fixtures.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/party/inventory.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/items/elements.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/party/items.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/items/use.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/party/turn.js?v=0.5.25"></script>
+    <script src="src/runtime/render/viewport_rendering.js?v=0.5.25"></script>
+    <script src="src/runtime/render/ui_chrome.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/classes.js?v=0.5.25"></script>
+    <script src="src/runtime/engine/mapgen.js?v=0.5.25"></script>
+    <script src="src/runtime/io/persistence.js?v=0.5.25"></script>
+    <script src="src/runtime/config/difficulty.js?v=0.5.25"></script>
+    <script src="src/runtime/config/deities.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/reactions.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/economy.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/inventory_extras.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/talents.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/boss_monsters.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/shops.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/npcs.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/hidden_passages.js?v=0.5.25"></script>
+    <script src="src/runtime/render/sound.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/bestiary.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/wanderers.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/quests.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/floor_hazards.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/allies.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/engineering.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/ecology.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/mastery.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/exploration.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/alchemy.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/weather.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/arcane.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/enchanting.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/events.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/corruption.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/relics.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/siege.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/bloodlines.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/gadgets.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/cartography.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/lore.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/artefacts.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/mutations.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/camping.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/leylines.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/contracts.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/herbalism.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/divination.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/necromancy.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/runes.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/harvesting.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/totems.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/resonance.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/spirits.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/cooking.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/bardic.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/psionics.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/timewarp.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/mining.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/smithing.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/morale.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/constellations.js?v=0.5.25"></script>
+    <script src="src/runtime/render/mobile.js?v=0.5.25"></script>
+    <script src="src/runtime/io/input.js?v=0.5.25"></script>
+    <script src="src/main.js?v=0.5.25"></script>
+    <script>
+      // Register the service worker for offline play. Best-effort — game still
+      // works without it.
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("sw.js").catch(() => {});
+        });
+      }
+      // PWA install prompt: stash the event and surface a small button.
+      (function () {
+        let installEvent = null;
+        const button = document.getElementById("installButton");
+        if (!button) return;
+        window.addEventListener("beforeinstallprompt", (event) => {
+          event.preventDefault();
+          installEvent = event;
+          button.classList.remove("hidden");
+        });
+        button.addEventListener("click", async () => {
+          if (!installEvent) return;
+          installEvent.prompt();
+          try { await installEvent.userChoice; } catch (e) {}
+          installEvent = null;
+          button.classList.add("hidden");
+        });
+        window.addEventListener("appinstalled", () => {
+          installEvent = null;
+          button.classList.add("hidden");
+        });
+      }());
+    </script>
   </body>
 </html>
