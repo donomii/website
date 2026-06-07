@@ -3,7 +3,11 @@
   window.CotBRuntime.installBossMonsters = function (context) {
     with (context) {
       // Deepest floors of each branch get a boss-tier encounter.
-      const BOSS_FLOORS = [2, 3, 6, 8, 10, 11, 12, 14];
+      // Deepest floors of each branch get a boss-tier encounter. Indexes cover
+      // the full DCSS progression: D:3, Orc:1, Lair:3, Swamp:2, Shoals:2,
+      // Snake:1, Spider:1, Slime:2, Crypt:2, Elf:2, Vaults:2, Depths:2, Zot:1,
+      // Gehenna:1, Cocytus:1, Tartarus:1, Dis:1, Abyss:1, Pan:1, Tomb:1.
+      const BOSS_FLOORS = [2, 3, 6, 8, 10, 11, 12, 14, 16, 18, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30];
 
       function seedBosses() {
         if (context.bossesDisabled || state.bossesSeeded) return;

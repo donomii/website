@@ -465,7 +465,17 @@ window.CotBResources = {
           },
           "support": null,
           "mobility": null,
-          "self": null,
+          "self": {
+            "name": "invisibility",
+            "kind": "haste",
+            "turns": 8,
+            "effect": "blink",
+            "cooldown": 10,
+            "spell": "SPELL_INVISIBILITY",
+            "spellbook": "orc_wizard",
+            "frequency": 9,
+            "flags": "MON_SPELL_WIZARD"
+          },
           "summon": null,
           "resists": null,
           "traits": null,
@@ -862,7 +872,17 @@ window.CotBResources = {
           },
           "support": null,
           "mobility": null,
-          "self": null,
+          "self": {
+            "name": "invisibility",
+            "kind": "haste",
+            "turns": 8,
+            "effect": "blink",
+            "cooldown": 10,
+            "spell": "SPELL_INVISIBILITY",
+            "spellbook": "orc_wizard",
+            "frequency": 9,
+            "flags": "MON_SPELL_WIZARD"
+          },
           "summon": null,
           "resists": null,
           "traits": null,
@@ -1177,12 +1197,13 @@ window.CotBResources = {
           ],
           "power": 3,
           "ranged": {
-            "name": "smite",
+            "name": "pain",
             "range": 4,
             "power": 6,
-            "effect": "smite",
-            "smiteTargeted": true,
-            "spell": "SPELL_SMITING",
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 1,
+            "spell": "SPELL_PAIN",
             "spellbook": "orc_priest",
             "frequency": 13,
             "flags": "MON_SPELL_PRIEST"
@@ -1695,12 +1716,13 @@ window.CotBResources = {
           ],
           "power": 3,
           "ranged": {
-            "name": "smite",
+            "name": "pain",
             "range": 4,
             "power": 6,
-            "effect": "smite",
-            "smiteTargeted": true,
-            "spell": "SPELL_SMITING",
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 1,
+            "spell": "SPELL_PAIN",
             "spellbook": "orc_priest",
             "frequency": 13,
             "flags": "MON_SPELL_PRIEST"
@@ -1787,7 +1809,17 @@ window.CotBResources = {
           },
           "support": null,
           "mobility": null,
-          "self": null,
+          "self": {
+            "name": "invisibility",
+            "kind": "haste",
+            "turns": 8,
+            "effect": "blink",
+            "cooldown": 10,
+            "spell": "SPELL_INVISIBILITY",
+            "spellbook": "orc_wizard",
+            "frequency": 9,
+            "flags": "MON_SPELL_WIZARD"
+          },
           "summon": null,
           "resists": null,
           "traits": null,
@@ -5408,7 +5440,18 @@ window.CotBResources = {
             "frequency": 50,
             "flags": "MON_SPELL_NATURAL | MON_SPELL_BREATH"
           },
-          "support": null,
+          "support": {
+            "name": "deflect missiles",
+            "kind": "might",
+            "range": 5,
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 11,
+            "spell": "SPELL_DEFLECT_MISSILES",
+            "spellbook": "wind_drake",
+            "frequency": 29,
+            "flags": "MON_SPELL_NATURAL"
+          },
           "mobility": null,
           "self": null,
           "summon": null,
@@ -5522,7 +5565,17 @@ window.CotBResources = {
             "frequency": 11,
             "flags": "MON_SPELL_WIZARD"
           },
-          "self": null,
+          "self": {
+            "name": "invisibility",
+            "kind": "haste",
+            "turns": 8,
+            "effect": "blink",
+            "cooldown": 10,
+            "spell": "SPELL_INVISIBILITY",
+            "spellbook": "ilsuiw",
+            "frequency": 11,
+            "flags": "MON_SPELL_WIZARD"
+          },
           "summon": {
             "name": "water elementals",
             "kind": "water",
@@ -5564,7 +5617,17 @@ window.CotBResources = {
             }
           ],
           "power": 12,
-          "ranged": null,
+          "ranged": {
+            "name": "waterstrike",
+            "range": 4,
+            "power": 8,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_WATERSTRIKE",
+            "spellbook": "water_nymph",
+            "frequency": 60,
+            "flags": "MON_SPELL_WIZARD"
+          },
           "support": null,
           "mobility": null,
           "self": null,
@@ -6082,9 +6145,30 @@ window.CotBResources = {
             "frequency": 55,
             "flags": "MON_SPELL_NATURAL | MON_SPELL_BREATH"
           },
-          "support": null,
+          "support": {
+            "name": "concentrate venom",
+            "kind": "might",
+            "range": 5,
+            "turns": 8,
+            "effect": "halo",
+            "cooldown": 8,
+            "spell": "SPELL_CONCENTRATE_VENOM",
+            "spellbook": "naga_mage",
+            "frequency": 20,
+            "flags": "MON_SPELL_WIZARD"
+          },
           "mobility": null,
-          "self": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "naga_mage",
+            "frequency": 10,
+            "flags": "MON_SPELL_WIZARD"
+          },
           "summon": null,
           "resists": {
             "poison": 1
@@ -7704,15 +7788,17 @@ window.CotBResources = {
         "y": 4,
         "dir": 1
       },
-      "doors": [],
+      "doors": [
+        "7,5"
+      ],
       "stairs": {
         "up": {
           "x": 4,
           "y": 4
         },
         "down": {
-          "x": 7,
-          "y": 5
+          "x": 4,
+          "y": 3
         }
       },
       "floorItems": [
@@ -7724,7 +7810,7 @@ window.CotBResources = {
           "power": 0,
           "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_slime.png",
           "x": 4,
-          "y": 3
+          "y": 5
         }
       ],
       "traps": [],
@@ -7805,8 +7891,8 @@ window.CotBResources = {
           "traits": {
             "acidDamage": 42
           },
-          "x": 3,
-          "y": 4
+          "x": 5,
+          "y": 3
         },
         {
           "id": "azure_jelly-14",
@@ -7856,7 +7942,7 @@ window.CotBResources = {
           "traits": {
             "coldDamage": 12
           },
-          "x": 5,
+          "x": 3,
           "y": 3
         },
         {
@@ -7965,8 +8051,8 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
-          "x": 3,
-          "y": 3
+          "x": 6,
+          "y": 5
         },
         {
           "id": "eye_of_draining-14",
@@ -8003,28 +8089,5381 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "x": 3,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "id": "Crypt:1",
+      "name": "Bone Box",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_crypt.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_crypt.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt3.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt5.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt7.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_1a.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_2a.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs4.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs6.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs8.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs10.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs5.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs7.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs9.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_yak_skull.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_sword_gold.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_gray2.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_gray2.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood03.png"
+      },
+      "map": {
+        "name": "minmay_crypt_entry_simple_sparse",
+        "width": 11,
+        "height": 11,
+        "rows": [
+          "xxxxxxxxxxx",
+          "xx...x...xx",
+          "x.........x",
+          "x..x...x..x",
+          "x.........x",
+          "xx.......xx",
+          "x.........x",
+          "x..x...x..x",
+          "x.........x",
+          "xx...x...xx",
+          "xxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/crypt.des"
+      },
+      "start": {
+        "x": 5,
+        "y": 5,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 5,
+          "y": 5
+        },
+        "down": {
+          "x": 5,
+          "y": 4
+        }
+      },
+      "floorItems": [
+        {
+          "id": "scythe-crypt",
+          "name": "runed scythe",
+          "shortName": "scythe",
+          "kind": "weapon",
+          "power": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/scythe1.png",
+          "x": 1,
+          "y": 3
+        },
+        {
+          "id": "gold-crypt-1",
+          "name": "126 gold pieces",
+          "shortName": "126g",
+          "kind": "gold",
+          "value": 126,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 5,
+          "y": 3
+        },
+        {
+          "id": "curing-crypt",
+          "name": "potion of curing",
+          "shortName": "curing",
+          "kind": "healing",
+          "power": 15,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-curing.png",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "id": "mindburst-crypt",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 16,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 9,
+          "y": 4
+        },
+        {
+          "id": "ring-positive-crypt",
+          "name": "ring of positive energy",
+          "shortName": "rN",
+          "kind": "ring",
+          "power": 1,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-positive-energy.png",
+          "x": 4,
+          "y": 1
+        },
+        {
+          "id": "ring-willpower-crypt",
+          "name": "ring of willpower",
+          "shortName": "will",
+          "kind": "ring",
+          "power": 1,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-willpower.png",
+          "x": 3,
+          "y": 8
+        },
+        {
+          "id": "amulet-spirit-crypt",
+          "name": "amulet of guardian spirit",
+          "shortName": "spirit",
+          "kind": "amulet",
+          "power": 1,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-spirit.png",
+          "x": 8,
+          "y": 8
+        }
+      ],
+      "traps": [
+        {
+          "id": "bone-trap-crypt",
+          "name": "bone spike trap",
+          "shortName": "spikes",
+          "kind": "damage",
+          "power": 11,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/spear.png",
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "decor": [
+        {
+          "id": "grave-crypt-1",
+          "name": "carved gravestone",
+          "shortName": "grave",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/gravestone_writing1.png",
+          "x": 2,
+          "y": 5
+        },
+        {
+          "id": "sarcophagus-crypt-1",
+          "name": "sealed sarcophagus",
+          "shortName": "sarcophagus",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/sarcophagus_sealed.png",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "id": "skull-pike-crypt-1",
+          "name": "skull pike",
+          "shortName": "pike",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/skull_pike_1.png",
+          "x": 8,
+          "y": 2
+        }
+      ],
+      "encounters": [
+        {
+          "id": "wight-15",
+          "name": "wight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/wight.png",
+          "maxHp": 17,
+          "hd": 3,
+          "exp": 73,
+          "speed": 10,
+          "ac": 4,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain",
+              "damage": 8
+            }
+          ],
+          "power": 8,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": {
+            "drainDamage": 8
+          },
+          "x": 3,
+          "y": 2
+        },
+        {
+          "id": "zombie-15",
+          "name": "zombie",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/zombies/zombie_small.png",
+          "maxHp": 8,
+          "hd": 1,
+          "exp": 9,
+          "speed": 5,
+          "ac": 0,
+          "ev": 4,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": null,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "id": "wraith-15",
+          "name": "wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/wraith.png",
+          "maxHp": 33,
+          "hd": 6,
+          "exp": 209,
+          "speed": 10,
+          "ac": 10,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 15
+            }
+          ],
+          "power": 15,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": {
+            "airborne": true
+          },
           "x": 6,
           "y": 5
         },
         {
-          "id": "jelly-14",
-          "name": "jelly",
-          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/amorphous/jelly.png",
-          "maxHp": 17,
-          "hd": 3,
-          "exp": 42,
+          "id": "skeletal_warrior-15",
+          "name": "skeletal warrior",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/skeletal_warrior.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 759,
+          "speed": 10,
+          "ac": 15,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": null,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "id": "necromancer-15",
+          "name": "necromancer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/necromancer.png",
+          "maxHp": 40,
+          "hd": 10,
+          "exp": 612,
           "speed": 10,
           "ac": 0,
-          "ev": 2,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 6
+            }
+          ],
+          "power": 6,
+          "ranged": {
+            "name": "bolt of draining",
+            "range": 5,
+            "power": 10,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 2,
+            "spell": "SPELL_BOLT_OF_DRAINING",
+            "spellbook": "necromancer",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "bind souls",
+            "kind": "undead",
+            "group": "bound souls",
+            "allies": [
+              "wraith",
+              "shadow-wraith"
+            ],
+            "count": 1,
+            "range": 2,
+            "turns": 16,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_BIND_SOULS",
+            "spellbook": "necromancer",
+            "frequency": 30,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 8,
+          "y": 3
+        },
+        {
+          "id": "phantom-15",
+          "name": "phantom",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/phantom.png",
+          "maxHp": 27,
+          "hd": 6,
+          "exp": 105,
+          "speed": 10,
+          "ac": 3,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "blink_with",
+              "damage": 8
+            }
+          ],
+          "power": 8,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": {
+            "airborne": true,
+            "blinkDamage": 8,
+            "blinkWith": true
+          },
+          "x": 1,
+          "y": 6
+        }
+      ]
+    },
+    {
+      "id": "Crypt:2",
+      "name": "Catacomb Corners",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_crypt.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_crypt.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt2.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt4.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt6.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt8.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_4a.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_5a.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs3.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb0.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb1.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb2.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb3.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs11.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs13.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs15.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_yak_skull.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_sword_corrupted.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crypt-metal0.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crypt-metal2.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood01.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood02.png"
+      },
+      "map": {
+        "name": "minmay_crypt_entry_simple_corners",
+        "width": 11,
+        "height": 11,
+        "rows": [
+          "xxxxxxxxxxx",
+          "xxx.....xxx",
+          "xx.......xx",
+          "x...x.x...x",
+          "x..xx.xx..x",
+          "x.........x",
+          "x..xx.xx..x",
+          "x...x.x...x",
+          "xx.......xx",
+          "xxx.....xxx",
+          "xxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/crypt.des"
+      },
+      "start": {
+        "x": 5,
+        "y": 5,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 5,
+          "y": 5
+        },
+        "down": {
+          "x": 5,
+          "y": 4
+        }
+      },
+      "floorItems": [
+        {
+          "id": "eveningstar-crypt",
+          "name": "demon eveningstar",
+          "shortName": "evening",
+          "kind": "weapon",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/eveningstar2.png",
+          "x": 7,
+          "y": 5
+        },
+        {
+          "id": "rune-crypt",
+          "name": "bone rune of Zot Soup",
+          "shortName": "bone",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_tomb.png",
+          "x": 5,
+          "y": 8
+        },
+        {
+          "id": "gold-crypt-2",
+          "name": "168 gold pieces",
+          "shortName": "168g",
+          "kind": "gold",
+          "value": 168,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 3,
+          "y": 2
+        },
+        {
+          "id": "resist-crypt",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 2,
+          "turns": 16,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 4,
+          "y": 2
+        },
+        {
+          "id": "polymorph-crypt",
+          "name": "wand of polymorph",
+          "shortName": "poly",
+          "kind": "wand",
+          "power": 14,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-polymorph.png",
+          "x": 7,
+          "y": 7
+        },
+        {
+          "id": "plate-crypt",
+          "name": "grave plate armour",
+          "shortName": "plate",
+          "kind": "armour",
+          "power": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/plate2.png",
+          "x": 6,
+          "y": 9
+        },
+        {
+          "id": "ring-positive-crypt-deep",
+          "name": "ring of positive energy",
+          "shortName": "rN",
+          "kind": "ring",
+          "power": 1,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-positive-energy.png",
+          "x": 7,
+          "y": 3
+        },
+        {
+          "id": "ring-protection-crypt-deep",
+          "name": "ring of protection",
+          "shortName": "protect",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-protection.png",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "id": "ring-shadows-crypt-deep",
+          "name": "ring of Shadows",
+          "shortName": "shadow",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "evasion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/artefact/urand_shadows.png",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "id": "amulet-reflection-crypt-deep",
+          "name": "amulet of reflection",
+          "shortName": "reflect",
+          "kind": "amulet",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-reflection.png",
+          "x": 8,
+          "y": 2
+        },
+        {
+          "id": "amulet-finger-crypt-deep",
+          "name": "macabre finger necklace",
+          "shortName": "finger",
+          "kind": "amulet",
+          "power": 3,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_finger.png",
+          "x": 9,
+          "y": 7
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-trap-crypt",
+          "name": "Zot trap",
+          "shortName": "zot",
+          "kind": "damage",
+          "power": 12,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 8,
+          "y": 6
+        },
+        {
+          "id": "dispersal-trap-crypt",
+          "name": "dispersal trap",
+          "shortName": "disperse",
+          "kind": "teleport",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/dispersal.png",
+          "x": 9,
+          "y": 4
+        }
+      ],
+      "decor": [
+        {
+          "id": "necropolis-crypt-2",
+          "name": "weathered headstone",
+          "shortName": "headstone",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/necropolis_gravestone_0.png",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "id": "sarcophagus-crypt-2",
+          "name": "cracked sarcophagus",
+          "shortName": "sarcophagus",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/sarcophagus_pedestal_left.png",
+          "x": 9,
+          "y": 6
+        },
+        {
+          "id": "angel-crypt-2",
+          "name": "weeping statue",
+          "shortName": "statue",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/statue_angel.png",
+          "x": 2,
+          "y": 7
+        }
+      ],
+      "encounters": [
+        {
+          "id": "vampire-16",
+          "name": "vampire",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/vampire.png",
+          "maxHp": 33,
+          "hd": 6,
+          "exp": 214,
+          "speed": 10,
+          "ac": 10,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 15
+            },
+            {
+              "type": "bite",
+              "flavor": "vampiric",
+              "damage": 15
+            }
+          ],
+          "power": 15,
+          "ranged": {
+            "name": "vampiric draining",
+            "range": 3,
+            "power": 6,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 1,
+            "healCaster": true,
+            "spell": "SPELL_VAMPIRIC_DRAINING",
+            "spellbook": "vampire",
+            "frequency": 50,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "invisibility",
+            "kind": "haste",
+            "turns": 8,
+            "effect": "blink",
+            "cooldown": 10,
+            "spell": "SPELL_INVISIBILITY",
+            "spellbook": "vampire",
+            "frequency": 14,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": {
+            "vampiricDamage": 15
+          },
+          "x": 3,
+          "y": 5
+        },
+        {
+          "id": "ancient_champion-16",
+          "name": "ancient champion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/ancient_champion.png",
+          "maxHp": 70,
+          "hd": 14,
+          "exp": 1518,
+          "speed": 10,
+          "ac": 15,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 32
+            }
+          ],
+          "power": 32,
+          "ranged": {
+            "name": "iron shot",
+            "range": 5,
+            "power": 12,
+            "effect": "impact",
+            "spell": "SPELL_IRON_SHOT",
+            "spellbook": "ancient_champion",
+            "frequency": 21,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "ancient_champion",
+            "frequency": 21,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": null,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "id": "wraith-16",
+          "name": "wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/wraith.png",
+          "maxHp": 33,
+          "hd": 6,
+          "exp": 209,
+          "speed": 10,
+          "ac": 10,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 15
+            }
+          ],
+          "power": 15,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 6,
+          "y": 5
+        },
+        {
+          "id": "ghoul-16",
+          "name": "ghoul",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/ghoul.png",
+          "maxHp": 147,
+          "hd": 14,
+          "exp": 1148,
+          "speed": 10,
+          "ac": 4,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "claw",
+              "flavor": null,
+              "damage": 30
+            },
+            {
+              "type": "claw",
+              "flavor": null,
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": null,
+          "x": 6,
+          "y": 8
+        },
+        {
+          "id": "shadow_wraith-16",
+          "name": "shadow wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/shadow_wraith.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 761,
+          "speed": 10,
+          "ac": 7,
+          "ev": 7,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 27
+            }
+          ],
+          "power": 27,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": {
+            "airborne": true
+          },
+          "x": 3,
+          "y": 3
+        },
+        {
+          "id": "necromancer-16",
+          "name": "necromancer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/necromancer.png",
+          "maxHp": 40,
+          "hd": 10,
+          "exp": 612,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 6
+            }
+          ],
+          "power": 6,
+          "ranged": {
+            "name": "bolt of draining",
+            "range": 5,
+            "power": 10,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 2,
+            "spell": "SPELL_BOLT_OF_DRAINING",
+            "spellbook": "necromancer",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "bind souls",
+            "kind": "undead",
+            "group": "bound souls",
+            "allies": [
+              "wraith",
+              "shadow-wraith"
+            ],
+            "count": 1,
+            "range": 2,
+            "turns": 16,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_BIND_SOULS",
+            "spellbook": "necromancer",
+            "frequency": 30,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 8,
+          "y": 3
+        },
+        {
+          "id": "simulacrum-16",
+          "name": "simulacrum",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/simulacra/simulacrum_small.png",
+          "maxHp": 11,
+          "hd": 2,
+          "exp": 9,
+          "speed": 7,
+          "ac": 10,
+          "ev": 4,
           "habitat": "amphibious",
           "attacks": [
             {
               "type": "hit",
-              "flavor": "acid",
-              "damage": 3
+              "flavor": null,
+              "damage": 6
             }
           ],
+          "power": 6,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": null,
+          "x": 4,
+          "y": 9
+        },
+        {
+          "id": "jiangshi-16",
+          "name": "jiangshi",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/jiangshi.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 909,
+          "speed": 18,
+          "ac": 10,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "claw",
+              "flavor": "vampiric",
+              "damage": 27
+            },
+            {
+              "type": "claw",
+              "flavor": "vampiric",
+              "damage": 27
+            }
+          ],
+          "power": 27,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": {
+            "vampiricDamage": 27
+          },
+          "x": 7,
+          "y": 1
+        }
+      ]
+    },
+    {
+      "id": "Elf:1",
+      "name": "Crystal Ring",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_elf.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_elf.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic2.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic5.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic8.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic11.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic14.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_dark_3_0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_dark_3_2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_lightblue.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_blue.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_cyan.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_white.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall00.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall02.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall04.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_bookcase0.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_shelf0.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_1a.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_2a.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_n.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood03_n.png"
+      },
+      "map": {
+        "name": "minmay_elf_arrival_circle",
+        "width": 19,
+        "height": 19,
+        "rows": [
+          "xxxxxxxxxxxxxxxxxxx",
+          "xxxxxxxx...xxxxxxxx",
+          "xxxxx.........xxxxx",
+          "xxxx...........xxxx",
+          "xxx.............xxx",
+          "xx...xxx...xxx...xx",
+          "xx...xxx...xxx...xx",
+          "xx...xxx...xxx...xx",
+          "x.................x",
+          "x.................x",
+          "x.................x",
+          "xx...xxx...xxx...xx",
+          "xx...xxx...xxx...xx",
+          "xx...xxx...xxx...xx",
+          "xxx.............xxx",
+          "xxxx...........xxxx",
+          "xxxxx.........xxxxx",
+          "xxxxxxxx...xxxxxxxx",
+          "xxxxxxxxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/elf.des"
+      },
+      "start": {
+        "x": 9,
+        "y": 9,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 9,
+          "y": 9
+        },
+        "down": {
+          "x": 9,
+          "y": 8
+        }
+      },
+      "floorItems": [
+        {
+          "id": "magic-elf",
+          "name": "potion of magic",
+          "shortName": "magic",
+          "kind": "might",
           "power": 3,
+          "turns": 14,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-magic.png",
+          "x": 11,
+          "y": 9
+        },
+        {
+          "id": "map-elf",
+          "name": "scroll of magic mapping",
+          "shortName": "map",
+          "kind": "mapping",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/scroll/i-magic_mapping.png",
+          "x": 12,
+          "y": 8
+        },
+        {
+          "id": "charm-elf",
+          "name": "wand of charming",
+          "shortName": "charm",
+          "kind": "wand",
+          "power": 12,
+          "charges": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-charming.png",
+          "x": 15,
+          "y": 9
+        },
+        {
+          "id": "long-sword-elf",
+          "name": "runed long sword",
+          "shortName": "sword",
+          "kind": "weapon",
+          "power": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/long_sword2.png",
+          "x": 3,
+          "y": 10
+        },
+        {
+          "id": "chain-elf",
+          "name": "elven chain mail",
+          "shortName": "chain",
+          "kind": "armour",
+          "power": 1,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/chain_mail2.png",
+          "x": 6,
+          "y": 14
+        },
+        {
+          "id": "gold-elf-1",
+          "name": "152 gold pieces",
+          "shortName": "152g",
+          "kind": "gold",
+          "value": 152,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 13,
+          "y": 14
+        },
+        {
+          "id": "ring-willpower-elf",
+          "name": "ring of willpower",
+          "shortName": "will",
+          "kind": "ring",
+          "power": 1,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-willpower.png",
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "ring-magic-elf",
+          "name": "ring of magical power",
+          "shortName": "magic",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-magical-power.png",
+          "x": 6,
+          "y": 3
+        },
+        {
+          "id": "amulet-regeneration-elf",
+          "name": "amulet of regeneration",
+          "shortName": "regen",
+          "kind": "amulet",
+          "power": 2,
+          "bonus": "regen",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-regeneration.png",
+          "x": 4,
+          "y": 13
+        }
+      ],
+      "traps": [
+        {
+          "id": "alarm-elf-1",
+          "name": "alarm rune",
+          "shortName": "alarm",
+          "kind": "alarm",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/alarm.png",
+          "x": 9,
+          "y": 2
+        }
+      ],
+      "decor": [
+        {
+          "id": "bookcase-elf-1",
+          "name": "crystal bookcase",
+          "shortName": "books",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_bookcase1.png",
+          "x": 10,
+          "y": 3
+        },
+        {
+          "id": "shelf-elf-1",
+          "name": "magic shelf",
+          "shortName": "shelf",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_shelf2.png",
+          "x": 3,
+          "y": 7
+        },
+        {
+          "id": "fountain-elf-1",
+          "name": "clear fountain",
+          "shortName": "fountain",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/decor/blue_fountain.png",
+          "x": 4,
+          "y": 5
+        }
+      ],
+      "encounters": [
+        {
+          "id": "deep_elf_zephyrmancer-17",
+          "name": "deep elf zephyrmancer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_zephyrmancer.png",
+          "maxHp": 41,
+          "hd": 9,
+          "exp": 599,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 5
+            }
+          ],
+          "power": 5,
+          "ranged": {
+            "name": "lightning bolt",
+            "range": 5,
+            "power": 9,
+            "element": "elec",
+            "effect": "smite",
+            "spell": "SPELL_LIGHTNING_BOLT",
+            "spellbook": "deep_elf_air_mage",
+            "frequency": 40,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "deep_elf_air_mage",
+            "frequency": 20,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 10,
+          "y": 9
+        },
+        {
+          "id": "deep_elf_archer-17",
+          "name": "deep elf archer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_archer.png",
+          "maxHp": 50,
+          "hd": 10,
+          "exp": 746,
+          "speed": 10,
+          "ac": 0,
+          "ev": 15,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 21
+            }
+          ],
+          "power": 21,
+          "ranged": {
+            "name": "slow",
+            "range": 4,
+            "power": 0,
+            "effect": "smite",
+            "status": "slow",
+            "statusTurns": 5,
+            "spell": "SPELL_SLOW",
+            "spellbook": "deep_elf_archer",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": {
+            "name": "deflect missiles",
+            "kind": "might",
+            "range": 5,
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 11,
+            "spell": "SPELL_DEFLECT_MISSILES",
+            "spellbook": "deep_elf_archer",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "mobility": {
+            "name": "blink range",
+            "kind": "close",
+            "range": 5,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK_RANGE",
+            "spellbook": "deep_elf_archer",
+            "frequency": 36,
+            "flags": "MON_SPELL_WIZARD | MON_SPELL_SHORT_RANGE"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 8
+        },
+        {
+          "id": "deep_elf_knight-17",
+          "name": "deep elf knight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_knight.png",
+          "maxHp": 50,
+          "hd": 11,
+          "exp": 777,
+          "speed": 10,
+          "ac": 0,
+          "ev": 17,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 21
+            }
+          ],
+          "power": 21,
+          "ranged": {
+            "name": "throw icicle",
+            "range": 5,
+            "power": 8,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_THROW_ICICLE",
+            "spellbook": "deep_elf_knight",
+            "frequency": 24,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "deep_elf_knight",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 11
+        },
+        {
+          "id": "deep_elf_pyromancer-17",
+          "name": "deep elf pyromancer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_pyromancer.png",
+          "maxHp": 41,
+          "hd": 9,
+          "exp": 600,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 5
+            }
+          ],
+          "power": 5,
+          "ranged": {
+            "name": "pyre arrow",
+            "range": 5,
+            "power": 9,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_PYRE_ARROW",
+            "spellbook": "deep_elf_fire_mage",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "deep_elf_fire_mage",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "self": null,
+          "summon": {
+            "name": "fire elementals",
+            "kind": "demon",
+            "group": "fire elementals",
+            "allies": [
+              "salamander"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 18,
+            "effect": "flame",
+            "cooldown": 9,
+            "spell": "SPELL_FIRE_ELEMENTALS",
+            "spellbook": "deep_elf_fire_mage",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 7,
+          "y": 15
+        },
+        {
+          "id": "deep_elf_elementalist-17",
+          "name": "deep elf elementalist",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_elementalist1.png",
+          "maxHp": 63,
+          "hd": 14,
+          "exp": 1187,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": {
+            "name": "lee's rapid deconstruction",
+            "range": 5,
+            "power": 11,
+            "effect": "impact",
+            "spell": "SPELL_LRD",
+            "spellbook": "deep_elf_elementalist",
+            "frequency": 33,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": {
+            "name": "deflect missiles",
+            "kind": "might",
+            "range": 5,
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 11,
+            "spell": "SPELL_DEFLECT_MISSILES",
+            "spellbook": "deep_elf_elementalist",
+            "frequency": 11,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "deep_elf_elementalist",
+            "frequency": 11,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 14,
+          "y": 13
+        }
+      ]
+    },
+    {
+      "id": "Elf:2",
+      "name": "Hall of Iron Lattice",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_elf.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_elf.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic3.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic6.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic9.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic13.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic10.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic15.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_dark_5_0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_dark_5_4.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_magenta.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_lightmagenta.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_red.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_lightred.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall06.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall08.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall10.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_bookcase2.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_shelf3.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_3a.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_4a.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_n.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_n.png"
+      },
+      "map": {
+        "name": "minmay_elf_arrival_plus",
+        "width": 17,
+        "height": 17,
+        "rows": [
+          "xxxxxxxxxxxxxxxxx",
+          "xxxxxx.....xxxxxx",
+          "xxxxxx.....xxxxxx",
+          "xxxxxx.....xxxxxx",
+          "xxxxxx.....xxxxxx",
+          "xxxxxxxx+xxxxxxxx",
+          "x....x.....x....x",
+          "x....x.....x....x",
+          "x....+.....+....x",
+          "x....x.....x....x",
+          "x....x.....x....x",
+          "xxxxxxxx+xxxxxxxx",
+          "xxxxxx.....xxxxxx",
+          "xxxxxx.....xxxxxx",
+          "xxxxxx.....xxxxxx",
+          "xxxxxx.....xxxxxx",
+          "xxxxxxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/elf.des"
+      },
+      "start": {
+        "x": 8,
+        "y": 8,
+        "dir": 1
+      },
+      "doors": [
+        "8,5",
+        "5,8",
+        "11,8",
+        "8,11"
+      ],
+      "stairs": {
+        "up": {
+          "x": 8,
+          "y": 8
+        },
+        "down": {
+          "x": 8,
+          "y": 7
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-elf-2",
+          "name": "elven rune of Zot Soup",
+          "shortName": "elven",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_elven.png",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "id": "magic-elf-2",
+          "name": "potion of magic",
+          "shortName": "magic",
+          "kind": "might",
+          "power": 4,
+          "turns": 16,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-magic.png",
+          "x": 10,
+          "y": 9
+        },
+        {
+          "id": "demon-blade-elf-2",
+          "name": "demon blade",
+          "shortName": "demon",
+          "kind": "weapon",
+          "power": 6,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/demon_blade.png",
+          "x": 12,
+          "y": 7
+        },
+        {
+          "id": "mindburst-elf-2",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 18,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 13,
+          "y": 7
+        },
+        {
+          "id": "plate-elf-2",
+          "name": "crystal plate armour",
+          "shortName": "crystal",
+          "kind": "armour",
+          "power": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/crystal_plate2.png",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "id": "gold-elf-2",
+          "name": "217 gold pieces",
+          "shortName": "217g",
+          "kind": "gold",
+          "value": 217,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 3,
+          "y": 10
+        },
+        {
+          "id": "ring-willpower-elf-2",
+          "name": "ring of willpower",
+          "shortName": "will",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-willpower.png",
+          "x": 10,
+          "y": 4
+        },
+        {
+          "id": "ring-magic-elf-2",
+          "name": "ring of magical power",
+          "shortName": "magic",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-magical-power.png",
+          "x": 3,
+          "y": 7
+        },
+        {
+          "id": "ring-evasion-elf-2",
+          "name": "ring of evasion",
+          "shortName": "evade",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "evasion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-evasion.png",
+          "x": 14,
+          "y": 7
+        },
+        {
+          "id": "amulet-spirit-elf-2",
+          "name": "amulet of guardian spirit",
+          "shortName": "spirit",
+          "kind": "amulet",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-spirit.png",
+          "x": 2,
+          "y": 9
+        },
+        {
+          "id": "amulet-faith-elf-2",
+          "name": "amulet of faith",
+          "shortName": "faith",
+          "kind": "amulet",
+          "power": 1,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-faith.png",
+          "x": 14,
+          "y": 10
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-elf-2",
+          "name": "Zot rune",
+          "shortName": "zot",
+          "kind": "damage",
+          "power": 13,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "id": "dispersal-elf-2",
+          "name": "dispersal rune",
+          "shortName": "disperse",
+          "kind": "teleport",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/dispersal.png",
+          "x": 6,
+          "y": 12
+        }
+      ],
+      "decor": [
+        {
+          "id": "bookcase-elf-2",
+          "name": "crystal bookcase",
+          "shortName": "books",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_bookcase3.png",
+          "x": 7,
+          "y": 12
+        },
+        {
+          "id": "shelf-elf-2",
+          "name": "magic shelf",
+          "shortName": "shelf",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_shelf3.png",
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "fountain-elf-2",
+          "name": "sparkling fountain",
+          "shortName": "fountain",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/decor/dry_fountain.png",
+          "x": 7,
+          "y": 14
+        }
+      ],
+      "encounters": [
+        {
+          "id": "deep_elf_blademaster-18",
+          "name": "deep elf blademaster",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_blademaster.png",
+          "maxHp": 104,
+          "hd": 16,
+          "exp": 1664,
+          "speed": 15,
+          "ac": 0,
+          "ev": 25,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 9,
+          "y": 8
+        },
+        {
+          "id": "deep_elf_master_archer-18",
+          "name": "deep elf master archer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_master_archer.png",
+          "maxHp": 75,
+          "hd": 15,
+          "exp": 1640,
+          "speed": 10,
+          "ac": 0,
+          "ev": 15,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 8,
+          "y": 12
+        },
+        {
+          "id": "deep_elf_annihilator-18",
+          "name": "deep elf annihilator",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_annihilator.png",
+          "maxHp": 68,
+          "hd": 15,
+          "exp": 1004,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": {
+            "name": "lightning bolt",
+            "range": 5,
+            "power": 9,
+            "element": "elec",
+            "effect": "smite",
+            "spell": "SPELL_LIGHTNING_BOLT",
+            "spellbook": "annihilator",
+            "frequency": 11,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "annihilator",
+            "frequency": 22,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 7
+        },
+        {
+          "id": "deep_elf_sorcerer-18",
+          "name": "deep elf sorcerer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_sorcerer.png",
+          "maxHp": 63,
+          "hd": 14,
+          "exp": 1237,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": {
+            "name": "corrosive bolt",
+            "range": 5,
+            "power": 9,
+            "element": "acid",
+            "effect": "poison",
+            "status": "corroded",
+            "statusTurns": 6,
+            "spell": "SPELL_CORROSIVE_BOLT",
+            "spellbook": "deep_elf_sorcerer",
+            "frequency": 18,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "deep_elf_sorcerer",
+            "frequency": 22,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 12,
+          "y": 10
+        },
+        {
+          "id": "deep_elf_death_mage-18",
+          "name": "deep elf death mage",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_death_mage.png",
+          "maxHp": 78,
+          "hd": 17,
+          "exp": 1027,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": {
+            "name": "bolt of draining",
+            "range": 5,
+            "power": 10,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 2,
+            "spell": "SPELL_BOLT_OF_DRAINING",
+            "spellbook": "deep_elf_death_mage",
+            "frequency": 22,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "call lost souls",
+            "kind": "undead",
+            "group": "lost souls",
+            "allies": [
+              "phantom",
+              "wraith"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 16,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_CALL_LOST_SOULS",
+            "spellbook": "deep_elf_death_mage",
+            "frequency": 22,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 8,
+          "y": 1
+        },
+        {
+          "id": "deep_elf_high_priest-18",
+          "name": "deep elf high priest",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_high_priest.png",
+          "maxHp": 50,
+          "hd": 11,
+          "exp": 896,
+          "speed": 10,
+          "ac": 3,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 14
+            }
+          ],
+          "power": 14,
+          "ranged": {
+            "name": "malign offering",
+            "range": 4,
+            "power": 9,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 2,
+            "spell": "SPELL_MALIGN_OFFERING",
+            "spellbook": "deep_elf_high_priest",
+            "frequency": 18,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 9,
+          "y": 14
+        },
+        {
+          "id": "deep_elf_demonologist-18",
+          "name": "deep elf demonologist",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_demonologist.png",
+          "maxHp": 54,
+          "hd": 12,
+          "exp": 1031,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": {
+            "name": "banishment",
+            "range": 5,
+            "power": 0,
+            "effect": "blink",
+            "status": "banish",
+            "statusTurns": 4,
+            "spell": "SPELL_BANISHMENT",
+            "spellbook": "deep_elf_demonologist",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "summon demon",
+            "kind": "demon",
+            "group": "demons",
+            "allies": [
+              "hellwing",
+              "orange-demon",
+              "red-devil",
+              "sun-demon"
+            ],
+            "count": 1,
+            "range": 2,
+            "turns": 18,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SUMMON_DEMON",
+            "spellbook": "deep_elf_demonologist",
+            "frequency": 24,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 10,
+          "y": 2
+        }
+      ]
+    },
+    {
+      "id": "Vaults:1",
+      "name": "Vanguard Atrium",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_vaults_open.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_vaults.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor1.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor3.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor5.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/white_marble2.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic4.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic7.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall3.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal0.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal2.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal4.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal6.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal1.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal3.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal5.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_sword_gold.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-crystal0.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-crystal2.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall5.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_n.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_n.png"
+      },
+      "map": {
+        "name": "david_vaults_3",
+        "width": 12,
+        "height": 10,
+        "rows": [
+          "xxxxxxxxxxxx",
+          "x..........x",
+          "x..........x",
+          "x..........x",
+          "x..........x",
+          "x..........x",
+          "x..........x",
+          "x..........x",
+          "x..........x",
+          "xxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/vaults.des"
+      },
+      "start": {
+        "x": 6,
+        "y": 4,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 6,
+          "y": 4
+        },
+        "down": {
+          "x": 6,
+          "y": 3
+        }
+      },
+      "floorItems": [
+        {
+          "id": "haste-vaults-1",
+          "name": "potion of haste",
+          "shortName": "haste",
+          "kind": "haste",
+          "power": 0,
+          "turns": 16,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-haste.png",
+          "x": 8,
+          "y": 4
+        },
+        {
+          "id": "war-axe-vaults-1",
+          "name": "runed war axe",
+          "shortName": "axe",
+          "kind": "weapon",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/war_axe2.png",
+          "x": 5,
+          "y": 2
+        },
+        {
+          "id": "plate-vaults-1",
+          "name": "vault guard plate",
+          "shortName": "plate",
+          "kind": "armour",
+          "power": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/plate1.png",
+          "x": 9,
+          "y": 3
+        },
+        {
+          "id": "polymorph-vaults-1",
+          "name": "wand of polymorph",
+          "shortName": "poly",
+          "kind": "wand",
+          "power": 14,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-polymorph.png",
+          "x": 9,
+          "y": 2
+        },
+        {
+          "id": "gold-vaults-1",
+          "name": "189 gold pieces",
+          "shortName": "189g",
+          "kind": "gold",
+          "value": 189,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "id": "ring-protection-vaults",
+          "name": "ring of protection",
+          "shortName": "protect",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-protection.png",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "id": "ring-slaying-vaults",
+          "name": "ring of slaying",
+          "shortName": "slay",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-slaying.png",
+          "x": 8,
+          "y": 7
+        },
+        {
+          "id": "amulet-regen-vaults",
+          "name": "amulet of regeneration",
+          "shortName": "regen",
+          "kind": "amulet",
+          "power": 2,
+          "bonus": "regen",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-regeneration.png",
+          "x": 2,
+          "y": 2
+        },
+        {
+          "id": "amulet-reflection-vaults",
+          "name": "amulet of reflection",
+          "shortName": "reflect",
+          "kind": "amulet",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-reflection.png",
+          "x": 1,
+          "y": 5
+        }
+      ],
+      "traps": [
+        {
+          "id": "alarm-vaults-1",
+          "name": "alarm tile",
+          "shortName": "alarm",
+          "kind": "alarm",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/alarm.png",
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "decor": [
+        {
+          "id": "banner-vaults-1",
+          "name": "vault banner",
+          "shortName": "banner",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_banner_beogh.png",
+          "x": 3,
+          "y": 3
+        },
+        {
+          "id": "fountain-vaults-1",
+          "name": "marble fountain",
+          "shortName": "fountain",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/decor/blue_fountain.png",
+          "x": 10,
+          "y": 3
+        },
+        {
+          "id": "lectern-vaults-1",
+          "name": "oak lectern",
+          "shortName": "lectern",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/lectern.png",
+          "x": 10,
+          "y": 2
+        }
+      ],
+      "encounters": [
+        {
+          "id": "vault_guard-19",
+          "name": "vault guard",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/vault_guard.png",
+          "maxHp": 72,
+          "hd": 13,
+          "exp": 869,
+          "speed": 10,
+          "ac": 1,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 7,
+          "y": 4
+        },
+        {
+          "id": "vault_sentinel-19",
+          "name": "vault sentinel",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/vault_sentinel.png",
+          "maxHp": 52,
+          "hd": 8,
+          "exp": 448,
+          "speed": 10,
+          "ac": 1,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 15
+            }
+          ],
+          "power": 15,
+          "ranged": {
+            "name": "sentinel mark",
+            "range": 5,
+            "power": 0,
+            "effect": "fear",
+            "status": "marked",
+            "statusTurns": 8,
+            "spell": "SPELL_SENTINEL_MARK",
+            "spellbook": "vault_sentinel",
+            "frequency": 58,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 5
+        },
+        {
+          "id": "ironbound_preserver-19",
+          "name": "ironbound preserver",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/ironbound_preserver.png",
+          "maxHp": 112,
+          "hd": 14,
+          "exp": 1118,
+          "speed": 10,
+          "ac": 0,
+          "ev": 6,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": {
+            "name": "minor healing",
+            "kind": "heal",
+            "range": 5,
+            "power": 9,
+            "effect": "halo",
+            "cooldown": 5,
+            "spell": "SPELL_MINOR_HEALING",
+            "spellbook": "ironbound_preserver",
+            "frequency": 41,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 8,
+          "y": 6
+        },
+        {
+          "id": "ironbound_convoker-19",
+          "name": "ironbound convoker",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/ironbound_convoker.png",
+          "maxHp": 50,
+          "hd": 9,
+          "exp": 644,
+          "speed": 10,
+          "ac": 0,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": null,
+          "support": {
+            "name": "might other",
+            "kind": "might",
+            "range": 5,
+            "turns": 8,
+            "effect": "halo",
+            "cooldown": 7,
+            "spell": "SPELL_MIGHT_OTHER",
+            "spellbook": "ironbound_convoker",
+            "frequency": 30,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "mobility": {
+            "name": "word of recall",
+            "kind": "encircle",
+            "range": 6,
+            "effect": "blink",
+            "cooldown": 9,
+            "spell": "SPELL_WORD_OF_RECALL",
+            "spellbook": "ironbound_convoker",
+            "frequency": 30,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 3,
+          "y": 2
+        },
+        {
+          "id": "tengu_warrior-19",
+          "name": "tengu warrior",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/tengu_warrior.png",
+          "maxHp": 60,
+          "hd": 10,
+          "exp": 808,
+          "speed": 10,
+          "ac": 2,
+          "ev": 17,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "flank",
+              "damage": 16
+            },
+            {
+              "type": "peck",
+              "flavor": null,
+              "damage": 8
+            },
+            {
+              "type": "claw",
+              "flavor": null,
+              "damage": 8
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": {
+            "airborne": true
+          },
+          "x": 3,
+          "y": 6
+        },
+        {
+          "id": "warg-19",
+          "name": "warg",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/animals/warg.png",
+          "maxHp": 33,
+          "hd": 5,
+          "exp": 187,
+          "speed": 15,
+          "ac": 9,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "bite",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1
+          },
+          "traits": null,
+          "x": 8,
+          "y": 8
+        }
+      ]
+    },
+    {
+      "id": "Vaults:2",
+      "name": "Iron Garrison",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_vaults_closed.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_vaults.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor2.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor4.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor6.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/white_marble5.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic9.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic12.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall7.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall9.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal3.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal5.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal7.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal8.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal4.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal6.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-metal8.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_sword_gold.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-crystal1.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/vaults-crystal3.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall11.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_s.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_s.png"
+      },
+      "map": {
+        "name": "david_vaults_2",
+        "width": 11,
+        "height": 9,
+        "rows": [
+          "xxxxxxxxxxx",
+          "x.........x",
+          "x.........x",
+          "x......x.xx",
+          "x......x..x",
+          "x....xxx.xx",
+          "x.........x",
+          "x....x.x.xx",
+          "xxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/vaults.des"
+      },
+      "start": {
+        "x": 6,
+        "y": 4,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 6,
+          "y": 4
+        },
+        "down": {
+          "x": 6,
+          "y": 3
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-vaults-2",
+          "name": "silver rune of Zot Soup",
+          "shortName": "silver",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_vaults.png",
+          "x": 6,
+          "y": 2
+        },
+        {
+          "id": "haste-vaults-2",
+          "name": "potion of haste",
+          "shortName": "haste",
+          "kind": "haste",
+          "power": 0,
+          "turns": 18,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-haste.png",
+          "x": 5,
+          "y": 2
+        },
+        {
+          "id": "morning-star-vaults-2",
+          "name": "runed morningstar",
+          "shortName": "morning",
+          "kind": "weapon",
+          "power": 6,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/morningstar2.png",
+          "x": 8,
+          "y": 5
+        },
+        {
+          "id": "crystal-plate-vaults-2",
+          "name": "crystal plate armour",
+          "shortName": "crystal",
+          "kind": "armour",
+          "power": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/crystal_plate3.png",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "id": "mindburst-vaults-2",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 20,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "id": "gold-vaults-2",
+          "name": "263 gold pieces",
+          "shortName": "263g",
+          "kind": "gold",
+          "value": 263,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "id": "ring-protection-vaults-2",
+          "name": "ring of protection",
+          "shortName": "protect",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-protection.png",
+          "x": 8,
+          "y": 2
+        },
+        {
+          "id": "ring-slaying-vaults-2",
+          "name": "ring of slaying",
+          "shortName": "slay",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-slaying.png",
+          "x": 8,
+          "y": 6
+        },
+        {
+          "id": "ring-willpower-vaults-2",
+          "name": "ring of willpower",
+          "shortName": "will",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-willpower.png",
+          "x": 1,
+          "y": 4
+        },
+        {
+          "id": "amulet-spirit-vaults-2",
+          "name": "amulet of guardian spirit",
+          "shortName": "spirit",
+          "kind": "amulet",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-spirit.png",
+          "x": 1,
+          "y": 3
+        },
+        {
+          "id": "amulet-vitality-vaults-2",
+          "name": "amulet of Vitality",
+          "shortName": "vital",
+          "kind": "amulet",
+          "power": 3,
+          "bonus": "regen",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_vitality.png",
+          "x": 2,
+          "y": 1
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-vaults-2",
+          "name": "Zot trap",
+          "shortName": "zot",
+          "kind": "damage",
+          "power": 14,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "id": "dispersal-vaults-2",
+          "name": "dispersal tile",
+          "shortName": "disperse",
+          "kind": "teleport",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/dispersal.png",
+          "x": 8,
+          "y": 1
+        }
+      ],
+      "decor": [
+        {
+          "id": "banner-vaults-2",
+          "name": "silver banner",
+          "shortName": "banner",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_icon_chei.png",
+          "x": 7,
+          "y": 1
+        },
+        {
+          "id": "fountain-vaults-2",
+          "name": "silver fountain",
+          "shortName": "fountain",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/decor/blue_fountain.png",
+          "x": 9,
+          "y": 2
+        },
+        {
+          "id": "statue-vaults-2",
+          "name": "vault sentry statue",
+          "shortName": "statue",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/statue_angel.png",
+          "x": 9,
+          "y": 1
+        }
+      ],
+      "encounters": [
+        {
+          "id": "vault_warden-20",
+          "name": "vault warden",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/vault_warden.png",
+          "maxHp": 88,
+          "hd": 16,
+          "exp": 1219,
+          "speed": 10,
+          "ac": 1,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 36
+            }
+          ],
+          "power": 36,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 5,
+          "y": 4
+        },
+        {
+          "id": "vault_guard-20",
+          "name": "vault guard",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/vault_guard.png",
+          "maxHp": 72,
+          "hd": 13,
+          "exp": 869,
+          "speed": 10,
+          "ac": 1,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "id": "ironbound_frostheart-20",
+          "name": "ironbound frostheart",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/ironbound_frostheart.png",
+          "maxHp": 60,
+          "hd": 11,
+          "exp": 808,
+          "speed": 10,
+          "ac": 0,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "touch",
+              "flavor": "cold",
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": {
+            "coldDamage": 25
+          },
+          "x": 6,
+          "y": 7
+        },
+        {
+          "id": "ironbound_thunderhulk-20",
+          "name": "ironbound thunderhulk",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/ironbound_thunderhulk.png",
+          "maxHp": 88,
+          "hd": 18,
+          "exp": 1070,
+          "speed": 10,
+          "ac": 1,
+          "ev": 8,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": {
+            "name": "call down lightning",
+            "range": 6,
+            "power": 11,
+            "element": "elec",
+            "effect": "smite",
+            "smiteTargeted": true,
+            "spell": "SPELL_CALL_DOWN_LIGHTNING",
+            "spellbook": "ironbound_thunderhulk",
+            "frequency": 50,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink range",
+            "kind": "close",
+            "range": 5,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK_RANGE",
+            "spellbook": "ironbound_thunderhulk",
+            "frequency": 20,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 3,
+          "y": 3
+        },
+        {
+          "id": "ironbound_beastmaster-20",
+          "name": "ironbound beastmaster",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/ironbound_beastmaster.png",
+          "maxHp": 66,
+          "hd": 13,
+          "exp": 948,
+          "speed": 10,
+          "ac": 0,
+          "ev": 14,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 45
+            }
+          ],
+          "power": 45,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 1
+        },
+        {
+          "id": "ironbound_mechanist-20",
+          "name": "ironbound mechanist",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/ironbound_mechanist.png",
+          "maxHp": 65,
+          "hd": 13,
+          "exp": 1000,
+          "speed": 10,
+          "ac": 1,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 22
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 22
+            }
+          ],
+          "power": 22,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 3,
+          "y": 6
+        },
+        {
+          "id": "tengu_reaver-20",
+          "name": "tengu reaver",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/tengu_reaver.png",
+          "maxHp": 85,
+          "hd": 17,
+          "exp": 1406,
+          "speed": 10,
+          "ac": 2,
+          "ev": 17,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 27
+            },
+            {
+              "type": "peck",
+              "flavor": null,
+              "damage": 11
+            },
+            {
+              "type": "claw",
+              "flavor": null,
+              "damage": 11
+            }
+          ],
+          "power": 27,
+          "ranged": {
+            "name": "venom bolt",
+            "range": 5,
+            "power": 8,
+            "element": "poison",
+            "effect": "poison",
+            "poisonTurns": 4,
+            "spell": "SPELL_VENOM_BOLT",
+            "spellbook": "tengu_reaver",
+            "frequency": 11,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": {
+            "name": "deflect missiles",
+            "kind": "might",
+            "range": 5,
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 11,
+            "spell": "SPELL_DEFLECT_MISSILES",
+            "spellbook": "tengu_reaver",
+            "frequency": 11,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": {
+            "airborne": true
+          },
+          "x": 8,
+          "y": 7
+        },
+        {
+          "id": "sphinx-20",
+          "name": "sphinx",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/guardian_sphinx.png",
+          "maxHp": 3,
+          "hd": 0,
+          "exp": 1,
+          "speed": 0,
+          "ac": 0,
+          "ev": 0,
+          "habitat": "land",
+          "attacks": [],
+          "power": 3,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 3,
+          "y": 7
+        }
+      ]
+    },
+    {
+      "id": "Depths:1",
+      "name": "Grave Atrium",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_depths.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_depths.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/depthstone_floor0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/depthstone_floor1.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/depthstone_floor2.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/depthstone_floor3.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/pebble_brown1.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/pebble_brown3.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths_entry0.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths_entry2.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths_entry4.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths1.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths_entry1.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths_entry3.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths_entry5.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_0.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_2.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths_leafy0.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths_leafy2.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood02.png"
+      },
+      "map": {
+        "name": "gammafunk_depths_entry_grave",
+        "width": 13,
+        "height": 13,
+        "rows": [
+          "xxxxxxxxxxxxx",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "x...........x",
+          "xxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/depths.des"
+      },
+      "start": {
+        "x": 6,
+        "y": 6,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 6,
+          "y": 6
+        },
+        "down": {
+          "x": 6,
+          "y": 5
+        }
+      },
+      "floorItems": [
+        {
+          "id": "haste-depths-1",
+          "name": "potion of haste",
+          "shortName": "haste",
+          "kind": "haste",
+          "power": 0,
+          "turns": 20,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-haste.png",
+          "x": 8,
+          "y": 6
+        },
+        {
+          "id": "resist-depths-1",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 3,
+          "turns": 18,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 8,
+          "y": 7
+        },
+        {
+          "id": "great-mace-depths-1",
+          "name": "runed eveningstar",
+          "shortName": "evening",
+          "kind": "weapon",
+          "power": 7,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/eveningstar3.png",
+          "x": 5,
+          "y": 9
+        },
+        {
+          "id": "crystal-plate-depths-1",
+          "name": "crystal plate armour",
+          "shortName": "crystal",
+          "kind": "armour",
+          "power": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/crystal_plate.png",
+          "x": 6,
+          "y": 11
+        },
+        {
+          "id": "polymorph-depths-1",
+          "name": "wand of polymorph",
+          "shortName": "poly",
+          "kind": "wand",
+          "power": 18,
+          "charges": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-polymorph.png",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "id": "gold-depths-1",
+          "name": "308 gold pieces",
+          "shortName": "308g",
+          "kind": "gold",
+          "value": 308,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 11,
+          "y": 8
+        },
+        {
+          "id": "ring-protection-depths",
+          "name": "ring of protection",
+          "shortName": "protect",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-protection.png",
+          "x": 11,
+          "y": 6
+        },
+        {
+          "id": "ring-slaying-depths",
+          "name": "ring of slaying",
+          "shortName": "slay",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-slaying.png",
+          "x": 9,
+          "y": 3
+        },
+        {
+          "id": "ring-fire-depths",
+          "name": "ring of fire",
+          "shortName": "fire",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "resistance",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-fire.png",
+          "element": "fire",
+          "x": 4,
+          "y": 10
+        },
+        {
+          "id": "amulet-spirit-depths",
+          "name": "amulet of guardian spirit",
+          "shortName": "spirit",
+          "kind": "amulet",
+          "power": 2,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-spirit.png",
+          "x": 10,
+          "y": 9
+        },
+        {
+          "id": "amulet-rage-depths",
+          "name": "amulet of rage",
+          "shortName": "rage",
+          "kind": "amulet",
+          "power": 4,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-rage.png",
+          "x": 11,
+          "y": 3
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-depths-1",
+          "name": "Zot rune",
+          "shortName": "zot",
+          "kind": "damage",
+          "power": 15,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 5,
+          "y": 2
+        }
+      ],
+      "decor": [
+        {
+          "id": "grave-depths-1",
+          "name": "granite gravestone",
+          "shortName": "grave",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/gravestone_writing2.png",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "id": "fountain-depths-1",
+          "name": "black fountain",
+          "shortName": "fountain",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/decor/dry_fountain.png",
+          "x": 8,
+          "y": 2
+        },
+        {
+          "id": "statue-depths-1",
+          "name": "crumbled column",
+          "shortName": "column",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/depths_crumbled_column.png",
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "encounters": [
+        {
+          "id": "deep_troll-21",
+          "name": "deep troll",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/deep_troll.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 733,
+          "speed": 10,
+          "ac": 6,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "bite",
+              "flavor": null,
+              "damage": 27
+            },
+            {
+              "type": "claw",
+              "flavor": null,
+              "damage": 20
+            },
+            {
+              "type": "claw",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 27,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 7,
+          "y": 6
+        },
+        {
+          "id": "two_headed_ogre-21",
+          "name": "two-headed ogre",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/two_headed_ogre.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 824,
+          "speed": 10,
+          "ac": 3,
+          "ev": 6,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 15
+            }
+          ],
+          "power": 20,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 5,
+          "y": 3
+        },
+        {
+          "id": "ettin-21",
+          "name": "ettin",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/ettin.png",
+          "maxHp": 66,
+          "hd": 12,
+          "exp": 929,
+          "speed": 10,
+          "ac": 9,
+          "ev": 4,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 40
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 40
+            }
+          ],
+          "power": 40,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 3,
+          "y": 7
+        },
+        {
+          "id": "cyclops-21",
+          "name": "cyclops",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/cyclops.png",
+          "maxHp": 50,
+          "hd": 9,
+          "exp": 547,
+          "speed": 7,
+          "ac": 5,
+          "ev": 3,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 35
+            }
+          ],
+          "power": 35,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 9,
+          "y": 8
+        },
+        {
+          "id": "yaktaur_captain-21",
+          "name": "yaktaur captain",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/taurs/yaktaur_captain.png",
+          "maxHp": 77,
+          "hd": 14,
+          "exp": 895,
+          "speed": 10,
+          "ac": 5,
+          "ev": 5,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "id": "centaur_warrior-21",
+          "name": "centaur warrior",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/taurs/centaur_warrior.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 836,
+          "speed": 15,
+          "ac": 4,
+          "ev": 8,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 16
+            },
+            {
+              "type": "kick",
+              "flavor": null,
+              "damage": 5
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 7,
+          "y": 11
+        },
+        {
+          "id": "rakshasa-21",
+          "name": "rakshasa",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/rakshasa.png",
+          "maxHp": 66,
+          "hd": 11,
+          "exp": 870,
+          "speed": 10,
+          "ac": 6,
+          "ev": 14,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": {
+            "name": "force lance",
+            "range": 4,
+            "power": 7,
+            "effect": "impact",
+            "status": "knockback",
+            "spell": "SPELL_FORCE_LANCE",
+            "spellbook": "rakshasa",
+            "frequency": 20,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "rakshasa",
+            "frequency": 10,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "self": null,
+          "summon": {
+            "name": "phantom mirror",
+            "kind": "undead",
+            "group": "mirror phantoms",
+            "allies": [
+              "phantom"
+            ],
+            "count": 1,
+            "range": 2,
+            "turns": 12,
+            "effect": "blink",
+            "cooldown": 9,
+            "spell": "SPELL_PHANTOM_MIRROR",
+            "spellbook": "rakshasa",
+            "frequency": 20,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "resists": {
+            "poison": 1
+          },
+          "traits": null,
+          "x": 11,
+          "y": 4
+        },
+        {
+          "id": "ugly_thing-21",
+          "name": "ugly thing",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/aberrations/ugly_thing.png",
+          "maxHp": 66,
+          "hd": 12,
+          "exp": 555,
+          "speed": 10,
+          "ac": 4,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 17
+            }
+          ],
+          "power": 17,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 3,
+          "y": 1
+        }
+      ]
+    },
+    {
+      "id": "Depths:2",
+      "name": "Sealed Sanctum",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_zot_closed.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_depths.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/depthstone_floor2.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/depthstone_floor4.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/pebble_brown0.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/pebble_brown2.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/pebble_brown4.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/depthstone_floor1.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths2.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths3.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths4.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths1.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths1.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths3.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths0.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_1.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_3.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths_leafy1.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths_leafy3.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood07_n.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood09_n.png"
+      },
+      "map": {
+        "name": "grunt_enter_depths_magical_seal",
+        "width": 11,
+        "height": 11,
+        "rows": [
+          "xxxxxxxxxxx",
+          "xxx.....xxx",
+          "xx.......xx",
+          "x..xx+xx..x",
+          "x..x...x..x",
+          "x..x...x..x",
+          "x..x...x..x",
+          "x..xxxxx..x",
+          "xx.......xx",
+          "xxx.....xxx",
+          "xxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/depths.des"
+      },
+      "start": {
+        "x": 5,
+        "y": 5,
+        "dir": 1
+      },
+      "doors": [
+        "5,3"
+      ],
+      "stairs": {
+        "up": {
+          "x": 5,
+          "y": 5
+        },
+        "down": {
+          "x": 5,
+          "y": 4
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-depths-2",
+          "name": "black rune of Zot Soup",
+          "shortName": "black",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_tartarus.png",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "id": "haste-depths-2",
+          "name": "potion of haste",
+          "shortName": "haste",
+          "kind": "haste",
+          "power": 0,
+          "turns": 22,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-haste.png",
+          "x": 5,
+          "y": 2
+        },
+        {
+          "id": "resist-depths-2",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 4,
+          "turns": 20,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 8,
+          "y": 4
+        },
+        {
+          "id": "demon-blade-depths-2",
+          "name": "demon blade",
+          "shortName": "demon",
+          "kind": "weapon",
+          "power": 8,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/demon_blade3.png",
+          "x": 6,
+          "y": 8
+        },
+        {
+          "id": "crystal-plate-depths-2",
+          "name": "crystal plate armour",
+          "shortName": "crystal",
+          "kind": "armour",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/crystal_plate2.png",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "id": "mindburst-depths-2",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 22,
+          "charges": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 1,
+          "y": 6
+        },
+        {
+          "id": "gold-depths-2",
+          "name": "412 gold pieces",
+          "shortName": "412g",
+          "kind": "gold",
+          "value": 412,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 8,
+          "y": 2
+        },
+        {
+          "id": "ring-protection-depths-2",
+          "name": "ring of protection",
+          "shortName": "protect",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-protection.png",
+          "x": 8,
+          "y": 6
+        },
+        {
+          "id": "ring-slaying-depths-2",
+          "name": "ring of slaying",
+          "shortName": "slay",
+          "kind": "ring",
+          "power": 5,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-slaying.png",
+          "x": 6,
+          "y": 1
+        },
+        {
+          "id": "ring-fire-resist-depths-2",
+          "name": "ring of fire resistance",
+          "shortName": "rF",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "resistance",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-r-fire.png",
+          "element": "fire",
+          "x": 9,
+          "y": 6
+        },
+        {
+          "id": "ring-cold-resist-depths-2",
+          "name": "ring of cold resistance",
+          "shortName": "rC",
+          "kind": "ring",
+          "power": 2,
+          "bonus": "resistance",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-r-cold.png",
+          "element": "cold",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "id": "amulet-spirit-depths-2",
+          "name": "amulet of guardian spirit",
+          "shortName": "spirit",
+          "kind": "amulet",
+          "power": 3,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-spirit.png",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "id": "amulet-vitality-depths-2",
+          "name": "amulet of Vitality",
+          "shortName": "vital",
+          "kind": "amulet",
+          "power": 4,
+          "bonus": "regen",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_vitality.png",
+          "x": 1,
+          "y": 3
+        },
+        {
+          "id": "amulet-finger-depths-2",
+          "name": "macabre finger necklace",
+          "shortName": "finger",
+          "kind": "amulet",
+          "power": 4,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_finger.png",
+          "x": 2,
+          "y": 8
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-depths-2",
+          "name": "Zot rune",
+          "shortName": "zot",
+          "kind": "damage",
+          "power": 16,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 6,
+          "y": 2
+        },
+        {
+          "id": "dispersal-depths-2",
+          "name": "dispersal rune",
+          "shortName": "disperse",
+          "kind": "teleport",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/dispersal.png",
+          "x": 8,
+          "y": 3
+        }
+      ],
+      "decor": [
+        {
+          "id": "sigil-depths-2",
+          "name": "binding sigil",
+          "shortName": "sigil",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_3.png",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "id": "chain-depths-2",
+          "name": "chained sentinel",
+          "shortName": "chains",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_icon_makhleb.png",
+          "x": 9,
+          "y": 4
+        },
+        {
+          "id": "brazier-depths-2",
+          "name": "black brazier",
+          "shortName": "brazier",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/fiery_conduit_0.png",
+          "x": 6,
+          "y": 9
+        }
+      ],
+      "encounters": [
+        {
+          "id": "stone_giant-22",
+          "name": "stone giant",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/stone_giant.png",
+          "maxHp": 88,
+          "hd": 16,
+          "exp": 1084,
+          "speed": 10,
+          "ac": 12,
+          "ev": 2,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 45
+            }
+          ],
+          "power": 45,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 6,
+          "y": 5
+        },
+        {
+          "id": "fire_giant-22",
+          "name": "fire giant",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/fire_giant.png",
+          "maxHp": 96,
+          "hd": 16,
+          "exp": 1281,
+          "speed": 10,
+          "ac": 8,
+          "ev": 4,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": {
+            "name": "bolt of fire",
+            "range": 5,
+            "power": 10,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_BOLT_OF_FIRE",
+            "spellbook": "fire_giant",
+            "frequency": 29,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": 2
+          },
+          "traits": null,
+          "x": 5,
+          "y": 8
+        },
+        {
+          "id": "frost_giant-22",
+          "name": "frost giant",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/frost_giant.png",
+          "maxHp": 104,
+          "hd": 16,
+          "exp": 1249,
+          "speed": 10,
+          "ac": 9,
+          "ev": 3,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 35
+            }
+          ],
+          "power": 35,
+          "ranged": {
+            "name": "bolt of cold",
+            "range": 5,
+            "power": 10,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_BOLT_OF_COLD",
+            "spellbook": "frost_giant",
+            "frequency": 66,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": null,
+          "x": 9,
+          "y": 5
+        },
+        {
+          "id": "hellion-22",
+          "name": "hellion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/hellion.png",
+          "maxHp": 39,
+          "hd": 7,
+          "exp": 384,
+          "speed": 12,
+          "ac": 5,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": {
+            "name": "call down damnation",
+            "range": 6,
+            "power": 14,
+            "element": "fire",
+            "effect": "flame",
+            "smiteTargeted": true,
+            "spell": "SPELL_CALL_DOWN_DAMNATION",
+            "spellbook": "hellion",
+            "frequency": 57,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "damnation": 1
+          },
+          "traits": null,
+          "x": 4,
+          "y": 8
+        },
+        {
+          "id": "balrug-22",
+          "name": "balrug",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/balrug.png",
+          "maxHp": 77,
+          "hd": 14,
+          "exp": 1202,
+          "speed": 12,
+          "ac": 5,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "fire",
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": {
+            "name": "pyre arrow",
+            "range": 5,
+            "power": 9,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_PYRE_ARROW",
+            "spellbook": "balrug",
+            "frequency": 16,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": 3,
+            "cold": -1
+          },
+          "traits": {
+            "airborne": true,
+            "fireDamage": 25
+          },
+          "x": 7,
+          "y": 2
+        },
+        {
+          "id": "hell_knight-22",
+          "name": "hell knight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/hell_knight.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 781,
+          "speed": 10,
+          "ac": 0,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 26
+            }
+          ],
+          "power": 26,
+          "ranged": {
+            "name": "bolt of fire",
+            "range": 5,
+            "power": 10,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_BOLT_OF_FIRE",
+            "spellbook": "hell_knight",
+            "frequency": 17,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "hell_knight",
+            "frequency": 10,
+            "flags": "MON_SPELL_PRIEST | MON_SPELL_EMERGENCY"
+          },
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "hell_knight",
+            "frequency": 26,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "summon": null,
+          "resists": {
+            "fire": 3
+          },
+          "traits": null,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "id": "cacodemon-22",
+          "name": "cacodemon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/cacodemon.png",
+          "maxHp": 98,
+          "hd": 13,
+          "exp": 1139,
+          "speed": 10,
+          "ac": 11,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "vuln",
+              "damage": 22
+            },
+            {
+              "type": "hit",
+              "flavor": "vuln",
+              "damage": 22
+            }
+          ],
+          "power": 22,
+          "ranged": {
+            "name": "doom bolt",
+            "range": 5,
+            "power": 13,
+            "effect": "smite",
+            "spell": "SPELL_DOOM_BOLT",
+            "spellbook": "cacodemon",
+            "frequency": 22,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 7,
+          "y": 8
+        },
+        {
+          "id": "shadow_demon-22",
+          "name": "shadow demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/shadow_demon.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 713,
+          "speed": 10,
+          "ac": 7,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 21
+            }
+          ],
+          "power": 21,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "shadow creatures",
+            "kind": "undead",
+            "group": "shadow creatures",
+            "allies": [
+              "shadow-wraith",
+              "shadow-demon",
+              "phantom"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 16,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SHADOW_CREATURES",
+            "spellbook": "shadow_demon",
+            "frequency": 30,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "resists": {
+            "poison": 1,
+            "cold": 2
+          },
+          "traits": null,
+          "x": 7,
+          "y": 1
+        },
+        {
+          "id": "titan-22",
+          "name": "titan",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/titan.png",
+          "maxHp": 110,
+          "hd": 20,
+          "exp": 1664,
+          "speed": 10,
+          "ac": 10,
+          "ev": 3,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 55
+            }
+          ],
+          "power": 55,
+          "ranged": {
+            "name": "lightning bolt",
+            "range": 5,
+            "power": 9,
+            "element": "elec",
+            "effect": "smite",
+            "spell": "SPELL_LIGHTNING_BOLT",
+            "spellbook": "titan",
+            "frequency": 18,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": {
+            "name": "minor healing",
+            "kind": "heal",
+            "range": 5,
+            "power": 9,
+            "effect": "halo",
+            "cooldown": 5,
+            "spell": "SPELL_MINOR_HEALING",
+            "spellbook": "titan",
+            "frequency": 36,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 3
+          },
+          "traits": null,
+          "x": 9,
+          "y": 3
+        }
+      ]
+    },
+    {
+      "id": "Zot:1",
+      "name": "Sanctum of the Orb",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/zot_stairs_down.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_zot.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/zot_diamonds0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/zot_diamonds2.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/zot_diamonds4.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/zot_diamonds6.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/zot_diamonds1.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/zot_diamonds5.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_blue0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_blue2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_zot0.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_zot1.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_zot2.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_zot3.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_blue1.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_blue2.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_blue3.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_0.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_2.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_stone_last00.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_stone_last04.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_n.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood09_n.png"
+      },
+      "map": {
+        "name": "zot_entry_small",
+        "width": 10,
+        "height": 11,
+        "rows": [
+          "xxxxxxxxxx",
+          "xxxxxxxxxx",
+          "xxxxxxxxxx",
+          "xxxx..xxxx",
+          "xxxx...xxx",
+          "xxx.....+x",
+          "xxxx...xxx",
+          "xxxx..xxxx",
+          "xxxxxxxxxx",
+          "xxxxxxxxxx",
+          "xxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/zot.des"
+      },
+      "start": {
+        "x": 5,
+        "y": 5,
+        "dir": 1
+      },
+      "doors": [
+        "8,5"
+      ],
+      "stairs": {
+        "up": {
+          "x": 5,
+          "y": 5
+        },
+        "down": {
+          "x": 5,
+          "y": 4
+        }
+      },
+      "floorItems": [
+        {
+          "id": "orb-of-zot",
+          "name": "the Orb of Zot Soup",
+          "shortName": "Orb",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/uncollected_orb.png",
+          "x": 7,
+          "y": 5
+        },
+        {
+          "id": "haste-zot",
+          "name": "potion of haste",
+          "shortName": "haste",
+          "kind": "haste",
+          "power": 0,
+          "turns": 24,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-haste.png",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "id": "might-zot",
+          "name": "potion of might",
+          "shortName": "might",
+          "kind": "might",
+          "power": 6,
+          "turns": 20,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-might.png",
+          "x": 4,
+          "y": 5
+        },
+        {
+          "id": "demon-blade-zot",
+          "name": "runed demon blade",
+          "shortName": "demon",
+          "kind": "weapon",
+          "power": 10,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/demon_blade.png",
+          "x": 6,
+          "y": 4
+        },
+        {
+          "id": "crystal-plate-zot",
+          "name": "crystal plate of Zot",
+          "shortName": "crystal",
+          "kind": "armour",
+          "power": 6,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/crystal_plate.png",
+          "x": 5,
+          "y": 7
+        }
+      ],
+      "traps": [],
+      "decor": [],
+      "encounters": [
+        {
+          "id": "orb_guardian-23",
+          "name": "Orb Guardian",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/aberrations/orb_guardian.png",
+          "maxHp": 83,
+          "hd": 15,
+          "exp": 1752,
+          "speed": 14,
+          "ac": 13,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 45
+            }
+          ],
+          "power": 45,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 6,
+          "y": 5
+        },
+        {
+          "id": "orb_of_fire-23",
+          "name": "orb of fire",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_fire.png",
+          "maxHp": 150,
+          "hd": 30,
+          "exp": 4638,
+          "speed": 15,
+          "ac": 20,
+          "ev": 20,
+          "habitat": "land",
+          "attacks": [],
+          "power": 3,
+          "ranged": {
+            "name": "bolt of fire",
+            "range": 5,
+            "power": 10,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_BOLT_OF_FIRE",
+            "spellbook": "orb_of_fire",
+            "frequency": 32,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 3,
+            "fire": 3,
+            "cold": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 5,
+          "y": 3
+        },
+        {
+          "id": "draconian_knight-23",
+          "name": "draconian knight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/draco/draco-job-knight.png",
+          "maxHp": 112,
+          "hd": 16,
+          "exp": 1280,
+          "speed": 10,
+          "ac": 9,
+          "ev": 2,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 27
+            }
+          ],
+          "power": 27,
+          "ranged": {
+            "name": "throw icicle",
+            "range": 5,
+            "power": 8,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_THROW_ICICLE",
+            "spellbook": "draconian_knight",
+            "frequency": 13,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "draconian_knight",
+            "frequency": 13,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 4
+        },
+        {
+          "id": "draconian_annihilator-23",
+          "name": "draconian annihilator",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/draco/draco-job-annihilator.png",
+          "maxHp": 80,
+          "hd": 16,
+          "exp": 1119,
+          "speed": 10,
+          "ac": -1,
+          "ev": 0,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 15
+            }
+          ],
+          "power": 15,
+          "ranged": {
+            "name": "lightning bolt",
+            "range": 5,
+            "power": 9,
+            "element": "elec",
+            "effect": "smite",
+            "spell": "SPELL_LIGHTNING_BOLT",
+            "spellbook": "annihilator",
+            "frequency": 11,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "annihilator",
+            "frequency": 22,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 6,
+          "y": 6
+        },
+        {
+          "id": "draconian_stormcaller-23",
+          "name": "draconian stormcaller",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/draco/draco-job-stormcaller.png",
+          "maxHp": 88,
+          "hd": 16,
+          "exp": 1145,
+          "speed": 10,
+          "ac": 0,
+          "ev": 0,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": {
+            "name": "smite",
+            "range": 4,
+            "power": 6,
+            "effect": "smite",
+            "smiteTargeted": true,
+            "spell": "SPELL_SMITING",
+            "spellbook": "draconian_stormcaller",
+            "frequency": 20,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "summon drakes",
+            "kind": "dragon",
+            "group": "drakes",
+            "allies": [
+              "swamp-drake",
+              "wind-drake",
+              "drake",
+              "wyvern"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 18,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SUMMON_DRAKES",
+            "spellbook": "draconian_stormcaller",
+            "frequency": 20,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "killer_klown-23",
+          "name": "Killer Klown",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/killer_klown_blue.png",
+          "maxHp": 150,
+          "hd": 20,
+          "exp": 3010,
+          "speed": 13,
+          "ac": 10,
+          "ev": 15,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": null,
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "killer_klown",
+            "frequency": 29,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 3,
+          "y": 5
+        },
+        {
+          "id": "tentacled_monstrosity-23",
+          "name": "tentacled monstrosity",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/aberrations/tentacled_monstrosity.png",
+          "maxHp": 127,
+          "hd": 23,
+          "exp": 1843,
+          "speed": 10,
+          "ac": 5,
+          "ev": 5,
+          "habitat": "amphibious",
+          "attacks": [
+            {
+              "type": "tentacle_slap",
+              "flavor": null,
+              "damage": 22
+            },
+            {
+              "type": "tentacle_slap",
+              "flavor": null,
+              "damage": 17
+            },
+            {
+              "type": "tentacle_slap",
+              "flavor": null,
+              "damage": 13
+            },
+            {
+              "type": "constrict",
+              "flavor": "crush",
+              "damage": 6
+            }
+          ],
+          "power": 22,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1,
+            "fire": 1,
+            "cold": 1
+          },
+          "traits": {
+            "snareTurns": 2
+          },
+          "x": 4,
+          "y": 3
+        },
+        {
+          "id": "ancient_lich-23",
+          "name": "ancient lich",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/ancient_lich.png",
+          "maxHp": 108,
+          "hd": 27,
+          "exp": 4693,
+          "speed": 10,
+          "ac": 20,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "touch",
+              "flavor": "drain",
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": {
+            "name": "corrosive bolt",
+            "range": 5,
+            "power": 9,
+            "element": "acid",
+            "effect": "poison",
+            "status": "corroded",
+            "statusTurns": 6,
+            "spell": "SPELL_CORROSIVE_BOLT",
+            "spellbook": "ancient_lich",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "ancient_lich",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "fire": 1,
+            "cold": 2
+          },
+          "traits": {
+            "drainDamage": 20
+          },
+          "x": 4,
+          "y": 7
+        }
+      ]
+    },
+    {
+      "id": "Gehenna:1",
+      "name": "Pyre of Asmodeus",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_gehenna1.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal01.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal03.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal05.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal09.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava04.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_pyre0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_pyre2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell01.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell03.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell05.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell08.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell02.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell04.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell06.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_pyre3.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_pyre4.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell09.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell11.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_s.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood09_s.png"
+      },
+      "map": {
+        "name": "pf_hell_entry_great_geh",
+        "width": 9,
+        "height": 14,
+        "rows": [
+          "xxxxxxxxx",
+          "xlx...xlx",
+          "xlx...xlx",
+          "xlx...xlx",
+          "xlx...xlx",
+          "xlx...xlx",
+          "xlx...xlx",
+          "xlx...xlx",
+          "xxxx+xxxx",
+          "xxl...lxx",
+          "xxl...lxx",
+          "xxl...lxx",
+          "xxxlllxxx",
+          "xxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/hell.des"
+      },
+      "start": {
+        "x": 4,
+        "y": 10,
+        "dir": 1
+      },
+      "doors": [
+        "4,8"
+      ],
+      "stairs": {
+        "up": {
+          "x": 4,
+          "y": 10
+        },
+        "down": {
+          "x": 4,
+          "y": 9
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-geh",
+          "name": "fiery rune of Zot Soup",
+          "shortName": "fiery",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_gehenna.png",
+          "x": 6,
+          "y": 10
+        },
+        {
+          "id": "resist-geh",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 5,
+          "turns": 22,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 5,
+          "y": 11
+        },
+        {
+          "id": "demon-blade-geh",
+          "name": "runed demon blade",
+          "shortName": "demon",
+          "kind": "weapon",
+          "power": 9,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/demon_blade2.png",
+          "x": 2,
+          "y": 9
+        },
+        {
+          "id": "plate-geh",
+          "name": "firebrand plate",
+          "shortName": "plate",
+          "kind": "armour",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/plate3.png",
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "mindburst-geh",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 22,
+          "charges": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 4,
+          "y": 4
+        },
+        {
+          "id": "gold-geh",
+          "name": "399 gold pieces",
+          "shortName": "399g",
+          "kind": "gold",
+          "value": 399,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "id": "ring-fire-resist-geh",
+          "name": "ring of fire resistance",
+          "shortName": "rF",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "resistance",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-r-fire.png",
+          "element": "fire",
+          "x": 2,
+          "y": 11
+        },
+        {
+          "id": "ring-fire-geh",
+          "name": "ring of fire",
+          "shortName": "fire",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "resistance",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-fire.png",
+          "element": "fire",
+          "x": 5,
+          "y": 5
+        },
+        {
+          "id": "ring-slaying-geh",
+          "name": "ring of slaying",
+          "shortName": "slay",
+          "kind": "ring",
+          "power": 5,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-slaying.png",
+          "x": 3,
+          "y": 3
+        },
+        {
+          "id": "amulet-spirit-geh",
+          "name": "amulet of guardian spirit",
+          "shortName": "spirit",
+          "kind": "amulet",
+          "power": 3,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/i-spirit.png",
+          "x": 5,
+          "y": 2
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-geh",
+          "name": "hellfire rune",
+          "shortName": "hellfire",
+          "kind": "damage",
+          "power": 17,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 6,
+          "y": 11
+        }
+      ],
+      "decor": [
+        {
+          "id": "brazier-geh",
+          "name": "infernal brazier",
+          "shortName": "brazier",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/fiery_conduit_0.png",
+          "x": 6,
+          "y": 9
+        },
+        {
+          "id": "chain-geh",
+          "name": "chained skull",
+          "shortName": "chains",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_icon_makhleb.png",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "id": "sigil-geh",
+          "name": "asmodean sigil",
+          "shortName": "sigil",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell10.png",
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "encounters": [
+        {
+          "id": "brimstone_fiend-24",
+          "name": "Brimstone Fiend",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/brimstone_fiend.png",
+          "maxHp": 99,
+          "hd": 18,
+          "exp": 2027,
+          "speed": 10,
+          "ac": 15,
+          "ev": 6,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 15
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 15
+            }
+          ],
+          "power": 25,
+          "ranged": {
+            "name": "hurl damnation",
+            "range": 6,
+            "power": 16,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_HURL_DAMNATION",
+            "spellbook": "brimstone_fiend",
+            "frequency": 34,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": 3,
+            "cold": -1,
+            "damnation": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 5,
+          "y": 10
+        },
+        {
+          "id": "hellion-24",
+          "name": "hellion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/hellion.png",
+          "maxHp": 39,
+          "hd": 7,
+          "exp": 384,
+          "speed": 12,
+          "ac": 5,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": {
+            "name": "call down damnation",
+            "range": 6,
+            "power": 14,
+            "element": "fire",
+            "effect": "flame",
+            "smiteTargeted": true,
+            "spell": "SPELL_CALL_DOWN_DAMNATION",
+            "spellbook": "hellion",
+            "frequency": 57,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "damnation": 1
+          },
+          "traits": null,
+          "x": 2,
+          "y": 10
+        },
+        {
+          "id": "balrug-24",
+          "name": "balrug",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/balrug.png",
+          "maxHp": 77,
+          "hd": 14,
+          "exp": 1202,
+          "speed": 12,
+          "ac": 5,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "fire",
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": {
+            "name": "pyre arrow",
+            "range": 5,
+            "power": 9,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_PYRE_ARROW",
+            "spellbook": "balrug",
+            "frequency": 16,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": 3,
+            "cold": -1
+          },
+          "traits": {
+            "airborne": true,
+            "fireDamage": 25
+          },
+          "x": 5,
+          "y": 12
+        },
+        {
+          "id": "sun_demon-24",
+          "name": "sun demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/sun_demon.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 777,
+          "speed": 12,
+          "ac": 10,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "fire",
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1,
+            "fire": 3,
+            "cold": -1
+          },
+          "traits": {
+            "airborne": true,
+            "fireDamage": 30
+          },
+          "x": 5,
+          "y": 7
+        },
+        {
+          "id": "red_devil-24",
+          "name": "red devil",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/red_devil.png",
+          "maxHp": 32,
+          "hd": 7,
+          "exp": 319,
+          "speed": 10,
+          "ac": 7,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "barbs",
+              "damage": 19
+            }
+          ],
+          "power": 19,
           "ranged": null,
           "support": null,
           "mobility": null,
@@ -8032,13 +13471,6570 @@ window.CotBResources = {
           "summon": null,
           "resists": {
             "poison": 1,
-            "corr": 3
+            "fire": 3,
+            "cold": -1
           },
           "traits": {
-            "acidDamage": 3
+            "airborne": true,
+            "barbedTurns": 4
+          },
+          "x": 3,
+          "y": 6
+        },
+        {
+          "id": "smoke_demon-24",
+          "name": "smoke demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/smoke_demon.png",
+          "maxHp": 39,
+          "hd": 7,
+          "exp": 428,
+          "speed": 10,
+          "ac": 5,
+          "ev": 9,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 8
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 5
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 5
+            }
+          ],
+          "power": 8,
+          "ranged": {
+            "name": "pyre arrow",
+            "range": 5,
+            "power": 9,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_PYRE_ARROW",
+            "spellbook": "smoke_demon",
+            "frequency": 19,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": 2
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 4,
+          "y": 3
+        },
+        {
+          "id": "hell_knight-24",
+          "name": "hell knight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/hell_knight.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 781,
+          "speed": 10,
+          "ac": 0,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 26
+            }
+          ],
+          "power": 26,
+          "ranged": {
+            "name": "bolt of fire",
+            "range": 5,
+            "power": 10,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_BOLT_OF_FIRE",
+            "spellbook": "hell_knight",
+            "frequency": 17,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "hell_knight",
+            "frequency": 10,
+            "flags": "MON_SPELL_PRIEST | MON_SPELL_EMERGENCY"
+          },
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "hell_knight",
+            "frequency": 26,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "summon": null,
+          "resists": {
+            "fire": 3
+          },
+          "traits": null,
+          "x": 5,
+          "y": 3
+        }
+      ]
+    },
+    {
+      "id": "Cocytus:1",
+      "name": "Iceberg of Antaeus",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_cocytus1.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen2.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen5.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen8.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice0.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice2.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block0.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block2.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block3.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block4.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block1.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall1.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall3.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall4.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice_overlay_N.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice_overlay_E.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice_overlay_S.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_n.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_n.png"
+      },
+      "map": {
+        "name": "pf_coc_iceberg",
+        "width": 13,
+        "height": 15,
+        "rows": [
+          "xxxxxxxxxxxxx",
+          "xx.........xx",
+          "x...wwwww...x",
+          "x..wwxxxww..x",
+          "x..wxxxxxw..x",
+          "x.wxxx.xxxw.x",
+          "x.wxx...xxw.x",
+          "x.wxx...WxW.x",
+          "x.wxx...xWw.x",
+          "x.wxxx.xxxw.x",
+          "x..wxxxxxw..x",
+          "x..wwxxxww..x",
+          "x...wwwww...x",
+          "xx.........xx",
+          "xxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/hell.des"
+      },
+      "start": {
+        "x": 6,
+        "y": 7,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 6,
+          "y": 7
+        },
+        "down": {
+          "x": 6,
+          "y": 6
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-coc",
+          "name": "icy rune of Zot Soup",
+          "shortName": "icy",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_cocytus.png",
+          "x": 8,
+          "y": 7
+        },
+        {
+          "id": "resist-coc",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 5,
+          "turns": 22,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 6,
+          "y": 8
+        },
+        {
+          "id": "trident-coc",
+          "name": "frost trident",
+          "shortName": "trident",
+          "kind": "weapon",
+          "power": 8,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/trident2.png",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "id": "crystal-plate-coc",
+          "name": "glacial crystal plate",
+          "shortName": "crystal",
+          "kind": "armour",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/crystal_plate.png",
+          "x": 5,
+          "y": 6
+        }
+      ],
+      "traps": [],
+      "decor": [],
+      "encounters": [
+        {
+          "id": "ice_fiend-25",
+          "name": "Ice Fiend",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/ice_fiend.png",
+          "maxHp": 99,
+          "hd": 18,
+          "exp": 1816,
+          "speed": 10,
+          "ac": 15,
+          "ev": 6,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "claw",
+              "flavor": "cold",
+              "damage": 25
+            },
+            {
+              "type": "claw",
+              "flavor": "cold",
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": {
+            "name": "bolt of cold",
+            "range": 5,
+            "power": 10,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_BOLT_OF_COLD",
+            "spellbook": "ice_fiend",
+            "frequency": 46,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": {
+            "airborne": true,
+            "coldDamage": 25
+          },
+          "x": 7,
+          "y": 7
+        },
+        {
+          "id": "ice_devil-25",
+          "name": "ice devil",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/ice_devil.png",
+          "maxHp": 44,
+          "hd": 8,
+          "exp": 341,
+          "speed": 10,
+          "ac": 12,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "cold",
+              "damage": 16
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": {
+            "coldDamage": 16
+          },
+          "x": 6,
+          "y": 5
+        },
+        {
+          "id": "frost_giant-25",
+          "name": "frost giant",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/frost_giant.png",
+          "maxHp": 104,
+          "hd": 16,
+          "exp": 1249,
+          "speed": 10,
+          "ac": 9,
+          "ev": 3,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 35
+            }
+          ],
+          "power": 35,
+          "ranged": {
+            "name": "bolt of cold",
+            "range": 5,
+            "power": 10,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_BOLT_OF_COLD",
+            "spellbook": "frost_giant",
+            "frequency": 66,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": null,
+          "x": 7,
+          "y": 6
+        },
+        {
+          "id": "freezing_wraith-25",
+          "name": "freezing wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/freezing_wraith.png",
+          "maxHp": 44,
+          "hd": 8,
+          "exp": 354,
+          "speed": 10,
+          "ac": 12,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "cold",
+              "damage": 16
+            },
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 15
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": {
+            "airborne": true,
+            "coldDamage": 16
+          },
+          "x": 7,
+          "y": 8
+        },
+        {
+          "id": "white_imp-25",
+          "name": "white imp",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/white_imp.png",
+          "maxHp": 11,
+          "hd": 2,
+          "exp": 10,
+          "speed": 10,
+          "ac": 4,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "cold",
+              "damage": 4
+            }
+          ],
+          "power": 4,
+          "ranged": {
+            "name": "throw frost",
+            "range": 4,
+            "power": 6,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_THROW_FROST",
+            "spellbook": "white_imp",
+            "frequency": 52,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": -1,
+            "cold": 2
+          },
+          "traits": {
+            "airborne": true,
+            "coldDamage": 4
+          },
+          "x": 6,
+          "y": 9
+        },
+        {
+          "id": "shadow_demon-25",
+          "name": "shadow demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/shadow_demon.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 713,
+          "speed": 10,
+          "ac": 7,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 21
+            }
+          ],
+          "power": 21,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "shadow creatures",
+            "kind": "undead",
+            "group": "shadow creatures",
+            "allies": [
+              "shadow-wraith",
+              "shadow-demon",
+              "phantom"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 16,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SHADOW_CREATURES",
+            "spellbook": "shadow_demon",
+            "frequency": 30,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "resists": {
+            "poison": 1,
+            "cold": 2
+          },
+          "traits": null,
+          "x": 5,
+          "y": 8
+        }
+      ]
+    },
+    {
+      "id": "Tartarus:1",
+      "name": "Catacomb of Dispater",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_tartarus1.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/black_cobalt01.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/black_cobalt03.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/black_cobalt06.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/black_cobalt09.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/black_cobalt11.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal_blank.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_dark0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_dark2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone01.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone03.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone06.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone09.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone02.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone05.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone08.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_rock1.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_rock3.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone11.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone12.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood03.png"
+      },
+      "map": {
+        "name": "hangedman_tar_grid_catacomb",
+        "width": 16,
+        "height": 13,
+        "rows": [
+          "xxxxxxxxxxxxxxxx",
+          "xxxxx..xx..xxxxx",
+          "xxxxx.xxxx.xxxxx",
+          "xxxxx..xx..xxxxx",
+          "xxxx..xxxx..xxxx",
+          "xxx....xx....xxx",
+          "xx....xxxx....xx",
+          "x......xx......x",
+          "xx....xxxx....xx",
+          "xxxxx..xx..xxxxx",
+          "xxxxx.xxxx.xxxxx",
+          "xxxx...xx...xxxx",
+          "xxxxxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/hell.des"
+      },
+      "start": {
+        "x": 6,
+        "y": 1,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 6,
+          "y": 1
+        },
+        "down": {
+          "x": 5,
+          "y": 1
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-tar",
+          "name": "dark rune of Zot Soup",
+          "shortName": "dark",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_tartarus.png",
+          "x": 6,
+          "y": 3
+        },
+        {
+          "id": "resist-tar",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 5,
+          "turns": 22,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 5,
+          "y": 5
+        },
+        {
+          "id": "scythe-tar",
+          "name": "reaper's scythe",
+          "shortName": "scythe",
+          "kind": "weapon",
+          "power": 9,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/scythe3.png",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "id": "plate-tar",
+          "name": "grave plate",
+          "shortName": "plate",
+          "kind": "armour",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/plate2.png",
+          "x": 4,
+          "y": 7
+        },
+        {
+          "id": "mindburst-tar",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 22,
+          "charges": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 3,
+          "y": 7
+        },
+        {
+          "id": "gold-tar",
+          "name": "399 gold pieces",
+          "shortName": "399g",
+          "kind": "gold",
+          "value": 399,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "id": "ring-positive-tar",
+          "name": "ring of positive energy",
+          "shortName": "rN",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-positive-energy.png",
+          "x": 5,
+          "y": 8
+        },
+        {
+          "id": "ring-willpower-tar",
+          "name": "ring of willpower",
+          "shortName": "will",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-willpower.png",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "id": "ring-shadows-tar",
+          "name": "ring of Shadows",
+          "shortName": "shadow",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "evasion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/artefact/urand_shadows.png",
+          "x": 5,
+          "y": 11
+        },
+        {
+          "id": "amulet-finger-tar",
+          "name": "macabre finger necklace",
+          "shortName": "finger",
+          "kind": "amulet",
+          "power": 5,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_finger.png",
+          "x": 1,
+          "y": 7
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-tar",
+          "name": "torment rune",
+          "shortName": "torment",
+          "kind": "damage",
+          "power": 18,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 5,
+          "y": 7
+        }
+      ],
+      "decor": [
+        {
+          "id": "crypt-tar",
+          "name": "black sarcophagus",
+          "shortName": "sarcophagus",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/sarcophagus_sealed.png",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "id": "skull-tar",
+          "name": "skull pike",
+          "shortName": "pike",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/skull_pike_2.png",
+          "x": 5,
+          "y": 9
+        },
+        {
+          "id": "grave-tar",
+          "name": "weathered tomb",
+          "shortName": "tomb",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/necropolis_gravestone_1.png",
+          "x": 3,
+          "y": 8
+        }
+      ],
+      "encounters": [
+        {
+          "id": "shadow_demon-26",
+          "name": "shadow demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/shadow_demon.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 713,
+          "speed": 10,
+          "ac": 7,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 21
+            }
+          ],
+          "power": 21,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "shadow creatures",
+            "kind": "undead",
+            "group": "shadow creatures",
+            "allies": [
+              "shadow-wraith",
+              "shadow-demon",
+              "phantom"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 16,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SHADOW_CREATURES",
+            "spellbook": "shadow_demon",
+            "frequency": 30,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "resists": {
+            "poison": 1,
+            "cold": 2
+          },
+          "traits": null,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "id": "reaper-26",
+          "name": "reaper",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/reaper.png",
+          "maxHp": 71,
+          "hd": 14,
+          "exp": 1133,
+          "speed": 10,
+          "ac": 15,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drag",
+              "damage": 36
+            }
+          ],
+          "power": 36,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "cold": 1
+          },
+          "traits": {
+            "airborne": true,
+            "dragDamage": 36
           },
           "x": 4,
           "y": 5
+        },
+        {
+          "id": "tzitzimitl-26",
+          "name": "Tzitzimitl",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/tzitzimitl.png",
+          "maxHp": 105,
+          "hd": 22,
+          "exp": 2056,
+          "speed": 10,
+          "ac": 12,
+          "ev": 16,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "engulf",
+              "flavor": "drain_speed",
+              "damage": 25
+            },
+            {
+              "type": "bite",
+              "flavor": "drain",
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": {
+            "name": "bolt of draining",
+            "range": 5,
+            "power": 10,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 2,
+            "spell": "SPELL_BOLT_OF_DRAINING",
+            "spellbook": "tzitzimitl",
+            "frequency": 25,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1,
+            "cold": 2
+          },
+          "traits": {
+            "airborne": true,
+            "drainDamage": 25
+          },
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "shadow_wraith-26",
+          "name": "shadow wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/shadow_wraith.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 761,
+          "speed": 10,
+          "ac": 7,
+          "ev": 7,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 27
+            }
+          ],
+          "power": 27,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": {
+            "airborne": true
+          },
+          "x": 3,
+          "y": 6
+        },
+        {
+          "id": "freezing_wraith-26",
+          "name": "freezing wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/freezing_wraith.png",
+          "maxHp": 44,
+          "hd": 8,
+          "exp": 354,
+          "speed": 10,
+          "ac": 12,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "cold",
+              "damage": 16
+            },
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 15
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": {
+            "airborne": true,
+            "coldDamage": 16
+          },
+          "x": 4,
+          "y": 8
+        },
+        {
+          "id": "ancient_lich-26",
+          "name": "ancient lich",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/ancient_lich.png",
+          "maxHp": 108,
+          "hd": 27,
+          "exp": 4693,
+          "speed": 10,
+          "ac": 20,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "touch",
+              "flavor": "drain",
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": {
+            "name": "corrosive bolt",
+            "range": 5,
+            "power": 9,
+            "element": "acid",
+            "effect": "poison",
+            "status": "corroded",
+            "statusTurns": 6,
+            "spell": "SPELL_CORROSIVE_BOLT",
+            "spellbook": "ancient_lich",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "ancient_lich",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "fire": 1,
+            "cold": 2
+          },
+          "traits": {
+            "drainDamage": 20
+          },
+          "x": 5,
+          "y": 10
+        },
+        {
+          "id": "revenant-26",
+          "name": "revenant",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/revenant.png",
+          "maxHp": 36,
+          "hd": 6,
+          "exp": 200,
+          "speed": 10,
+          "ac": 4,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "claw",
+              "flavor": null,
+              "damage": 14
+            }
+          ],
+          "power": 14,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": null,
+          "x": 6,
+          "y": 11
+        }
+      ]
+    },
+    {
+      "id": "Dis:1",
+      "name": "Iron City of Dispater",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_dis1.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/iron0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/iron2.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/iron4.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/iron5.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/metal_infernal0.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/metal_infernal2.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron0-0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron2-0.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron1-1.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron2-2.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron3-2.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron4-2.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron1-2.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron2-3.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron3-3.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron1-3.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron3-1.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron4-3.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron5-2.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_n.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_n.png"
+      },
+      "map": {
+        "name": "grunt_hell_entry_dis_old",
+        "width": 19,
+        "height": 15,
+        "rows": [
+          "xxxxxxxxxxxxxxxxxxx",
+          "xxxxx.........xxxxx",
+          "xx..xxxxxxxxxxx..xx",
+          "xx..+..xxxxx..+..xx",
+          "xxx+xxxx...xxxx+xxx",
+          "x.x....+...+....x.x",
+          "x.x+xxxx...xxxx.x.x",
+          "x.x....xx+xx..x.x.x",
+          "x.x..x.xx.xx.xx.x.x",
+          "x.x....xx.xx....x.x",
+          "xxx+x..xx.xxxxx+xxx",
+          "xx..xxxxx.xxxxx..xx",
+          "xx..xxxxx+xxxxx..xx",
+          "xxxxx.........xxxxx",
+          "xxxxxxxxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/hell.des"
+      },
+      "start": {
+        "x": 6,
+        "y": 8,
+        "dir": 1
+      },
+      "doors": [
+        "4,3",
+        "14,3",
+        "3,4",
+        "15,4",
+        "7,5",
+        "11,5",
+        "3,6",
+        "9,7",
+        "3,10",
+        "15,10",
+        "9,12"
+      ],
+      "stairs": {
+        "up": {
+          "x": 6,
+          "y": 8
+        },
+        "down": {
+          "x": 6,
+          "y": 7
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-dis",
+          "name": "iron rune of Zot Soup",
+          "shortName": "iron",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_dis.png",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "id": "resist-dis",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 5,
+          "turns": 22,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 3,
+          "y": 7
+        },
+        {
+          "id": "war-axe-dis",
+          "name": "adamant war axe",
+          "shortName": "axe",
+          "kind": "weapon",
+          "power": 9,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/war_axe3.png",
+          "x": 6,
+          "y": 13
+        },
+        {
+          "id": "plate-dis",
+          "name": "adamant plate",
+          "shortName": "plate",
+          "kind": "armour",
+          "power": 6,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/plate3.png",
+          "x": 3,
+          "y": 12
+        },
+        {
+          "id": "mindburst-dis",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 22,
+          "charges": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 13,
+          "y": 9
+        },
+        {
+          "id": "gold-dis",
+          "name": "399 gold pieces",
+          "shortName": "399g",
+          "kind": "gold",
+          "value": 399,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 15,
+          "y": 7
+        },
+        {
+          "id": "ring-protection-dis",
+          "name": "ring of protection",
+          "shortName": "protect",
+          "kind": "ring",
+          "power": 5,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-protection.png",
+          "x": 7,
+          "y": 13
+        },
+        {
+          "id": "ring-corrosion-dis",
+          "name": "ring of resist corrosion",
+          "shortName": "rCorr",
+          "kind": "ring",
+          "power": 3,
+          "bonus": "resistance",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-r-corrosion.png",
+          "element": "acid",
+          "x": 12,
+          "y": 9
+        },
+        {
+          "id": "ring-strength-dis",
+          "name": "ring of strength",
+          "shortName": "str",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-str.png",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "id": "amulet-vitality-dis",
+          "name": "amulet of Vitality",
+          "shortName": "vital",
+          "kind": "amulet",
+          "power": 4,
+          "bonus": "regen",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_vitality.png",
+          "x": 15,
+          "y": 9
+        },
+        {
+          "id": "amulet-cekugob-dis",
+          "name": "amulet of Cekugob",
+          "shortName": "cekugob",
+          "kind": "amulet",
+          "power": 4,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_cekugob.png",
+          "x": 13,
+          "y": 3
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-dis",
+          "name": "adamant rune",
+          "shortName": "adamant",
+          "kind": "damage",
+          "power": 18,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 5,
+          "y": 3
+        }
+      ],
+      "decor": [
+        {
+          "id": "forge-dis",
+          "name": "iron forge",
+          "shortName": "forge",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/fiery_conduit_0.png",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "id": "chain-dis",
+          "name": "iron chains",
+          "shortName": "chains",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_icon_makhleb.png",
+          "x": 12,
+          "y": 7
+        },
+        {
+          "id": "statue-dis",
+          "name": "iron sentry",
+          "shortName": "statue",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/statue_angel.png",
+          "x": 14,
+          "y": 9
+        }
+      ],
+      "encounters": [
+        {
+          "id": "hell_sentinel-27",
+          "name": "Hell Sentinel",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/hell_sentinel.png",
+          "maxHp": 143,
+          "hd": 19,
+          "exp": 1822,
+          "speed": 10,
+          "ac": 25,
+          "ev": 3,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 40
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 40,
+          "ranged": {
+            "name": "hurl damnation",
+            "range": 6,
+            "power": 16,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_HURL_DAMNATION",
+            "spellbook": "hell_sentinel",
+            "frequency": 28,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 3,
+            "poison": 3,
+            "fire": 3,
+            "cold": 3,
+            "damnation": 1
+          },
+          "traits": null,
+          "x": 6,
+          "y": 9
+        },
+        {
+          "id": "hell_knight-27",
+          "name": "hell knight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/hell_knight.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 781,
+          "speed": 10,
+          "ac": 0,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 26
+            }
+          ],
+          "power": 26,
+          "ranged": {
+            "name": "bolt of fire",
+            "range": 5,
+            "power": 10,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_BOLT_OF_FIRE",
+            "spellbook": "hell_knight",
+            "frequency": 17,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "hell_knight",
+            "frequency": 10,
+            "flags": "MON_SPELL_PRIEST | MON_SPELL_EMERGENCY"
+          },
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "hell_knight",
+            "frequency": 26,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "summon": null,
+          "resists": {
+            "fire": 3
+          },
+          "traits": null,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "id": "executioner-27",
+          "name": "Executioner",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/executioner.png",
+          "maxHp": 66,
+          "hd": 12,
+          "exp": 1531,
+          "speed": 20,
+          "ac": 10,
+          "ev": 15,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 30,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "executioner",
+            "frequency": 41,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1,
+            "fire": 1,
+            "cold": 1
+          },
+          "traits": null,
+          "x": 8,
+          "y": 4
+        },
+        {
+          "id": "iron_imp-27",
+          "name": "iron imp",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/iron_imp.png",
+          "maxHp": 17,
+          "hd": 3,
+          "exp": 40,
+          "speed": 8,
+          "ac": 6,
+          "ev": 8,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1,
+            "fire": 3,
+            "cold": 1
+          },
+          "traits": null,
+          "x": 2,
+          "y": 11
+        },
+        {
+          "id": "orange_demon-27",
+          "name": "orange demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/orange_demon.png",
+          "maxHp": 52,
+          "hd": 8,
+          "exp": 421,
+          "speed": 10,
+          "ac": 3,
+          "ev": 7,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "sting",
+              "flavor": "reach_sting",
+              "damage": 15
+            },
+            {
+              "type": "hit",
+              "flavor": "weakness",
+              "damage": 8
+            }
+          ],
+          "power": 15,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": {
+            "reachDamage": 15
+          },
+          "x": 10,
+          "y": 4
+        },
+        {
+          "id": "sin_beast-27",
+          "name": "sin beast",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/sin_beast.png",
+          "maxHp": 81,
+          "hd": 12,
+          "exp": 1287,
+          "speed": 15,
+          "ac": 5,
+          "ev": 14,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "bite",
+              "flavor": "antimagic",
+              "damage": 28
+            },
+            {
+              "type": "trample",
+              "flavor": "trample",
+              "damage": 20
+            }
+          ],
+          "power": 28,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 10,
+          "y": 13
+        },
+        {
+          "id": "hellion-27",
+          "name": "hellion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/hellion.png",
+          "maxHp": 39,
+          "hd": 7,
+          "exp": 384,
+          "speed": 12,
+          "ac": 5,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": {
+            "name": "call down damnation",
+            "range": 6,
+            "power": 14,
+            "element": "fire",
+            "effect": "flame",
+            "smiteTargeted": true,
+            "spell": "SPELL_CALL_DOWN_DAMNATION",
+            "spellbook": "hellion",
+            "frequency": 57,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "damnation": 1
+          },
+          "traits": null,
+          "x": 14,
+          "y": 5
+        }
+      ]
+    },
+    {
+      "id": "Abyss:1",
+      "name": "Splay of Lugonu",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/starry_portal.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal02.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal06.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal11.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal14.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal_blank.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/black_cobalt05.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_1.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_1a.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_2a.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_3a.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_4a.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_1b.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_2b.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_3b.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_2.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_0.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_3.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_4b.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_e.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood05_w.png"
+      },
+      "map": {
+        "name": "hangedman_abyss_entry_splay",
+        "width": 17,
+        "height": 13,
+        "rows": [
+          "xxxxxxxxxxxxxxxxx",
+          "xxxxxxxxx...xxxxx",
+          "xxxxxxxxxx..xxxxx",
+          "xxxxxxxxx.......x",
+          "xxxxxxxxx.......x",
+          "xxxxxxxxx...x.x.x",
+          "xxxxxxx...xxxxxxx",
+          "x.x.x...xxxxxxxxx",
+          "x.......xxxxxxxxx",
+          "x.......xxxxxxxxx",
+          "xxxxx..xxxxxxxxxx",
+          "xxxxx...xxxxxxxxx",
+          "xxxxxxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/abyss.des"
+      },
+      "start": {
+        "x": 8,
+        "y": 6,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 8,
+          "y": 6
+        },
+        "down": {
+          "x": 7,
+          "y": 6
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-aby",
+          "name": "abyssal rune of Zot Soup",
+          "shortName": "abyssal",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_abyss.png",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "id": "resist-aby",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 5,
+          "turns": 22,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 9,
+          "y": 3
+        },
+        {
+          "id": "mutation-aby",
+          "name": "potion of mutation",
+          "shortName": "mutate",
+          "kind": "might",
+          "power": 4,
+          "turns": 14,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-mutation.png",
+          "x": 10,
+          "y": 3
+        },
+        {
+          "id": "chaos-blade-aby",
+          "name": "chaos demon blade",
+          "shortName": "chaos",
+          "kind": "weapon",
+          "power": 9,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/demon_blade.png",
+          "x": 6,
+          "y": 10
+        },
+        {
+          "id": "plate-aby",
+          "name": "warped crystal plate",
+          "shortName": "plate",
+          "kind": "armour",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/crystal_plate3.png",
+          "x": 3,
+          "y": 7
+        },
+        {
+          "id": "polymorph-aby",
+          "name": "wand of polymorph",
+          "shortName": "poly",
+          "kind": "wand",
+          "power": 20,
+          "charges": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-polymorph.png",
+          "x": 4,
+          "y": 9
+        },
+        {
+          "id": "gold-aby",
+          "name": "444 gold pieces",
+          "shortName": "444g",
+          "kind": "gold",
+          "value": 444,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 3,
+          "y": 9
+        },
+        {
+          "id": "ring-willpower-aby",
+          "name": "ring of willpower",
+          "shortName": "will",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-willpower.png",
+          "x": 12,
+          "y": 4
+        },
+        {
+          "id": "ring-magic-aby",
+          "name": "ring of magical power",
+          "shortName": "magic",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-magical-power.png",
+          "x": 12,
+          "y": 3
+        },
+        {
+          "id": "ring-shadows-aby",
+          "name": "ring of Shadows",
+          "shortName": "shadow",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "evasion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/artefact/urand_shadows.png",
+          "x": 3,
+          "y": 8
+        },
+        {
+          "id": "amulet-finger-aby",
+          "name": "macabre finger necklace",
+          "shortName": "finger",
+          "kind": "amulet",
+          "power": 5,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_finger.png",
+          "x": 15,
+          "y": 5
+        },
+        {
+          "id": "amulet-dreamshard-aby",
+          "name": "dreamshard necklace",
+          "shortName": "dream",
+          "kind": "amulet",
+          "power": 4,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_dreamshard.png",
+          "x": 15,
+          "y": 4
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-aby",
+          "name": "chaos rune",
+          "shortName": "chaos",
+          "kind": "damage",
+          "power": 18,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "id": "warp-aby",
+          "name": "warp rune",
+          "shortName": "warp",
+          "kind": "teleport",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/dispersal.png",
+          "x": 7,
+          "y": 11
+        }
+      ],
+      "decor": [
+        {
+          "id": "sigil-aby",
+          "name": "abyssal sigil",
+          "shortName": "sigil",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_2.png",
+          "x": 10,
+          "y": 2
+        },
+        {
+          "id": "crystal-aby",
+          "name": "warp crystal",
+          "shortName": "crystal",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_3.png",
+          "x": 11,
+          "y": 2
+        },
+        {
+          "id": "altar-aby",
+          "name": "Lugonu's altar",
+          "shortName": "altar",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/orb_dais.png",
+          "x": 14,
+          "y": 4
+        }
+      ],
+      "encounters": [
+        {
+          "id": "tentacled_monstrosity-28",
+          "name": "tentacled monstrosity",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/aberrations/tentacled_monstrosity.png",
+          "maxHp": 127,
+          "hd": 23,
+          "exp": 1843,
+          "speed": 10,
+          "ac": 5,
+          "ev": 5,
+          "habitat": "amphibious",
+          "attacks": [
+            {
+              "type": "tentacle_slap",
+              "flavor": null,
+              "damage": 22
+            },
+            {
+              "type": "tentacle_slap",
+              "flavor": null,
+              "damage": 17
+            },
+            {
+              "type": "tentacle_slap",
+              "flavor": null,
+              "damage": 13
+            },
+            {
+              "type": "constrict",
+              "flavor": "crush",
+              "damage": 6
+            }
+          ],
+          "power": 22,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1,
+            "fire": 1,
+            "cold": 1
+          },
+          "traits": {
+            "snareTurns": 2
+          },
+          "x": 9,
+          "y": 6
+        },
+        {
+          "id": "tentacled_starspawn-28",
+          "name": "tentacled starspawn",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/abyss/tentacled_starspawn.png",
+          "maxHp": 88,
+          "hd": 16,
+          "exp": 1507,
+          "speed": 10,
+          "ac": 5,
+          "ev": 5,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "bite",
+              "flavor": null,
+              "damage": 40
+            },
+            {
+              "type": "engulf",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 40,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 6,
+          "y": 8
+        },
+        {
+          "id": "starcursed_mass-28",
+          "name": "starcursed mass",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/abyss/starcursed_mass.png",
+          "maxHp": 150,
+          "hd": 12,
+          "exp": 993,
+          "speed": 10,
+          "ac": 10,
+          "ev": 0,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "engulf",
+              "flavor": null,
+              "damage": 16
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 5,
+          "y": 8
+        },
+        {
+          "id": "wretched_star-28",
+          "name": "wretched star",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/abyss/wretched_star.png",
+          "maxHp": 70,
+          "hd": 10,
+          "exp": 770,
+          "speed": 10,
+          "ac": 10,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [],
+          "power": 3,
+          "ranged": {
+            "name": "force lance",
+            "range": 4,
+            "power": 7,
+            "effect": "impact",
+            "status": "knockback",
+            "spell": "SPELL_FORCE_LANCE",
+            "spellbook": "wretched_star",
+            "frequency": 60,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "fire": 1,
+            "cold": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 4,
+          "y": 8
+        },
+        {
+          "id": "thrashing_horror-28",
+          "name": "thrashing horror",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/abyss/thrashing_horror.png",
+          "maxHp": 50,
+          "hd": 9,
+          "exp": 795,
+          "speed": 25,
+          "ac": 5,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "trample",
+              "flavor": "trample",
+              "damage": 17
+            },
+            {
+              "type": "trample",
+              "flavor": "trample",
+              "damage": 9
+            }
+          ],
+          "power": 17,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "might",
+            "kind": "might",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_MIGHT",
+            "spellbook": "thrashing_horror",
+            "frequency": 59,
+            "flags": "MON_SPELL_NATURAL | MON_SPELL_EMERGENCY"
+          },
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "fire": 1,
+            "cold": 1
+          },
+          "traits": null,
+          "x": 10,
+          "y": 1
+        },
+        {
+          "id": "unseen_horror-28",
+          "name": "unseen horror",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/aberrations/unseen_horror.png",
+          "maxHp": 39,
+          "hd": 7,
+          "exp": 384,
+          "speed": 30,
+          "ac": 5,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 6,
+          "y": 11
+        },
+        {
+          "id": "chaos_spawn-28",
+          "name": "chaos spawn",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/chaos_spawn1.png",
+          "maxHp": 30,
+          "hd": 6,
+          "exp": 172,
+          "speed": 10,
+          "ac": 4,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "random",
+              "flavor": "chaotic",
+              "damage": 19
+            }
+          ],
+          "power": 19,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 13,
+          "y": 3
+        },
+        {
+          "id": "apocalypse_crab-28",
+          "name": "apocalypse crab",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/abyss/apocalypse_crab.png",
+          "maxHp": 48,
+          "hd": 8,
+          "exp": 454,
+          "speed": 10,
+          "ac": 11,
+          "ev": 5,
+          "habitat": "amphibious",
+          "attacks": [
+            {
+              "type": "bite",
+              "flavor": "chaotic",
+              "damage": 14
+            },
+            {
+              "type": "claw",
+              "flavor": "chaotic",
+              "damage": 14
+            }
+          ],
+          "power": 14,
+          "ranged": {
+            "name": "chaos breath",
+            "range": 5,
+            "power": 11,
+            "effect": "smite",
+            "status": "dazed",
+            "statusTurns": 4,
+            "spell": "SPELL_CHAOS_BREATH",
+            "spellbook": "apocalypse_crab",
+            "frequency": 62,
+            "flags": "MON_SPELL_NATURAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": -1,
+            "fire": 2,
+            "cold": 2
+          },
+          "traits": null,
+          "x": 2,
+          "y": 8
+        }
+      ]
+    },
+    {
+      "id": "Pan:1",
+      "name": "Sceptre of Mnoleg",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/starry_portal.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal04.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal08.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal12.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal15.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/metal_infernal1.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/metal_infernal3.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell04.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell07.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell10.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_1.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_depths_2.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_zot1.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell11.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_1.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_zot2.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_icon_makhleb.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_sword_corrupted.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_0.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_2.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_e.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_w.png"
+      },
+      "map": {
+        "name": "grunt_pan_entry_sceptre",
+        "width": 12,
+        "height": 12,
+        "rows": [
+          "xxxxxxxxxxxx",
+          "x..xxxxxx..x",
+          "x.xx....xx.x",
+          "x+x......x+x",
+          "x.x......x.x",
+          "x.x......x.x",
+          "x.x......x.x",
+          "x.xx....xx.x",
+          "x..xx++xx..x",
+          "xx........xx",
+          "xxxx....xxxx",
+          "xxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/pan.des"
+      },
+      "start": {
+        "x": 6,
+        "y": 2,
+        "dir": 1
+      },
+      "doors": [
+        "1,3",
+        "10,3",
+        "5,8",
+        "6,8"
+      ],
+      "stairs": {
+        "up": {
+          "x": 6,
+          "y": 2
+        },
+        "down": {
+          "x": 6,
+          "y": 3
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-pan",
+          "name": "demonic rune of Zot Soup",
+          "shortName": "demonic",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_mnoleg.png",
+          "x": 5,
+          "y": 2
+        },
+        {
+          "id": "haste-pan",
+          "name": "potion of haste",
+          "shortName": "haste",
+          "kind": "haste",
+          "power": 0,
+          "turns": 24,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-haste.png",
+          "x": 6,
+          "y": 5
+        },
+        {
+          "id": "resist-pan",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 6,
+          "turns": 24,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 3,
+          "y": 3
+        },
+        {
+          "id": "sceptre-pan",
+          "name": "Mnoleg's sceptre",
+          "shortName": "sceptre",
+          "kind": "weapon",
+          "power": 10,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/demon_blade2.png",
+          "x": 10,
+          "y": 1
+        },
+        {
+          "id": "crystal-plate-pan",
+          "name": "panlord plate",
+          "shortName": "crystal",
+          "kind": "armour",
+          "power": 6,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/crystal_plate3.png",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "id": "mindburst-pan",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 24,
+          "charges": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 1,
+          "y": 4
+        },
+        {
+          "id": "gold-pan",
+          "name": "555 gold pieces",
+          "shortName": "555g",
+          "kind": "gold",
+          "value": 555,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 5,
+          "y": 10
+        },
+        {
+          "id": "ring-protection-pan",
+          "name": "ring of protection",
+          "shortName": "protect",
+          "kind": "ring",
+          "power": 5,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-protection.png",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "id": "ring-slaying-pan",
+          "name": "ring of slaying",
+          "shortName": "slay",
+          "kind": "ring",
+          "power": 6,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-slaying.png",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "id": "ring-willpower-pan",
+          "name": "ring of willpower",
+          "shortName": "will",
+          "kind": "ring",
+          "power": 4,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-willpower.png",
+          "x": 1,
+          "y": 1
+        },
+        {
+          "id": "ring-tortoise-pan",
+          "name": "ring of the Tortoise",
+          "shortName": "tortoise",
+          "kind": "ring",
+          "power": 5,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/artefact/urand_tortoise.png",
+          "x": 6,
+          "y": 10
+        },
+        {
+          "id": "amulet-vitality-pan",
+          "name": "amulet of Vitality",
+          "shortName": "vital",
+          "kind": "amulet",
+          "power": 5,
+          "bonus": "regen",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_vitality.png",
+          "x": 7,
+          "y": 10
+        },
+        {
+          "id": "amulet-cekugob-pan",
+          "name": "amulet of Cekugob",
+          "shortName": "cekugob",
+          "kind": "amulet",
+          "power": 5,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_cekugob.png",
+          "x": 1,
+          "y": 6
+        },
+        {
+          "id": "amulet-finger-pan",
+          "name": "macabre finger necklace",
+          "shortName": "finger",
+          "kind": "amulet",
+          "power": 5,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_finger.png",
+          "x": 3,
+          "y": 9
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-pan",
+          "name": "panlord rune",
+          "shortName": "panlord",
+          "kind": "damage",
+          "power": 20,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 4,
+          "y": 4
+        },
+        {
+          "id": "dispersal-pan",
+          "name": "chaos rune",
+          "shortName": "chaos",
+          "kind": "teleport",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/dispersal.png",
+          "x": 4,
+          "y": 6
+        }
+      ],
+      "decor": [
+        {
+          "id": "sceptre-decor-pan",
+          "name": "shattered sceptre",
+          "shortName": "sceptre",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/fiery_conduit_0.png",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "id": "sigil-pan",
+          "name": "panlord sigil",
+          "shortName": "sigil",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_0.png",
+          "x": 10,
+          "y": 4
+        },
+        {
+          "id": "throne-pan",
+          "name": "obsidian throne",
+          "shortName": "throne",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/statue_depths_zot_angel.png",
+          "x": 10,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "id": "cacodemon-29",
+          "name": "cacodemon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/cacodemon.png",
+          "maxHp": 98,
+          "hd": 13,
+          "exp": 1139,
+          "speed": 10,
+          "ac": 11,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "vuln",
+              "damage": 22
+            },
+            {
+              "type": "hit",
+              "flavor": "vuln",
+              "damage": 22
+            }
+          ],
+          "power": 22,
+          "ranged": {
+            "name": "doom bolt",
+            "range": 5,
+            "power": 13,
+            "effect": "smite",
+            "spell": "SPELL_DOOM_BOLT",
+            "spellbook": "cacodemon",
+            "frequency": 22,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 7,
+          "y": 2
+        },
+        {
+          "id": "executioner-29",
+          "name": "Executioner",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/executioner.png",
+          "maxHp": 66,
+          "hd": 12,
+          "exp": 1531,
+          "speed": 20,
+          "ac": 10,
+          "ev": 15,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 30,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "executioner",
+            "frequency": 41,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1,
+            "fire": 1,
+            "cold": 1
+          },
+          "traits": null,
+          "x": 7,
+          "y": 5
+        },
+        {
+          "id": "green_death-29",
+          "name": "green death",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/green_death.png",
+          "maxHp": 72,
+          "hd": 13,
+          "exp": 928,
+          "speed": 10,
+          "ac": 5,
+          "ev": 7,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 32
+            }
+          ],
+          "power": 32,
+          "ranged": {
+            "name": "poison arrow",
+            "range": 5,
+            "power": 9,
+            "element": "poison",
+            "effect": "poison",
+            "poisonTurns": 5,
+            "spell": "SPELL_POISON_ARROW",
+            "spellbook": "green_death",
+            "frequency": 21,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1
+          },
+          "traits": null,
+          "x": 9,
+          "y": 1
+        },
+        {
+          "id": "hellion-29",
+          "name": "hellion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/hellion.png",
+          "maxHp": 39,
+          "hd": 7,
+          "exp": 384,
+          "speed": 12,
+          "ac": 5,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": {
+            "name": "call down damnation",
+            "range": 6,
+            "power": 14,
+            "element": "fire",
+            "effect": "flame",
+            "smiteTargeted": true,
+            "spell": "SPELL_CALL_DOWN_DAMNATION",
+            "spellbook": "hellion",
+            "frequency": 57,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "damnation": 1
+          },
+          "traits": null,
+          "x": 3,
+          "y": 4
+        },
+        {
+          "id": "balrug-29",
+          "name": "balrug",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/balrug.png",
+          "maxHp": 77,
+          "hd": 14,
+          "exp": 1202,
+          "speed": 12,
+          "ac": 5,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "fire",
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": {
+            "name": "pyre arrow",
+            "range": 5,
+            "power": 9,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_PYRE_ARROW",
+            "spellbook": "balrug",
+            "frequency": 16,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": 3,
+            "cold": -1
+          },
+          "traits": {
+            "airborne": true,
+            "fireDamage": 25
+          },
+          "x": 5,
+          "y": 7
+        },
+        {
+          "id": "shadow_demon-29",
+          "name": "shadow demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/shadow_demon.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 713,
+          "speed": 10,
+          "ac": 7,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 21
+            }
+          ],
+          "power": 21,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "shadow creatures",
+            "kind": "undead",
+            "group": "shadow creatures",
+            "allies": [
+              "shadow-wraith",
+              "shadow-demon",
+              "phantom"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 16,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SHADOW_CREATURES",
+            "spellbook": "shadow_demon",
+            "frequency": 30,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "resists": {
+            "poison": 1,
+            "cold": 2
+          },
+          "traits": null,
+          "x": 6,
+          "y": 9
+        },
+        {
+          "id": "orange_demon-29",
+          "name": "orange demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/orange_demon.png",
+          "maxHp": 52,
+          "hd": 8,
+          "exp": 421,
+          "speed": 10,
+          "ac": 3,
+          "ev": 7,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "sting",
+              "flavor": "reach_sting",
+              "damage": 15
+            },
+            {
+              "type": "hit",
+              "flavor": "weakness",
+              "damage": 8
+            }
+          ],
+          "power": 15,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": {
+            "reachDamage": 15
+          },
+          "x": 7,
+          "y": 9
+        },
+        {
+          "id": "sphinx_marauder-29",
+          "name": "sphinx marauder",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/sphinx_marauder.png",
+          "maxHp": 84,
+          "hd": 13,
+          "exp": 1615,
+          "speed": 12,
+          "ac": 4,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "pounce",
+              "flavor": "airstrike",
+              "damage": 13
+            }
+          ],
+          "power": 13,
+          "ranged": {
+            "name": "vex",
+            "range": 3,
+            "power": 0,
+            "effect": "fear",
+            "status": "dazed",
+            "statusTurns": 4,
+            "spell": "SPELL_VEX",
+            "spellbook": "sphinx_marauder",
+            "frequency": 22,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": {
+            "airborne": true
+          },
+          "x": 8,
+          "y": 9
+        },
+        {
+          "id": "juggernaut-29",
+          "name": "juggernaut",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/juggernaut.png",
+          "maxHp": 170,
+          "hd": 20,
+          "exp": 3979,
+          "speed": 15,
+          "ac": 20,
+          "ev": 5,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 80
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 40
+            }
+          ],
+          "power": 80,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 10,
+          "y": 7
+        }
+      ]
+    },
+    {
+      "id": "Tomb:1",
+      "name": "Sepulcher of the Royal Mummy",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_tomb.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_tomb.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt4.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt7.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt10.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_3a.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_8a.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb1.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb3.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs6.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs10.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs7.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs11.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs13.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_yak_skull.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_sword_gold.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crypt-metal0.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crypt-metal2.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood01.png"
+      },
+      "map": {
+        "name": "tomb_entry_simple_bobbens",
+        "width": 9,
+        "height": 9,
+        "rows": [
+          "xxxxxxxxx",
+          "x.......x",
+          "x.xxxxx.x",
+          "x.x...x.x",
+          "x.x...x.x",
+          "x.x...x.x",
+          "x.x++xx.x",
+          "x.......x",
+          "xxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/branches/tomb.des"
+      },
+      "start": {
+        "x": 4,
+        "y": 4,
+        "dir": 1
+      },
+      "doors": [
+        "3,6",
+        "4,6"
+      ],
+      "stairs": {
+        "up": {
+          "x": 4,
+          "y": 4
+        },
+        "down": {
+          "x": 4,
+          "y": 3
+        }
+      },
+      "floorItems": [
+        {
+          "id": "rune-tomb",
+          "name": "golden rune of Zot Soup",
+          "shortName": "golden",
+          "kind": "quest",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_tomb.png",
+          "x": 4,
+          "y": 5
+        },
+        {
+          "id": "resist-tomb",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 6,
+          "turns": 24,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 3,
+          "y": 3
+        },
+        {
+          "id": "curing-tomb",
+          "name": "potion of heal wounds",
+          "shortName": "heal",
+          "kind": "healing",
+          "power": 40,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-heal-wounds.png",
+          "x": 1,
+          "y": 4
+        },
+        {
+          "id": "sceptre-tomb",
+          "name": "royal scepter",
+          "shortName": "scepter",
+          "kind": "weapon",
+          "power": 10,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/morningstar3.png",
+          "x": 7,
+          "y": 5
+        },
+        {
+          "id": "plate-tomb",
+          "name": "golden plate",
+          "shortName": "plate",
+          "kind": "armour",
+          "power": 6,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/plate3.png",
+          "x": 5,
+          "y": 1
+        },
+        {
+          "id": "mindburst-tomb",
+          "name": "wand of mindburst",
+          "shortName": "mindburst",
+          "kind": "wand",
+          "power": 24,
+          "charges": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 1,
+          "y": 6
+        },
+        {
+          "id": "gold-tomb",
+          "name": "777 gold pieces",
+          "shortName": "777g",
+          "kind": "gold",
+          "value": 777,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 6,
+          "y": 1
+        },
+        {
+          "id": "ring-positive-tomb",
+          "name": "ring of positive energy",
+          "shortName": "rN",
+          "kind": "ring",
+          "power": 5,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-positive-energy.png",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "id": "ring-willpower-tomb",
+          "name": "ring of willpower",
+          "shortName": "will",
+          "kind": "ring",
+          "power": 5,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-willpower.png",
+          "x": 7,
+          "y": 3
+        },
+        {
+          "id": "ring-magic-tomb",
+          "name": "ring of magical power",
+          "shortName": "magic",
+          "kind": "ring",
+          "power": 5,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/i-magical-power.png",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "id": "ring-tortoise-tomb",
+          "name": "ring of the Tortoise",
+          "shortName": "tortoise",
+          "kind": "ring",
+          "power": 6,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/ring/artefact/urand_tortoise.png",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "id": "amulet-vitality-tomb",
+          "name": "amulet of Vitality",
+          "shortName": "vital",
+          "kind": "amulet",
+          "power": 5,
+          "bonus": "regen",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_vitality.png",
+          "x": 1,
+          "y": 7
+        },
+        {
+          "id": "amulet-finger-tomb",
+          "name": "macabre finger necklace",
+          "shortName": "finger",
+          "kind": "amulet",
+          "power": 6,
+          "bonus": "power",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_finger.png",
+          "x": 7,
+          "y": 1
+        },
+        {
+          "id": "amulet-cekugob-tomb",
+          "name": "amulet of Cekugob",
+          "shortName": "cekugob",
+          "kind": "amulet",
+          "power": 6,
+          "bonus": "defense",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/amulet/artefact/urand_cekugob.png",
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-tomb",
+          "name": "royal curse",
+          "shortName": "curse",
+          "kind": "damage",
+          "power": 20,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 7,
+          "y": 4
+        },
+        {
+          "id": "dispersal-tomb",
+          "name": "warding glyph",
+          "shortName": "glyph",
+          "kind": "teleport",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/dispersal.png",
+          "x": 1,
+          "y": 3
+        }
+      ],
+      "decor": [
+        {
+          "id": "sarcophagus-tomb",
+          "name": "royal sarcophagus",
+          "shortName": "sarcophagus",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/sarcophagus_pedestal_right.png",
+          "x": 4,
+          "y": 1
+        },
+        {
+          "id": "obelisk-tomb",
+          "name": "granite obelisk",
+          "shortName": "obelisk",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/depths_crumbled_column.png",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "id": "hieroglyph-tomb",
+          "name": "royal hieroglyphs",
+          "shortName": "glyphs",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/gravestone_writing2.png",
+          "x": 7,
+          "y": 7
+        }
+      ],
+      "encounters": [
+        {
+          "id": "royal_mummy-30",
+          "name": "royal mummy",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/royal_mummy.png",
+          "maxHp": 195,
+          "hd": 15,
+          "exp": 3477,
+          "speed": 10,
+          "ac": 10,
+          "ev": 6,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 35
+            }
+          ],
+          "power": 35,
+          "ranged": {
+            "name": "smite",
+            "range": 4,
+            "power": 6,
+            "effect": "smite",
+            "smiteTargeted": true,
+            "spell": "SPELL_SMITING",
+            "spellbook": "royal_mummy",
+            "frequency": 13,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "summon scarabs",
+            "kind": "undead",
+            "group": "scarabs",
+            "allies": [
+              "death-scarab"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 18,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_SUMMON_SCARABS",
+            "spellbook": "royal_mummy",
+            "frequency": 26,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": {
+            "elec": 1,
+            "cold": 1
+          },
+          "traits": null,
+          "x": 5,
+          "y": 4
+        },
+        {
+          "id": "mummy_priest-30",
+          "name": "mummy priest",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/mummy_priest.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 920,
+          "speed": 8,
+          "ac": 8,
+          "ev": 7,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": {
+            "name": "smite",
+            "range": 4,
+            "power": 6,
+            "effect": "smite",
+            "smiteTargeted": true,
+            "spell": "SPELL_SMITING",
+            "spellbook": "mummy_priest",
+            "frequency": 12,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "summon undead",
+            "kind": "undead",
+            "group": "undead",
+            "allies": [
+              "zombie",
+              "wight",
+              "wraith",
+              "ghoul",
+              "simulacrum",
+              "skeletal-warrior"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 18,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SUMMON_UNDEAD",
+            "spellbook": "mummy_priest",
+            "frequency": 24,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "resists": {
+            "elec": 1,
+            "cold": 1
+          },
+          "traits": null,
+          "x": 4,
+          "y": 7
+        },
+        {
+          "id": "guardian_mummy-30",
+          "name": "guardian mummy",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/guardian_mummy.png",
+          "maxHp": 46,
+          "hd": 7,
+          "exp": 328,
+          "speed": 8,
+          "ac": 6,
+          "ev": 9,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": null,
+          "x": 5,
+          "y": 7
+        },
+        {
+          "id": "curse_skull-30",
+          "name": "curse skull",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/curse_skull.png",
+          "maxHp": 52,
+          "hd": 13,
+          "exp": 1166,
+          "speed": 15,
+          "ac": 35,
+          "ev": 3,
+          "habitat": "land",
+          "attacks": [],
+          "power": 3,
+          "ranged": {
+            "name": "symbol of torment",
+            "range": 6,
+            "power": 0,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 3,
+            "spell": "SPELL_SYMBOL_OF_TORMENT",
+            "spellbook": "curse_skull",
+            "frequency": 16,
+            "flags": "MON_SPELL_MAGICAL | MON_SPELL_NOISY"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "summon undead",
+            "kind": "undead",
+            "group": "undead",
+            "allies": [
+              "zombie",
+              "wight",
+              "wraith",
+              "ghoul",
+              "simulacrum",
+              "skeletal-warrior"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 18,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SUMMON_UNDEAD",
+            "spellbook": "curse_skull",
+            "frequency": 48,
+            "flags": "MON_SPELL_MAGICAL | MON_SPELL_NOISY"
+          },
+          "resists": {
+            "elec": 1,
+            "fire": 2,
+            "cold": 2
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 1,
+          "y": 5
+        },
+        {
+          "id": "curse_toe-30",
+          "name": "curse toe",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/curse_toe.png",
+          "maxHp": 98,
+          "hd": 14,
+          "exp": 2722,
+          "speed": 10,
+          "ac": 25,
+          "ev": 1,
+          "habitat": "land",
+          "attacks": [],
+          "power": 3,
+          "ranged": {
+            "name": "symbol of torment",
+            "range": 6,
+            "power": 0,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 3,
+            "spell": "SPELL_SYMBOL_OF_TORMENT",
+            "spellbook": "curse_toe",
+            "frequency": 26,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "summon mushrooms",
+            "kind": "demon",
+            "group": "mushrooms",
+            "allies": [
+              "fungus",
+              "plant"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 14,
+            "effect": "halo",
+            "cooldown": 8,
+            "spell": "SPELL_SUMMON_MUSHROOMS",
+            "spellbook": "curse_toe",
+            "frequency": 39,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "resists": {
+            "elec": 1,
+            "fire": 3,
+            "cold": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 3,
+          "y": 1
+        },
+        {
+          "id": "death_cob-30",
+          "name": "death cob",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/death_cob.png",
+          "maxHp": 91,
+          "hd": 14,
+          "exp": 1513,
+          "speed": 25,
+          "ac": 10,
+          "ev": 15,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 35
+            }
+          ],
+          "power": 35,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": null,
+          "x": 7,
+          "y": 6
+        },
+        {
+          "id": "sphinx-30",
+          "name": "sphinx",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/guardian_sphinx.png",
+          "maxHp": 3,
+          "hd": 0,
+          "exp": 1,
+          "speed": 0,
+          "ac": 0,
+          "ev": 0,
+          "habitat": "land",
+          "attacks": [],
+          "power": 3,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 7,
+          "y": 2
+        },
+        {
+          "id": "mummy-30",
+          "name": "mummy",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/mummy.png",
+          "maxHp": 20,
+          "hd": 3,
+          "exp": 18,
+          "speed": 6,
+          "ac": 3,
+          "ev": 6,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": -1,
+            "cold": 1
+          },
+          "traits": null,
+          "x": 2,
+          "y": 1
+        }
+      ]
+    },
+    {
+      "id": "Ossuary:1",
+      "name": "Forgotten Ossuary",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_crypt.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_crypt.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt1.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt5.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt8.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt11.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_6a.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_7a.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs2.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs5.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs8.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs12.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs14.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs15.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs9.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs11.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs13.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_yak_skull.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_sword_gold.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_gray2.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_gray2.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood01.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood02.png"
+      },
+      "map": {
+        "name": "enter_ossuary_4",
+        "width": 9,
+        "height": 8,
+        "rows": [
+          "xxxxxxxxx",
+          "xxxxxxxxx",
+          "xx.....xx",
+          "xx.....xx",
+          "xx.x.x.xx",
+          "xx.x.x.xx",
+          "xxxx.xxxx",
+          "xxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/portals/ossuary.des"
+      },
+      "start": {
+        "x": 4,
+        "y": 2,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 4,
+          "y": 2
+        },
+        "down": {
+          "x": 4,
+          "y": 3
+        }
+      },
+      "floorItems": [
+        {
+          "id": "curing-oss",
+          "name": "potion of curing",
+          "shortName": "curing",
+          "kind": "healing",
+          "power": 14,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-curing.png",
+          "x": 6,
+          "y": 2
+        },
+        {
+          "id": "mace-oss",
+          "name": "ancient mace",
+          "shortName": "mace",
+          "kind": "weapon",
+          "power": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/mace1.png",
+          "x": 5,
+          "y": 3
+        },
+        {
+          "id": "scroll-oss",
+          "name": "scroll of magic mapping",
+          "shortName": "map",
+          "kind": "mapping",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/scroll/i-magic_mapping.png",
+          "x": 6,
+          "y": 3
+        },
+        {
+          "id": "gold-oss",
+          "name": "66 gold pieces",
+          "shortName": "66g",
+          "kind": "gold",
+          "value": 66,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/16.png",
+          "x": 4,
+          "y": 6
+        }
+      ],
+      "traps": [
+        {
+          "id": "alarm-oss",
+          "name": "warding rune",
+          "shortName": "ward",
+          "kind": "alarm",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/alarm.png",
+          "x": 2,
+          "y": 2
+        }
+      ],
+      "decor": [
+        {
+          "id": "sarcophagus-oss",
+          "name": "forgotten sarcophagus",
+          "shortName": "sarcophagus",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/sarcophagus_sealed.png",
+          "x": 4,
+          "y": 4
+        },
+        {
+          "id": "grave-oss",
+          "name": "chipped headstone",
+          "shortName": "grave",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/gravestone_blank.png",
+          "x": 6,
+          "y": 5
+        },
+        {
+          "id": "skull-oss",
+          "name": "skull pile",
+          "shortName": "skulls",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/skull_pike_2.png",
+          "x": 2,
+          "y": 5
+        }
+      ],
+      "encounters": [
+        {
+          "id": "zombie-31",
+          "name": "zombie",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/zombies/zombie_small.png",
+          "maxHp": 8,
+          "hd": 1,
+          "exp": 9,
+          "speed": 5,
+          "ac": 0,
+          "ev": 4,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": null,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "id": "wight-31",
+          "name": "wight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/wight.png",
+          "maxHp": 17,
+          "hd": 3,
+          "exp": 73,
+          "speed": 10,
+          "ac": 4,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain",
+              "damage": 8
+            }
+          ],
+          "power": 8,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": {
+            "drainDamage": 8
+          },
+          "x": 3,
+          "y": 3
+        },
+        {
+          "id": "phantom-31",
+          "name": "phantom",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/phantom.png",
+          "maxHp": 27,
+          "hd": 6,
+          "exp": 105,
+          "speed": 10,
+          "ac": 3,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "blink_with",
+              "damage": 8
+            }
+          ],
+          "power": 8,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": {
+            "airborne": true,
+            "blinkDamage": 8,
+            "blinkWith": true
+          },
+          "x": 4,
+          "y": 5
+        },
+        {
+          "id": "skeletal_warrior-31",
+          "name": "skeletal warrior",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/skeletal_warrior.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 759,
+          "speed": 10,
+          "ac": 15,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": null,
+          "x": 6,
+          "y": 4
+        },
+        {
+          "id": "necrophage-31",
+          "name": "necrophage",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/necrophage.png",
+          "maxHp": 22,
+          "hd": 5,
+          "exp": 76,
+          "speed": 10,
+          "ac": 2,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain",
+              "damage": 6
+            }
+          ],
+          "power": 6,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": {
+            "drainDamage": 6
+          },
+          "x": 2,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "id": "IceCave:1",
+      "name": "Frozen Pillars",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_cocytus2.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen3.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen6.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen9.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen11.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice1.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice3.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall3.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block1.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block2.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block3.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block4.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall0.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall2.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall4.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block0.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice_overlay_NE.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice_overlay_NW.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice_overlay_SE.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_w.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_e.png"
+      },
+      "map": {
+        "name": "portal_ice_cave_entry_pillars_1",
+        "width": 7,
+        "height": 7,
+        "rows": [
+          "xxxxxxx",
+          "xx.x.xx",
+          "x.....x",
+          "xx...xx",
+          "x.....x",
+          "xx.x.xx",
+          "xxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/portals/icecave.des"
+      },
+      "start": {
+        "x": 3,
+        "y": 3,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 3,
+          "y": 3
+        },
+        "down": {
+          "x": 3,
+          "y": 2
+        }
+      },
+      "floorItems": [
+        {
+          "id": "curing-ice",
+          "name": "potion of heal wounds",
+          "shortName": "heal",
+          "kind": "healing",
+          "power": 20,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-heal-wounds.png",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "id": "trident-ice",
+          "name": "frost trident",
+          "shortName": "trident",
+          "kind": "weapon",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/trident1.png",
+          "x": 4,
+          "y": 2
+        },
+        {
+          "id": "iceblast-ice",
+          "name": "wand of iceblast",
+          "shortName": "ice",
+          "kind": "wand",
+          "power": 14,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-iceblast.png",
+          "x": 4,
+          "y": 1
+        },
+        {
+          "id": "gold-ice",
+          "name": "99 gold pieces",
+          "shortName": "99g",
+          "kind": "gold",
+          "value": 99,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/16.png",
+          "x": 5,
+          "y": 4
+        }
+      ],
+      "traps": [
+        {
+          "id": "frost-ice",
+          "name": "frost rune",
+          "shortName": "frost",
+          "kind": "damage",
+          "power": 8,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 2,
+          "y": 4
+        }
+      ],
+      "decor": [
+        {
+          "id": "pillar-ice",
+          "name": "ice pillar",
+          "shortName": "pillar",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block4.png",
+          "x": 2,
+          "y": 2
+        },
+        {
+          "id": "crystal-ice",
+          "name": "frost crystal",
+          "shortName": "crystal",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall4.png",
+          "x": 2,
+          "y": 5
+        },
+        {
+          "id": "statue-ice",
+          "name": "frozen sentinel",
+          "shortName": "statue",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/statue_angel.png",
+          "x": 1,
+          "y": 4
+        }
+      ],
+      "encounters": [
+        {
+          "id": "ice_devil-32",
+          "name": "ice devil",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/ice_devil.png",
+          "maxHp": 44,
+          "hd": 8,
+          "exp": 341,
+          "speed": 10,
+          "ac": 12,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "cold",
+              "damage": 16
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": {
+            "coldDamage": 16
+          },
+          "x": 4,
+          "y": 3
+        },
+        {
+          "id": "white_imp-32",
+          "name": "white imp",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/white_imp.png",
+          "maxHp": 11,
+          "hd": 2,
+          "exp": 10,
+          "speed": 10,
+          "ac": 4,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "cold",
+              "damage": 4
+            }
+          ],
+          "power": 4,
+          "ranged": {
+            "name": "throw frost",
+            "range": 4,
+            "power": 6,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_THROW_FROST",
+            "spellbook": "white_imp",
+            "frequency": 52,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": -1,
+            "cold": 2
+          },
+          "traits": {
+            "airborne": true,
+            "coldDamage": 4
+          },
+          "x": 4,
+          "y": 4
+        },
+        {
+          "id": "simulacrum-32",
+          "name": "simulacrum",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/simulacra/simulacrum_small.png",
+          "maxHp": 11,
+          "hd": 2,
+          "exp": 9,
+          "speed": 7,
+          "ac": 10,
+          "ev": 4,
+          "habitat": "amphibious",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 6
+            }
+          ],
+          "power": 6,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": null,
+          "x": 5,
+          "y": 2
+        },
+        {
+          "id": "freezing_wraith-32",
+          "name": "freezing wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/freezing_wraith.png",
+          "maxHp": 44,
+          "hd": 8,
+          "exp": 354,
+          "speed": 10,
+          "ac": 12,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "cold",
+              "damage": 16
+            },
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 15
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": {
+            "airborne": true,
+            "coldDamage": 16
+          },
+          "x": 1,
+          "y": 2
+        },
+        {
+          "id": "ice_fiend-32",
+          "name": "Ice Fiend",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/ice_fiend.png",
+          "maxHp": 99,
+          "hd": 18,
+          "exp": 1816,
+          "speed": 10,
+          "ac": 15,
+          "ev": 6,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "claw",
+              "flavor": "cold",
+              "damage": 25
+            },
+            {
+              "type": "claw",
+              "flavor": "cold",
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": {
+            "name": "bolt of cold",
+            "range": 5,
+            "power": 10,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_BOLT_OF_COLD",
+            "spellbook": "ice_fiend",
+            "frequency": 46,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": {
+            "airborne": true,
+            "coldDamage": 25
+          },
+          "x": 4,
+          "y": 5
+        }
+      ]
+    },
+    {
+      "id": "Bailey:1",
+      "name": "Fortified Bailey",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_arch_hell.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor1.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor2.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/marble_floor4.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/white_marble3.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic1.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic4.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown3.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown1.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown4.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown6.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown7.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown2.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown5.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown6.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_banner_beogh.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_sword_gold.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown-vines0.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown-vines2.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_e.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood05_w.png"
+      },
+      "map": {
+        "name": "enter_bailey_6",
+        "width": 11,
+        "height": 9,
+        "rows": [
+          "xxxxxxxxxxx",
+          "x.........x",
+          "x.........x",
+          "x.........x",
+          "x.........x",
+          "x.........x",
+          "x.........x",
+          "x.........x",
+          "xxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/portals/bailey.des"
+      },
+      "start": {
+        "x": 5,
+        "y": 4,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 5,
+          "y": 4
+        },
+        "down": {
+          "x": 5,
+          "y": 3
+        }
+      },
+      "floorItems": [
+        {
+          "id": "haste-bailey",
+          "name": "potion of haste",
+          "shortName": "haste",
+          "kind": "haste",
+          "power": 0,
+          "turns": 14,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-haste.png",
+          "x": 7,
+          "y": 4
+        },
+        {
+          "id": "axe-bailey",
+          "name": "runed war axe",
+          "shortName": "axe",
+          "kind": "weapon",
+          "power": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/war_axe1.png",
+          "x": 5,
+          "y": 1
+        },
+        {
+          "id": "chain-bailey",
+          "name": "banded chain mail",
+          "shortName": "chain",
+          "kind": "armour",
+          "power": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/chain_mail3.png",
+          "x": 2,
+          "y": 4
+        },
+        {
+          "id": "polymorph-bailey",
+          "name": "wand of polymorph",
+          "shortName": "poly",
+          "kind": "wand",
+          "power": 12,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-polymorph.png",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "id": "gold-bailey",
+          "name": "123 gold pieces",
+          "shortName": "123g",
+          "kind": "gold",
+          "value": 123,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 1,
+          "y": 3
+        }
+      ],
+      "traps": [
+        {
+          "id": "alarm-bailey",
+          "name": "watchman alarm",
+          "shortName": "alarm",
+          "kind": "alarm",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/alarm.png",
+          "x": 3,
+          "y": 5
+        }
+      ],
+      "decor": [
+        {
+          "id": "statue-bailey",
+          "name": "granite statue with axe",
+          "shortName": "statue",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/crumbled_column_3.png",
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "banner-bailey",
+          "name": "orcish banner",
+          "shortName": "banner",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/ensign_beogh.png",
+          "x": 4,
+          "y": 7
+        },
+        {
+          "id": "lectern-bailey",
+          "name": "warmaster's lectern",
+          "shortName": "lectern",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/lectern.png",
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "id": "orc-33",
+          "name": "orc",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/orcs/orc.png",
+          "maxHp": 7,
+          "hd": 1,
+          "exp": 3,
+          "speed": 10,
+          "ac": 0,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 2
+            }
+          ],
+          "power": 2,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 6,
+          "y": 4
+        },
+        {
+          "id": "hobgoblin-33",
+          "name": "hobgoblin",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/hobgoblin.png",
+          "maxHp": 6,
+          "hd": 1,
+          "exp": 2,
+          "speed": 10,
+          "ac": 2,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 5
+            }
+          ],
+          "power": 5,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 6,
+          "y": 6
+        },
+        {
+          "id": "orc_warrior-33",
+          "name": "orc warrior",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/orcs/orc_warrior.png",
+          "maxHp": 28,
+          "hd": 4,
+          "exp": 133,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 8,
+          "y": 3
+        },
+        {
+          "id": "orc_knight-33",
+          "name": "orc knight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/orcs/orc_knight.png",
+          "maxHp": 68,
+          "hd": 9,
+          "exp": 617,
+          "speed": 10,
+          "ac": 2,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": null,
+          "support": {
+            "name": "battlecry",
+            "kind": "might",
+            "range": 6,
+            "turns": 6,
+            "effect": "halo",
+            "cooldown": 7,
+            "spell": "SPELL_BATTLECRY",
+            "spellbook": "orc_knight",
+            "frequency": 50,
+            "flags": "MON_SPELL_VOCAL"
+          },
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 1,
+          "y": 4
+        },
+        {
+          "id": "warg-33",
+          "name": "warg",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/animals/warg.png",
+          "maxHp": 33,
+          "hd": 5,
+          "exp": 187,
+          "speed": 15,
+          "ac": 9,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "bite",
+              "flavor": null,
+              "damage": 25
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1
+          },
+          "traits": null,
+          "x": 7,
+          "y": 7
+        }
+      ]
+    },
+    {
+      "id": "Volcano:1",
+      "name": "Volcanic Grotto",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_arch_hell.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/volcanic_floor0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/volcanic_floor1.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/volcanic_floor2.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava04.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava08.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall1.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall2.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall3.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall4.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall5.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall6.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall0.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall2.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_steel_blood0.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_steel_blood2.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell01.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell03.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_s.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_s.png"
+      },
+      "map": {
+        "name": "nicolae_volcano_entry_s_turn",
+        "width": 18,
+        "height": 10,
+        "rows": [
+          "xxxxxxxxxxxxxxxxxx",
+          "xxxxx....xxx.....x",
+          "xxx.......xx....xx",
+          "xx.........x....xx",
+          "xx...x.....x....xx",
+          "xx...x..........xx",
+          "xx...x.........xxx",
+          "xx...xx.......xxxx",
+          "xxxxxxxxx...xxxxxx",
+          "xxxxxxxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/portals/volcano.des"
+      },
+      "start": {
+        "x": 3,
+        "y": 6,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 3,
+          "y": 6
+        },
+        "down": {
+          "x": 3,
+          "y": 5
+        }
+      },
+      "floorItems": [
+        {
+          "id": "resist-vol",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 3,
+          "turns": 18,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 3,
+          "y": 7
+        },
+        {
+          "id": "trident-vol",
+          "name": "flame trident",
+          "shortName": "trident",
+          "kind": "weapon",
+          "power": 6,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/trident3.png",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "id": "plate-vol",
+          "name": "firescale plate",
+          "shortName": "plate",
+          "kind": "armour",
+          "power": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/plate3.png",
+          "x": 8,
+          "y": 7
+        },
+        {
+          "id": "flame-vol",
+          "name": "wand of flame",
+          "shortName": "flame",
+          "kind": "wand",
+          "power": 14,
+          "charges": 3,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-flame.png",
+          "x": 10,
+          "y": 7
+        },
+        {
+          "id": "gold-vol",
+          "name": "222 gold pieces",
+          "shortName": "222g",
+          "kind": "gold",
+          "value": 222,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 12,
+          "y": 5
+        }
+      ],
+      "traps": [
+        {
+          "id": "flame-trap-vol",
+          "name": "flame vent",
+          "shortName": "flame",
+          "kind": "damage",
+          "power": 14,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+          "x": 9,
+          "y": 6
+        }
+      ],
+      "decor": [
+        {
+          "id": "conduit-vol",
+          "name": "fiery conduit",
+          "shortName": "conduit",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/fiery_conduit_0.png",
+          "x": 8,
+          "y": 5
+        },
+        {
+          "id": "brazier-vol",
+          "name": "obsidian brazier",
+          "shortName": "brazier",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_icon_makhleb.png",
+          "x": 9,
+          "y": 8
+        },
+        {
+          "id": "crater-vol",
+          "name": "smoldering crater",
+          "shortName": "crater",
+          "kind": "floor",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+          "x": 11,
+          "y": 8
+        }
+      ],
+      "encounters": [
+        {
+          "id": "salamander-34",
+          "name": "salamander",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/salamander.png",
+          "maxHp": 64,
+          "hd": 8,
+          "exp": 530,
+          "speed": 10,
+          "ac": 5,
+          "ev": 7,
+          "habitat": "amphibious_lava",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "fire",
+              "damage": 13
+            }
+          ],
+          "power": 13,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": 3,
+            "cold": -1
+          },
+          "traits": {
+            "fireDamage": 13
+          },
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "salamander_mystic-34",
+          "name": "salamander mystic",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demihumanoids/salamander_mystic.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 759,
+          "speed": 10,
+          "ac": 5,
+          "ev": 7,
+          "habitat": "amphibious_lava",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "fire",
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": {
+            "name": "force lance",
+            "range": 4,
+            "power": 7,
+            "effect": "impact",
+            "status": "knockback",
+            "spell": "SPELL_FORCE_LANCE",
+            "spellbook": "salamander_mystic",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": {
+            "name": "haste other",
+            "kind": "haste",
+            "range": 5,
+            "turns": 7,
+            "effect": "halo",
+            "cooldown": 7,
+            "spell": "SPELL_HASTE_OTHER",
+            "spellbook": "salamander_mystic",
+            "frequency": 24,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": 3,
+            "cold": -1
+          },
+          "traits": {
+            "fireDamage": 10
+          },
+          "x": 6,
+          "y": 4
+        },
+        {
+          "id": "hell_knight-34",
+          "name": "hell knight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/hell_knight.png",
+          "maxHp": 65,
+          "hd": 10,
+          "exp": 781,
+          "speed": 10,
+          "ac": 0,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 26
+            }
+          ],
+          "power": 26,
+          "ranged": {
+            "name": "bolt of fire",
+            "range": 5,
+            "power": 10,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_BOLT_OF_FIRE",
+            "spellbook": "hell_knight",
+            "frequency": 17,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "hell_knight",
+            "frequency": 10,
+            "flags": "MON_SPELL_PRIEST | MON_SPELL_EMERGENCY"
+          },
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "hell_knight",
+            "frequency": 26,
+            "flags": "MON_SPELL_PRIEST"
+          },
+          "summon": null,
+          "resists": {
+            "fire": 3
+          },
+          "traits": null,
+          "x": 5,
+          "y": 1
+        },
+        {
+          "id": "fire_giant-34",
+          "name": "fire giant",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/giants/fire_giant.png",
+          "maxHp": 96,
+          "hd": 16,
+          "exp": 1281,
+          "speed": 10,
+          "ac": 8,
+          "ev": 4,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": {
+            "name": "bolt of fire",
+            "range": 5,
+            "power": 10,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_BOLT_OF_FIRE",
+            "spellbook": "fire_giant",
+            "frequency": 29,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": 2
+          },
+          "traits": null,
+          "x": 8,
+          "y": 3
+        },
+        {
+          "id": "red_devil-34",
+          "name": "red devil",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/red_devil.png",
+          "maxHp": 32,
+          "hd": 7,
+          "exp": 319,
+          "speed": 10,
+          "ac": 7,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "barbs",
+              "damage": 19
+            }
+          ],
+          "power": 19,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "fire": 3,
+            "cold": -1
+          },
+          "traits": {
+            "airborne": true,
+            "barbedTurns": 4
+          },
+          "x": 10,
+          "y": 4
+        },
+        {
+          "id": "sun_demon-34",
+          "name": "sun demon",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/sun_demon.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 777,
+          "speed": 12,
+          "ac": 10,
+          "ev": 12,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "fire",
+              "damage": 30
+            }
+          ],
+          "power": 30,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1,
+            "fire": 3,
+            "cold": -1
+          },
+          "traits": {
+            "airborne": true,
+            "fireDamage": 30
+          },
+          "x": 13,
+          "y": 6
+        },
+        {
+          "id": "hellion-34",
+          "name": "hellion",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/demons/hellion.png",
+          "maxHp": 39,
+          "hd": 7,
+          "exp": 384,
+          "speed": 12,
+          "ac": 5,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": {
+            "name": "call down damnation",
+            "range": 6,
+            "power": 14,
+            "element": "fire",
+            "effect": "flame",
+            "smiteTargeted": true,
+            "spell": "SPELL_CALL_DOWN_DAMNATION",
+            "spellbook": "hellion",
+            "frequency": 57,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "poison": 1,
+            "damnation": 1
+          },
+          "traits": null,
+          "x": 13,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "id": "Necropolis:1",
+      "name": "Necropolis Arbor",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_crypt.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_crypt.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt4.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt7.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt10.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_3a.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/crypt_domino_8a.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/metal_wall_necropolis_0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/metal_wall_necropolis_2.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_necropolis_1.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_necropolis_3.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_necropolis_5.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_necropolis_7.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_necropolis_2.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_necropolis_4.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_necropolis_6.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/metal_wall_necropolis_red_0.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/metal_wall_necropolis_red_2.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/metal_wall_necropolis_4.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_clear_permarock_necropolis0.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood01.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood03.png"
+      },
+      "map": {
+        "name": "index_necropolis_entry_arbor_square",
+        "width": 9,
+        "height": 9,
+        "rows": [
+          "xxxxxxxxx",
+          "xxxx....x",
+          "x..x....x",
+          "xxxx....x",
+          "x.......x",
+          "x....xxxx",
+          "x....x..x",
+          "x....xxxx",
+          "xxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/portals/necropolis.des"
+      },
+      "start": {
+        "x": 4,
+        "y": 4,
+        "dir": 1
+      },
+      "doors": [],
+      "stairs": {
+        "up": {
+          "x": 4,
+          "y": 4
+        },
+        "down": {
+          "x": 4,
+          "y": 3
+        }
+      },
+      "floorItems": [
+        {
+          "id": "curing-necro",
+          "name": "potion of curing",
+          "shortName": "curing",
+          "kind": "healing",
+          "power": 16,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-curing.png",
+          "x": 6,
+          "y": 4
+        },
+        {
+          "id": "scythe-necro",
+          "name": "weathered scythe",
+          "shortName": "scythe",
+          "kind": "weapon",
+          "power": 4,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/scythe2.png",
+          "x": 4,
+          "y": 6
+        },
+        {
+          "id": "draining-necro",
+          "name": "wand of mindburst",
+          "shortName": "mind",
+          "kind": "wand",
+          "power": 14,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 4,
+          "y": 7
+        },
+        {
+          "id": "gold-necro",
+          "name": "77 gold pieces",
+          "shortName": "77g",
+          "kind": "gold",
+          "value": 77,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/16.png",
+          "x": 7,
+          "y": 3
+        }
+      ],
+      "traps": [
+        {
+          "id": "alarm-necro",
+          "name": "warding sigil",
+          "shortName": "ward",
+          "kind": "alarm",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/alarm.png",
+          "x": 5,
+          "y": 2
+        }
+      ],
+      "decor": [
+        {
+          "id": "tree-necro",
+          "name": "dead tree of woe",
+          "shortName": "tree",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/necropolis_gravestone_2.png",
+          "x": 4,
+          "y": 1
+        },
+        {
+          "id": "sarcophagus-necro",
+          "name": "silent sarcophagus",
+          "shortName": "sarcophagus",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/sarcophagus_pedestal_right.png",
+          "x": 5,
+          "y": 1
+        },
+        {
+          "id": "grave-necro",
+          "name": "weathered tombstone",
+          "shortName": "grave",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/necropolis_gravestone_1.png",
+          "x": 6,
+          "y": 1
+        }
+      ],
+      "encounters": [
+        {
+          "id": "phantom-35",
+          "name": "phantom",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/phantom.png",
+          "maxHp": 27,
+          "hd": 6,
+          "exp": 105,
+          "speed": 10,
+          "ac": 3,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "blink_with",
+              "damage": 8
+            }
+          ],
+          "power": 8,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": {
+            "airborne": true,
+            "blinkDamage": 8,
+            "blinkWith": true
+          },
+          "x": 5,
+          "y": 4
+        },
+        {
+          "id": "wight-35",
+          "name": "wight",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/wight.png",
+          "maxHp": 17,
+          "hd": 3,
+          "exp": 73,
+          "speed": 10,
+          "ac": 4,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain",
+              "damage": 8
+            }
+          ],
+          "power": 8,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": {
+            "drainDamage": 8
+          },
+          "x": 2,
+          "y": 4
+        },
+        {
+          "id": "zombie-35",
+          "name": "zombie",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/zombies/zombie_small.png",
+          "maxHp": 8,
+          "hd": 1,
+          "exp": 9,
+          "speed": 5,
+          "ac": 0,
+          "ev": 4,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 10,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": null,
+          "x": 6,
+          "y": 3
+        },
+        {
+          "id": "wraith-35",
+          "name": "wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/wraith.png",
+          "maxHp": 33,
+          "hd": 6,
+          "exp": 209,
+          "speed": 10,
+          "ac": 10,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 15
+            }
+          ],
+          "power": 15,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "cold": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 2,
+          "y": 5
+        },
+        {
+          "id": "shadow_wraith-35",
+          "name": "shadow wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/shadow_wraith.png",
+          "maxHp": 55,
+          "hd": 10,
+          "exp": 761,
+          "speed": 10,
+          "ac": 7,
+          "ev": 7,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 27
+            }
+          ],
+          "power": 27,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": {
+            "airborne": true
+          },
+          "x": 6,
+          "y": 2
+        },
+        {
+          "id": "freezing_wraith-35",
+          "name": "freezing wraith",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/freezing_wraith.png",
+          "maxHp": 44,
+          "hd": 8,
+          "exp": 354,
+          "speed": 10,
+          "ac": 12,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": "cold",
+              "damage": 16
+            },
+            {
+              "type": "hit",
+              "flavor": "drain_speed",
+              "damage": 15
+            }
+          ],
+          "power": 16,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "fire": -1,
+            "cold": 3
+          },
+          "traits": {
+            "airborne": true,
+            "coldDamage": 16
+          },
+          "x": 2,
+          "y": 6
+        },
+        {
+          "id": "necromancer-35",
+          "name": "necromancer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/humans/necromancer.png",
+          "maxHp": 40,
+          "hd": 10,
+          "exp": 612,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 6
+            }
+          ],
+          "power": 6,
+          "ranged": {
+            "name": "bolt of draining",
+            "range": 5,
+            "power": 10,
+            "effect": "fear",
+            "status": "drain",
+            "drainMax": 2,
+            "spell": "SPELL_BOLT_OF_DRAINING",
+            "spellbook": "necromancer",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "bind souls",
+            "kind": "undead",
+            "group": "bound souls",
+            "allies": [
+              "wraith",
+              "shadow-wraith"
+            ],
+            "count": 1,
+            "range": 2,
+            "turns": 16,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_BIND_SOULS",
+            "spellbook": "necromancer",
+            "frequency": 30,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 7,
+          "y": 2
+        }
+      ]
+    },
+    {
+      "id": "Desolation:1",
+      "name": "Desolation Temple",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/desolation_portal.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/desolation_exit.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/limestone0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/limestone3.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/limestone6.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/sand1.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/salt0.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/endless_salt2.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall3.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall1.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall4.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall6.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall8.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall2.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall5.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall7.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/desolation1.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/desolation2.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall9.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/endless_salt0.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_w.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_e.png"
+      },
+      "map": {
+        "name": "portal_desolation_entry_holy_temple",
+        "width": 17,
+        "height": 17,
+        "rows": [
+          "xxxxxxxxxxxxxxxxx",
+          "x...............x",
+          "x....xx+++xx....x",
+          "x....x.....x....x",
+          "x....x.....x....x",
+          "x.xxxx.x.x.xxxx.x",
+          "x.x...........x.x",
+          "x.x.x.......x.x.x",
+          "x.x...........x.x",
+          "x.x.x.......x.x.x",
+          "x.x...........x.x",
+          "x.xxxx.....xxxx.x",
+          "x....x.x.x.x....x",
+          "x....x.....x....x",
+          "x....xxxxxxx....x",
+          "x...............x",
+          "xxxxxxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/portals/desolation.des"
+      },
+      "start": {
+        "x": 8,
+        "y": 8,
+        "dir": 1
+      },
+      "doors": [
+        "7,2",
+        "8,2",
+        "9,2"
+      ],
+      "stairs": {
+        "up": {
+          "x": 8,
+          "y": 8
+        },
+        "down": {
+          "x": 8,
+          "y": 7
+        }
+      },
+      "floorItems": [
+        {
+          "id": "resist-desol",
+          "name": "potion of resistance",
+          "shortName": "resist",
+          "kind": "might",
+          "power": 2,
+          "turns": 14,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-resistance.png",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "id": "morningstar-desol",
+          "name": "holy morningstar",
+          "shortName": "morning",
+          "kind": "weapon",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/morningstar1.png",
+          "x": 12,
+          "y": 8
+        },
+        {
+          "id": "plate-desol",
+          "name": "salted scale mail",
+          "shortName": "scale",
+          "kind": "armour",
+          "power": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/scale_mail1.png",
+          "x": 13,
+          "y": 7
+        },
+        {
+          "id": "charm-desol",
+          "name": "wand of charming",
+          "shortName": "charm",
+          "kind": "wand",
+          "power": 14,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-charming.png",
+          "x": 15,
+          "y": 9
+        },
+        {
+          "id": "gold-desol",
+          "name": "131 gold pieces",
+          "shortName": "131g",
+          "kind": "gold",
+          "value": 131,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 14,
+          "y": 4
+        }
+      ],
+      "traps": [
+        {
+          "id": "alarm-desol",
+          "name": "warding sigil",
+          "shortName": "ward",
+          "kind": "alarm",
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/alarm.png",
+          "x": 4,
+          "y": 6
+        }
+      ],
+      "decor": [
+        {
+          "id": "altar-desol",
+          "name": "abandoned altar",
+          "shortName": "altar",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/ensign_beogh.png",
+          "x": 13,
+          "y": 9
+        },
+        {
+          "id": "pillar-desol",
+          "name": "salt pillar",
+          "shortName": "pillar",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/crumbled_column_1.png",
+          "x": 1,
+          "y": 9
+        },
+        {
+          "id": "statue-desol",
+          "name": "weathered angel statue",
+          "shortName": "statue",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/statue_angel.png",
+          "x": 2,
+          "y": 4
+        }
+      ],
+      "encounters": [
+        {
+          "id": "saltling-36",
+          "name": "saltling",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/saltling.png",
+          "maxHp": 27,
+          "hd": 8,
+          "exp": 271,
+          "speed": 12,
+          "ac": 15,
+          "ev": 5,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": null,
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 9,
+          "y": 8
+        },
+        {
+          "id": "peacekeeper-36",
+          "name": "peacekeeper",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/peacekeeper.png",
+          "maxHp": 45,
+          "hd": 12,
+          "exp": 859,
+          "speed": 15,
+          "ac": 20,
+          "ev": 3,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "bite",
+              "flavor": null,
+              "damage": 25
+            },
+            {
+              "type": "claw",
+              "flavor": null,
+              "damage": 15
+            }
+          ],
+          "power": 25,
+          "ranged": {
+            "name": "throw barbs",
+            "range": 5,
+            "power": 5,
+            "effect": "impact",
+            "status": "barbed",
+            "statusTurns": 6,
+            "spell": "SPELL_THROW_BARBS",
+            "spellbook": "peacekeeper",
+            "frequency": 33,
+            "flags": "MON_SPELL_NATURAL"
+          },
+          "support": {
+            "name": "battlecry",
+            "kind": "might",
+            "range": 6,
+            "turns": 6,
+            "effect": "halo",
+            "cooldown": 7,
+            "spell": "SPELL_BATTLECRY",
+            "spellbook": "peacekeeper",
+            "frequency": 25,
+            "flags": "MON_SPELL_VOCAL"
+          },
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "fire": 1,
+            "cold": 1
+          },
+          "traits": null,
+          "x": 5,
+          "y": 10
+        },
+        {
+          "id": "angel-36",
+          "name": "angel",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/holy/angel.png",
+          "maxHp": 102,
+          "hd": 12,
+          "exp": 1155,
+          "speed": 15,
+          "ac": 10,
+          "ev": 20,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 25
+            },
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 10
+            }
+          ],
+          "power": 25,
+          "ranged": null,
+          "support": {
+            "name": "minor healing",
+            "kind": "heal",
+            "range": 5,
+            "power": 9,
+            "effect": "halo",
+            "cooldown": 5,
+            "spell": "SPELL_MINOR_HEALING",
+            "spellbook": "angel",
+            "frequency": 62,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 1,
+            "poison": 1
+          },
+          "traits": {
+            "airborne": true
+          },
+          "x": 10,
+          "y": 13
+        },
+        {
+          "id": "crystal_guardian-36",
+          "name": "crystal guardian",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/crystal_guardian.png",
+          "maxHp": 60,
+          "hd": 16,
+          "exp": 918,
+          "speed": 10,
+          "ac": 20,
+          "ev": 0,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 42
+            }
+          ],
+          "power": 42,
+          "ranged": {
+            "name": "crystallising shot",
+            "range": 5,
+            "power": 8,
+            "effect": "impact",
+            "status": "vitrified",
+            "statusTurns": 5,
+            "spell": "SPELL_CRYSTALLISING_SHOT",
+            "spellbook": "crystal_guardian",
+            "frequency": 50,
+            "flags": "MON_SPELL_MAGICAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 3,
+            "fire": 3,
+            "cold": 3
+          },
+          "traits": null,
+          "x": 15,
+          "y": 6
+        },
+        {
+          "id": "crystal_echidna-36",
+          "name": "crystal echidna",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/animals/crystal_echidna.png",
+          "maxHp": 64,
+          "hd": 12,
+          "exp": 773,
+          "speed": 13,
+          "ac": 10,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "bite",
+              "flavor": null,
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": {
+            "name": "crystallising shot",
+            "range": 5,
+            "power": 8,
+            "effect": "impact",
+            "status": "vitrified",
+            "statusTurns": 5,
+            "spell": "SPELL_CRYSTALLISING_SHOT",
+            "spellbook": "crystal_echidna",
+            "frequency": 30,
+            "flags": "MON_SPELL_NATURAL"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": null,
+          "resists": {
+            "elec": 3,
+            "fire": 3,
+            "cold": 3
+          },
+          "traits": null,
+          "x": 2,
+          "y": 12
+        }
+      ]
+    },
+    {
+      "id": "WizLab:1",
+      "name": "Wizard Tower",
+      "assets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/starry_portal.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_grey_smoke.png",
+        "poisonCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_poison0.png",
+        "petrifyCloud": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_calc_dust0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/cobble_blood1.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "wallGlow0": "vendor/crawl/crawl-ref/source/rltiles/effect/umbral_torchlight.png",
+        "wallGlow1": "vendor/crawl/crawl-ref/source/rltiles/effect/orb_glow0.png",
+        "wallGlow2": "vendor/crawl/crawl-ref/source/rltiles/effect/quad_glow.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/runelight0.png",
+        "floorAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/runelight1.png",
+        "floorAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic7.png",
+        "floorAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic12.png",
+        "floorAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic11.png",
+        "floorAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/mosaic14.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_lightblue.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_cyan.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_1a.png",
+        "wallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_2a.png",
+        "wallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_3a.png",
+        "wallAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_4a.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_1b.png",
+        "sideWallAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_2b.png",
+        "sideWallAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_3b.png",
+        "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_shelf0.png",
+        "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_bookcase0.png",
+        "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_green.png",
+        "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_magenta.png",
+        "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_n.png",
+        "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood03_n.png"
+      },
+      "map": {
+        "name": "mu_enter_wizlab_2",
+        "width": 17,
+        "height": 14,
+        "rows": [
+          "xxxxxxxxxxxxxxxxx",
+          "x...............x",
+          "x...............x",
+          "x...............x",
+          "x...............x",
+          "x.......+.......x",
+          "x...............x",
+          "x...............x",
+          "x...............x",
+          "x.......+.......x",
+          "x...............x",
+          "x.....x...x.....x",
+          "x....xxx.xxx....x",
+          "xxxxxxxxxxxxxxxxx"
+        ],
+        "source": "vendor/crawl/crawl-ref/source/dat/des/portals/wizlab.des"
+      },
+      "start": {
+        "x": 8,
+        "y": 3,
+        "dir": 1
+      },
+      "doors": [
+        "8,5",
+        "8,9"
+      ],
+      "stairs": {
+        "up": {
+          "x": 8,
+          "y": 3
+        },
+        "down": {
+          "x": 15,
+          "y": 12
+        }
+      },
+      "floorItems": [
+        {
+          "id": "magic-wiz",
+          "name": "potion of magic",
+          "shortName": "magic",
+          "kind": "might",
+          "power": 4,
+          "turns": 18,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/potion/i-magic.png",
+          "x": 10,
+          "y": 3
+        },
+        {
+          "id": "long-sword-wiz",
+          "name": "enchanted long sword",
+          "shortName": "sword",
+          "kind": "weapon",
+          "power": 5,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/weapon/long_sword2.png",
+          "x": 10,
+          "y": 5
+        },
+        {
+          "id": "robe-wiz",
+          "name": "archmage's robe",
+          "shortName": "robe",
+          "kind": "armour",
+          "power": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/armour/robe_ego2.png",
+          "x": 11,
+          "y": 6
+        },
+        {
+          "id": "mindburst-wiz",
+          "name": "wand of mindburst",
+          "shortName": "mind",
+          "kind": "wand",
+          "power": 18,
+          "charges": 2,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/wand/i-mindburst.png",
+          "x": 2,
+          "y": 1
+        },
+        {
+          "id": "gold-wiz",
+          "name": "244 gold pieces",
+          "shortName": "244g",
+          "kind": "gold",
+          "value": 244,
+          "power": 0,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/item/gold/25.png",
+          "x": 8,
+          "y": 12
+        }
+      ],
+      "traps": [
+        {
+          "id": "zot-wiz",
+          "name": "arcane sigil",
+          "shortName": "arcane",
+          "kind": "damage",
+          "power": 14,
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/zot.png",
+          "x": 12,
+          "y": 5
+        }
+      ],
+      "decor": [
+        {
+          "id": "bookcase-wiz",
+          "name": "wizard's bookcase",
+          "shortName": "books",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_bookcase1.png",
+          "x": 13,
+          "y": 4
+        },
+        {
+          "id": "orb-wiz",
+          "name": "scrying orb",
+          "shortName": "orb",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/orb_dais.png",
+          "x": 15,
+          "y": 2
+        },
+        {
+          "id": "shelf-wiz",
+          "name": "alchemist's shelf",
+          "shortName": "shelf",
+          "kind": "fixture",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_shelf2.png",
+          "x": 5,
+          "y": 9
+        }
+      ],
+      "encounters": [
+        {
+          "id": "deep_elf_pyromancer-37",
+          "name": "deep elf pyromancer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_pyromancer.png",
+          "maxHp": 41,
+          "hd": 9,
+          "exp": 600,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 5
+            }
+          ],
+          "power": 5,
+          "ranged": {
+            "name": "pyre arrow",
+            "range": 5,
+            "power": 9,
+            "element": "fire",
+            "effect": "flame",
+            "spell": "SPELL_PYRE_ARROW",
+            "spellbook": "deep_elf_fire_mage",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "deep_elf_fire_mage",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "self": null,
+          "summon": {
+            "name": "fire elementals",
+            "kind": "demon",
+            "group": "fire elementals",
+            "allies": [
+              "salamander"
+            ],
+            "count": 2,
+            "range": 2,
+            "turns": 18,
+            "effect": "flame",
+            "cooldown": 9,
+            "spell": "SPELL_FIRE_ELEMENTALS",
+            "spellbook": "deep_elf_fire_mage",
+            "frequency": 15,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 9,
+          "y": 3
+        },
+        {
+          "id": "deep_elf_zephyrmancer-37",
+          "name": "deep elf zephyrmancer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_zephyrmancer.png",
+          "maxHp": 41,
+          "hd": 9,
+          "exp": 599,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 5
+            }
+          ],
+          "power": 5,
+          "ranged": {
+            "name": "lightning bolt",
+            "range": 5,
+            "power": 9,
+            "element": "elec",
+            "effect": "smite",
+            "spell": "SPELL_LIGHTNING_BOLT",
+            "spellbook": "deep_elf_air_mage",
+            "frequency": 40,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "deep_elf_air_mage",
+            "frequency": 20,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 4,
+          "y": 2
+        },
+        {
+          "id": "deep_elf_annihilator-37",
+          "name": "deep elf annihilator",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_annihilator.png",
+          "maxHp": 68,
+          "hd": 15,
+          "exp": 1004,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": {
+            "name": "lightning bolt",
+            "range": 5,
+            "power": 9,
+            "element": "elec",
+            "effect": "smite",
+            "spell": "SPELL_LIGHTNING_BOLT",
+            "spellbook": "annihilator",
+            "frequency": 11,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": {
+            "name": "blink",
+            "kind": "random",
+            "range": 4,
+            "effect": "blink",
+            "cooldown": 6,
+            "spell": "SPELL_BLINK",
+            "spellbook": "annihilator",
+            "frequency": 22,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "self": null,
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 10,
+          "y": 7
+        },
+        {
+          "id": "deep_elf_sorcerer-37",
+          "name": "deep elf sorcerer",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_sorcerer.png",
+          "maxHp": 63,
+          "hd": 14,
+          "exp": 1237,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": {
+            "name": "corrosive bolt",
+            "range": 5,
+            "power": 9,
+            "element": "acid",
+            "effect": "poison",
+            "status": "corroded",
+            "statusTurns": 6,
+            "spell": "SPELL_CORROSIVE_BOLT",
+            "spellbook": "deep_elf_sorcerer",
+            "frequency": 18,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "deep_elf_sorcerer",
+            "frequency": 22,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": null,
+          "traits": null,
+          "x": 9,
+          "y": 9
+        },
+        {
+          "id": "deep_elf_demonologist-37",
+          "name": "deep elf demonologist",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/humanoids/elves/deep_elf_demonologist.png",
+          "maxHp": 54,
+          "hd": 12,
+          "exp": 1031,
+          "speed": 10,
+          "ac": 0,
+          "ev": 13,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "hit",
+              "flavor": null,
+              "damage": 12
+            }
+          ],
+          "power": 12,
+          "ranged": {
+            "name": "banishment",
+            "range": 5,
+            "power": 0,
+            "effect": "blink",
+            "status": "banish",
+            "statusTurns": 4,
+            "spell": "SPELL_BANISHMENT",
+            "spellbook": "deep_elf_demonologist",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": null,
+          "summon": {
+            "name": "summon demon",
+            "kind": "demon",
+            "group": "demons",
+            "allies": [
+              "hellwing",
+              "orange-demon",
+              "red-devil",
+              "sun-demon"
+            ],
+            "count": 1,
+            "range": 2,
+            "turns": 18,
+            "effect": "halo",
+            "cooldown": 9,
+            "spell": "SPELL_SUMMON_DEMON",
+            "spellbook": "deep_elf_demonologist",
+            "frequency": 24,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": null,
+          "traits": null,
+          "x": 9,
+          "y": 10
+        },
+        {
+          "id": "lich-37",
+          "name": "lich",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/lich.png",
+          "maxHp": 80,
+          "hd": 20,
+          "exp": 1745,
+          "speed": 10,
+          "ac": 10,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "touch",
+              "flavor": "drain",
+              "damage": 15
+            }
+          ],
+          "power": 15,
+          "ranged": {
+            "name": "bolt of cold",
+            "range": 5,
+            "power": 10,
+            "element": "cold",
+            "effect": "ice",
+            "spell": "SPELL_BOLT_OF_COLD",
+            "spellbook": "lich",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "lich",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": null,
+          "resists": {
+            "cold": 2
+          },
+          "traits": {
+            "drainDamage": 15
+          },
+          "x": 7,
+          "y": 11
+        },
+        {
+          "id": "dread_lich-37",
+          "name": "dread lich",
+          "tile": "vendor/crawl/crawl-ref/source/rltiles/mon/undead/dread_lich.png",
+          "maxHp": 108,
+          "hd": 27,
+          "exp": 5099,
+          "speed": 10,
+          "ac": 20,
+          "ev": 10,
+          "habitat": "land",
+          "attacks": [
+            {
+              "type": "touch",
+              "flavor": "drain",
+              "damage": 20
+            }
+          ],
+          "power": 20,
+          "ranged": {
+            "name": "paralyse",
+            "range": 3,
+            "power": 0,
+            "effect": "smite",
+            "status": "snared",
+            "statusTurns": 2,
+            "spell": "SPELL_PARALYSE",
+            "spellbook": "dread_lich",
+            "frequency": 18,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "support": null,
+          "mobility": null,
+          "self": {
+            "name": "haste",
+            "kind": "haste",
+            "turns": 10,
+            "effect": "halo",
+            "cooldown": 10,
+            "spell": "SPELL_HASTE",
+            "spellbook": "dread_lich",
+            "frequency": 12,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "summon": {
+            "name": "summon greater demon",
+            "kind": "demon",
+            "group": "greater demons",
+            "allies": [
+              "executioner",
+              "reaper",
+              "green-death",
+              "balrug",
+              "cacodemon"
+            ],
+            "count": 1,
+            "range": 2,
+            "turns": 20,
+            "effect": "halo",
+            "cooldown": 11,
+            "spell": "SPELL_SUMMON_GREATER_DEMON",
+            "spellbook": "dread_lich",
+            "frequency": 18,
+            "flags": "MON_SPELL_WIZARD"
+          },
+          "resists": {
+            "elec": 1,
+            "fire": 1,
+            "cold": 2
+          },
+          "traits": {
+            "drainDamage": 20
+          },
+          "x": 14,
+          "y": 8
         }
       ]
     }
