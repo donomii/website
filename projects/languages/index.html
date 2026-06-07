@@ -119,46 +119,67 @@
 			<h1>Languages</h1>
 			</header>
 			<div class="summary">
-<p>I keep designing programming languages.  I'm not sure I can stop.</p>
+<p>I keep writing new programming languages.  Not sure why.</p>
 </div>
 <div style="clear:both"></div>
 <div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
-<p>Programming languages have been a side project of mine for as long as I've been writing code.  Some are serious, some are deliberately broken, some are little experiments that turned into something useful at the command line.  This page is a single place to keep track of them.</p>
+<p>It was probably inevitable.  After too many years of writing code in programming languages, I gave in to the voices in my head that kept asking &quot;why do we have to do it like this?  Isn't there something better?&quot;</p>
 <h2 id="throff">Throff</h2>
-<p><a href="/projects/throff/index.html">Throff</a> is the big one — a dynamically typed, late binding, homoiconic, concatenative programming language.  It looks Forth-ish, but the whole program (including control flow) is one big tree of words operating on a stack, and that tree can be rewritten at runtime.</p>
+<p><a href="/projects/throff/index.html">Throff</a> is my Meisterwerk.  Before this, I felt like a tourist in the world of programming, now I feel like I have a good grasp of how programming languages work.</p>
+<p>Throff is a dynamically typed, late binding, homoiconic, concatenative programming language.  It was an attempt to take Forth and update it for the modern world of programming, by building the entire system up from a small foundation of functions, and a tiny simple interpreter.</p>
+<p>It works completely, but the result is just another modern programming language, which fits in the same niche as Perl, Python, Ruby, PHP.  An interpreted language that is pleasant enough to write in, has the flexibility and power to redefine its own syntax and extend it in convenient ways.</p>
 <p>There are now several implementations:</p>
 <ul>
 <li>Original Perl interpreter</li>
-<li>Go interpreter (the one most people use)</li>
+<li>Go interpreter</li>
 <li>JavaScript port (<code>throff-js-lib</code>, <code>throff-cli.js</code>) so it runs in a browser or under Node</li>
 <li>Rust port (<code>throff-rs</code>)</li>
 <li>Jupyter kernel (<code>throff-jupyter</code>) — Throff in notebooks</li>
 <li>Mobile builds (<code>throffMobile</code>, <code>throffMobile-new</code>) for running Throff on a phone</li>
 </ul>
-<p>The combined source lives in <code>~/git/throff-combined</code> and includes a VM spec, a library of examples, and the cross-platform downloads linked from the <a href="/projects/throff/index.html">Throff project page</a>.</p>
-<p>Throff is the language I actually use; the others are the languages I had to write in order to figure out what I wanted Throff to be.</p>
+<p>The combined source lives in <code>github.com/donomii/throff-combined</code> and includes a VM spec, a library of examples, and the cross-platform downloads linked from the <a href="/projects/throff/index.html">Throff project page</a>.</p>
+<p>It has some interesting internals, as it uses a three-stack model, with the third stack being the environment, which provides continuations and useful scoping tricks.  The imlementation allows for things like perfect tail calls, allowing complex control structures to operate without needing to consider stack management.</p>
 <h2 id="linc">Linc</h2>
-<p><a href="https://gitlab.com/donomii/linc">Linc</a> (in <code>~/git/racketprogs/linc</code>) is a linear concatenative language in the spirit of Kitten, but compiled to C.</p>
+<p><a href="https://gitlab.com/donomii/linc">Linc</a> (in <code>~/git/racketprogs/linc</code>) is my attempt to make a useful systems level language using some very advanced concepts like linear typing and ADTs.  In benchmarks, it lands somewhere around the Rust level, which is about right.</p>
+<p>The final language is starting to look similar to C, but with more type declarations, and some very different (better) behaviour.</p>
 <ul>
-<li>Concatenative, postfix, stack-based.</li>
-<li>Statically typed with row polymorphism over the stack.</li>
-<li><strong>Linear types</strong>: every value is used exactly once.  <code>clone</code> and <code>drop</code> are explicit.</li>
-<li>Branches are stack-neutral: <code>condition then [ true-branch ] else [ false-branch ] if</code>.</li>
-<li>Threads can be spawned with a linear value, and typed channel endpoints (<code>ChannelSend a</code>, <code>ChannelRecv a</code>) support split / send / receive / close.</li>
+<li>
+<p><strong>Linear types</strong>: every value is used exactly once, and then destroyed or released.</p>
+</li>
+<li>
+<p>Concatenative, postfix, stack-based, but with a C-like frontend.</p>
+</li>
+<li>
+<p>Statically typed with row polymorphism over the stack.</p>
+</li>
+<li>
+<p>Threads can be spawned with a linear value, and typed channel endpoints (<code>ChannelSend a</code>, <code>ChannelRecv a</code>) support split / send / receive / close.</p>
+</li>
 </ul>
 <p>The compiler is written in C and emits C, which gets handed to a target C compiler.  A <code>--static</code> flag asks for a single-binary native build.  There's a <code>std/</code> library covering math, files, paths, env, config, JSON, threads, HTTP, AWS SigV4, DynamoDB, ClickHouse — the kind of plumbing you actually need to write a useful program.  The driver only links in support libraries (<code>libcurl</code>, OpenSSL, OpenGL, GLUT, etc.) for features the program actually uses, so simple programs stay small.</p>
-<p>Linc is my attempt to find out whether a strict, linear, concatenative language can be pleasant to write real software in.  So far: cautiously yes.</p>
+<p>Linc is my attempt to find out whether a linear, concatenative language can be pleasant to write real software in.  So far: surprisingly yes.</p>
 <h2 id="xsh">xsh</h2>
 <p><a href="https://gitlab.com/donomii/xsh">xsh</a> (in <code>~/git/racketprogs/xsh</code>) is a cross-platform shell and scripting language.</p>
 <ul>
 <li>Homoiconic functional scripting language that works by tree reduction.</li>
-<li>Specifically not Lisp.</li>
+<li>Specifically not Lisp, even though it looks a bit like LISP.</li>
 <li>Focusses on being pleasant to debug and introspect — every reduction step can be paused, inspected, and resumed.</li>
-<li>Written in Go.</li>
 </ul>
 <p>xsh ships as two cooperating binaries: <code>xsh</code> is the interpreter, and <code>xshguardian</code> is a sibling process the shell delegates external-program execution to, so signal handling and PTY allocation don't block the parent interpreter.  There's an embedded standard library (<code>stdlib.xsh</code>) with <code>map</code>, <code>fold</code>, <code>reverse</code>, <code>range</code>, boolean combinators built on <code>nand</code>, a default prompt, and a small <code>lined</code> line editor with history, completions, F-keys, and Ctrl-R search.</p>
 <p>The language has a <a href="https://gitlab.com/donomii/xsh/-/blob/main/SPEC.md">spec</a> and a <a href="https://gitlab.com/donomii/xsh/-/blob/main/PSEUDOCODE.md">pseudocode walkthrough</a> of the implementation.</p>
 <p>I want my shell to be a real programming language, and I want my programming language to be a real shell.  xsh is that experiment.</p>
+<h2 id="quon-and-the-quonverter">Quon (and the Quonverter)</h2>
+<p><a href="https://gitlab.com/donomii/quonverter">Quonverter</a> (in <code>~/git/racketprogs/quonverter</code>) is an attempt to make the &quot;unviersal programming language&quot;, something that runs everywhere, on every machine.  A language that can run on every platform, works with every compiler, and can adapt for new environments.</p>
+<p>It turns out, this is possible, so long as you don't try to actually do anything useful with it.</p>
+<p>At the moment, it is a transpiler that takes a small S-expression-flavoured language — <strong>quon</strong> — and emits source code in <strong>C, Perl, Node.js, Java, or Lua</strong>.</p>
+<ul>
+<li>Made from pure madness</li>
+<li>Ugly as sin</li>
+<li>Somehow actually works</li>
+</ul>
+<p>The language is deliberately the lowest common denominator across those targets — functions, structs, conditionals, recursion.  No closures, no coroutines, no Hindley-Milner.  The whole point is that anything written in quon is automatically available as a library <em>in any of those host languages</em>.  Write once, get five language ports for free.</p>
+<p>The compiler is self-hosting: <code>compiler.qon</code> compiles itself.  A <code>bootstrap/</code> directory keeps pre-built versions of the compiler in each target (<code>quon.exe</code>, <code>quon.pl</code>, <code>quon.js</code>, <code>quon.lua</code>, <code>quon.java</code>), so I can rebuild from any of them.  There are circular-build scripts (<code>circular.bash</code>, <code>circularperl.bash</code>) that re-host the compiler in each language and verify it still works.</p>
+<p>There is absolutely no reason for this language to exist, and nothing useful to do with it.  But I think it's probably the best thing I have ever written.</p>
 <h2 id="stalk">Stalk</h2>
 <p><a href="https://gitlab.com/donomii/stalk">Stalk</a> (in <code>~/git/racketprogs/stalk</code>) is a small prototype-based language inspired by Smalltalk.</p>
 <ul>
@@ -227,7 +248,8 @@ y ifTrue: [| io print: &quot;Yes\n&quot;] ifFalse: [| io print: &quot;No\n&quot;
 <p>The interesting part isn't the syntax — Smalltalk is Smalltalk — it's that an object reference is <em>literally a network endpoint</em>, and &quot;send a message&quot; is <em>literally an HTTP request</em>.  A program written in ServiceTalk is a small fleet of processes that you can scale, redeploy, or rewrite individually.  There's a Docker Compose file and a Kubernetes manifest in the repo for running real fleets.  A Rust port (<code>servicetalk-rs</code>) lives alongside the Go implementation.</p>
 <p>ServiceTalk is what happens if you take Smalltalk's &quot;everything is an object, everything is a message send&quot; seriously enough to make it true at the OS level.</p>
 <h2 id="atto">Atto</h2>
-<p><a href="https://gitlab.com/donomii/atto">Atto</a> (in <code>~/git/racketprogs/atto</code>) is a minimal Lisp-shaped functional language with prefix syntax — a Go re-implementation of <a href="https://github.com/zesterer/atto">zesterer/atto</a>.</p>
+<p><a href="https://gitlab.com/donomii/atto">Atto</a> (in <code>~/git/racketprogs/atto</code>) is a minimal functional language in Go. It's a  re-implementation of <a href="https://github.com/zesterer/atto">zesterer/atto</a>.</p>
+<p>I really admire the way it's possible to make a complete language in 500-1000 lines of host code.</p>
 <pre><code class="language-atto">fn factorial n is
     if = 0 n
         1
@@ -237,10 +259,10 @@ fn main is
     print factorial 5
 </code></pre>
 <p>A program is a sequence of <code>fn name args is body</code> definitions.  Bodies are expressions: function calls, <code>if</code>, integer/string/boolean/list literals, and references to bound names.  Lists are cons-cell pairs.  Nothing else.</p>
-<p>I keep Atto around as a reminder of how little a real programming language can be made of.</p>
+<p>It's not quite compatible with the original.</p>
 <h2 id="perltalk">PerlTalk</h2>
 <p><a href="https://gitlab.com/donomii/PerlTalk">PerlTalk</a> (in <code>~/git/racketprogs/PerlTalk</code>) is a failed Smalltalk-interpreter-in-Perl experiment, plus several side projects in parser construction (BNF / PEG / ANTLR / brag).</p>
-<p>The parser works — it can read a Smalltalk-flavoured program — but execution is incomplete: defining functions doesn't work, and trying to return from a function loops forever.  The post-mortem in the repo blames an underplanned execution model and an over-ambitious nanopass-style parser (&quot;Neo / Cell / LinkList&quot;, <code>CellParser.pm</code>).</p>
+<p>The parser works — it can read a Smalltalk-flavoured program — but execution is incomplete.  Nonetheless, it kicked off my interest in making programming languages, and informed several of my later attempts.</p>
 <p>The interesting stuff that came out of it:</p>
 <ul>
 <li><code>peg.go</code> + <code>bnf/</code> — a Go program that loads a BNF grammar (and an input) and matches the input against a named rule, with sample grammars for BNF itself, C, Java, SQL92, and Canadian postal codes.</li>
@@ -248,27 +270,13 @@ fn main is
 <li><code>antlr/</code> — a small ANTLR4 Go program that prints the parse tree for any input C file.</li>
 <li><code>perl2sxpr.pl</code> — a Perl-source-to-S-expression converter (uses <code>PPI</code>), useful for staring at how Perl is actually parsed.</li>
 </ul>
-<p>PerlTalk's value is mostly negative: it's the project that taught me what <em>not</em> to do, and that fed directly into Stalk.</p>
 <h2 id="smaller-language-shaped-things">Smaller language-shaped things</h2>
 <p>These aren't full languages but they live in the same headspace:</p>
 <ul>
-<li><strong><a href="https://gitlab.com/donomii/gom">gom</a></strong> (<code>~/git/racketprogs/gom</code>) — Go + Macros.  A preprocessor for <code>*.gom</code> files that applies a fixed pipeline of source rewrites and writes <code>*.gen.go</code> next to each input.  All generated files start with the standard <code>Code generated by gom; DO NOT EDIT.</code> header.</li>
-<li><strong><a href="https://gitlab.com/donomii/autoparser">autoparser</a></strong> (<code>~/git/racketprogs/autoparser</code>) — automatic parser-generator experiments, in the same family as the BNF / PEG / ANTLR work in PerlTalk.</li>
+<li><strong><a href="https://gitlab.com/donomii/gom">gom</a></strong> (<code>~/git/racketprogs/gom</code>) — Go + Macros.  A preprocessor for <code>*.gom</code> files that applies a fixed pipeline of source rewrites and writes <code>*.gen.go</code> next to each input.</li>
+<li><strong><a href="https://gitlab.com/donomii/autoparser">autoparser</a></strong> (<code>~/git/racketprogs/autoparser</code>) — an automatic parser for programming languages with balanced brackets (so almost all of them).  You hand it a list of keywords, and the delimiters you want, and it returns a tree of parsed strings, expressions, and functions.</li>
 <li><strong><a href="/projects/liveobjects/index.html">Perl LiveObjects</a></strong> — a live self-modifying environment, in Perl, that's effectively a tiny language on top of Perl.</li>
 </ul>
-<h2 id="why-so-many">Why so many?</h2>
-<p>Each of these answers a slightly different question.</p>
-<ul>
-<li><em>What if the whole program were one tree of words you could rewrite at runtime?</em> — Throff.</li>
-<li><em>What if every value had to be used exactly once?</em> — Linc.</li>
-<li><em>What if your shell were also a real programming language?</em> — xsh.</li>
-<li><em>What does Smalltalk look like without classes or an image?</em> — Stalk.</li>
-<li><em>What if Smalltalk objects were real OS processes talking over HTTP?</em> — ServiceTalk.</li>
-<li><em>How small can a programming language actually be?</em> — Atto.</li>
-<li><em>How not to write a Smalltalk interpreter?</em> — PerlTalk.</li>
-<li><em>Can a macro system feel native to Go?</em> — gom.</li>
-</ul>
-<p>I'll keep writing more.</p>
 
 			</article>
 			<div class="lightbox-overlay" id="lightbox">
