@@ -31,35 +31,6 @@
       <main class="shell">
         <section class="viewport-column" aria-label="Dungeon view">
           <div id="viewport" class="viewport" tabindex="0"></div>
-          <div class="command-strip" aria-label="Movement">
-            <button type="button" data-action="turnLeft" data-tier="primary" title="Turn left" aria-label="Turn left">&larr;</button>
-            <button type="button" data-action="moveForward" data-tier="primary" title="Step forward" aria-label="Step forward">&uarr;</button>
-            <button type="button" data-action="turnRight" data-tier="primary" title="Turn right" aria-label="Turn right">&rarr;</button>
-            <button type="button" data-action="moveLeft" data-tier="primary" title="Sidestep left" aria-label="Sidestep left">&#8676;</button>
-            <button type="button" data-action="attack" data-tier="primary" title="Attack" aria-label="Attack">&#9876;</button>
-            <button type="button" data-action="moveRight" data-tier="primary" title="Sidestep right" aria-label="Sidestep right">&#8677;</button>
-            <button type="button" data-action="wait" data-tier="primary" title="Wait one turn" aria-label="Wait one turn">&middot;</button>
-            <button type="button" data-action="moveBack" data-tier="primary" title="Step back" aria-label="Step back">&darr;</button>
-            <button type="button" data-action="interact" data-tier="primary" title="Use item, trap, door, fixture, or stairs" aria-label="Use item, trap, door, fixture, or stairs">&gt;</button>
-            <button type="button" data-action="rest" data-tier="secondary" title="Rest until ready (R / 5)" aria-label="Rest until ready">Z</button>
-            <button type="button" data-action="autoExplore" data-tier="secondary" title="Auto-explore the floor (o)" aria-label="Auto-explore the floor">o</button>
-            <button type="button" data-action="travelToStairs" data-tier="secondary" title="Travel to the nearest known stairs (T)" aria-label="Travel to known stairs">T</button>
-            <button type="button" data-action="cycleFormation" data-tier="secondary" title="Cycle party formation (F)" aria-label="Cycle party formation">F</button>
-            <button type="button" data-action="help" data-tier="secondary" title="Help (?)" aria-label="Help">?</button>
-            <button type="button" data-action="legend" data-tier="secondary" title="Map legend (L)" aria-label="Map legend">L</button>
-            <button type="button" data-action="achievements" data-tier="secondary" title="Achievements" aria-label="Achievements">★</button>
-            <button type="button" data-action="history" data-tier="secondary" title="Run history" aria-label="Run history">📜</button>
-            <button type="button" data-action="settings" data-tier="secondary" title="Settings" aria-label="Settings">⚙</button>
-            <button type="button" data-action="charge" data-tier="secondary" title="Charge attack (C)" aria-label="Charge attack">»</button>
-            <button type="button" data-action="sweep" data-tier="secondary" title="Sweep attack (Y)" aria-label="Sweep attack">⌖</button>
-            <button type="button" data-action="dropItem" data-tier="secondary" title="Drop the newest item (P)" aria-label="Drop item">P</button>
-            <button type="button" data-action="examine" data-tier="secondary" title="Examine the cell ahead" aria-label="Examine">i</button>
-            <button type="button" data-action="toggleRun" data-tier="secondary" title="Toggle run mode" aria-label="Run mode toggle">⏵⏵</button>
-            <button type="button" data-action="search" data-tier="secondary" title="Search adjacent walls (N)" aria-label="Search adjacent walls">🔍</button>
-            <button type="button" data-action="signature" data-tier="secondary" title="Trigger leader's class signature (B)" aria-label="Class signature">★B</button>
-            <button type="button" data-action="character" data-tier="secondary" title="View party roster (K)" aria-label="Party roster">K</button>
-            <button type="button" data-action="moreActions" data-tier="more" title="More actions" aria-label="More actions">⋯</button>
-          </div>
         </section>
 
         <aside class="side-panel">
@@ -115,6 +86,61 @@
             </div>
             <div id="log" class="message-log"></div>
           </section>
+
+          <details class="accordion-panel commands-accordion">
+            <summary>Commands</summary>
+            <div class="command-strip" aria-label="Movement">
+              <button type="button" data-action="turnLeft" data-tier="primary" title="Turn left" aria-label="Turn left">&larr;</button>
+              <button type="button" data-action="moveForward" data-tier="primary" title="Step forward" aria-label="Step forward">&uarr;</button>
+              <button type="button" data-action="turnRight" data-tier="primary" title="Turn right" aria-label="Turn right">&rarr;</button>
+              <button type="button" data-action="moveLeft" data-tier="primary" title="Sidestep left" aria-label="Sidestep left">&#8676;</button>
+              <button type="button" data-action="attack" data-tier="primary" title="Attack" aria-label="Attack">&#9876;</button>
+              <button type="button" data-action="moveRight" data-tier="primary" title="Sidestep right" aria-label="Sidestep right">&#8677;</button>
+              <button type="button" data-action="wait" data-tier="primary" title="Wait one turn" aria-label="Wait one turn">&middot;</button>
+              <button type="button" data-action="moveBack" data-tier="primary" title="Step back" aria-label="Step back">&darr;</button>
+              <button type="button" data-action="interact" data-tier="primary" title="Use item, trap, door, fixture, or stairs" aria-label="Use item, trap, door, fixture, or stairs">&gt;</button>
+              <button type="button" data-action="rest" data-tier="secondary" title="Rest until ready (R / 5)" aria-label="Rest until ready">Z</button>
+              <button type="button" data-action="autoExplore" data-tier="secondary" title="Auto-explore the floor (o)" aria-label="Auto-explore the floor">o</button>
+              <button type="button" data-action="travelToStairs" data-tier="secondary" title="Travel to the nearest known stairs (T)" aria-label="Travel to known stairs">T</button>
+              <button type="button" data-action="cycleFormation" data-tier="secondary" title="Cycle party formation (F)" aria-label="Cycle party formation">F</button>
+              <button type="button" data-action="help" data-tier="secondary" title="Help (?)" aria-label="Help">?</button>
+              <button type="button" data-action="legend" data-tier="secondary" title="Map legend (L)" aria-label="Map legend">L</button>
+              <button type="button" data-action="achievements" data-tier="secondary" title="Achievements" aria-label="Achievements">★</button>
+              <button type="button" data-action="history" data-tier="secondary" title="Run history" aria-label="Run history">📜</button>
+              <button type="button" data-action="settings" data-tier="secondary" title="Settings" aria-label="Settings">⚙</button>
+              <button type="button" data-action="charge" data-tier="secondary" title="Charge attack (C)" aria-label="Charge attack">»</button>
+              <button type="button" data-action="sweep" data-tier="secondary" title="Sweep attack (Y)" aria-label="Sweep attack">⌖</button>
+              <button type="button" data-action="dropItem" data-tier="secondary" title="Drop the newest item (P)" aria-label="Drop item">P</button>
+              <button type="button" data-action="examine" data-tier="secondary" title="Examine the cell ahead" aria-label="Examine">i</button>
+              <button type="button" data-action="toggleRun" data-tier="secondary" title="Toggle run mode" aria-label="Run mode toggle">⏵⏵</button>
+              <button type="button" data-action="search" data-tier="secondary" title="Search adjacent walls (N)" aria-label="Search adjacent walls">🔍</button>
+              <button type="button" data-action="signature" data-tier="secondary" title="Trigger leader's class signature (B)" aria-label="Class signature">★B</button>
+              <button type="button" data-action="character" data-tier="secondary" title="View party roster (K)" aria-label="Party roster">K</button>
+              <button type="button" data-action="moreActions" data-tier="more" title="More actions" aria-label="More actions">⋯</button>
+            </div>
+          </details>
+
+          <details class="accordion-panel">
+            <summary>Quests &amp; Bestiary</summary>
+            <div class="accordion-actions">
+              <button type="button" data-action="quests">🎯 Quests</button>
+              <button type="button" data-action="bestiary">🐉 Bestiary</button>
+              <button type="button" data-action="markers">📌 Markers</button>
+              <button type="button" data-action="talents">🎓 Talents</button>
+            </div>
+          </details>
+
+          <details class="accordion-panel">
+            <summary>Run &amp; Saves</summary>
+            <div class="accordion-actions">
+              <button type="button" data-action="stats">📊 Lifetime stats</button>
+              <button type="button" data-action="history">📜 History</button>
+              <button type="button" data-action="saveSlots">💾 Save slots</button>
+              <button type="button" data-action="settings">⚙ Settings</button>
+              <button type="button" data-action="help">❓ Help</button>
+            </div>
+          </details>
+
         </aside>
       </main>
     </div>

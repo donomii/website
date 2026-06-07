@@ -140,7 +140,7 @@ h2 {
   min-width: 0;
   min-height: 0;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr);
   gap: 12px;
 }
 
@@ -173,16 +173,16 @@ h2 {
 
 .command-strip {
   display: grid;
-  grid-template-columns: repeat(3, minmax(56px, 1fr));
+  grid-template-columns: repeat(3, minmax(40px, 1fr));
   gap: 7px;
-  max-width: 372px;
-  justify-self: center;
-  width: min(100%, 372px);
+  max-width: 100%;
+  justify-self: stretch;
+  width: 100%;
 }
 
 .command-strip button,
 .inventory-item button {
-  min-height: 40px;
+  min-height: 36px;
   border: 1px solid #5f6041;
   border-radius: 5px;
   background: linear-gradient(#283126, #171b17);
@@ -191,7 +191,7 @@ h2 {
 }
 
 .command-strip button {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
 }
 
@@ -203,7 +203,7 @@ h2 {
 
 .side-panel {
   display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto auto;
   gap: 8px;
   align-content: start;
   min-height: 0;
@@ -1587,3 +1587,85 @@ body.colorblind .map-cell.ally { background: #56b4e9; color: #04121d; }
   opacity: 0.7;
   font-size: 0.85em;
 }
+
+.accordion-panel {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(26, 33, 29, 0.97), rgba(16, 18, 17, 0.97));
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.accordion-panel > summary {
+  cursor: pointer;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #f4d78b;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  list-style: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.accordion-panel > summary::-webkit-details-marker { display: none; }
+
+.accordion-panel > summary::after {
+  content: "▸";
+  font-size: 11px;
+  color: #d1a64d;
+  transition: transform 0.15s ease;
+}
+
+.accordion-panel[open] > summary::after {
+  transform: rotate(90deg);
+}
+
+.accordion-panel[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.accordion-panel > .command-strip,
+.accordion-panel > .accordion-actions {
+  padding: 8px;
+}
+
+.accordion-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.accordion-actions button {
+  min-height: 36px;
+  border: 1px solid #5f6041;
+  border-radius: 5px;
+  background: linear-gradient(#283126, #171b17);
+  color: #f4d78b;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.accordion-actions button:hover {
+  border-color: #d1a64d;
+  background: linear-gradient(#394832, #1c221c);
+}
+
+/* On mobile, force commands accordion open so the controls are always visible. */
+@media (max-width: 720px) {
+  .accordion-panel.commands-accordion > summary { display: none; }
+  .accordion-panel.commands-accordion > .command-strip { padding: 0; }
+  .accordion-panel.commands-accordion {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+  .accordion-panel.commands-accordion > .command-strip { display: grid !important; }
+}
+
