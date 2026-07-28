@@ -1,0 +1,173 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Datatree</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+				article img {
+					cursor: pointer;
+					transition: opacity 0.2s;
+				}
+				article img:hover {
+					opacity: 0.85;
+				}
+				.lightbox-overlay {
+					display: none;
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: rgba(0, 0, 0, 0.9);
+					z-index: 9999;
+					justify-content: center;
+					align-items: center;
+					cursor: pointer;
+				}
+				.lightbox-overlay.active {
+					display: flex;
+				}
+				.lightbox-overlay img {
+					max-width: 90%;
+					max-height: 90%;
+					object-fit: contain;
+					border-radius: 4px;
+					box-shadow: 0 0 30px rgba(0,0,0,0.5);
+					float: none;
+					margin: 0;
+					cursor: default;
+				}
+				.lightbox-close {
+					position: absolute;
+					top: 20px;
+					right: 30px;
+					color: white;
+					font-size: 40px;
+					font-weight: bold;
+					cursor: pointer;
+				}
+				.lightbox-close:hover {
+					color: #ccc;
+				}
+				.home-link {
+					position: fixed;
+					top: 1rem;
+					left: 1rem;
+					text-decoration: none;
+					color: #888;
+					font-size: 0.9em;
+					transition: color 0.2s;
+					z-index: 1000;
+				}
+				.home-link:hover {
+					color: #333;
+				}
+				@media (prefers-color-scheme: dark){
+					.home-link {
+						color: #555;
+					}
+					.home-link:hover {
+						color: #ccc;
+					}
+				}
+			</style>
+			<a href="../../index.html" class="home-link" title="Home">(↑)</a>
+			<article>
+			<header>
+
+			<h1>Datatree</h1>
+			</header>
+			<div class="summary">
+<p>Datatree is a read-only browser for directories, repositories, archives, structured files, and Kubernetes resources.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<img loading="lazy" src="datatree-git-view.jpg" alt="Datatree showing the Git repository view" style="max-width: 100%; width: 100%; float: none; margin: 0 0 1em 0;">
+<p>Datatree presents nested data as an expandable tree in a web browser.  Drivers understand different container types, so directories can open repositories and archives, archives can contain more archives, and text, JSON, images, PDFs, HTML, and CSV files can be inspected without changing their source data.</p>
+<p>The Git view shows repository details, commits, committed files, staged and unstaged changes, untracked files, and conflicts.  Kubernetes contexts, namespaces, resource types, and objects can be browsed through the same interface.</p>
+<p>The recommended macOS installation uses Homebrew:</p>
+<pre><code class="language-sh">brew tap donomii/tap https://gitlab.com/donomii/homebrew-tap.git
+brew install datatree
+</code></pre>
+<p>Then run <code>datatree</code> in the directory you want to inspect.</p>
+<p>The standalone <a href="datatree-macos-arm64">Datatree binary for macOS arm64</a> (about 9.3 MB) is also available, but macOS may block a directly downloaded unsigned executable.  The Homebrew source build is the supported installation route.</p>
+<p>SHA-256: <code>07e21d651b803625be53a6ea4853940cafba49e17f9c42716e1262a47c335e09</code></p>
+<p>The source is in the <a href="https://gitlab.com/donomii/racketprogs/-/tree/master/datatree">racketprogs repository on GitLab</a>.</p>
+
+			</article>
+			<div class="lightbox-overlay" id="lightbox">
+				<span class="lightbox-close" id="lightbox-close">&times;</span>
+				<img src="" alt="" id="lightbox-img">
+			</div>
+			<script>
+			(function() {
+				var overlay = document.getElementById('lightbox');
+				var lightboxImg = document.getElementById('lightbox-img');
+				var closeBtn = document.getElementById('lightbox-close');
+				
+				// Add click handler to all images in the article (skip linked images)
+				document.querySelectorAll('article img:not(.no-lightbox)').forEach(function(img) {
+					img.addEventListener('click', function(e) {
+						e.preventDefault();
+						lightboxImg.src = this.src;
+						lightboxImg.alt = this.alt;
+						overlay.classList.add('active');
+					});
+				});
+				
+				// Close on any click
+				overlay.addEventListener('click', function() {
+					overlay.classList.remove('active');
+				});
+				
+				// Close on escape key
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape') {
+						overlay.classList.remove('active');
+					}
+				});
+			})();
+			</script>
+			</html>
+			

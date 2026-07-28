@@ -124,13 +124,14 @@
 <div style="clear:both"></div>
 <div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
 <p>It was probably inevitable.  After too many years of writing code in programming languages, I gave in to the voices in my head that kept asking &quot;why do we have to do it like this?  Isn't there something better?&quot;</p>
+<h2 id="zipper">Zipper</h2>
+<p><a href="zipper.html">Zipper</a> is a small text-replacement programming language: the whole program is a string, and running it means repeatedly finding a reducible call and replacing it with the next piece of text.  Its step display shows the complete program after every replacement, so you can watch the language evaluate itself.</p>
 <h2 id="throff">Throff</h2>
 <p><a href="/projects/throff/index.html">Throff</a> is my Meisterwerk.  Before this, I felt like a tourist in the world of programming, now I feel like I have a good grasp of how programming languages work.</p>
 <p>Throff is a dynamically typed, late binding, homoiconic, concatenative programming language.  It was an attempt to take Forth and update it for the modern world of programming, by building the entire system up from a small foundation of functions, and a tiny simple interpreter.</p>
 <p>It works completely, but the result is just another modern programming language, which fits in the same niche as Perl, Python, Ruby, PHP.  An interpreted language that is pleasant enough to write in, has the flexibility and power to redefine its own syntax and extend it in convenient ways.</p>
 <p>There are now several implementations:</p>
 <ul>
-<li>Original Perl interpreter</li>
 <li>Go interpreter</li>
 <li>JavaScript port (<code>throff-js-lib</code>, <code>throff-cli.js</code>) so it runs in a browser or under Node</li>
 <li>Rust port (<code>throff-rs</code>)</li>
