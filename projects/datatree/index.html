@@ -128,10 +128,10 @@
 <p>The Git view shows repository details, commits, committed files, staged and unstaged changes, untracked files, and conflicts.  Kubernetes contexts, namespaces, resource types, and objects can be browsed through the same interface.</p>
 <p>The recommended macOS installation uses Homebrew:</p>
 <pre><code class="language-sh">brew tap donomii/tap https://gitlab.com/donomii/homebrew-tap.git
-brew install datatree
+brew install --cask datatree
 </code></pre>
 <p>Then run <code>datatree</code> in the directory you want to inspect.</p>
-<p>The standalone <a href="datatree-macos-arm64">Datatree binary for macOS arm64</a> (about 9.3 MB) is also available, but macOS may block a directly downloaded unsigned executable.  The Homebrew source build is the supported installation route.</p>
+<p>The cask installs the checksummed macOS arm64 binary. It is not signed or notarized, so the cask removes quarantine from that executable after installation to prevent Gatekeeper from blocking it. The standalone <a href="datatree-macos-arm64">Datatree binary for macOS arm64</a> (about 9.3 MB) is also available.</p>
 <p>SHA-256: <code>07e21d651b803625be53a6ea4853940cafba49e17f9c42716e1262a47c335e09</code></p>
 <p>The source is in the <a href="https://gitlab.com/donomii/racketprogs/-/tree/master/datatree">racketprogs repository on GitLab</a>.</p>
 
