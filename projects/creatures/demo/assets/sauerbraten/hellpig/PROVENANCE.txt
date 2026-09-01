@@ -1,0 +1,11 @@
+name=Sauerbraten Hellpig
+creator=Psionic
+project_url=https://sourceforge.net/projects/sauerbraten/
+source_snapshot=Debian source package sauerbraten 0.0.20201227-1
+source_url=https://sources.debian.org/src/sauerbraten/0.0.20201227-1/packages/models/monster/hellpig/
+license=Free reuse with creator credit requested
+license_file=LICENSE.txt
+body.md2_sha256=69314bbb6e46cd9ba02e605985398a7020d31c7f5b90a57e8a9703b0acf580ff
+body.jpg_sha256=d5afa4bb838565d204a852b15ad40ade588e1d53fa7bc2faff5db8583706baed
+md2.cfg_sha256=3ded01948819ce7afa841653fce926120907013100d773b993bb550a3df8f65c
+LICENSE.txt_sha256=ec802134ff7de2ce6d8b539874b8803af7ba66812302b62ab2d8ac53d8ab13f9

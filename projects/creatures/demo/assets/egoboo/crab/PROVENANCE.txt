@@ -1,0 +1,10 @@
+name=Egoboo Crab
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/crab.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/crab.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_sha256=135d052995bf2c1d8becf5f26041e71964061b24b0d1d45839f03c883fd32e82
+body.png_sha256=24eebab5ae58c51bb96f4d306710b0ed3bbb33f3a5fb597494fc40aa0bcfd0ca
+data.txt_sha256=080da01489162d767de671f8cd2efc63f361fa2ddfab043c0073997f672e63fd

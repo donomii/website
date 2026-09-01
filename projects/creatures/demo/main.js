@@ -1,5 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/webxr/VRButton.js';
+import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js';
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -56,24 +57,18 @@ scene.add(gridHelper);
 
 // Creature class
 class Creature {
-    constructor(x, z) {
-        // Create block body
-        const bodyGeometry = new THREE.BoxGeometry(1, 1.5, 1);
-        const bodyMaterial = new THREE.MeshStandardMaterial({
-            color: this.getRandomColor()
-        });
-        this.mesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
-        this.mesh.castShadow = true;
-        this.mesh.receiveShadow = true;
-
-        // Create face
-        this.createFace();
+    constructor(x, z, model) {
+        // Create one of the genuine animated game actors.
+        this.actor = model.createActor();
+        this.mesh = this.actor.object;
+        this.baseY = 0.05;
+        this.carryHeight = model.carryHeight;
 
         // Position
-        this.mesh.position.set(x, 1.5, z);
+        this.mesh.position.set(x, this.baseY, z);
 
         // Movement properties
-        this.targetPosition = new THREE.Vector3(x, 1.5, z);
+        this.targetPosition = new THREE.Vector3(x, this.baseY, z);
         this.velocity = new THREE.Vector3();
         this.isMoving = false;
         this.moveSpeed = 0.02;
@@ -91,55 +86,12 @@ class Creature {
         this.eatingTarget = null;
 
         // Collision properties
-        this.collisionRadius = 0.7; // Slightly larger than the visual size for comfort
+        this.collisionRadius = model.collisionRadius;
 
         // Schedule first movement
         this.scheduleNextMove();
 
         scene.add(this.mesh);
-    }
-
-    getRandomColor() {
-        const colors = [
-            0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24,
-            0x6c5ce7, 0xa29bfe, 0xfd79a8, 0xfdcb6e
-        ];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-
-    createFace() {
-        // Eyes
-        const eyeGeometry = new THREE.SphereGeometry(0.08, 8, 8);
-        const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-        const pupilMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
-
-        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        leftEye.position.set(-0.2, 0.3, 0.51);
-        const leftPupil = new THREE.Mesh(
-            new THREE.SphereGeometry(0.04, 8, 8),
-            pupilMaterial
-        );
-        leftPupil.position.set(-0.2, 0.3, 0.56);
-
-        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        rightEye.position.set(0.2, 0.3, 0.51);
-        const rightPupil = new THREE.Mesh(
-            new THREE.SphereGeometry(0.04, 8, 8),
-            pupilMaterial
-        );
-        rightPupil.position.set(0.2, 0.3, 0.56);
-
-        // Mouth
-        const mouthGeometry = new THREE.BoxGeometry(0.3, 0.05, 0.05);
-        const mouthMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
-        const mouth = new THREE.Mesh(mouthGeometry, mouthMaterial);
-        mouth.position.set(0, -0.1, 0.51);
-
-        this.mesh.add(leftEye);
-        this.mesh.add(leftPupil);
-        this.mesh.add(rightEye);
-        this.mesh.add(rightPupil);
-        this.mesh.add(mouth);
     }
 
     scheduleNextMove() {
@@ -157,7 +109,7 @@ class Creature {
         const range = 40;
         const x = (Math.random() - 0.5) * range;
         const z = (Math.random() - 0.5) * range;
-        this.targetPosition.set(x, 1.5, z);
+        this.targetPosition.set(x, this.baseY, z);
         this.isMoving = true;
     }
 
@@ -265,14 +217,13 @@ class Creature {
 
     update(time) {
         // Floating animation
-        const baseY = 1.5;
         const floatY = Math.sin(time * this.floatSpeed + this.floatOffset) * this.floatAmplitude;
 
         // If moving to pickup, continuously update target to follow the block
         // This creates fun chasing behavior when multiple creatures want the same block!
         if (this.taskState === 'moving_to_pickup' && this.currentTask) {
             const block = this.currentTask.data.block;
-            this.targetPosition.set(block.mesh.position.x, 1.5, block.mesh.position.z);
+            this.targetPosition.set(block.mesh.position.x, this.baseY, block.mesh.position.z);
         }
 
         // If eating, check if block was stolen
@@ -315,7 +266,7 @@ class Creature {
                         this.currentTask.data.dropLocation = { x: dropX, z: dropZ };
 
                         // Move to drop location
-                        this.targetPosition.set(dropX, 1.5, dropZ);
+                        this.targetPosition.set(dropX, this.baseY, dropZ);
                         this.isMoving = true;
                     }, 500); // Brief pause to "pick up"
                 } else if (this.taskState === 'carrying') {
@@ -350,8 +301,10 @@ class Creature {
             }
         }
 
+        this.actor.update(time, this.isMoving);
+
         // Apply floating
-        this.mesh.position.y = baseY + floatY;
+        this.mesh.position.y = this.baseY + floatY;
     }
 }
 
@@ -478,7 +431,7 @@ class MovableBlock {
             // Follow carrier
             this.mesh.position.set(
                 this.carrier.mesh.position.x,
-                this.carrier.mesh.position.y + 1.2,
+                this.carrier.mesh.position.y + this.carrier.carryHeight,
                 this.carrier.mesh.position.z
             );
         }
@@ -574,18 +527,29 @@ for (let i = 0; i < initialBlockCount; i++) {
 // Create block emitter/fountain
 const blockEmitter = new BlockEmitter(-15, -15);
 
-// Create population of 10 creatures
+// Create one creature for every available animated model.
 const creatures = [];
-const populationSize = 10;
 const spawnRange = 20;
 
-for (let i = 0; i < populationSize; i++) {
-    const x = (Math.random() - 0.5) * spawnRange;
-    const z = (Math.random() - 0.5) * spawnRange;
-    const creature = new Creature(x, z);
-    creatures.push(creature);
-    taskManager.registerCreature(creature);
+function createCreaturePopulation(models) {
+    for (const model of models) {
+        const x = (Math.random() - 0.5) * spawnRange;
+        const z = (Math.random() - 0.5) * spawnRange;
+        const creature = new Creature(x, z, model);
+        creatures.push(creature);
+        taskManager.registerCreature(creature);
+    }
+    document.body.dataset.creatureCount = String(creatures.length);
+    document.getElementById('model-status').textContent = `${creatures.length} animated models are running`;
 }
+
+document.getElementById('model-status').textContent = `Loading ${CREATURE_MODEL_COUNT} animated models…`;
+loadCreatureModels((loaded, total, label) => {
+    document.getElementById('model-status').textContent = `Loading creatures: ${loaded}/${total} (${label})`;
+}).then(createCreaturePopulation).catch(error => {
+    document.getElementById('model-status').textContent = 'Creature models failed to load';
+    console.error(`Creature model loading failed: ${error.message}`, error);
+});
 
 // Periodically create tasks to move blocks
 function scheduleBlockMoveTask() {

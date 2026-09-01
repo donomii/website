@@ -1,0 +1,10 @@
+name=Egoboo Minotore
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/minotore.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/minotore.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_sha256=9df499944647d4f5a28b7a065720fa0c3069671e61210973e02dba3f6b16719f
+body.png_sha256=b4f4c0e5b19fb894de991994703cc9c2806bf633633036d7275023fcfca26946
+data.txt_sha256=1ffb1d3eec0192ea4c950bd33572d3d52b461022f8a300ea7fd5bfdce33fe14d

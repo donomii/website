@@ -1,0 +1,10 @@
+name=Egoboo Bat
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/bat.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/bat.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_sha256=4e5d3ccfe8fb72f11e4eb73ac4a8b9025512b0cff8b3bdacab2158881e53b37f
+body.png_sha256=f1c691cb0a866fb60675c281e7cf57efbfa9f8b053cd01f2bc835cbfc7400c2f
+data.txt_sha256=77b735e8ef4c910a472c8358b19f4cc9e8562bf1cb6e872d1b386667484a717a

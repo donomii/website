@@ -1,0 +1,31 @@
+# UFO: Alien Invasion female PHALANX soldier asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff`. They combine the female PHALANX
+actor with the game's `light` Combat Armour path. Their local names and
+upstream paths are:
+
+```text
+body.md2  base/models/soldiers/femalelight/body.md2
+body.anm  base/models/soldiers/femalelight/body.anm
+body.tag  base/models/soldiers/femalelight/body.tag
+body.png  base/models/soldiers/femalelight/body.png
+head.md2  base/models/soldiers/femalelight/head01.md2
+head.png  base/models/soldiers/femalelight/head01a.png
+```
+
+Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/soldiers/femalelight
+
+The upstream `LICENSES` manifest credits Origin for every selected file and
+identifies them as GNU General Public License 2.0 or later. `COPYING` is the
+unmodified upstream GPL 2.0 license text.
+
+```text
+40e6ea87c2550cc5ba10d124ddd1e73b5afb8b54a5fae51327740e3200797010  body.md2
+ca4d241a45ce4dbf63a8686b117b499e648740a399141d9051f3925512e8c5d5  body.anm
+01b15956524609234a93014044b8b09a104bc9f5b6e8f211363a1070ef1a93f1  body.tag
+31b0c93d4fec1cda5a03bde58ebd4a7efaeac1a2307f31609c5bea31212561ff  body.png
+3763eb11595a56071f2eb444f66595de28201770adfdccbfbdccd64a65f5802c  head.md2
+56efb941c04fe4e042592307dbb5f09c5d2564eee6e1e21619d4bbfc9fc03078  head.png
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
+```

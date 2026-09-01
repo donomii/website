@@ -1,0 +1,30 @@
+# UFO: Alien Invasion Bloodspider asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff`. Their local names and upstream
+paths are:
+
+```text
+body.md2  base/models/aliens/bloodspider/bloodspider.md2
+body.anm  base/models/aliens/bloodspider/bloodspider.anm
+body.tag  base/models/aliens/bloodspider/bloodspider.tag
+body.jpg  base/models/aliens/bloodspider/bloodspider.jpg
+head.md2  base/models/aliens/bloodspider/head.md2
+```
+
+Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/aliens/bloodspider
+
+The upstream `LICENSES` manifest credits Werner Höhrer for the basic model and
+animations, Ryan Span for model corrections, Jake Gustafson for the selected
+skin, and Werner Höhrer for the head. Each selected asset is Creative Commons
+Attribution-ShareAlike 3.0. `COPYING` is the unmodified Creative Commons legal
+code downloaded from https://creativecommons.org/licenses/by-sa/3.0/legalcode.txt.
+
+```text
+0d6b3f10c7aa627c34dcfe68f5ce1e3e2fbdcad5a3f59ff27530df7f6bac912e  body.md2
+b583afc2b39bd039456a5b3a8ff415572abaa74c872d5ddd1c42d3022b00b2aa  body.anm
+151232348454c9bb509dbf48c57923a86cbe9312ffdf5a7e5e257e1a51c7f4c2  body.tag
+6d6361a5f1e1fad2c21b70df48aab3ceae21f1129cb4900d078ac47e1c23fa49  body.jpg
+719b23209fde673e39591f9cc7baa4e4b5988fd6a530e11ff1051fe2ecdca29c  head.md2
+3f941b3b89cf7b8370ceb83cc76d2120d471b58735d8ca60238a751a48d7f72f  COPYING
+```

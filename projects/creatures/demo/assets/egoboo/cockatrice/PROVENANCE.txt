@@ -1,0 +1,10 @@
+name=Egoboo Cockatrice
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/cockatrice.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/cockatrice.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_sha256=ed85e3282e1236d3f73eb75d4e80322ffdc23be4e5819d031c0339b1167ccae1
+body.png_sha256=dcaa860b926ffca495675d3e8067b7190ed1cf54655f20718044f70f761ba4c6
+data.txt_sha256=a690d045d2531523c86a56bfadb227584266ebfcad6077e4da4006ee66b22f94

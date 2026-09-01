@@ -1,0 +1,25 @@
+# UFO: Alien Invasion Alien Tank asset provenance
+
+The model and skin are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff`. The animation table corrects its
+first duplicated `cstand3` row to the otherwise missing `stand3`; all frame
+bounds and rates remain unchanged. Their local names and upstream paths are:
+
+```text
+body.md2  base/models/aliens/alientank/alientank.md2
+body.anm  base/models/aliens/alientank/alientank.anm
+body.png  base/models/aliens/alientank/alientank.png
+```
+
+Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/aliens/alientank
+
+The upstream `LICENSES` manifest credits Achim "Arthur" Menzel and identifies
+the selected files as Creative Commons Attribution-Share Alike 3.0 Unported.
+The unmodified license text is included as `COPYING`.
+
+```text
+c3bfe621cb0d069d74940a45b573cebf73677938c87eae61f66884e889070aaf  body.md2
+2fa5e593e407387d76a56298d4168ba710a519a9854f2b7a509d74bd176e8a44  body.anm
+148b98cc51224bb448963516ff5f18247d3a31a0b7c9e39bf27290873778bbfe  body.png
+3f941b3b89cf7b8370ceb83cc76d2120d471b58735d8ca60238a751a48d7f72f  COPYING
+```

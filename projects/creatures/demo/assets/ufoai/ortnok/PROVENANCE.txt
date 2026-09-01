@@ -1,0 +1,31 @@
+# UFO: Alien Invasion Ortnok asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff`. Their local names and upstream
+paths are:
+
+```text
+body.md2  base/models/aliens/ortnok/body01.md2
+body.anm  base/models/aliens/ortnok/body01.anm
+body.tag  base/models/aliens/ortnok/body01.tag
+body.png  base/models/aliens/ortnok/body01a.png
+head.md2  base/models/aliens/ortnok/head01.md2
+head.png  base/models/aliens/ortnok/head01.png
+```
+
+Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/aliens/ortnok
+
+The upstream `LICENSES` manifest credits Lukas "Rastaman" Beyeler for the
+models, animation data, tags, and skins, with MCR additionally credited for
+the selected body and head skins. Each selected file is GNU General Public
+License 2.0. `COPYING` is the corresponding unmodified upstream license text.
+
+```text
+922fa3d1a6ecb0f12a1b69f82b1b599b7accc8251dc1a4acd70c1c4093469de8  body.md2
+36f3b87084ba4d07790b3179c7f90cf75d6e83d537c6a8bf686263da24e37f56  body.anm
+6553a34e352b5fb75d43f2a9776e09fd191922f4786996fb157c1644bc13c098  body.tag
+f76d08db52eab0db92f5c7863e51f3bd8852bae331e3302ef18910de60fbb90b  body.png
+1d70c43d646ae48bfac78faabedf34d74066dd4cb05200fd56d0932fc1919b18  head.md2
+6b9b59bdee55cb4ea81dfa5f4c5a4b1dc46b71e823f1f42c6c70081d6caf2c88  head.png
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
+```

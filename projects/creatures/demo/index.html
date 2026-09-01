@@ -26,6 +26,22 @@
             border-radius: 5px;
             font-size: 14px;
         }
+
+        #model-status {
+            display: block;
+            margin-top: 6px;
+        }
+
+        #credits {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 7px 9px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -34,8 +50,10 @@
         <strong>World Stuff</strong><br>
         Left Click + Drag: Pan camera<br>
         Right Click + Drag: Rotate camera<br>
-        Scroll: Zoom in/out
+        Scroll: Zoom in/out<br>
+        <span id="model-status">Loading animated models…</span>
     </div>
+    <a id="credits" href="model-credits.html">Model credits</a>
 
     <script type="module" src="main.js"></script>
 </body>

@@ -1,0 +1,29 @@
+# UFO: Alien Invasion Hovernet asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff`. Their local names and upstream
+paths are:
+
+```text
+body.md2  base/models/aliens/hovernet/body01.md2
+body.anm  base/models/aliens/hovernet/body01.anm
+body.tag  base/models/aliens/hovernet/body01.tag
+body.jpg  base/models/aliens/hovernet/body01.jpg
+head.md2  base/models/aliens/hovernet/head.md2
+```
+
+Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/aliens/hovernet
+
+The upstream `LICENSES` manifest identifies the body files as GNU General
+Public License 2.0 and the head model as Creative Commons Attribution-Share
+Alike 3.0. Both unmodified license texts are included.
+
+```text
+2aed12622c0c9eaff3a6651d28ce7f0102bbb4ea0d9a5a1867ac87ed3297d680  body.md2
+08154fde11615c7f3367e91439926b859cb4136967218fbe2fd85556d0ef6a40  body.anm
+51c181ed597a3ed82043fc2172ba96a2b3399eab88dff9f82e036798e64623fd  body.tag
+05b04ed0336b320952dabd4c745d1d560ee04aab3ed99522931e2ac028689eec  body.jpg
+719b23209fde673e39591f9cc7baa4e4b5988fd6a530e11ff1051fe2ecdca29c  head.md2
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING.GPL2
+3f941b3b89cf7b8370ceb83cc76d2120d471b58735d8ca60238a751a48d7f72f  COPYING.CC-BY-SA-3.0
+```

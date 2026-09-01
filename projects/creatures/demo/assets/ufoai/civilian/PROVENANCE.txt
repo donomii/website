@@ -1,0 +1,30 @@
+# UFO: Alien Invasion civilian asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff`. Their local names and upstream
+paths are:
+
+```text
+body.md2  base/models/civilians/female/body01.md2
+body.anm  base/models/civilians/female/body01.anm
+body.tag  base/models/civilians/female/body01.tag
+body.jpg  base/models/civilians/female/body01a.jpg
+head.md2  base/models/civilians/female/head01a.md2
+head.jpg  base/models/civilians/female/head01a.jpg
+```
+
+Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/civilians/female
+
+The upstream `LICENSES` manifest credits Lukas "Rastaman" Beyeler for every
+selected file and identifies them as GNU General Public License 2.0. `COPYING`
+is the unmodified upstream GPL 2.0 license text.
+
+```text
+af8248af4bf64bccd74395486485f5994f26c1e46ad4fd0b7c6de09f3977223a  body.md2
+43f9065ede7dc6a5af3d27d05bf54e50a91fa3c9e5028490b79da1d101b19a41  body.anm
+32ef3e2f5c818f72efe425a09df9df46614ffc2a0f4277ea16cf9facada4969e  body.tag
+51da72bc0f663a90de9025764ad667c6f51cc455049e093b97ebc04e56a8c4d5  body.jpg
+7140c1ac5f6c630163254781dcc0e35654c3683059005a6750557444dc1e1644  head.md2
+6847662caef0a7ceeeeed498c27f8953e3962da19a05b22c8bbb3d8bdfa525ff  head.jpg
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
+```
