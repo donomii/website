@@ -46,23 +46,8 @@
 
       // ── Momentary Rewind: roll back a few moments of damage ──────────────
       function momentaryRewind(messages) {
-        if (context.timewarpDisabled) { messages.push("Time magic is not active."); return false; }
-        if ((state.timeCharges || 0) < REWIND_COST) {
-          messages.push(`Not enough time charges (need ${REWIND_COST}, have ${state.timeCharges || 0}).`);
-          return false;
-        }
-        state.timeCharges -= REWIND_COST;
-        let healed = 0;
-        for (const m of state.party) {
-          if ((m.hp || 0) > 0 && m.hp < (m.maxHp || m.hp)) {
-            m.hp = Math.min(m.maxHp, m.hp + REWIND_HEAL);
-            healed += 1;
-          }
-        }
-        messages.push(healed > 0
-          ? `Time rewinds — wounds unmake themselves. (+${REWIND_HEAL} HP each)`
-          : "Time rewinds but finds no wounds to undo.");
-        return true;
+        messages.push("Time magic cannot restore health. Use a healing consumable instead.");
+        return false;
       }
 
       // ── Passive bonus: haste amplifies attack power ───────────────────────

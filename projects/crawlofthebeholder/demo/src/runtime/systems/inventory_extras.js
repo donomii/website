@@ -111,6 +111,76 @@
         return hash;
       }
 
+      // One-line "what it does" per kind, mirroring the ITEM_USE handlers.
+      const ITEM_EFFECT_LINES = {
+        healing: (item) => `Drink once: heals the most wounded living member ${item.power || 0} HP${(item.name || "").includes("curing") ? "; cures poison and barbs" : ""}. Does not revive fallen members.`,
+        mapping: () => "Read: reveals the whole floor.",
+        might: (item) => `Drink: party might for ${item.turns || 18} turns.`,
+        resistance: (item) => `Drink: halves elemental damage for ${item.turns || 16} turns.`,
+        haste: (item) => `Drink: party haste for ${item.turns || 14} turns.`,
+        blink: () => "Use: short random teleport.",
+        teleport: () => "Use: teleports the party far away.",
+        fear: () => "Read: sends nearby monsters fleeing.",
+        confuse: (item) => `Read: confuses nearby monsters for ${item.turns || 5} turns.`,
+        fog: (item) => `Use: sight-blocking fog for ${item.turns || 7} turns.`,
+        poison: (item) => `Use: fills nearby tiles with poison for ${item.turns || 6} turns.`,
+        immolation: () => "Read: ignites visible monsters from within.",
+        silence: (item) => `Read: silence for ${item.turns || 10} turns — ranged casters go quiet.`,
+        identify: () => "Read: names an unknown item.",
+        remove_curse: () => "Read: lifts curses from worn gear.",
+        food: (item) => context.hungerDisabled ? "Legacy food: not needed; this expedition has no hunger clock." : `Eat: restores ${item.power || 0} satiety.`,
+        torch: () => "Carried: extends the party's sight.",
+        throwable: (item) => `Throw at the nearest foe: ${item.power || 0} damage${item.status ? `, inflicts ${item.status}` : ""}.`,
+        evocable: (item) => `Evoke: ${item.charges != null ? `${item.charges} charge${item.charges === 1 ? "" : "s"} of ` : ""}${item.name}.`,
+        wand: (item) => `Zap at the nearest foe (${item.charges != null ? `${item.charges} charges` : "charged"}).`,
+        scroll: () => "Read: casts the spell written on it.",
+        glyph: () => "Read: inscribes a ward on this tile.",
+        charm: () => "Use: sways a nearby monster to your side.",
+        taming: () => "Use: tames a nearby beast.",
+        recall: () => "Use: recalls the party to the upstairs.",
+        trapkit: () => "Use: deploys a trap on the tile ahead.",
+        treasure_map: () => "Read: marks a cache on the floor.",
+        "alch-fire": (item) => `Throw: fire burst, ${item.power || 0} damage.`,
+        weapon: (item) => `Equip: weapon, +${item.power || 0} power.${item.proc === "vampiric" ? " Lifesteal is inactive; use recovery supplies." : ""}`,
+        armour: (item) => `Equip: armour${item.power ? `, ${item.power} protection` : ""}.`,
+        talisman: (item) => `Equip: talisman${item.power ? `, +${item.power} power` : ""}.`,
+        ring: (item) => `Equip: ring${item.bonus ? ` of ${item.bonus}` : ""}.`,
+        amulet: (item) => `Equip: amulet${item.bonus ? ` of ${item.bonus}` : ""}.${/regeneration|vitality/.test(item.name || "") || item.bonus === "regen" ? " Does not restore health while waiting." : ""}`,
+        quest: () => "The reason the party came down here.",
+        gold: () => "Spends itself."
+      };
+
+      // Everything a front end needs to present an item at a glance — the 2D
+      // tooltip and the VR detail strip both read this.
+      function itemInfo(item) {
+        if (!item) return null;
+        const unidentified = isUnidentified(item);
+        const effect = unidentified
+          ? "Unidentified — use it to learn what it does."
+          : (ITEM_EFFECT_LINES[item.kind] || (() => "Usable from the pack."))(item);
+        const stats = [];
+        if (!unidentified) {
+          if (typeof item.power === "number" && item.power !== 0) stats.push(`power ${item.power}`);
+          if (item.turns) stats.push(`${item.turns} turns`);
+          if (item.charges != null) stats.push(`${item.charges} charges`);
+          const elements = item.elements || (item.element ? [item.element] : []);
+          if (elements.length > 0) stats.push(elements.join("/"));
+        }
+        if (typeof itemWeight === "function") stats.push(`wt ${itemWeight(item)}`);
+        if (typeof itemValue === "function") stats.push(`${itemValue(item)}g`);
+        const spec = !unidentified && typeof equipKindSpec === "function" ? equipKindSpec(item.kind) : null;
+        return {
+          name: displayItemName(item),
+          kind: item.kind,
+          effect,
+          stats,
+          slot: spec ? spec.slot : null,
+          cursed: !unidentified && isCursed(item),
+          blessed: !unidentified && isBlessed(item),
+          lore: !unidentified && typeof itemLore === "function" ? itemLore(item.name) || "" : ""
+        };
+      }
+
       Object.assign(context, {
         isUnidentified,
         isCursed,
@@ -120,6 +190,7 @@
         identifyAll,
         unidentifiedLabel,
         displayItemName,
+        itemInfo,
         annotateItem,
         seedItemFlags
       });

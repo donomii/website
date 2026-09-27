@@ -69,13 +69,28 @@
         return false;
       }
 
+      function bindSidebarAccordion() {
+        const sections = document.querySelectorAll(".side-panel details[data-sidebar-section]");
+        sections.forEach((section) => {
+          section.addEventListener("toggle", () => {
+            if (!section.open) return;
+            sections.forEach((other) => {
+              if (other !== section) other.open = false;
+            });
+          });
+        });
+      }
+
       function bindInput() {
-        document.querySelector(".command-strip").addEventListener("click", (event) => {
-          const button = event.target.closest("button[data-action]");
-          if (!button) return;
-          const action = button.dataset.action;
-          if (dispatchUiAction(action)) return;
-          handleAction(action);
+        bindSidebarAccordion();
+        document.querySelectorAll(".command-strip, .accordion-actions, .more-actions-grid, #settingsModal .modal-actions, #characterCreateModal .modal-actions").forEach((container) => {
+          container.addEventListener("click", (event) => {
+            const button = event.target.closest("button[data-action]");
+            if (!button) return;
+            const action = button.dataset.action;
+            if (dispatchUiAction(action)) return;
+            handleAction(action);
+          });
         });
 
         els.inventory.addEventListener("click", (event) => {
@@ -129,13 +144,25 @@
           });
         }
         if (els.mapZoomIn?.addEventListener) {
-          els.mapZoomIn.addEventListener("click", () => zoomMap(0.25));
+          els.mapZoomIn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            zoomMap(0.25);
+          });
         }
         if (els.mapZoomOut?.addEventListener) {
-          els.mapZoomOut.addEventListener("click", () => zoomMap(-0.25));
+          els.mapZoomOut.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            zoomMap(-0.25);
+          });
         }
         if (els.mapZoomReset?.addEventListener) {
-          els.mapZoomReset.addEventListener("click", () => resetMapZoom());
+          els.mapZoomReset.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            resetMapZoom();
+          });
         }
         // Ctrl/⌘ + wheel zooms the map on desktops.
         if (els.mapScroller?.addEventListener) {
@@ -179,12 +206,22 @@
             if (!select) return;
             const index = Number.parseInt(select.dataset.memberIndex, 10);
             const member = state.party[index];
-            if (!member) return;
-            const klass = (typeof CLASSES === "object") ? CLASSES[select.value] : null;
+            if (!member || state.characterCreated) return;
             member.classKey = select.value;
             member.signatureCooldown = 0;
-            const desc = els.characterCreateList.querySelector(`[data-desc-for="${index}"]`);
-            if (desc) desc.textContent = klass ? klass.description : "";
+            // New class → that class's default portrait.
+            member.portraitKey = null;
+            renderCharacterCreate();
+          });
+        }
+        if (els.characterCreateList?.addEventListener) {
+          els.characterCreateList.addEventListener("click", (event) => {
+            const button = event.target?.closest?.("button[data-portrait-for]");
+            if (!button) return;
+            const member = state.party[Number.parseInt(button.dataset.portraitFor, 10)];
+            if (!member || typeof cycleMemberPortrait !== "function") return;
+            cycleMemberPortrait(member);
+            renderCharacterCreate();
           });
         }
         if (els.characterCreateDifficulty?.addEventListener) {
@@ -208,36 +245,31 @@
           }
           els.characterCreateDeity.addEventListener("change", () => {
             if (typeof setDeity === "function") setDeity(els.characterCreateDeity.value);
-            if (els.characterCreateDailyDesc && typeof deityDescription === "function" && els.characterCreateDeity.value !== "none") {
-              els.characterCreateDailyDesc.textContent = deityDescription(els.characterCreateDeity.value);
-            }
           });
         }
         if (els.characterCreateDaily?.addEventListener) {
-          if (els.characterCreateDailyDesc && typeof dailySeed === "function") {
-            els.characterCreateDailyDesc.textContent = `Today's seed is ${dailySeed()}.`;
-          }
           els.characterCreateDaily.addEventListener("change", () => {
             state.dailySeed = els.characterCreateDaily.checked && typeof dailySeed === "function" ? dailySeed() : null;
           });
         }
         if (els.characterCreateStart?.addEventListener) {
           els.characterCreateStart.addEventListener("click", () => {
-            state.tutorialSeen = true;
-            state.characterCreated = true;
-            if (typeof applyClassStartingStats === "function") applyClassStartingStats();
-            if (typeof applyDifficultyToFloors === "function") applyDifficultyToFloors();
-            if (typeof applyNewGamePlus === "function") {
-              const tier = applyNewGamePlus();
-              if (tier > 0 && typeof showToast === "function") showToast(`New Game+ tier ${tier}: tougher foes, +${tier * 50} gold.`);
-            }
-            els.characterCreateModal?.classList.add("hidden");
-            if (typeof saveGame === "function") saveGame();
+            // beginRun applies the on-screen selections (classes, difficulty,
+            // deity, daily) that the change handlers already wrote into state,
+            // builds the world, and hides the modal. Shared with the URL/CLI
+            // startup options.
+            if (typeof beginRun === "function") beginRun();
             render();
           });
         }
         if (els.characterCreateRandom?.addEventListener) {
           els.characterCreateRandom.addEventListener("click", () => {
+            if (state.characterCreated) {
+              setMessage("Class actions are fixed for this run. Start a new expedition to choose another party.");
+              return;
+            } else {
+              state.message = "Choosing the starting party's classes and fixed actions.";
+            }
             const klasses = typeof getClassDefinitions === "function" ? getClassDefinitions() : [];
             for (const member of state.party) {
               member.classKey = klasses[Math.floor(Math.random() * klasses.length)]?.key || member.classKey;
@@ -266,9 +298,28 @@
         }
         if (els.settingsModal) {
           const settings = typeof readSettings === "function" ? readSettings() : {};
+          const tilesetSelect = document.getElementById("settingTileset");
           const runModeCheck = document.getElementById("settingRunMode");
           const highContrastCheck = document.getElementById("settingHighContrast");
           const hideFlashCheck = document.getElementById("settingHideFlash");
+          if (tilesetSelect) {
+            const tileset = typeof normalizeTileset === "function"
+              ? normalizeTileset(settings.tileset)
+              : settings.tileset === "linocut" ? "linocut" : "classic";
+            tilesetSelect.value = tileset;
+            if (typeof setTileset === "function") setTileset(tileset);
+            else state.tileset = tileset;
+            tilesetSelect.addEventListener("change", () => {
+              const selected = typeof normalizeTileset === "function"
+                ? normalizeTileset(tilesetSelect.value)
+                : tilesetSelect.value === "linocut" ? "linocut" : "classic";
+              settings.tileset = selected;
+              if (typeof setTileset === "function") setTileset(selected);
+              else state.tileset = selected;
+              writeSettings(settings);
+              renderViewport();
+            });
+          }
           if (runModeCheck) {
             runModeCheck.checked = !!settings.runMode;
             state.runMode = !!settings.runMode;
@@ -420,6 +471,8 @@
             O: "autoExplore",
             t: "travelToStairs",
             T: "travelToStairs",
+            z: "travelToLoot",
+            Z: "travelToLoot",
             f: "cycleFormation",
             F: "cycleFormation",
             c: "charge",
@@ -462,6 +515,7 @@
       }
       Object.assign(context, {
         bindInput,
+        bindSidebarAccordion,
         dispatchUiAction,
       });
     }

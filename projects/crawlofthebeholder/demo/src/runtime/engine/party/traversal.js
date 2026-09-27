@@ -209,6 +209,51 @@
         return Math.min(...monsters.map((monster) => Math.abs(point.x - monster.x) + Math.abs(point.y - monster.y)));
       }
 
+      // Walk to a chosen discovered tile (map click / VR laser-point), with
+      // the same safety stops as the other travel commands.
+      function travelTo(targetX, targetY) {
+        if (state.victory || state.defeated) return;
+        if (targetX === state.x && targetY === state.y) return;
+        if (!mapContains(targetX, targetY) || !currentFloorState().discovered.has(keyOf(targetX, targetY)) || mapKind(targetX, targetY) !== "floor") {
+          setMessage("The party cannot walk there.");
+          return;
+        }
+        const initialThreat = restNearbyThreat();
+        if (initialThreat) {
+          setMessage(`${initialThreat.name} blocks the way. Travel is unsafe.`);
+          return;
+        }
+        const blocker = restBlockingCondition();
+        if (blocker) {
+          setMessage(`The party cannot travel while ${blocker} lingers.`);
+          return;
+        }
+        const goals = [{ x: targetX, y: targetY }];
+        let steps = 0;
+        const maxSteps = 200;
+        while (steps < maxSteps && !state.defeated && !state.victory) {
+          if (state.x === targetX && state.y === targetY) break;
+          const move = bfsNextStep(goals);
+          if (!move || move.reached) break;
+          const before = { x: state.x, y: state.y };
+          moveBy(move.dx, move.dy);
+          steps += 1;
+          if (state.x === before.x && state.y === before.y) break;
+          if (restNearbyThreat()) break;
+          if (restBlockingCondition()) break;
+        }
+        if (steps === 0) {
+          state.message = "No clear route there.";
+        } else if (state.x === targetX && state.y === targetY) {
+          state.message = `The party arrives after ${steps} step${steps === 1 ? "" : "s"}.`;
+        } else if (restNearbyThreat()) {
+          state.message = `${state.message} The party stops as something approaches.`;
+        } else {
+          state.message = `The party travels ${steps} step${steps === 1 ? "" : "s"}.`;
+        }
+        render();
+      }
+
       Object.assign(context, {
         bfsNextStep,
         autoExploreTarget,
@@ -216,6 +261,7 @@
         autoExplore,
         travelToStairsTarget,
         travelToStairs,
+        travelTo,
         nearestMonsterDistance,
       });
     }

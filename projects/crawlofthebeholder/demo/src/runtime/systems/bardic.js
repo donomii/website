@@ -70,7 +70,8 @@
           return (m.hp || 0) > 0 && d <= BARDIC_RANGE;
         });
         for (const m of targets) {
-          m.fearedTurns = Math.max(m.fearedTurns || 0, DIRGE_FEAR_TURNS);
+          m.fearTurns = Math.max(m.fearTurns || 0, m.fearedTurns || 0, DIRGE_FEAR_TURNS);
+          m.fearedTurns = 0;
         }
         messages.push(targets.length > 0
           ? `A haunting dirge fills ${targets.length} foe${targets.length > 1 ? "s" : ""} with dread.`

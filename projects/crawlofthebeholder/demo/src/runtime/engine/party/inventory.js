@@ -99,9 +99,9 @@
       }
 
 
-      function equipItem(item, slot, verb) {
-        const target = liveMember();
-        if (!target) return false;
+      function equipItem(item, slot, verb, member) {
+        const target = member || liveMember();
+        if (!target || target.hp <= 0) return false;
         const previous = target[slot];
         if (previous && previous.cursed) {
           if (typeof identifyItem === "function") identifyItem(previous);

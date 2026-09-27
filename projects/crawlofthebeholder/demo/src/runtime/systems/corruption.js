@@ -66,6 +66,19 @@
         messages.push("The void strains but cannot tear open here.");
       }
 
+      function staggerParty(messages) {
+        const step = dirs[Math.floor(Math.random() * dirs.length)];
+        const x = state.x + step.x;
+        const y = state.y + step.y;
+        messages.push("Corruption compels you to stagger!");
+        if (!mapContains(x, y) || solidAt(x, y) || monsterAt(x, y) || allyAt(x, y) || trapAt(x, y)) return false;
+        state.x = x;
+        state.y = y;
+        if (typeof pulse === "function") pulse("move");
+        reveal();
+        return true;
+      }
+
       function tickCorruption(messages) {
         if (context.corruptionDisabled) return false;
         const level = corruptionLevel();
@@ -95,10 +108,8 @@
           }
         }
 
-        // At 75+: compelled movement — random direction nudge (just message for now).
-        if (level >= 75 && Math.random() < 0.04) {
-          messages.push("Corruption compels you to stagger!");
-        }
+        // At 75+: compelled movement — random direction nudge.
+        if (level >= 75 && Math.random() < 0.04) staggerParty(messages);
 
         // At 100: summon wraith. Reset corruption to 60 so it can happen again.
         if (level >= 100) {

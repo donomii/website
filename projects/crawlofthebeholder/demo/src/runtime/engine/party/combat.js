@@ -76,7 +76,7 @@
         }
 
         if (Math.abs(state.x - monster.x) + Math.abs(state.y - monster.y) <= 1) {
-          const hit = hurtLiveMember(baseDamage, 0);
+          const hit = hurtLiveMember(baseDamage, 0, null, monster);
           if (hit) addDamageMark(state, "fire", hit.damage);
           if (hit) messages.push(`${hit.defender.name} is caught for ${hit.damage}.`);
           if (hit && !liveMember()) {
@@ -130,7 +130,6 @@
           const hpGain = 4 + Math.ceil(state.level / 2);
           for (const member of state.party) {
             member.maxHp += hpGain;
-            if (member.hp > 0) member.hp += hpGain;
             if (state.level % 2 === 0) member.power += 1;
             if (state.level % 3 === 0) member.defense += 1;
           }
@@ -205,10 +204,7 @@
         const proc = activeWeaponProc();
         if (!proc || damage <= 0 || target.hp <= 0) return "";
         if (proc === "vampiric") {
-          const heal = Math.max(1, Math.ceil(damage / 4));
-          const wounded = liveMembers().filter((m) => m.hp < m.maxHp).sort((a, b) => a.hp - b.hp)[0];
-          if (wounded) wounded.hp = Math.min(wounded.maxHp, wounded.hp + heal);
-          return ` Lifesteal heals ${heal}.`;
+          return " Lifesteal is inactive; recovery requires consumable supplies.";
         }
         if (proc === "freeze") {
           target.slowedTurns = Math.max(target.slowedTurns || 0, 3);
@@ -271,15 +267,18 @@
           damage += memberAttackDamage(attackers[index], index, target);
           names.push(attackers[index].name);
         }
+        // Sneak attack (combat extras): a foe that hasn't noticed the party
+        // takes bonus damage on the opening strike.
+        damage += typeof sneakAttackBonus === "function" ? sneakAttackBonus(target, damage) : 0;
         const critRolled = !options.sweep && rollCriticalChance();
         if (critRolled) {
           damage = Math.round(damage * 2);
           state.criticalHits = (state.criticalHits || 0) + 1;
           if (typeof flashCrit === "function") flashCrit();
           if (typeof shakeViewport === "function") shakeViewport(2);
-          if (typeof pulse === "function") pulse("crit");
+          if (typeof pulse === "function") pulse("crit", target);
         } else if (typeof pulse === "function") {
-          pulse("attack");
+          pulse("attack", target);
         }
         if (typeof queueFloater === "function") queueFloater(damage, critRolled ? "crit" : "damage");
         if (options.chargeBonus) damage = Math.round(damage * options.chargeBonus);

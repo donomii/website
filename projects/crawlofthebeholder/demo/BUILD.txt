@@ -1,8 +1,8 @@
 Crawl of the Beholder
 version: 0.3.105
 entrypoint: index.html
-app files: 86
+app files: 98
 metadata files: 3
-assets: 968
+assets: 1041
 
 Open index.html from a static web server. All referenced game assets are copied under vendor/.

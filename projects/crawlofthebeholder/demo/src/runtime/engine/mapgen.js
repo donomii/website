@@ -437,6 +437,9 @@
         }
         const floors = generateDungeon(count || resources.floors.length, { ...opts, seed });
         resources.floors = floors;
+        // Impose the win arc on the raw floors (Orb in the deepest vault, runes
+        // through the deep floors, seal of Zot) before deriving the live copies.
+        if (typeof context.normalizeCampaign === "function") context.normalizeCampaign({ generated: true });
         state.floors = floors.map((floor) => ({
           openedDoors: new Set(),
           discovered: new Set(),
@@ -452,6 +455,12 @@
         state.x = floors[0].start.x;
         state.y = floors[0].start.y;
         state.dir = floors[0].start.dir;
+        // Bosses were seeded once at install against the baked floors; the live
+        // floors are brand new, so re-seed their champions here.
+        if (typeof context.seedBosses === "function") {
+          state.bossesSeeded = false;
+          context.seedBosses();
+        }
         return floors.length;
       }
 

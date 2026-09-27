@@ -1,8 +1,10 @@
 // Service worker for Crawl of the Beholder.
-// Strategy: cache-first for the app shell + runtime modules, network fallback.
-// Bump CACHE_VERSION whenever you ship new code so old caches get cleaned out.
+// Strategy: network-FIRST for same-origin requests, falling back to the cached
+// app shell only when offline. (Cache-first was a trap — edited code kept being
+// served stale until CACHE_VERSION was bumped by hand, which looked like fixes
+// "breaking again". Network-first means a reload always picks up new code.)
 
-const CACHE_VERSION = "cotb-v27-classlore";
+const CACHE_VERSION = "cotb-v35-side-decals";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -37,6 +39,7 @@ const APP_SHELL = [
   "./src/runtime/io/persistence.js",
   "./src/runtime/config/difficulty.js",
   "./src/runtime/config/deities.js",
+  "./src/runtime/config/portraits.js",
   "./src/runtime/systems/reactions.js",
   "./src/runtime/systems/economy.js",
   "./src/runtime/systems/inventory_extras.js",
@@ -49,6 +52,13 @@ const APP_SHELL = [
   "./src/runtime/systems/bestiary.js",
   "./src/runtime/systems/wanderers.js",
   "./src/runtime/systems/quests.js",
+  "./src/runtime/systems/campaign.js",
+  "./src/runtime/systems/fishing.js",
+  "./src/runtime/systems/graves.js",
+  "./src/runtime/systems/delving.js",
+  "./src/runtime/systems/combat_extras.js",
+  "./src/runtime/systems/milestones.js",
+  "./src/runtime/systems/locks.js",
   "./src/runtime/systems/floor_hazards.js",
   "./src/runtime/systems/allies.js",
   "./src/runtime/systems/engineering.js",
@@ -88,7 +98,10 @@ const APP_SHELL = [
   "./src/runtime/systems/smithing.js",
   "./src/runtime/systems/morale.js",
   "./src/runtime/systems/constellations.js",
+  "./src/runtime/systems/charms.js",
   "./src/runtime/render/mobile.js",
+  "./src/runtime/render/vr.js",
+  "./src/runtime/io/dev_options.js",
   "./src/runtime/io/input.js"
 ];
 
@@ -129,17 +142,17 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_VERSION);
-    const cached = await cache.match(req, { ignoreSearch: true });
-    if (cached) return cached;
     try {
+      // Network first: always serve the freshest code, and refresh the cache.
       const network = await fetch(req);
-      // Cache same-origin successful responses (skip opaque/error responses).
       if (network && network.ok && network.type !== "opaque") {
         try { await cache.put(req, network.clone()); } catch (e) {}
       }
       return network;
     } catch (error) {
-      // Fully offline and we missed cache. Fall back to a tiny synthetic page.
+      // Offline → fall back to whatever we cached.
+      const cached = await cache.match(req, { ignoreSearch: true });
+      if (cached) return cached;
       if (req.headers.get("accept")?.includes("text/html")) {
         return new Response("<!doctype html><meta charset=utf-8><title>Offline</title><p>You're offline and this page isn't cached yet.</p>", {
           status: 200,

@@ -13,12 +13,21 @@
           reward: { gold: 20 }
         },
         {
+          id: "runes",
+          name: "Break the seal of Zot",
+          description: "Gather runes to breach the sanctum.",
+          progress: () => typeof runesHeld === "function" ? runesHeld() : 0,
+          target: () => typeof requiredRunesForZot === "function" ? requiredRunesForZot() : 3,
+          done: () => typeof runesHeld === "function" && typeof requiredRunesForZot === "function" && runesHeld() >= requiredRunesForZot(),
+          reward: { gold: 60 }
+        },
+        {
           id: "orb",
           name: "Recover the Orb",
-          description: "Pick up the Orb of Zot Soup.",
-          progress: () => state.inventory.some((i) => i.kind === "quest") || state.victory ? 1 : 0,
+          description: "Lift the Orb of Zot Soup from the sanctum.",
+          progress: () => (typeof hasOrb === "function" && hasOrb()) || state.victory ? 1 : 0,
           target: () => 1,
-          done: () => state.inventory.some((i) => i.kind === "quest") || state.victory
+          done: () => (typeof hasOrb === "function" && hasOrb()) || state.victory
         },
         {
           id: "escape",

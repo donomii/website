@@ -5,45 +5,11 @@
       const SWIPE_THRESHOLD = 36; // pixels
       const SWIPE_TIMEOUT_MS = 600;
       const LONG_PRESS_MS = 380;
+      const MOBILE_LAYOUT_QUERY = "(max-width: 720px), (max-width: 920px) and (orientation: landscape) and (max-height: 540px)";
 
       function isMobileLayout() {
         if (typeof window === "undefined") return false;
-        return window.matchMedia && window.matchMedia("(max-width: 720px)").matches;
-      }
-
-      function setActiveTab(name) {
-        if (!name) return;
-        state.activeMobileTab = name;
-        if (typeof document === "undefined") return;
-        if (typeof document.querySelectorAll !== "function") return;
-        const tabs = document.querySelectorAll(".mobile-tab[data-tab]");
-        if (tabs && typeof tabs.forEach === "function") {
-          tabs.forEach((tab) => {
-            tab.setAttribute?.("aria-pressed", tab.dataset?.tab === name ? "true" : "false");
-          });
-        }
-        const panels = document.querySelectorAll(".side-panel .tool-panel[data-panel]");
-        if (panels && typeof panels.forEach === "function") {
-          panels.forEach((panel) => {
-            panel.setAttribute?.("data-active", panel.dataset?.panel === name ? "true" : "false");
-          });
-        }
-      }
-
-      function ensureDefaultTab() {
-        if (!state.activeMobileTab) setActiveTab("map");
-        else setActiveTab(state.activeMobileTab);
-      }
-
-      function bindMobileTabs() {
-        if (typeof document === "undefined") return;
-        document.querySelectorAll(".mobile-tab[data-tab]").forEach((tab) => {
-          tab.addEventListener("click", (event) => {
-            event.preventDefault();
-            setActiveTab(tab.dataset.tab);
-          });
-        });
-        ensureDefaultTab();
+        return window.matchMedia && window.matchMedia(MOBILE_LAYOUT_QUERY).matches;
       }
 
       function bindMoreActionsSheet() {
@@ -59,6 +25,10 @@
         });
       }
 
+      function isViewportInteractionEvent(event) {
+        return !!event.target?.closest?.(".viewport-target");
+      }
+
       // Touch swipe detection on the viewport.
       function bindViewportTouch() {
         const node = els.viewport;
@@ -70,6 +40,11 @@
         let suppressed = false;
 
         node.addEventListener("touchstart", (event) => {
+          if (isViewportInteractionEvent(event)) {
+            suppressed = true;
+            if (longPressTimer) { window.clearTimeout(longPressTimer); longPressTimer = 0; }
+            return;
+          }
           if (event.touches.length !== 1) return;
           const touch = event.touches[0];
           startX = touch.clientX;
@@ -85,6 +60,7 @@
         }, { passive: true });
 
         node.addEventListener("touchmove", (event) => {
+          if (suppressed || isViewportInteractionEvent(event)) return;
           if (event.touches.length !== 1) return;
           const touch = event.touches[0];
           const dx = touch.clientX - startX;
@@ -96,7 +72,7 @@
 
         node.addEventListener("touchend", (event) => {
           if (longPressTimer) { window.clearTimeout(longPressTimer); longPressTimer = 0; }
-          if (suppressed) return;
+          if (suppressed || isViewportInteractionEvent(event)) { suppressed = false; return; }
           if (Date.now() - startTime > SWIPE_TIMEOUT_MS) return;
           const touch = event.changedTouches[0];
           if (!touch) return;
@@ -195,7 +171,6 @@
 
       function bindMobile() {
         if (typeof document === "undefined") return;
-        bindMobileTabs();
         bindMoreActionsSheet();
         bindViewportTouch();
         bindMinimapTaps();
@@ -228,10 +203,12 @@
         return true;
       }
 
-      function pulse(kind) {
+      function pulse(kind, at) {
         // Fire the matching sound effect (if installed) alongside the haptic.
-        // playSound has its own settings/gate so this stays orthogonal.
-        if (typeof playSound === "function") playSound(kind);
+        // playSound has its own settings/gate so this stays orthogonal. `at`
+        // (anything with tile x/y — a monster, a door cell) positions the
+        // sound; omitted means it happens to the party itself.
+        if (typeof playSound === "function") playSound(kind, at);
         if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return false;
         if (!hapticsEnabled()) return false;
         const pattern = HAPTIC_PATTERNS[kind];
@@ -303,8 +280,8 @@
 
       Object.assign(context, {
         isMobileLayout,
-        setActiveTab,
         bindMobile,
+        isViewportInteractionEvent,
         travelToCell,
         pulse,
         hapticsEnabled,

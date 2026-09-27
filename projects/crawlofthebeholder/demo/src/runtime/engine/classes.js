@@ -7,55 +7,43 @@
           key: "warrior",
           name: "Warrior",
           glyph: "⚔",
-          description: "Front-line bruiser. +2 defense passive. Signature: Rally — +3 power across the party for 4 turns.",
+          description: "Front-line bruiser. +2 defense, +1 power. Primary: Rally (+3 party power for the next 4 turns; cannot stack or refresh active might). Secondary: War Cry (frighten nearby foes). Both spend a turn and have separate cooldowns.",
           passiveDefense: 2,
           passivePower: 1,
           signatureCooldown: 20,
-          signature: { id: "rally", label: "Rally", body: "+3 power for 4 turns" },
-          ultimate: { id: "warcry", label: "War Cry", body: "Might + frighten nearby foes", cooldown: 36 }
+          signature: { id: "rally", label: "Rally", body: "+3 party power for the next 4 turns; wait until active might ends to rally again" },
+          ultimate: { id: "warcry", label: "War Cry", body: "Frighten foes within 6 tiles for 5 turns", cooldown: 36 }
         },
         mage: {
           key: "mage",
           name: "Mage",
           glyph: "✦",
-          description: "Spell-thrower. Wands hit 25% harder. Signature: Arcane Sight — reveals the floor and adds a charge to one held wand.",
+          description: "Spell-thrower. Wands hit 25% harder. Primary: Arcane Sight (reveal the floor). Secondary: Meteor (fire damage to discovered foes within 8 tiles and clear sight; walls, closed doors and smoke block it). Both spend a turn and have separate cooldowns.",
           passiveDefense: 0,
           passivePower: 0,
           wandPowerMultiplier: 1.25,
           signatureCooldown: 28,
-          signature: { id: "arcane_sight", label: "Arcane Sight", body: "Reveal the floor, +1 wand charge" },
-          ultimate: { id: "meteor", label: "Meteor", body: "Heavy fire damage to all visible foes", cooldown: 40 }
+          signature: { id: "arcane_sight", label: "Arcane Sight", body: "Reveal the floor; does not recharge items" },
+          ultimate: { id: "meteor", label: "Meteor", body: "Fire damage to discovered foes within 8 tiles and clear sight; no target costs no turn", cooldown: 40 }
         },
         rogue: {
           key: "rogue",
           name: "Rogue",
           glyph: "✦",
-          description: "Knife-fighter. +1 evasion party-wide. Signature: Shadow Step — short safe blink.",
+          description: "Scout. +1 defense, extended trap-disarm reach. Primary: Shadow Step (short safe blink). Secondary: Smoke Screen (fog around the party). Both spend a turn and have separate cooldowns.",
           passiveDefense: 1,
           passivePower: 0,
           disarmReach: 2,
           signatureCooldown: 16,
           signature: { id: "shadow_step", label: "Shadow Step", body: "Short blink away from danger" },
-          ultimate: { id: "vanish", label: "Vanish", body: "Blink + reset every monster's alert", cooldown: 30 }
-        },
-        cleric: {
-          key: "cleric",
-          name: "Cleric",
-          glyph: "✚",
-          description: "Devoted healer. Rest heals +1 extra. Signature: Blessing — heals 12 HP across the party and clears poison, burn, and bleeding.",
-          passiveDefense: 1,
-          passivePower: 0,
-          restBonus: 1,
-          signatureCooldown: 24,
-          signature: { id: "blessing", label: "Blessing", body: "Heal 12 HP, clear poison/burn/bleed" },
-          ultimate: { id: "sanctuary", label: "Sanctuary", body: "Full heal + clear all party ailments", cooldown: 44 }
+          ultimate: { id: "smoke_screen", label: "Smoke Screen", body: "Create 5-turn fog to block sight-based shots, not adjacent melee or smiting", cooldown: 30 }
         }
       };
 
       // Default class assignment by member name → class.
       const DEFAULT_CLASS_BY_NAME = {
         Mino: "warrior",
-        Ash: "cleric",
+        Ash: "warrior",
         Kob: "rogue",
         Vex: "mage"
       };
@@ -90,7 +78,6 @@
           if (klass.key === "warrior") { member.maxHp += 6; member.hp += 6; }
           if (klass.key === "mage") { member.maxHp -= 2; member.hp = Math.max(1, member.hp - 2); }
           if (klass.key === "rogue") { member.maxHp += 2; member.hp += 2; }
-          if (klass.key === "cleric") { member.maxHp += 4; member.hp += 4; }
         }
         addClassStartingItems();
       }
@@ -101,19 +88,15 @@
         const tile = sample.tile || "";
         let serial = 0;
         const make = (props) => ({ id: `starter-${++serial}-${state.lootSerial++}`, tile, ...props });
-        if (classes.has("warrior")) {
-          state.inventory.push(make({ name: "iron rations", shortName: "ration", kind: "food", power: 500 }));
-        }
         if (classes.has("mage")) {
           state.inventory.push(make({ name: "wand of flame", shortName: "flame", kind: "wand", power: 6, charges: 3 }));
         }
         if (classes.has("rogue")) {
           state.inventory.push(make({ name: "throwing daggers", shortName: "dagger", kind: "throwable", power: 5, charges: 4, range: 4 }));
         }
-        if (classes.has("cleric")) {
-          state.inventory.push(make({ name: "scroll of remove curse", shortName: "rc", kind: "remove_curse" }));
-          state.inventory.push(make({ name: "potion of curing", shortName: "cure", kind: "healing", power: 14 }));
-        }
+        // Recovery supplies belong to every party, not a healer's starting kit.
+        state.inventory.push(make({ name: "potion of curing", shortName: "cure", kind: "healing", power: 14 }));
+        state.inventory.push(make({ name: "potion of curing", shortName: "cure", kind: "healing", power: 14 }));
         // Everyone gets a torch so lighting feels like a real mechanic.
         state.inventory.push(make({ name: "weathered torch", shortName: "torch", kind: "torch" }));
       }
@@ -132,12 +115,7 @@
       }
 
       function classRestBonus() {
-        let bonus = 0;
-        for (const member of state.party) {
-          if (member.hp <= 0) continue;
-          bonus += classFor(member)?.restBonus || 0;
-        }
-        return bonus;
+        return 0;
       }
 
       function classDisarmReach() {
@@ -166,41 +144,20 @@
       }
 
       function applyRally() {
-        state.mightTurns = Math.max(state.mightTurns || 0, 4);
+        // The activation turn ticks once before the party can attack again.
+        state.mightTurns = Math.max(state.mightTurns || 0, 5);
         // Add a stack of extra power for 4 turns via the existing might pipeline.
-        state.message = "The warrior rallies the party!";
+        state.message = "The warrior rallies the party! +3 party power for the next 4 turns.";
       }
 
       function applyArcaneSight() {
         revealAll();
-        const wand = state.inventory.find((item) => item.kind === "wand" && (item.charges || 0) > 0);
-        if (wand) {
-          wand.charges = (wand.charges || 0) + 1;
-          state.message = `The mage chants — the floor unfolds, and ${wand.name} hums with another charge.`;
-        } else {
-          state.message = "The mage chants — the floor unfolds.";
-        }
+        state.message = "The mage chants — the floor unfolds.";
       }
 
       function applyShadowStep() {
         const moved = blinkParty();
         state.message = moved ? "The rogue slips through the dark." : "The rogue's blink fizzles.";
-      }
-
-      function applyBlessing() {
-        let healed = 0;
-        for (const member of state.party) {
-          if (member.hp <= 0) continue;
-          const before = member.hp;
-          member.hp = Math.min(member.maxHp, member.hp + 12);
-          healed += member.hp - before;
-        }
-        const cleared = [];
-        if (state.poisonedTurns > 0) { state.poisonedTurns = 0; cleared.push("poison"); }
-        if (state.burningTurns > 0) { state.burningTurns = 0; cleared.push("burn"); }
-        if (state.bleedingTurns > 0) { state.bleedingTurns = 0; cleared.push("bleeding"); }
-        const clearNote = cleared.length ? ` Clears ${cleared.join(", ")}.` : "";
-        state.message = `The cleric blesses the party for ${healed} HP.${clearNote}`;
       }
 
       function triggerSignature() {
@@ -221,11 +178,13 @@
           return;
         }
 
-        switch (klass.signature.id) {
+        if (klass.signature.id === "rally" && state.mightTurns > 0) {
+          setMessage(`Might is already active (${state.mightTurns} turns). Rally cannot stack or refresh it; no turn spent.`);
+          return;
+        } else switch (klass.signature.id) {
           case "rally": applyRally(); break;
           case "arcane_sight": applyArcaneSight(); break;
           case "shadow_step": applyShadowStep(); break;
-          case "blessing": applyBlessing(); break;
           default: setMessage(`${leader.name} fumbles their signature.`); return;
         }
         if (typeof pulse === "function") pulse("signature");
@@ -235,7 +194,6 @@
       }
 
       function applyWarcry() {
-        state.mightTurns = Math.max(state.mightTurns || 0, 8);
         let frightened = 0;
         for (const monster of currentFloorState().monsters) {
           if (monster.hp <= 0) continue;
@@ -248,36 +206,30 @@
 
       function applyMeteor() {
         const floorState = currentFloorState();
-        const targets = floorState.monsters.filter((m) => m.hp > 0 && floorState.discovered.has(keyOf(m.x, m.y)) && distanceToPlayer(m) <= 8);
-        let total = 0;
-        for (const monster of targets) {
-          const base = 18 + Math.floor(Math.random() * 8);
-          const dmg = typeof monsterElementDamage === "function" ? monsterElementDamage(monster, base, "fire") : base;
-          monster.hp = Math.max(0, monster.hp - dmg);
-          total += 1;
-          if (monster.hp === 0 && typeof killMonster === "function") killMonster(monster);
+        const targets = floorState.monsters.filter((m) => m.hp > 0 && floorState.discovered.has(keyOf(m.x, m.y)) && distanceToPlayer(m) <= 8 && clearSightBetween(state, m));
+        if (targets.length === 0) {
+          setMessage("Meteor needs a discovered foe within 8 tiles and clear sight. Walls, closed doors and smoke block it; no turn spent.");
+          return false;
+        } else {
+          for (const monster of targets) {
+            const base = 18 + Math.floor(Math.random() * 8);
+            const dmg = typeof monsterElementDamage === "function" ? monsterElementDamage(monster, base, "fire") : base;
+            monster.hp = Math.max(0, monster.hp - dmg);
+            if (monster.hp === 0 && typeof killMonster === "function") killMonster(monster);
+          }
+          if (typeof addEffect === "function") addEffect("immolation", targets.map((m) => ({ x: m.x, y: m.y })));
+          state.message = `A meteor crashes down on ${targets.length} foe${targets.length === 1 ? "" : "s"}.`;
+          return true;
         }
-        if (typeof addEffect === "function") addEffect("immolation", targets.map((m) => ({ x: m.x, y: m.y })));
-        state.message = `A meteor crashes down on ${total} foe${total === 1 ? "" : "s"}.`;
       }
 
-      function applyVanish() {
-        const moved = typeof blinkParty === "function" ? blinkParty() : false;
-        for (const monster of currentFloorState().monsters) monster.alerted = false;
-        state.message = moved ? "The rogue vanishes; the dungeon forgets the party." : "The rogue melts into shadow; pursuers lose the trail.";
-      }
-
-      function applySanctuary() {
-        for (const member of state.party) {
-          if (member.hp > 0) member.hp = member.maxHp;
-        }
-        const ailments = ["poisonedTurns", "burningTurns", "bleedingTurns", "snaredTurns", "barbedTurns", "engulfedTurns", "dazedTurns", "stunnedTurns", "corrodedTurns", "vitrifiedTurns", "slowedTurns"];
-        for (const key of ailments) state[key] = 0;
-        state.message = "Sanctuary floods the party with light. All wounds and ailments wash away.";
+      function applySmokeScreen() {
+        spreadFog(5);
+        state.message = "The rogue surrounds the party with smoke, obstructing sight.";
       }
 
       function ultimateUnlocked() {
-        return (state.level || 1) >= 10;
+        return true;
       }
 
       function triggerUltimate() {
@@ -293,19 +245,16 @@
           setMessage(`${leader?.name || "The leader"} has no ultimate ability.`);
           return;
         }
-        if (!ultimateUnlocked()) {
-          setMessage(`${klass.ultimate.label} unlocks at level 10 (currently ${state.level}).`);
-          return;
-        }
         if ((leader.ultimateCooldown || 0) > 0) {
           setMessage(`${klass.ultimate.label} is recharging (${leader.ultimateCooldown} turns).`);
           return;
         }
         switch (klass.ultimate.id) {
           case "warcry": applyWarcry(); break;
-          case "meteor": applyMeteor(); break;
-          case "vanish": applyVanish(); break;
-          case "sanctuary": applySanctuary(); break;
+          case "meteor":
+            if (!applyMeteor()) return;
+            else break;
+          case "smoke_screen": applySmokeScreen(); break;
           default: setMessage(`${leader.name} fumbles their ultimate.`); return;
         }
         if (typeof pulse === "function") pulse("signature");
@@ -320,7 +269,7 @@
 
       // Each class echoes a real DCSS background; classLore() surfaces that
       // background's authentic flavour (from backgrounds.txt via lore.js).
-      const CLASS_BACKGROUND = { warrior: "fighter", mage: "conjurer", rogue: "brigand", cleric: "monk" };
+      const CLASS_BACKGROUND = { warrior: "fighter", mage: "conjurer", rogue: "brigand" };
       function classBackground(classKey) { return CLASS_BACKGROUND[classKey] || null; }
       function classLore(classKey) {
         const bg = CLASS_BACKGROUND[classKey];
@@ -398,14 +347,12 @@
         applyRally,
         applyArcaneSight,
         applyShadowStep,
-        applyBlessing,
         triggerSignature,
         triggerUltimate,
         ultimateUnlocked,
         applyWarcry,
         applyMeteor,
-        applyVanish,
-        applySanctuary,
+        applySmokeScreen,
         applyClassStartingStats,
         addClassStartingItems,
         getClassDefinitions,

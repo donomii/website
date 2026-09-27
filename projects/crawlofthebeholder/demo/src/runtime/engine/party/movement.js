@@ -29,9 +29,15 @@
         if (trap.playerLaid) return false;
         trap.armed = false;
 
+        // Shaft traps drop the party a floor (delving module); float past on levitation.
+        if (typeof shaftFall === "function" && shaftFall(trap)) return true;
+
         if (trap.kind === "alarm") {
           const floorState = currentFloorState();
-          for (const monster of floorState.monsters) floorState.discovered.add(keyOf(monster.x, monster.y));
+          for (const monster of floorState.monsters) {
+            floorState.discovered.add(keyOf(monster.x, monster.y));
+            monster.alerted = true;
+          }
           addEffect("smite", [{ x: state.x, y: state.y }]);
           state.message = `${trap.name} screams through the halls.`;
           return true;
@@ -65,9 +71,12 @@
 
 
       function openDoor(x, y) {
+        // Locked doors (locks module): a key opens silently, a failed bash
+        // costs the turn and leaves the door shut.
+        if (typeof doorLockBlocks === "function" && doorLockBlocks(x, y)) return;
         currentFloorState().openedDoors.add(keyOf(x, y));
         state.doorsOpened = (state.doorsOpened || 0) + 1;
-        if (typeof pulse === "function") pulse("door");
+        if (typeof pulse === "function") pulse("door", { x, y });
         state.message = "The door grinds into the wall.";
         reveal();
         advanceTurn();
@@ -124,7 +133,7 @@
           return;
         }
         if (solidAt(nextX, nextY)) {
-          if (typeof pulse === "function") pulse("bump");
+          if (typeof pulse === "function") pulse("bump", { x: nextX, y: nextY });
           setMessage("Stone refuses the party.");
           return;
         }
@@ -293,7 +302,11 @@
         }
         if (stairs.direction === "down") {
           if (state.floorIndex === resources.floors.length - 1) {
-            setMessage("The stairs descend into the next chunk of game that does not exist yet.");
+            setMessage("This is the deepest vault — the Orb of Zot Soup lies here, not below.");
+            return;
+          }
+          if (typeof runeGateBlocks === "function" && runeGateBlocks(state.floorIndex + 1)) {
+            setMessage(runeGateMessage());
             return;
           }
           changeFloor(state.floorIndex + 1, "down");

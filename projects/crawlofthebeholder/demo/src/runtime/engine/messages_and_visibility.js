@@ -2,8 +2,26 @@
   window.CotBRuntime = window.CotBRuntime || {};
   window.CotBRuntime.installMessagesAndVisibility = function (context) {
     with (context) {
+      // The Orb of Zot Soup is the single win item. Runes are separate quest
+      // objectives that gate the descent into Zot — holding one is NOT the prize.
+      function isOrbItem(item) {
+        return !!item && item.kind === "quest" && (item.shortName === "orb" || /orb of zot/i.test(item.name || ""));
+      }
+
+      function isRuneItem(item) {
+        return !!item && item.kind === "quest" && !isOrbItem(item) && /rune/i.test(item.name || "");
+      }
+
+      function hasOrb() {
+        return state.inventory.some(isOrbItem);
+      }
+
+      function runesHeld() {
+        return state.inventory.filter(isRuneItem).length;
+      }
+
       function hasPrize() {
-        return state.inventory.some((item) => item.kind === "quest");
+        return hasOrb();
       }
 
       function percent(value, max) {
@@ -132,7 +150,7 @@
         const filter = state.inventoryFilter || "all";
         let items = state.inventory.filter((item) => {
           if (filter === "all") return true;
-          if (filter === "consumables") return ["healing", "mapping", "might", "resistance", "haste", "blink", "teleport", "fear", "fog", "poison", "immolation", "silence"].includes(item.kind);
+          if (filter === "consumables") return ["healing", "mapping", "might", "resistance", "haste", "blink", "teleport", "fear", "fog", "poison", "immolation", "silence", "charm"].includes(item.kind);
           if (filter === "weapons") return item.kind === "weapon";
           if (filter === "armour") return item.kind === "armour" || item.kind === "talisman" || item.kind === "ring" || item.kind === "amulet";
           if (filter === "magic") return ["wand", "evocable", "throwable"].includes(item.kind);
@@ -271,6 +289,10 @@
 
       Object.assign(context, {
         hasPrize,
+        isOrbItem,
+        isRuneItem,
+        hasOrb,
+        runesHeld,
         percent,
         setMessage,
         rememberMessage,

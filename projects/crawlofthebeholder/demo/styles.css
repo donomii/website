@@ -85,6 +85,12 @@ button {
   letter-spacing: 0;
 }
 
+.brand-mark img {
+  width: 34px;
+  height: 34px;
+  image-rendering: pixelated;
+}
+
 .version-badge {
   color: #c9b282;
   font-size: 12px;
@@ -171,6 +177,76 @@ h2 {
   image-rendering: pixelated;
 }
 
+.viewport-interactive-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.viewport-target {
+  position: absolute;
+  width: var(--target-w);
+  min-height: var(--target-h);
+  transform: translate(-50%, -50%);
+  display: inline-grid;
+  place-items: center;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font: 700 11px/1.1 system-ui, sans-serif;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  box-sizing: border-box;
+}
+
+.viewport-target.enabled {
+  pointer-events: auto;
+  cursor: pointer;
+  border: 1px solid rgba(240, 208, 122, 0.82);
+  background: rgba(34, 27, 17, 0.82);
+  color: #f6dda0;
+  box-shadow: 0 0 0 1px rgba(4, 3, 2, 0.7), 0 4px 14px rgba(0, 0, 0, 0.42);
+}
+
+.viewport-target.enabled:hover,
+.viewport-target.enabled:focus-visible {
+  border-color: #ffe18a;
+  color: #fff1c5;
+  background: rgba(54, 42, 23, 0.92);
+  outline: none;
+}
+
+.viewport-target.passive {
+  pointer-events: none;
+  border: 1px solid rgba(178, 156, 101, 0.34);
+  background: rgba(8, 7, 6, 0.48);
+  color: rgba(238, 210, 144, 0.72);
+}
+
+.viewport-target.target-gold {
+  color: #ffe187;
+  border-color: rgba(219, 177, 62, 0.72);
+}
+
+.viewport-target.target-prize {
+  color: #d9cbff;
+  border-color: rgba(148, 126, 230, 0.78);
+}
+
+.viewport-target.target-trap {
+  color: #ffb59f;
+  border-color: rgba(208, 91, 62, 0.76);
+}
+
+.viewport-target.target-door,
+.viewport-target.target-stairs {
+  color: #cfe3ff;
+  border-color: rgba(121, 164, 212, 0.66);
+}
+
 .command-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(40px, 1fr));
@@ -202,12 +278,28 @@ h2 {
 }
 
 .side-panel {
-  display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  align-content: start;
   min-height: 0;
   overflow: hidden;
+}
+
+.side-panel > .accordion-panel {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.side-panel > .accordion-panel[open] {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.side-panel > .accordion-panel[open] > :not(summary) {
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
 }
 
 .tool-panel {
@@ -523,71 +615,6 @@ h2 {
   white-space: nowrap;
 }
 
-.nearby {
-  min-height: 44px;
-  padding: 5px 9px 6px;
-  color: #cdbb9e;
-  font-size: 11px;
-  line-height: 1.22;
-}
-
-.nearby strong {
-  color: #f2d183;
-}
-
-.nearby-list {
-  display: grid;
-  gap: 2px;
-}
-
-.nearby-row {
-  display: grid;
-  grid-template-columns: 50px 1fr auto;
-  gap: 8px;
-  align-items: baseline;
-  min-width: 0;
-}
-
-.nearby-row span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.nearby-row em {
-  color: #9fb889;
-  font-size: 10px;
-  font-style: normal;
-}
-
-.nearby-row.danger strong {
-  color: #e58f75;
-}
-
-.nearby-row.ranged strong {
-  color: #8bd7e2;
-}
-
-.nearby-row.prize strong {
-  color: #d8c7ff;
-}
-
-.nearby-row.gold strong {
-  color: #f1d07a;
-}
-
-.nearby-row.trap strong {
-  color: #e0a06f;
-}
-
-.nearby-row.door strong {
-  color: #caa264;
-}
-
-.nearby-empty {
-  color: #9b8e78;
-}
-
 .message-log {
   display: grid;
   gap: 2px;
@@ -617,11 +644,6 @@ h2 {
   opacity: 0.58;
 }
 
-/* Mobile tab nav is invisible on desktop layouts. */
-.mobile-tabs {
-  display: none;
-}
-
 /* The "more" button only appears on small screens. */
 .command-strip button[data-tier="more"] {
   display: none;
@@ -629,21 +651,24 @@ h2 {
 
 @media (max-width: 920px) {
   .shell {
-    grid-template-columns: 1fr;
-    overflow: auto;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 38%);
+    overflow: hidden;
   }
 
   .viewport-column {
-    grid-template-rows: minmax(360px, 56vh) auto;
+    grid-template-rows: minmax(0, 1fr);
+    min-height: 0;
   }
 
   .side-panel {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    max-height: none;
+    overflow: hidden;
   }
 }
 
 @media (max-width: 720px) {
-  /* Phone layout: single column stacked, sticky controls at the bottom. */
+  /* Phone layout: single column stacked, with controls in a dedicated bottom row. */
   html, body {
     overflow: hidden;
     /* Prevent iOS rubber-band scrolling on the game shell. */
@@ -694,30 +719,27 @@ h2 {
 
   .shell {
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 58%);
     padding: 8px;
     gap: 8px;
     overflow: hidden;
   }
 
   .viewport-column {
-    grid-template-rows: minmax(0, 45vh) auto;
+    grid-template-rows: minmax(0, 1fr);
     gap: 8px;
   }
 
   .viewport {
-    min-height: 220px;
+    min-height: 0;
     touch-action: none; /* let our swipe handler intercept */
     -webkit-user-select: none;
     user-select: none;
   }
 
-  /* Command strip becomes a fixed bottom bar with a 9-button D-pad layout. */
+  /* Command strip becomes a bottom bar with a 9-button D-pad layout. */
   .command-strip {
-    position: sticky;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 20;
+    position: static;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 6px;
     max-width: none;
@@ -761,47 +783,9 @@ h2 {
   .command-strip button[data-action="interact"]     { grid-area: 2 / 4 / 3 / 5; background: linear-gradient(#2d4a1e, #16210f); border-color: #80a23a; }
   .command-strip button[data-action="wait"]         { grid-area: 2 / 5 / 3 / 6; }
 
-  /* Side panel becomes a single visible section with mobile tabs. */
+  /* Keep every accordion header visible while the open section uses the remaining height. */
   .side-panel {
-    grid-template-rows: auto minmax(0, 1fr);
-    grid-template-columns: 1fr;
     gap: 6px;
-  }
-
-  .mobile-tabs {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 4px;
-    padding: 0 4px;
-  }
-
-  .mobile-tab {
-    min-height: 36px;
-    border: 1px solid #4d3c29;
-    border-radius: 6px;
-    background: linear-gradient(#2a2017, #1a1410);
-    color: #cdbb9e;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 4px;
-    touch-action: manipulation;
-  }
-
-  .mobile-tab[aria-pressed="true"] {
-    background: linear-gradient(#5b4423, #3a2c1b);
-    color: #f1d07a;
-    border-color: #d1a64d;
-  }
-
-  /* Show only the active panel on mobile; the JS toggles data-active="true". */
-  .side-panel .tool-panel {
-    display: none;
-    overflow: auto;
-  }
-
-  .side-panel .tool-panel[data-active="true"] {
-    display: block;
   }
 
   .map-grid {
@@ -849,8 +833,9 @@ h2 {
     text-align: center;
   }
 
-  .compass {
-    bottom: calc(env(safe-area-inset-bottom) + 124px);
+  body .compass {
+    top: calc(env(safe-area-inset-top) + 64px);
+    bottom: auto;
     left: 12px;
     padding: 5px 9px;
   }
@@ -918,14 +903,9 @@ h2 {
     min-height: 44px;
     font-size: 20px;
   }
-  .mobile-tab {
-    font-size: 10px;
-    min-height: 32px;
-  }
 }
 
-/* Landscape phone — fit the viewport on the left, side panel on the right,
-   keep the command bar pinned to the bottom across the full width. */
+/* Landscape phone — fit the viewport on the left and the accordion on the right. */
 @media (max-width: 920px) and (orientation: landscape) and (max-height: 540px) {
   .topbar {
     padding: 4px 10px;
@@ -947,9 +927,14 @@ h2 {
 
   .shell {
     grid-template-columns: minmax(0, 1.4fr) minmax(180px, 1fr);
+    grid-template-rows: minmax(0, 1fr);
     gap: 6px;
     padding: 6px 6px 0;
     overflow: hidden;
+  }
+
+  body .compass {
+    top: calc(env(safe-area-inset-top) + 42px);
   }
 
   .viewport-column {
@@ -963,24 +948,22 @@ h2 {
   }
 
   .side-panel {
-    grid-template-rows: auto minmax(0, 1fr);
     gap: 4px;
-  }
-
-  /* In landscape we can show more of the panel at once, so revert the
-     mobile-only single-section view and let everything stack with scroll. */
-  .side-panel .tool-panel {
-    display: block;
-  }
-
-  .mobile-tabs {
-    display: none;
   }
 
   /* Command strip stays compact but shorter. */
   .command-strip {
     grid-template-columns: repeat(10, minmax(0, 1fr));
     padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+  }
+
+  .command-strip button[data-tier="secondary"] {
+    display: none;
+  }
+
+  .command-strip button[data-tier="more"] {
+    display: grid;
+    place-items: center;
   }
 
   .command-strip button[data-tier="primary"],
@@ -1182,6 +1165,25 @@ kbd {
   cursor: pointer;
 }
 
+.settings-list .settings-choice {
+  justify-content: space-between;
+}
+
+.settings-list select {
+  background: #1f1812;
+  color: #f3e4c5;
+  border: 1px solid #4d3c29;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+
+.settings-help {
+  margin: -4px 0 3px;
+  color: #9f927a;
+  line-height: 1.4;
+}
+
 .achievements-list li,
 .history-list li {
   display: flex;
@@ -1377,13 +1379,21 @@ body.low-hp-warning::after {
 /* Character creation */
 .character-create-list {
   display: grid;
-  gap: 10px;
-  margin: 12px 0 18px;
+  gap: 6px;
+  margin: 10px 0 10px;
+}
+/* Two members per line once there's width for it — keeps the dialog inside
+   even a 500px-tall window (the no-scroll rule) now that rows carry
+   portrait pickers. */
+@media (min-width: 560px) {
+  .character-create-list {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 .character-create-row {
   display: grid;
   gap: 4px;
-  padding: 8px 10px;
+  padding: 6px 10px;
   background: rgba(34, 26, 18, 0.55);
   border: 1px solid #3a2e1f;
   border-radius: 5px;
@@ -1395,6 +1405,24 @@ body.low-hp-warning::after {
   font-size: 13px;
   color: #f3e4c5;
 }
+.create-portrait {
+  width: 30px;
+  height: 30px;
+  padding: 1px;
+  cursor: pointer;
+  border: 1px solid rgba(238, 193, 101, 0.4);
+  border-radius: 4px;
+  background: rgba(48, 40, 28, 0.9);
+}
+.create-portrait:hover {
+  border-color: #f1d07a;
+}
+.create-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
 .character-create-row select {
   background: #1f1812;
   color: #f3e4c5;
@@ -1403,10 +1431,58 @@ body.low-hp-warning::after {
   padding: 4px 6px;
   font-size: 12px;
 }
-.character-create-desc {
-  margin: 0;
+.party-portrait {
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  vertical-align: -5px;
+  image-rendering: pixelated;
+  border: 1px solid rgba(238, 193, 101, 0.4);
+  border-radius: 3px;
+  background: rgba(48, 40, 28, 0.9);
+}
+
+/* Instant inventory hover card. Fixed-position, pointer-transparent, always
+   fully on screen (positioning clamps it) — never a scrolling box. */
+.item-tooltip {
+  position: fixed;
+  z-index: 90;
+  max-width: 270px;
+  padding: 8px 10px;
+  pointer-events: none;
+  display: grid;
+  gap: 3px;
+  background: rgba(20, 16, 12, 0.97);
+  border: 1px solid #6e5530;
+  border-radius: 5px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
+  color: #e8ddc8;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.item-tooltip.hidden {
+  display: none;
+}
+.item-tooltip strong {
+  color: #f1d07a;
+  font-size: 13px;
+}
+.item-tooltip .tooltip-flags {
+  color: #b7d2df;
+  font-style: normal;
   font-size: 11px;
+}
+.item-tooltip .tooltip-effect {
+  color: #e8ddc8;
+}
+.item-tooltip .tooltip-stats {
   color: #b3a37c;
+  font-size: 11px;
+}
+.item-tooltip .tooltip-lore {
+  color: #8a8172;
+  font-style: italic;
+  font-size: 11px;
 }
 
 /* Dialogue choices */
@@ -1579,14 +1655,6 @@ body.colorblind .map-cell.ally { background: #56b4e9; color: #04121d; }
   font-size: 0.85em;
 }
 
-/* Character creation: real DCSS background flavour under each class. */
-.character-create-lore {
-  display: block;
-  margin-top: 4px;
-  font-style: italic;
-  opacity: 0.7;
-  font-size: 0.85em;
-}
 
 .accordion-panel {
   border: 1px solid var(--line);
@@ -1656,16 +1724,3 @@ body.colorblind .map-cell.ally { background: #56b4e9; color: #04121d; }
   border-color: #d1a64d;
   background: linear-gradient(#394832, #1c221c);
 }
-
-/* On mobile, force commands accordion open so the controls are always visible. */
-@media (max-width: 720px) {
-  .accordion-panel.commands-accordion > summary { display: none; }
-  .accordion-panel.commands-accordion > .command-strip { padding: 0; }
-  .accordion-panel.commands-accordion {
-    border: none;
-    background: transparent;
-    box-shadow: none;
-  }
-  .accordion-panel.commands-accordion > .command-strip { display: grid !important; }
-}
-

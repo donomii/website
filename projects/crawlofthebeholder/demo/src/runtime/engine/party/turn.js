@@ -55,18 +55,10 @@
 
       function waitTurn() {
         const adjacentThreat = currentFloorState().monsters.some((monster) => monster.hp > 0 && distanceToPlayer(monster) === 1);
-        if (!adjacentThreat) {
-          const baseHeal = hasEquippedNamed("amulet", "regeneration") || hasEquippedNamed("amulet", "vitality") ? 2 : 1;
-          const restBonus = typeof classRestBonus === "function" ? classRestBonus() : 0;
-          const talentBonus = typeof talentBonusRestHeal === "function" ? talentBonusRestHeal() : 0;
-          const deityBonus = typeof deityRestBonus === "function" ? deityRestBonus() : 0;
-          const healing = baseHeal + restBonus + talentBonus + deityBonus;
-          for (const member of state.party) {
-            if (member.hp > 0 && member.hp < member.maxHp) member.hp = Math.min(member.maxHp, member.hp + healing);
-          }
-          state.message = healing > 2 ? "The party catches a blessed breath." : healing > 1 ? "The party catches a strong breath." : "The party catches a breath.";
-        } else {
+        if (adjacentThreat) {
           state.message = "The party braces.";
+        } else {
+          state.message = "The party waits. Waiting does not restore health; use recovery supplies.";
         }
         advanceTurn();
         render();
@@ -102,49 +94,11 @@
 
 
       function restUntilReady() {
-        if (state.victory || state.defeated) return;
-        if (!restPartyWounded()) {
-          setMessage("The party is already at full strength.");
+        if (state.victory || state.defeated) {
           return;
-        }
-        const blocker = restBlockingCondition();
-        if (blocker) {
-          setMessage(`The party cannot rest while ${blocker} lingers.`);
-          return;
-        }
-        const initialThreat = restNearbyThreat();
-        if (initialThreat) {
-          setMessage(`${initialThreat.name} is too close. The party cannot rest.`);
-          return;
-        }
-
-        let turns = 0;
-        const maxTurns = 80;
-        let stoppedBy = null;
-        while (turns < maxTurns && restPartyWounded() && !state.defeated && !state.victory) {
-          waitTurn();
-          turns += 1;
-          const intruder = restNearbyThreat();
-          if (intruder) {
-            stoppedBy = `${intruder.name} closes in`;
-            break;
-          }
-          const newBlocker = restBlockingCondition();
-          if (newBlocker) {
-            stoppedBy = `${newBlocker} sets in`;
-            break;
-          }
-        }
-        if (turns === 0) {
-          state.message = "The party finds no rest.";
-        } else if (stoppedBy) {
-          state.message = `The party rests ${turns} turn${turns === 1 ? "" : "s"} until ${stoppedBy}.`;
-        } else if (!restPartyWounded()) {
-          state.message = `The party rests ${turns} turn${turns === 1 ? "" : "s"} and stands ready.`;
         } else {
-          state.message = `The party rests ${turns} turn${turns === 1 ? "" : "s"} but is still wounded.`;
+          setMessage("Rest does not restore health. Use a healing consumable from the shared pack; wait to pass one turn.");
         }
-        render();
       }
 
 
@@ -170,6 +124,7 @@
         cycleFormation: () => cycleFormation(),
         autoExplore: () => autoExplore(),
         travelToStairs: () => travelToStairs(),
+        travelToLoot: () => { if (typeof travelToLoot === "function") travelToLoot(); },
         charge: () => chargeAttack(),
         sweep: () => sweepAttack(),
         toggleRun: () => toggleRunMode(),

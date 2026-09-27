@@ -35,6 +35,12 @@
         const rune   = state.inventory.find((i) => i.id === runeId   && i.kind === "rune");
         const target = state.inventory.find((i) => i.id === targetId && i.kind !== "rune");
         if (!rune || !target) { messages.push("Cannot find both items."); return false; }
+        if (rune.runeKind === "life") {
+          messages.push("Life enchantments are inactive: repeatable healing is not part of this ruleset. Neither item was consumed.");
+          return false;
+        } else {
+          messages.push("Checking the enchantment's equipment requirements.");
+        }
         if (target.rune) { messages.push(`${target.name} already bears a rune.`); return false; }
         if (rune.slot === "weapon" && !["weapon", "sword", "axe", "mace", "staff", "dagger", "bow"].includes(target.kind)) {
           messages.push(`${rune.name} bonds only to weapons.`); return false;
@@ -89,11 +95,8 @@
             break;
           case "life":
             // Heal the lead member (5% of their max HP) on any hit.
-            if (attacker.maxHp > 0) {
-              const heal = Math.max(1, Math.ceil(attacker.maxHp * 0.05));
-              attacker.hp = Math.min(attacker.maxHp, attacker.hp + heal);
-            }
-            break;
+            // Retired: repeatable weapon healing bypasses consumable recovery.
+            return;
           case "storm":
             // Arc lightning to a random adjacent monster.
             if (Math.random() < 0.3) {

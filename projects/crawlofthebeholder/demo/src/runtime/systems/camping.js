@@ -27,6 +27,12 @@
 
       // ── Make camp ──────────────────────────────────────────────────────────
       function makeCamp(messages) {
+        if ((state.provisions || 0) <= 0) {
+          messages.push("Recovery requires consumable provisions; camping cannot provide free healing.");
+          return false;
+        } else {
+          messages.push("Camping spends one provision.");
+        }
         if (monstersNearby()) {
           messages.push("Cannot camp — enemies are too close.");
           return false;

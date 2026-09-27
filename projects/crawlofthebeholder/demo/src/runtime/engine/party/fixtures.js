@@ -179,6 +179,11 @@
       // aliases the column behavior) and dispatch through the table instead of a
       // chain of name.includes branches. Adding a fixture is one row.
       const FIXTURE_TOKENS = [
+        // Gravestones of fallen runs (graves module) — salvage and respects.
+        ["gravestone", (decor, target) => {
+          if (typeof useGraveFixture === "function") useGraveFixture(decor, target);
+          else state.message = `${decor.name} stands silent.`;
+        }],
         ["shrine", useShrine],
         ["altar", useAltar],
         ["fountain", useFountain],
@@ -254,7 +259,7 @@
             extra = ` and a ${sample.name}`;
           }
         }
-        if (typeof pulse === "function") pulse("pickup");
+        if (typeof pulse === "function") pulse("pickup", decor);
         state.message = `${decor.name} yields ${gold} gold${extra}.`;
         advanceTurn();
         render();

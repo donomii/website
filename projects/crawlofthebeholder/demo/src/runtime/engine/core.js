@@ -20,6 +20,9 @@
       3: { front: [37, 31, 26, 38], sprite: [44, 38, 12, 19], item: [48, 56, 5, 5], tile: 82, light: 0.56, z: 8 },
       4: { front: [43, 38, 14, 24], sprite: [47, 42, 6, 11], item: [49, 53, 3, 3], tile: 54, light: 0.42, z: 5 }
     };
+    const CLASSIC_TILE_ROOT = "vendor/crawl/crawl-ref/source/rltiles/";
+    const LINOCUT_TILE_ROOT = "art/tilesets/linocut-2x/";
+    const LINOCUT_NORMAL_ROOT = "art/tilesets/linocut-normal-2x/";
 
     const state = {
       floorIndex: 0,
@@ -78,6 +81,7 @@
       criticalHits: 0,
       runStartedAt: Date.now(),
       runMode: false,
+      tileset: "classic",
       inventorySort: "default",
       inventoryFilter: "all",
       tutorialSeen: false,
@@ -91,7 +95,6 @@
       talentPoints: 0,
       talents: {},
       mapMarkers: [],
-      activeMobileTab: "map",
       mapZoom: 1,
       goldSpent: 0,
       claimedQuests: {},
@@ -125,8 +128,6 @@
       versionBadge: document.getElementById("versionBadge"),
       floorBadge: document.getElementById("floorBadge"),
       facingBadge: document.getElementById("facingBadge"),
-      threatBadge: document.getElementById("threatBadge"),
-      nearby: document.getElementById("nearby"),
       log: document.getElementById("log"),
       logCount: document.getElementById("logCount"),
       helpModal: document.getElementById("helpModal"),
@@ -166,7 +167,6 @@
       characterCreateDifficulty: document.getElementById("characterCreateDifficulty"),
       characterCreateDeity: document.getElementById("characterCreateDeity"),
       characterCreateDaily: document.getElementById("characterCreateDaily"),
-      characterCreateDailyDesc: document.getElementById("characterCreateDailyDesc"),
       dialogueModal: document.getElementById("dialogueModal"),
       dialogueTitle: document.getElementById("dialogueTitle"),
       dialogueBody: document.getElementById("dialogueBody"),
@@ -204,6 +204,46 @@
 
     function currentAssets() {
       return currentFloor().assets;
+    }
+
+    function normalizeTileset(value) {
+      return value === "linocut" ? "linocut" : "classic";
+    }
+
+    function setTileset(value) {
+      state.tileset = normalizeTileset(value);
+      return state.tileset;
+    }
+
+    function activeTileset() {
+      return normalizeTileset(state.tileset);
+    }
+
+    function environmentAsset(src) {
+      if (state.tileset !== "linocut" || typeof src !== "string" || !src.startsWith(CLASSIC_TILE_ROOT)) return src;
+      return `${LINOCUT_TILE_ROOT}${src.slice(CLASSIC_TILE_ROOT.length)}`;
+    }
+
+    function classicEnvironmentAsset(src) {
+      if (typeof src !== "string" || !src.startsWith(LINOCUT_TILE_ROOT)) return src;
+      return `${CLASSIC_TILE_ROOT}${src.slice(LINOCUT_TILE_ROOT.length)}`;
+    }
+
+    function renderedTile(src) {
+      return environmentAsset(src);
+    }
+
+    function renderedAssets() {
+      return Object.fromEntries(Object.entries(currentAssets()).map(([key, value]) => [key, environmentAsset(value)]));
+    }
+
+    function normalTile(src) {
+      if (typeof src !== "string" || !src.startsWith(LINOCUT_TILE_ROOT)) return null;
+      return `${LINOCUT_NORMAL_ROOT}${src.slice(LINOCUT_TILE_ROOT.length)}`;
+    }
+
+    function toggleTileset() {
+      return setTileset(activeTileset() === "linocut" ? "classic" : "linocut");
     }
 
     function cellAt(x, y) {
@@ -545,6 +585,15 @@
       currentFloor,
       currentFloorState,
       currentAssets,
+      normalizeTileset,
+      setTileset,
+      activeTileset,
+      toggleTileset,
+      environmentAsset,
+      classicEnvironmentAsset,
+      renderedTile,
+      renderedAssets,
+      normalTile,
       cellAt,
       setCellAt,
       dirAt,

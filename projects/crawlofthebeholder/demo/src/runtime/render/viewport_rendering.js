@@ -2,23 +2,94 @@
   window.CotBRuntime = window.CotBRuntime || {};
   window.CotBRuntime.installViewportRendering = function (context) {
     with (context) {
-      function imageEntry(src) {
-        const existing = imageCache.get(src);
+      function imageEntry(src, allowClassicFallback = true) {
+        const cacheKey = allowClassicFallback ? src : `${src}\u0000linocut-only`;
+        const directEntry = imageCache.get(src);
+        const existing = imageCache.get(cacheKey) || (!allowClassicFallback && directEntry?.ready && (!directEntry.loadedSrc || directEntry.loadedSrc === src) ? directEntry : null);
         if (existing) return existing;
 
-        const image = new Image();
-        const entry = { image, ready: false, failed: false };
-        image.onload = () => {
-          entry.ready = true;
-          renderViewport();
+        const fallbackSrc = allowClassicFallback && typeof classicEnvironmentAsset === "function" ? classicEnvironmentAsset(src) : src;
+        const entry = {
+          image: null,
+          ready: false,
+          failed: false,
+          loadedSrc: null,
+          fallbackSrc: fallbackSrc === src ? null : fallbackSrc
         };
-        image.onerror = () => {
-          entry.failed = true;
-          renderViewport();
+        imageCache.set(cacheKey, entry);
+
+        const load = (candidate, canFallback) => {
+          const image = new Image();
+          entry.image = image;
+          image.onload = () => {
+            entry.loadedSrc = candidate;
+            entry.ready = true;
+            renderViewport();
+          };
+          image.onerror = () => {
+            if (canFallback && entry.fallbackSrc) {
+              load(entry.fallbackSrc, false);
+              return;
+            }
+            entry.failed = true;
+            renderViewport();
+          };
+          image.src = candidate;
         };
-        image.src = src;
-        imageCache.set(src, entry);
+        load(src, true);
         return entry;
+      }
+
+      function isLinocutTexture(texture, entry = null) {
+        const linocutPath = typeof normalTile === "function" && normalTile(texture) !== null;
+        return linocutPath && (!entry?.loadedSrc || entry.loadedSrc === texture);
+      }
+
+      function setTextureSmoothing(context, texture, entry = null) {
+        const linocut = isLinocutTexture(texture, entry);
+        context.imageSmoothingEnabled = linocut;
+        if (linocut) context.imageSmoothingQuality = "high";
+      }
+
+      // Non-transparent bounding box of a tile, as fractions of the image (0..1).
+      // DCSS monster tiles pad the creature with empty space, so the artwork's
+      // bottom edge — not the tile's — is where the feet are. Cached per source.
+      const tileContentCache = new Map();
+      function tileContentBox(src) {
+        const cached = tileContentCache.get(src);
+        if (cached) return cached;
+        const full = { left: 0, top: 0, right: 1, bottom: 1 };
+        const entry = imageEntry(src);
+        if (!entry.ready) return full; // recomputed once the image loads
+        let box = full;
+        try {
+          const img = entry.image;
+          const w = img.naturalWidth || img.width;
+          const h = img.naturalHeight || img.height;
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return full;
+          ctx.drawImage(img, 0, 0);
+          const data = ctx.getImageData(0, 0, w, h).data;
+          let minX = w, minY = h, maxX = -1, maxY = -1;
+          for (let y = 0; y < h; y += 1) {
+            for (let x = 0; x < w; x += 1) {
+              if (data[(y * w + x) * 4 + 3] > 16) {
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+              }
+            }
+          }
+          if (maxX >= minX && maxY >= minY) box = { left: minX / w, top: minY / h, right: (maxX + 1) / w, bottom: (maxY + 1) / h };
+        } catch (error) {
+          box = full;
+        }
+        tileContentCache.set(src, box);
+        return box;
       }
 
       function cellHash(x, y, salt = 0) {
@@ -29,14 +100,28 @@
 
       function assetValues(prefix) {
         const assets = currentAssets();
-        return Object.keys(assets).filter((key) => key.startsWith(prefix)).sort().map((key) => assets[key]).filter(Boolean);
+        return Object.keys(assets)
+          .filter((key) => key.startsWith(prefix))
+          .sort()
+          .map((key) => environmentAsset(assets[key]))
+          .filter(Boolean);
       }
 
       function themedAsset(baseKey, altPrefix, cell, salt = 0) {
         const assets = currentAssets();
-        const choices = [assets[baseKey], ...assetValues(altPrefix)].filter(Boolean);
+        const base = environmentAsset(assets[baseKey]);
+        const choices = [base, ...assetValues(altPrefix)].filter(Boolean);
         if (choices.length === 0) return null;
-        return choices[cellHash(cell.x, cell.y, salt) % choices.length] || assets[baseKey];
+        return choices[cellHash(cell.x, cell.y, salt) % choices.length] || base;
+      }
+
+      function wallSurfaceTexture(cell) {
+        const assets = currentAssets();
+        const wall = environmentAsset(assets.wall);
+        const sideWall = environmentAsset(assets.sideWall);
+        const choices = [wall, ...assetValues("wallAlt"), sideWall, ...assetValues("sideWallAlt")].filter(Boolean);
+        if (choices.length === 0) return null;
+        return choices[cellHash(cell.x, cell.y, 31) % choices.length] || wall || sideWall;
       }
 
       function floorTexture(cell) {
@@ -91,8 +176,11 @@
         if (viewFrames[depth]) return viewFrames[depth];
         const last = viewFrames[viewFrames.length - 1];
         const shrink = Math.pow(0.62, depth - viewFrames.length + 1);
-        const width = Math.max(1.6, (last.right - last.left) * shrink);
-        const height = Math.max(2.2, (last.bottom - last.top) * shrink);
+        // Pure geometric shrink toward the vanishing point — no fixed floor.
+        // Clamping the frame size froze deep frames at one size, collapsing the
+        // floor strips between them to zero and lifting far monsters off them.
+        const width = (last.right - last.left) * shrink;
+        const height = (last.bottom - last.top) * shrink;
         return { left: 50 - width / 2, top: 50 - height / 2, right: 50 + width / 2, bottom: 50 + height / 2 };
       }
 
@@ -189,6 +277,33 @@
         return [[inner.right, inner.top], [outer.right, outer.top], [outer.right, outer.bottom], [inner.right, inner.bottom]];
       }
 
+      const VIEWPORT_REFERENCE_ASPECT = 4 / 3;
+      let viewportProjection = null;
+
+      function calculateViewportProjection(width, height) {
+        const projectionWidth = Math.min(width, height * VIEWPORT_REFERENCE_ASPECT);
+        const projectionHeight = projectionWidth / VIEWPORT_REFERENCE_ASPECT;
+        return {
+          width,
+          height,
+          aspectRatio: width / height,
+          xOffset: (width - projectionWidth) / 2,
+          yOffset: (height - projectionHeight) / 2,
+          xScale: projectionWidth / 100,
+          yScale: projectionHeight / 100
+        };
+      }
+
+      function updateViewportProjection(width, height) {
+        viewportProjection = calculateViewportProjection(width, height);
+        return viewportProjection;
+      }
+
+      function viewportProjectionFor(width, height) {
+        if (!viewportProjection || viewportProjection.width !== width || viewportProjection.height !== height) return updateViewportProjection(width, height);
+        return viewportProjection;
+      }
+
       function ensureViewportCanvas() {
         if (!viewportCanvas) {
           viewportCanvas = document.createElement("canvas");
@@ -200,6 +315,7 @@
         const bounds = els.viewport.getBoundingClientRect();
         const width = Math.max(1, Math.floor(bounds.width));
         const height = Math.max(1, Math.floor(bounds.height));
+        const projection = updateViewportProjection(width, height);
         const scale = window.devicePixelRatio || 1;
         const canvasWidth = Math.floor(width * scale);
         const canvasHeight = Math.floor(height * scale);
@@ -212,11 +328,12 @@
         }
 
         viewportContext.setTransform(scale, 0, 0, scale, 0, 0);
-        return { context: viewportContext, width, height };
+        return { context: viewportContext, width, height, aspectRatio: projection.aspectRatio };
       }
 
       function pctPoint(point, width, height) {
-        return { x: (point[0] / 100) * width, y: (point[1] / 100) * height };
+        const projection = viewportProjectionFor(width, height);
+        return { x: projection.xOffset + point[0] * projection.xScale, y: projection.yOffset + point[1] * projection.yScale };
       }
 
       function pctQuad(points, width, height) {
@@ -224,11 +341,12 @@
       }
 
       function pctRect(bounds, width, height) {
+        const projection = viewportProjectionFor(width, height);
         return {
-          x: (bounds[0] / 100) * width,
-          y: (bounds[1] / 100) * height,
-          width: (bounds[2] / 100) * width,
-          height: (bounds[3] / 100) * height
+          x: projection.xOffset + bounds[0] * projection.xScale,
+          y: projection.yOffset + bounds[1] * projection.yScale,
+          width: bounds[2] * projection.xScale,
+          height: bounds[3] * projection.yScale
         };
       }
 
@@ -237,6 +355,26 @@
         context.moveTo(points[0].x, points[0].y);
         for (let i = 1; i < points.length; i += 1) context.lineTo(points[i].x, points[i].y);
         context.closePath();
+      }
+
+      function appendQuadPath(context, points) {
+        context.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i += 1) context.lineTo(points[i].x, points[i].y);
+        context.closePath();
+      }
+
+      function withFrontDetailClip(context, points, occluders, drawDetails) {
+        if (occluders.length === 0) {
+          drawDetails();
+          return;
+        }
+        context.save();
+        context.beginPath();
+        appendQuadPath(context, points);
+        for (const occluder of occluders) appendQuadPath(context, occluder);
+        context.clip("evenodd");
+        drawDetails();
+        context.restore();
       }
 
       function shadeQuad(context, points, light) {
@@ -339,8 +477,13 @@
         }
 
         context.save();
+        setTextureSmoothing(context, texture, entry);
         drawQuadPath(context, points);
         context.clip();
+
+        const linocut = isLinocutTexture(texture, entry);
+        const rowCount = Math.max(1, maxY - minY + 1);
+        const sourceRowHeight = entry.image.height / rowCount;
 
         for (let y = minY; y <= maxY; y += 1) {
           const xs = scanlineIntersections(points, y + 0.5);
@@ -348,11 +491,14 @@
 
           const leftX = Math.floor(xs[0]);
           const rightX = Math.ceil(xs[xs.length - 1]);
-          const textureY = Math.floor(((y - minY) / Math.max(1, maxY - minY)) * entry.image.height) % entry.image.height;
+          const sourceY = ((y - minY) / rowCount) * entry.image.height;
+          const classicY = Math.floor(((y - minY) / Math.max(1, maxY - minY)) * entry.image.height) % entry.image.height;
+          const textureY = linocut ? sourceY : classicY;
+          const textureHeight = linocut ? sourceRowHeight : 1;
 
           for (let x = leftX; x < rightX; x += tileSize) {
             const drawnWidth = Math.min(tileSize, rightX - x);
-            context.drawImage(entry.image, 0, textureY, entry.image.width, 1, x, y, drawnWidth, 1);
+            context.drawImage(entry.image, 0, textureY, entry.image.width, textureHeight, x, y, drawnWidth, 1);
           }
         }
 
@@ -369,7 +515,7 @@
       }
 
       function drawImageMappedQuad(context, texture, points, light, fallback, options = {}) {
-        const entry = imageEntry(texture);
+        const entry = imageEntry(texture, options.allowClassicFallback !== false);
         const minY = Math.floor(Math.min(...points.map((point) => point.y)));
         const maxY = Math.ceil(Math.max(...points.map((point) => point.y)));
         const bounds = boundsForPoints(points);
@@ -391,9 +537,13 @@
         context.save();
         drawQuadPath(context, points);
         context.clip();
-        context.imageSmoothingEnabled = false;
+        setTextureSmoothing(context, texture, entry);
+        const linocut = isLinocutTexture(texture, entry);
+        const rowCount = Math.max(1, maxY - minY + 1);
+        const sourceRowHeight = entry.image.height / rowCount;
         if (options.composite) context.globalCompositeOperation = options.composite;
         if (options.alpha !== undefined) context.globalAlpha = options.alpha;
+        if (options.shadeTexture) context.filter = `brightness(${Math.max(0, Math.min(1, light))})`;
 
         for (let y = minY; y <= maxY; y += 1) {
           const xs = scanlineIntersections(points, y + 0.5);
@@ -401,28 +551,41 @@
 
           const leftX = Math.floor(xs[0]);
           const rightX = Math.ceil(xs[xs.length - 1]);
-          const sourceY = Math.max(0, Math.min(entry.image.height - 1, Math.floor(((y - minY) / Math.max(1, maxY - minY)) * entry.image.height)));
-          context.drawImage(entry.image, 0, sourceY, entry.image.width, 1, leftX, y, Math.max(1, rightX - leftX), 1);
+          const mappedY = ((y - minY) / rowCount) * entry.image.height;
+          const classicY = Math.max(0, Math.min(entry.image.height - 1, Math.floor(((y - minY) / Math.max(1, maxY - minY)) * entry.image.height)));
+          const sourceY = linocut ? mappedY : classicY;
+          const sourceHeight = linocut ? sourceRowHeight : 1;
+          context.drawImage(entry.image, 0, sourceY, entry.image.width, sourceHeight, leftX, y, Math.max(1, rightX - leftX), 1);
         }
 
         context.restore();
-        if (!options.noShade) shadeQuad(context, points, light);
+        if (!options.noShade && !options.shadeTexture) shadeQuad(context, points, light);
         return bounds;
       }
 
-      function drawVerticalMappedQuad(context, texture, points, depth, light, fallback) {
-        const entry = imageEntry(texture);
+      function drawVerticalMappedQuad(context, texture, points, depth, light, fallback, options = {}) {
+        const entry = imageEntry(texture, options.allowClassicFallback !== false);
         const minX = Math.floor(Math.min(...points.map((point) => point.x)));
         const maxX = Math.ceil(Math.max(...points.map((point) => point.x)));
+        const bounds = boundsForPoints(points);
 
         if (!entry.ready) {
+          if (options.shadow === false) return bounds;
           fillQuad(context, points, fallback, light);
-          return;
+          return bounds;
         }
 
         context.save();
+        setTextureSmoothing(context, texture, entry);
         drawQuadPath(context, points);
         context.clip();
+        if (options.composite) context.globalCompositeOperation = options.composite;
+        if (options.alpha !== undefined) context.globalAlpha = options.alpha;
+        if (options.shadeTexture) context.filter = `brightness(${Math.max(0, Math.min(1, light))})`;
+
+        const linocut = isLinocutTexture(texture, entry);
+        const columnCount = Math.max(1, maxX - minX + 1);
+        const sourceColumnWidth = entry.image.width / columnCount;
 
         for (let x = minX; x <= maxX; x += 1) {
           const ys = verticalIntersections(points, x + 0.5);
@@ -430,18 +593,23 @@
 
           const topY = ys[0];
           const bottomY = ys[ys.length - 1];
-          const textureX = Math.floor(((x - minX) / Math.max(1, maxX - minX)) * entry.image.width) % entry.image.width;
-          context.drawImage(entry.image, textureX, 0, 1, entry.image.height, x, topY, 1, bottomY - topY);
+          const sourceX = ((x - minX) / columnCount) * entry.image.width;
+          const classicX = Math.floor(((x - minX) / Math.max(1, maxX - minX)) * entry.image.width) % entry.image.width;
+          const textureX = linocut ? sourceX : classicX;
+          const textureWidth = linocut ? sourceColumnWidth : 1;
+          context.drawImage(entry.image, textureX, 0, textureWidth, entry.image.height, x, topY, 1, bottomY - topY);
         }
 
         context.restore();
-        shadeQuad(context, points, light);
+        if (!options.noShade && !options.shadeTexture) shadeQuad(context, points, light);
+        return bounds;
       }
 
       function drawTiledRect(context, texture, rect, tileSize, light, fallback) {
         const entry = imageEntry(texture);
 
         context.save();
+        setTextureSmoothing(context, texture, entry);
         context.beginPath();
         context.rect(rect.x, rect.y, rect.width, rect.height);
         context.clip();
@@ -465,6 +633,7 @@
       function drawDoorRect(context, texture, rect, light) {
         const entry = imageEntry(texture);
         context.save();
+        setTextureSmoothing(context, texture, entry);
         context.fillStyle = "#281d13";
         context.fillRect(rect.x, rect.y, rect.width, rect.height);
         if (entry.ready) context.drawImage(entry.image, rect.x, rect.y, rect.width, rect.height);
@@ -474,14 +643,14 @@
       }
 
       function drawSprite(context, source, bounds, width, height, options = {}) {
-        const entry = imageEntry(source);
+        const entry = imageEntry(source, options.allowClassicFallback !== false);
         if (!entry.ready) return null;
         const rect = pctRect(bounds, width, height);
         context.save();
         context.shadowColor = "rgba(0, 0, 0, 0.65)";
         context.shadowBlur = 18;
         context.shadowOffsetY = 12;
-        context.imageSmoothingEnabled = false;
+        setTextureSmoothing(context, source, entry);
         if (options.alpha !== undefined) context.globalAlpha = options.alpha;
         if (options.filter) context.filter = options.filter;
         context.drawImage(entry.image, rect.x, rect.y, rect.width, rect.height);
@@ -511,6 +680,42 @@
         context.restore();
       }
 
+      // Status art drawn OVER an afflicted monster's sprite, so the state is
+      // visible at a glance: a net over a netted (rooted) monster, flames
+      // when it burns from within, a green wash when poisoned, a fear sigil
+      // when fleeing. Shared vocabulary with the VR dolls.
+      const NET_TILE = "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/net.png";
+
+      function monsterStatusOverlays(monster) {
+        const assets = currentAssets();
+        return [
+          (monster.rootedTurns || 0) > 0 && { kind: "net", texture: environmentAsset(NET_TILE), alpha: 0.88 },
+          (monster.immolationTurns || 0) > 0 && { kind: "fire", texture: assets.effectFlame, alpha: 0.72, lower: true, composite: "lighter" },
+          (monster.poisonedTurns || 0) > 0 && { kind: "poison", texture: assets.poisonCloud, alpha: 0.42, composite: "screen" },
+          (monster.fearTurns || 0) > 0 && { kind: "fear", texture: assets.effectFear, alpha: 0.9, badge: true }
+        ].filter(Boolean);
+      }
+
+      function drawMonsterStatusOverlays(context, monster, rect) {
+        for (const overlay of monsterStatusOverlays(monster)) {
+          const entry = imageEntry(overlay.texture);
+          if (!entry.ready) continue;
+          context.save();
+          setTextureSmoothing(context, overlay.texture, entry);
+          context.globalAlpha = overlay.alpha;
+          if (overlay.composite) context.globalCompositeOperation = overlay.composite;
+          if (overlay.badge) {
+            const size = Math.max(14, rect.width * 0.3);
+            context.drawImage(entry.image, rect.x - size * 0.25, rect.y - size * 0.4, size, size);
+          } else if (overlay.lower) {
+            context.drawImage(entry.image, rect.x, rect.y + rect.height * 0.45, rect.width, rect.height * 0.55);
+          } else {
+            context.drawImage(entry.image, rect.x, rect.y, rect.width, rect.height);
+          }
+          context.restore();
+        }
+      }
+
       function drawMonsterStatusCue(context, monster, rect) {
         if (!monster.immolationTurns || monster.immolationTurns <= 0) return;
         const x = rect.x + rect.width * 0.82;
@@ -525,22 +730,29 @@
         context.restore();
       }
 
-      function drawLabel(context, text, rect) {
+      function drawLabel(context, text, rect, scale = 1) {
         context.save();
-        context.font = "12px system-ui, sans-serif";
+        context.font = `${12 * scale}px system-ui, sans-serif`;
         context.textAlign = "center";
         context.textBaseline = "middle";
         const label = text.length > 18 ? `${text.slice(0, 17)}...` : text;
         const metrics = context.measureText(label);
-        const width = metrics.width + 12;
-        const height = 18;
+        const width = metrics.width + 12 * scale;
+        const height = 18 * scale;
         const x = rect.x + rect.width / 2;
-        const y = rect.y + rect.height + 13;
+        const y = rect.y + rect.height + 13 * scale;
         context.fillStyle = "rgba(10, 9, 8, 0.78)";
         context.fillRect(x - width / 2, y - height / 2, width, height);
         context.fillStyle = "#f1d07a";
         context.fillText(label, x, y);
         context.restore();
+      }
+
+      function drawFloorLabel(context, text, rect, depth) {
+        const nearFrame = frameAt(nearEdgeDepth(depth));
+        const referenceFrame = frameAt(0);
+        const scale = (nearFrame.right - nearFrame.left) / (referenceFrame.right - referenceFrame.left);
+        if (scale >= 0.42) drawLabel(context, text, rect, Math.min(1, scale));
       }
 
       function drawViewportHaze(context, width, height) {
@@ -615,6 +827,60 @@
         context.restore();
       }
 
+      // Whole-view overlays for statuses that afflict the PARTY: under a net
+      // the entire view is netted over; burning edges the view in flame,
+      // poison washes it green, engulfed drowns it blue. The same list drives
+      // the VR visor overlay.
+      function partyStatusOverlays() {
+        const assets = currentAssets();
+        return [
+          state.snaredTurns > 0 && { kind: "net", texture: environmentAsset(NET_TILE), alpha: 0.5, tile: 96 },
+          state.burningTurns > 0 && { kind: "fire", texture: assets.effectFlame, color: [241, 107, 43], alpha: 0.22 },
+          state.poisonedTurns > 0 && { kind: "poison", texture: assets.poisonCloud, color: [101, 168, 79], alpha: 0.2 },
+          state.engulfedTurns > 0 && { kind: "engulfed", texture: assets.fog, color: [74, 162, 190], alpha: 0.26 },
+          state.barbedTurns > 0 && { kind: "barbed", color: [198, 95, 58], alpha: 0.14 }
+        ].filter(Boolean);
+      }
+
+      function drawPartyStatusOverlays(context, width, height) {
+        for (const overlay of partyStatusOverlays()) {
+          context.save();
+          if (overlay.kind === "net") {
+            // A real net mesh over the whole view, not a smear: tile the art.
+            const entry = imageEntry(overlay.texture);
+            if (entry.ready) {
+              context.globalAlpha = overlay.alpha;
+              setTextureSmoothing(context, overlay.texture, entry);
+              for (let y = 0; y < height; y += overlay.tile) {
+                for (let x = 0; x < width; x += overlay.tile) {
+                  context.drawImage(entry.image, x, y, overlay.tile, overlay.tile);
+                }
+              }
+            }
+          } else {
+            // Coloured vignette pressing in from the edges…
+            const [r, g, b] = overlay.color;
+            const vignette = context.createRadialGradient(width / 2, height / 2, Math.min(width, height) * 0.28, width / 2, height / 2, Math.max(width, height) * 0.62);
+            vignette.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
+            vignette.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${overlay.alpha * 2.4})`);
+            context.fillStyle = vignette;
+            context.fillRect(0, 0, width, height);
+            // …plus the element's art licking up from the bottom edge.
+            const entry = overlay.texture && imageEntry(overlay.texture);
+            if (entry && entry.ready) {
+              context.globalAlpha = overlay.alpha * 1.6;
+              context.globalCompositeOperation = overlay.kind === "fire" ? "lighter" : "screen";
+              context.imageSmoothingEnabled = false;
+              const strip = Math.max(48, height * 0.16);
+              for (let x = 0; x < width; x += strip) {
+                context.drawImage(entry.image, x, height - strip, strip, strip);
+              }
+            }
+          }
+          context.restore();
+        }
+      }
+
       function viewCell(depth, offset) {
         const forward = dirAt(0);
         const right = dirAt(1);
@@ -675,15 +941,43 @@
         return [shifted[0], shifted[1] + Math.max(0, floorLine - spriteBottom), shifted[2], shifted[3]];
       }
 
-      function standingBounds(depth, offset, widthScale = 0.42, heightScale = 0.58) {
+      // A monster fills one 32×32 tile. Draw it as a square sized to its own
+      // cell and planted on that cell's floor seam, so the tile's own padding
+      // sets the apparent creature size (a rat reads small, an ogre fills the
+      // tile) and the sprite shrinks and its feet rise with the floor as the
+      // cell recedes — true perspective, no floating, no forced humanoid box.
+      function actorTileBounds(monster, depth, offset) {
+        // Stand the monster on the NEAR edge of its own tile (one band forward),
+        // not the far edge — drawing it at frameAt(depth) puts it a square too far
+        // back, into the next tile.
+        const frame = frameAt(nearEdgeDepth(depth));
+        const cellWidth = frame.right - frame.left;
+        const cellHeight = frame.bottom - frame.top;
+        // Strictly proportional to the cell — NO fixed minimums. A fixed
+        // viewport-percent inset or sprite size outgrows the shrinking floor
+        // strip at distance and shoves far monsters above their own tile.
+        const size = cellWidth * 0.92;
+        const center = (frame.left + frame.right) / 2 + cellWidth * offset;
+        const floorSeam = frame.bottom - cellHeight * 0.04;
+        // Plant the artwork's bottom (not the padded tile's) on the floor seam by
+        // pushing the tile down past the seam by however much empty space sits
+        // below the creature in its tile. Airborne creatures hover above it.
+        const content = tileContentBox(monster.tile);
+        const belowContent = (1 - content.bottom) * size;
+        const tileBottom = (monster.traits?.airborne ? floorSeam - cellHeight * 0.22 : floorSeam) + belowContent;
+        return [center - size / 2, tileBottom - size, size, size];
+      }
+
+      function standingBounds(depth, offset, widthScale = 0.42, heightScale = 0.58, contentBottom = 1) {
         const frame = frameAt(depth);
         const cellWidth = frame.right - frame.left;
         const cellHeight = frame.bottom - frame.top;
-        const spriteWidth = Math.max(4, cellWidth * widthScale);
-        const spriteHeight = Math.max(5, cellHeight * heightScale);
+        const spriteWidth = cellWidth * widthScale;
+        const spriteHeight = cellHeight * heightScale;
         const center = (frame.left + frame.right) / 2 + cellWidth * offset;
-        const bottom = frame.bottom - Math.max(1.2, cellHeight * 0.06);
-        return [center - spriteWidth / 2, bottom - spriteHeight, spriteWidth, spriteHeight];
+        const floorSeam = frame.bottom - cellHeight * 0.06;
+        const tileBottom = floorSeam + (1 - contentBottom) * spriteHeight;
+        return [center - spriteWidth / 2, tileBottom - spriteHeight, spriteWidth, spriteHeight];
       }
 
       function sideWallSortValue(cell) {
@@ -705,7 +999,7 @@
       function drawSideWall(context, width, height, depth, offset, entry, data) {
         const points = pctQuad(sideFacePoints(depth, entry.boundary), width, height);
         const surface = sideFacePoints(depth, entry.boundary);
-        drawVerticalMappedQuad(context, themedAsset("sideWall", "sideWallAlt", entry.cell, entry.salt), points, depth, Math.max(0.2, data.light - 0.1), "#25211d");
+        drawVerticalMappedQuad(context, wallSurfaceTexture(entry.cell), points, depth, Math.max(0.2, data.light - 0.1), "#25211d");
         drawWallRelief(context, width, height, depth, entry.cell, surface, true);
         drawWallPatch(context, width, height, depth, offset, entry.cell, surface);
         drawWallStain(context, width, height, depth, offset, entry.cell, surface);
@@ -728,8 +1022,8 @@
         drawPartyAura(context, width, height, depth, offset, cell);
         strokeQuad(context, floorQuad, `rgba(240, 205, 132, ${Math.max(0.05, data.light * 0.11)})`);
         strokeQuad(context, ceilingQuad, `rgba(105, 91, 71, ${Math.max(0.04, data.light * 0.08)})`);
-
-        for (const entry of sideWallEntries(cell, offset)) drawSideWall(context, width, height, depth, offset, entry, data);
+        // Side walls are NOT drawn here — they go through the distance-sorted
+        // wall pass in renderViewport so every wall obeys far-to-near order.
       }
 
       function drawTerrainOverlay(context, width, height, depth, offset, cell) {
@@ -754,15 +1048,15 @@
       function floorVeilForCell(cell) {
         const terrain = terrainAt(cell.x, cell.y);
         const assets = currentAssets();
-        if (terrain === "lava") return { texture: assets.effectFlame, fallback: "#cf4a1e", alpha: 0.3, composite: "lighter", salt: 197, rarity: 1 };
-        if (terrain === "deep-water") return { texture: assets.fog, fallback: "#b8d3d2", alpha: 0.18, composite: "screen", salt: 199, rarity: 1 };
-        if (terrain === "water") return { texture: assets.fog, fallback: "#b8d3d2", alpha: 0.14, composite: "screen", salt: 211, rarity: 2 };
+        if (terrain === "lava") return { texture: environmentAsset(assets.floorScorch || assets.effectFlame), fallback: "#cf4a1e", alpha: 0.3, composite: "lighter", salt: 197, rarity: 1 };
+        if (terrain === "deep-water") return { texture: environmentAsset(assets.fog), fallback: "#b8d3d2", alpha: 0.18, composite: "screen", salt: 199, rarity: 1 };
+        if (terrain === "water") return { texture: environmentAsset(assets.fog), fallback: "#b8d3d2", alpha: 0.14, composite: "screen", salt: 211, rarity: 2 };
 
         const floor = currentFloor();
-        if (floor.id.startsWith("Swamp:")) return { texture: assets.poisonCloud || assets.fog, fallback: "#8fb36c", alpha: 0.13, composite: "screen", salt: 223, rarity: 3 };
-        if (floor.id.startsWith("Shoals:")) return { texture: assets.fog, fallback: "#b8d3d2", alpha: 0.12, composite: "screen", salt: 227, rarity: 3 };
-        if (floor.id.startsWith("Slime:")) return { texture: assets.poisonCloud || assets.fog, fallback: "#88bc55", alpha: 0.16, composite: "screen", salt: 229, rarity: 2 };
-        if (floor.name.includes("Lava")) return { texture: assets.effectFlame, fallback: "#cf4a1e", alpha: 0.18, composite: "lighter", salt: 233, rarity: 3 };
+        if (floor.id.startsWith("Swamp:")) return { texture: environmentAsset(assets.floorPoison || assets.poisonCloud || assets.fog), fallback: "#8fb36c", alpha: 0.13, composite: "screen", salt: 223, rarity: 3 };
+        if (floor.id.startsWith("Shoals:")) return { texture: environmentAsset(assets.fog), fallback: "#b8d3d2", alpha: 0.12, composite: "screen", salt: 227, rarity: 3 };
+        if (floor.id.startsWith("Slime:")) return { texture: environmentAsset(assets.floorPoison || assets.poisonCloud || assets.fog), fallback: "#88bc55", alpha: 0.16, composite: "screen", salt: 229, rarity: 2 };
+        if (floor.name.includes("Lava")) return { texture: environmentAsset(assets.floorScorch || assets.effectFlame), fallback: "#cf4a1e", alpha: 0.18, composite: "lighter", salt: 233, rarity: 3 };
         return null;
       }
 
@@ -773,7 +1067,7 @@
         if (cellHash(cell.x, cell.y, veil.salt) % veil.rarity !== 0) return;
         const data = geometryAt(depth);
         const quad = pctQuad(floorDecalPoints(depth, { left: 0.08, top: 0.08, right: 0.92, bottom: 0.98 }, offset), width, height);
-        drawImageMappedQuad(context, veil.texture, quad, Math.min(1, data.light + 0.18), veil.fallback, { alpha: veil.alpha, composite: veil.composite, noShade: true, shadow: false });
+        drawImageMappedQuad(context, veil.texture, quad, Math.min(1, data.light + 0.18), veil.fallback, { alpha: veil.alpha, composite: veil.composite, noShade: true, shadow: false, allowClassicFallback: false });
       }
 
       function drawFloorAccent(context, width, height, depth, offset, cell) {
@@ -785,15 +1079,15 @@
         const large = cellHash(cell.x, cell.y, 43) % 2 === 0;
         const footprint = large ? { left: 0.1, top: 0.12, right: 0.9, bottom: 0.98 } : { left: 0.22, top: 0.28, right: 0.78, bottom: 0.92 };
         const points = pctQuad(floorDecalPoints(depth, footprint, offset), width, height);
-        drawImageMappedQuad(context, texture, points, Math.min(1, data.light + 0.08), "#5f5a43", { shadow: false });
+        drawImageMappedQuad(context, texture, points, Math.min(1, data.light + 0.08), "#5f5a43", { shadow: false, allowClassicFallback: false });
       }
 
       function floorMarkTexture(mark) {
         const assets = currentAssets();
-        if (mark.kind === "scorch") return assets.floorScorch || assets.effectFlame;
-        if (mark.kind === "poison") return assets.floorPoison || assets.poisonCloud;
-        if (mark.kind === "ice") return assets.floorIce || assets.fog;
-        return assets.floorBlood || assets.floorAccent1 || assets.floorAccent0;
+        if (mark.kind === "scorch") return environmentAsset(assets.floorScorch || assets.effectFlame);
+        if (mark.kind === "poison") return environmentAsset(assets.floorPoison || assets.poisonCloud);
+        if (mark.kind === "ice") return environmentAsset(assets.floorIce || assets.fog);
+        return environmentAsset(assets.floorBlood || assets.floorAccent1 || assets.floorAccent0);
       }
 
       function floorMarkFallback(mark) {
@@ -817,7 +1111,7 @@
             : { left: 0.34 - spread, top: 0.18, right: 0.72 + spread, bottom: 0.74 + spread };
           const points = pctQuad(floorDecalPoints(depth, footprint, offset), width, height);
           const alpha = Math.min(0.92, 0.46 + mark.intensity * 0.12);
-          drawImageMappedQuad(context, floorMarkTexture(mark), points, Math.min(1, data.light + 0.1), floorMarkFallback(mark), { alpha, shadow: false });
+          drawImageMappedQuad(context, floorMarkTexture(mark), points, Math.min(1, data.light + 0.1), floorMarkFallback(mark), { alpha, shadow: false, allowClassicFallback: false });
         }
       }
 
@@ -864,15 +1158,32 @@
         const variant = cellHash(cell.x, cell.y, options.salt + 2) % 3;
         const footprint = options.footprints[variant] || options.footprints[0];
         const points = pctQuad(quadDecalPoints(surfacePoints, footprint), width, height);
-        drawImageMappedQuad(context, texture, points, Math.min(1, data.light + (options.lightBoost || 0.05)), options.fallback, { alpha: options.alpha, composite: options.composite, noShade: options.noShade, shadow: false });
+        const light = Math.min(1, data.light + (options.lightBoost || 0.05));
+        const drawOptions = {
+          alpha: options.alpha,
+          composite: options.composite,
+          noShade: options.noShade,
+          shadeTexture: !options.noShade,
+          shadow: false,
+          allowClassicFallback: false
+        };
+        const followsVerticalPerspective = surfacePoints[0][1] !== surfacePoints[1][1] || surfacePoints[2][1] !== surfacePoints[3][1];
+        if (followsVerticalPerspective) {
+          drawVerticalMappedQuad(context, texture, points, depth, light, options.fallback, drawOptions);
+        } else {
+          drawImageMappedQuad(context, texture, points, light, options.fallback, drawOptions);
+        }
       }
+
+      // A wall block's accent decal belongs to the BLOCK, not the viewing
+      // angle: the front face and the side panels must roll the same salt and
+      // rarity, or the decal you walked past vanishes when you turn to face
+      // it. Footprints stay per-surface (the quads have different shapes).
+      const WALL_ACCENT_SPEC = { prefix: "wallAccent", salt: 59, rarity: 7, maxOffset: 2 };
 
       function drawWallAccent(context, width, height, depth, offset, cell) {
         drawSurfaceDecal(context, width, height, depth, offset, cell, frontFacePoints(depth, offset), {
-          prefix: "wallAccent",
-          salt: 59,
-          rarity: 7,
-          maxOffset: 1,
+          ...WALL_ACCENT_SPEC,
           fallback: "#9b8152",
           footprints: [
             { left: 0.24, top: 0.24, right: 0.76, bottom: 0.78 },
@@ -934,11 +1245,10 @@
       }
 
       function drawSideWallAccent(context, width, height, depth, offset, cell, surfacePoints) {
+        // Same WALL_ACCENT_SPEC as the front face — same salt/rarity means the
+        // same blocks carry the same accent texture from every direction.
         drawSurfaceDecal(context, width, height, depth, offset, cell, surfacePoints, {
-          prefix: "wallAccent",
-          salt: 97,
-          rarity: 11,
-          maxOffset: 2,
+          ...WALL_ACCENT_SPEC,
           fallback: "#8d744a",
           footprints: [
             { left: 0.2, top: 0.18, right: 0.72, bottom: 0.7 },
@@ -951,18 +1261,27 @@
       function drawFloorFeature(context, width, height, depth, offset, cell) {
         const data = geometryAt(depth);
         const assets = currentAssets();
+        const openDoor = doorCellAt(cell.x, cell.y) && !closedDoorAt(cell.x, cell.y);
+        if (openDoor) {
+          const faceDepth = nearEdgeDepth(depth);
+          const points = pctQuad(frontFacePoints(faceDepth, offset), width, height);
+          drawVerticalMappedQuad(context, environmentAsset(assets.openDoor), points, faceDepth, geometryAt(faceDepth).light, "#281d13");
+          if (offset === 0) drawFloorLabel(context, "open door", boundsForPoints(points), depth);
+        }
+
         const stairs = stairsAt(cell.x, cell.y);
         if (stairs) {
           const stairQuad = pctQuad(floorDecalPoints(depth, { left: 0.24, top: 0.18, right: 0.76, bottom: 0.94 }, offset), width, height);
-          const rect = drawImageMappedQuad(context, stairs.direction === "down" ? assets.stairsDown : assets.stairsUp, stairQuad, data.light, "#7f6742");
-          if (rect && offset === 0) drawLabel(context, stairs.direction === "down" ? "downstairs" : "upstairs", rect);
+          const texture = environmentAsset(stairs.direction === "down" ? assets.stairsDown : assets.stairsUp);
+          const rect = drawImageMappedQuad(context, texture, stairQuad, data.light, "#7f6742");
+          if (rect && offset === 0) drawFloorLabel(context, stairs.direction === "down" ? "downstairs" : "upstairs", rect, depth);
         }
 
         const trap = trapAt(cell.x, cell.y);
         if (trap) {
           const trapQuad = pctQuad(floorDecalPoints(depth, { left: 0.3, top: 0.24, right: 0.7, bottom: 0.88 }, offset), width, height);
-          const rect = drawImageMappedQuad(context, trap.tile, trapQuad, data.light, "#7d4b35");
-          if (rect && offset === 0) drawLabel(context, trap.shortName, rect);
+          const rect = drawImageMappedQuad(context, environmentAsset(trap.tile), trapQuad, data.light, "#7d4b35", { allowClassicFallback: false });
+          if (rect && offset === 0) drawFloorLabel(context, trap.shortName, rect, depth);
         }
 
         const floorItem = itemAt(cell.x, cell.y);
@@ -970,7 +1289,7 @@
           const itemQuad = pctQuad(floorDecalPoints(depth, { left: 0.37, top: 0.44, right: 0.63, bottom: 0.84 }, offset), width, height);
           const fallback = floorItem.kind === "quest" ? "#735fc8" : floorItem.kind === "gold" ? "#c9a33f" : "#6e8058";
           const rect = drawImageMappedQuad(context, floorItem.tile, itemQuad, data.light, fallback);
-          if (rect && offset === 0) drawLabel(context, floorItem.shortName, rect);
+          if (rect && offset === 0) drawFloorLabel(context, floorItem.shortName, rect, depth);
         }
       }
 
@@ -1010,16 +1329,240 @@
         const spent = decorUsed(decor);
         if (decor.kind === "floor") {
           const decorQuad = pctQuad(floorDecalPoints(depth, { left: 0.17, top: 0.16, right: 0.83, bottom: 0.98 }, offset), width, height);
-          drawImageMappedQuad(context, decor.tile, decorQuad, Math.min(1, data.light + 0.05), "#80663b", { shadow: false, alpha: spent ? 0.5 : undefined });
+          drawImageMappedQuad(
+            context,
+            environmentAsset(decor.tile),
+            decorQuad,
+            Math.min(1, data.light + 0.05),
+            "#80663b",
+            { shadow: false, alpha: spent ? 0.5 : undefined }
+          );
           if (spent) drawSpentFloorDecor(context, decorQuad);
           return;
         }
 
         const tall = decor.name.includes("column") || decor.name.includes("idol");
-        const bounds = standingBounds(nearEdgeDepth(depth), offset, tall ? 0.38 : 0.44, tall ? 0.7 : 0.56);
-        const rect = drawSprite(context, decor.tile, bounds, width, height, spent ? { alpha: 0.52, filter: "grayscale(0.9) brightness(0.7)" } : {});
+        const texture = environmentAsset(decor.tile);
+        const bounds = standingBounds(nearEdgeDepth(depth), offset, tall ? 0.38 : 0.44, tall ? 0.7 : 0.56, tileContentBox(texture).bottom);
+        const rect = drawSprite(
+          context,
+          texture,
+          bounds,
+          width,
+          height,
+          spent ? { alpha: 0.52, filter: "grayscale(0.9) brightness(0.7)" } : {}
+        );
         if (spent && rect) drawSpentDecorBadge(context, rect);
-        if (rect && offset === 0) drawLabel(context, decor.shortName, rect);
+        if (rect && offset === 0) drawFloorLabel(context, decor.shortName, rect, depth);
+      }
+
+      const VIEWPORT_TARGET_MAX_DEPTH = 6;
+      const VIEWPORT_FLOOR_TARGETS = {
+        item: { left: 0.37, top: 0.44, right: 0.63, bottom: 0.84 },
+        trap: { left: 0.3, top: 0.24, right: 0.7, bottom: 0.88 },
+        stairs: { left: 0.24, top: 0.18, right: 0.76, bottom: 0.94 },
+        floorDecor: { left: 0.17, top: 0.16, right: 0.83, bottom: 0.98 }
+      };
+      const VIEWPORT_DOOR_TARGET = { left: 0.2, top: 0.16, right: 0.8, bottom: 0.88 };
+
+      function viewportTargetView(x, y) {
+        const view = viewCoordinates(x, y);
+        if (view.depth < 1 || view.depth > VIEWPORT_TARGET_MAX_DEPTH) return null;
+        if (Math.abs(view.offset) > Math.max(2, Math.ceil(view.depth * 0.7))) return null;
+        return view;
+      }
+
+      function viewportFloorTargetRect(width, height, view, footprint) {
+        return boundsForPoints(pctQuad(floorDecalPoints(view.depth, footprint, view.offset), width, height));
+      }
+
+      function viewportDoorTargetRect(width, height, view) {
+        const faceDepth = nearEdgeDepth(view.depth);
+        return boundsForPoints(pctQuad(quadDecalPoints(frontFacePoints(faceDepth, view.offset), VIEWPORT_DOOR_TARGET), width, height));
+      }
+
+      function viewportDecorTargetRect(width, height, view, decor) {
+        if (decor.kind === "floor") return viewportFloorTargetRect(width, height, view, VIEWPORT_FLOOR_TARGETS.floorDecor);
+        const tall = decor.name.includes("column") || decor.name.includes("idol");
+        return pctRect(standingBounds(nearEdgeDepth(view.depth), view.offset, tall ? 0.38 : 0.44, tall ? 0.7 : 0.56), width, height);
+      }
+
+      function viewportTargetId(kind, entry) {
+        return `${kind}:${entry.id || keyOf(entry.x, entry.y)}:${entry.x},${entry.y}`;
+      }
+
+      function viewportItemKind(item) {
+        if (item.kind === "quest") return "prize";
+        if (item.kind === "gold") return "gold";
+        return "item";
+      }
+
+      function viewportItemLabel(item, enabled) {
+        if (!enabled) return item.shortName || item.name;
+        if (item.kind === "gold") return "Pick up gold";
+        return `Pick up ${item.shortName || item.name}`;
+      }
+
+      function viewportDoorLabel(x, y, enabled) {
+        if (!enabled) return closedDoorAt(x, y) ? "closed door" : "open door";
+        return closedDoorAt(x, y) ? "Open door" : "Close door";
+      }
+
+      function viewportInteractionSpec() {
+        const item = itemAt(state.x, state.y);
+        if (item) return { kind: viewportItemKind(item), entry: item, action: "pickup" };
+        const stairs = stairsAt(state.x, state.y);
+        if (stairs) return { kind: "stairs", entry: { ...stairs, id: `stairs-${stairs.direction}-${state.x}-${state.y}`, x: state.x, y: state.y, direction: stairs.direction }, action: "interact" };
+        const trap = typeof trapTarget === "function" ? trapTarget() : null;
+        if (trap) return { kind: "trap", entry: trap, action: "disarm" };
+        const fixture = typeof fixtureTarget === "function" ? fixtureTarget() : null;
+        if (fixture) return { kind: "decor", entry: fixture.decor, action: "interact" };
+        const door = typeof doorTarget === "function" ? doorTarget() : null;
+        if (door) return { kind: "door", entry: { id: `door-${door.x}-${door.y}`, x: door.x, y: door.y }, action: "interact" };
+        return null;
+      }
+
+      function viewportInteractionRect(width, height, kind, entry, view) {
+        if (kind === "item" || kind === "gold" || kind === "prize") return viewportFloorTargetRect(width, height, view, VIEWPORT_FLOOR_TARGETS.item);
+        if (kind === "trap") return viewportFloorTargetRect(width, height, view, VIEWPORT_FLOOR_TARGETS.trap);
+        if (kind === "stairs") return viewportFloorTargetRect(width, height, view, VIEWPORT_FLOOR_TARGETS.stairs);
+        if (kind === "decor") return viewportDecorTargetRect(width, height, view, entry);
+        return viewportDoorTargetRect(width, height, view);
+      }
+
+      function viewportInteractionLabel(kind, entry, enabled) {
+        if (kind === "item" || kind === "gold" || kind === "prize") return viewportItemLabel(entry, enabled);
+        if (kind === "trap") return enabled ? `Disarm ${entry.shortName || entry.name}` : entry.shortName || entry.name;
+        if (kind === "stairs") return enabled ? "Use stairs" : entry.direction === "down" ? "downstairs" : "upstairs";
+        if (kind === "decor") return enabled ? `Use ${entry.shortName || entry.name}` : entry.shortName || entry.name;
+        return viewportDoorLabel(entry.x, entry.y, enabled);
+      }
+
+      function viewportTargetIntersects(rect, width, height) {
+        return rect.x + rect.width > 0 && rect.x < width && rect.y + rect.height > 0 && rect.y < height;
+      }
+
+      function viewportRectSamplePoints(rect) {
+        return [
+          { x: rect.x + rect.width * 0.5, y: rect.y + rect.height * 0.5 },
+          { x: rect.x, y: rect.y },
+          { x: rect.x + rect.width, y: rect.y },
+          { x: rect.x + rect.width, y: rect.y + rect.height },
+          { x: rect.x, y: rect.y + rect.height }
+        ];
+      }
+
+      function viewportPointInQuad(point, quad) {
+        let inside = false;
+        for (let current = 0, previous = quad.length - 1; current < quad.length; previous = current, current += 1) {
+          const a = quad[current];
+          const b = quad[previous];
+          const crosses = (a.y > point.y) !== (b.y > point.y);
+          if (crosses && point.x < ((b.x - a.x) * (point.y - a.y)) / (b.y - a.y) + a.x) inside = !inside;
+        }
+        return inside;
+      }
+
+      function viewportRectHitsQuad(rect, quad) {
+        return viewportRectSamplePoints(rect).some((point) => viewportPointInQuad(point, quad));
+      }
+
+      function viewportFrontWallBlocksTarget(width, height, rect, targetView, x, y, entry) {
+        if (entry.x === x && entry.y === y) return false;
+        if (!solidAt(x, y)) return false;
+        const view = viewCoordinates(x, y);
+        if (view.depth < 1 || view.depth >= targetView.depth) return false;
+        if (Math.abs(view.offset) > Math.max(2, Math.ceil(view.depth * 0.7))) return false;
+        const quad = pctQuad(frontFacePoints(nearEdgeDepth(view.depth), view.offset), width, height);
+        return viewportRectHitsQuad(rect, quad);
+      }
+
+      function viewportSideWallBlocksTarget(width, height, rect, targetView, cell, side, entry) {
+        if (side.cell.x === entry.x && side.cell.y === entry.y) return false;
+        const view = viewCoordinates(cell.x, cell.y);
+        if (view.depth < 1 || view.depth >= targetView.depth) return false;
+        const quad = pctQuad(sideFacePoints(view.depth, side.boundary), width, height);
+        return viewportRectHitsQuad(rect, quad);
+      }
+
+      function viewportTargetOccluded(width, height, rect, view, entry) {
+        const floor = currentFloor();
+        for (let y = -1; y <= floor.map.height; y += 1) {
+          for (let x = -1; x <= floor.map.width; x += 1) {
+            if (boundaryWallCell(x, y) && viewportFrontWallBlocksTarget(width, height, rect, view, x, y, entry)) return true;
+          }
+        }
+        for (const row of mapCellsInViewRows()) {
+          if (row.depth >= view.depth) continue;
+          const open = row.cells.filter((cell) => !solidAt(cell.x, cell.y));
+          for (const cell of open) {
+            for (const side of sideWallEntries(cell, cell.offset)) {
+              if (viewportSideWallBlocksTarget(width, height, rect, view, cell, side, entry)) return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      function viewportInteractionTarget(width, height, kind, entry, enabled, action = null) {
+        const view = viewportTargetView(entry.x, entry.y);
+        if (!view) return null;
+        const rect = viewportInteractionRect(width, height, kind, entry, view);
+        if (!viewportTargetIntersects(rect, width, height)) return null;
+        if (viewportTargetOccluded(width, height, rect, view, entry)) return null;
+        return {
+          id: viewportTargetId(kind, entry),
+          kind,
+          label: viewportInteractionLabel(kind, entry, enabled),
+          action: enabled ? action : null,
+          enabled,
+          rect,
+          cell: { x: entry.x, y: entry.y },
+          depth: view.depth,
+          offset: view.offset
+        };
+      }
+
+      function viewportInteractionTargets(width, height) {
+        const floorState = currentFloorState();
+        const floor = currentFloor();
+        const targets = [];
+        const active = viewportInteractionSpec();
+        const activeId = active ? viewportTargetId(active.kind, active.entry) : null;
+        const seenIds = new Set();
+        const pushTarget = (kind, entry) => {
+          const id = viewportTargetId(kind, entry);
+          if (seenIds.has(id)) return;
+          const enabled = id === activeId;
+          const target = viewportInteractionTarget(width, height, kind, entry, enabled, enabled ? active.action : null);
+          if (!target) return;
+          seenIds.add(id);
+          targets.push(target);
+        };
+
+        if (active) pushTarget(active.kind, active.entry);
+        for (const item of floorState.floorItems) {
+          if (floorState.discovered.has(keyOf(item.x, item.y))) pushTarget(viewportItemKind(item), item);
+        }
+        for (const trap of floorState.traps) {
+          if (trap.armed && floorState.discovered.has(keyOf(trap.x, trap.y))) pushTarget("trap", trap);
+        }
+        for (const stair of Object.values(floor.stairs).filter(Boolean)) {
+          if (floorState.discovered.has(keyOf(stair.x, stair.y))) {
+            const direction = stairsAt(stair.x, stair.y)?.direction || "up";
+            pushTarget("stairs", { ...stair, direction, id: `stairs-${direction}-${stair.x}-${stair.y}` });
+          }
+        }
+        for (const decor of floor.decor || []) {
+          if (floorState.discovered.has(keyOf(decor.x, decor.y))) pushTarget("decor", decor);
+        }
+        for (let y = 0; y < floor.map.height; y += 1) {
+          for (let x = 0; x < floor.map.width; x += 1) {
+            if (floorState.discovered.has(keyOf(x, y)) && doorCellAt(x, y)) pushTarget("door", { id: `door-${x}-${y}`, x, y });
+          }
+        }
+
+        return targets.sort((a, b) => Number(a.enabled) - Number(b.enabled) || b.depth - a.depth || Math.abs(b.offset) - Math.abs(a.offset));
       }
 
       function effectTexture(kind) {
@@ -1160,16 +1703,20 @@
       function drawActor(context, width, height, depth, offset, cell) {
         const monster = monsterAt(cell.x, cell.y);
         if (!monster) return;
-        const spriteDepth = nearEdgeDepth(depth);
-        const data = geometryAt(spriteDepth);
-        const rect = drawSprite(context, monster.tile, actorBounds(monster, data.sprite, spriteDepth, offset), width, height);
+        const rect = drawSprite(context, monster.tile, actorTileBounds(monster, depth, offset), width, height);
         if (!rect) return;
+        drawMonsterStatusOverlays(context, monster, rect);
         drawRangedCue(context, monster, rect);
         drawMonsterStatusCue(context, monster, rect);
         drawHealthBar(context, monster, rect);
       }
 
       function drawFrontSurface(context, width, height, depth, offset, cell) {
+        drawFrontSurfaceBase(context, width, height, depth, offset, cell);
+        drawFrontSurfaceDetails(context, width, height, depth, offset, cell);
+      }
+
+      function drawFrontSurfaceBase(context, width, height, depth, offset, cell) {
         const kind = mapKind(cell.x, cell.y);
         if (kind === "floor") return;
         const faceDepth = nearEdgeDepth(depth);
@@ -1177,18 +1724,36 @@
         const assets = currentAssets();
         const points = pctQuad(frontFacePoints(faceDepth, offset), width, height);
         if (kind === "door") {
-          drawVerticalMappedQuad(context, assets.door, points, faceDepth, data.light, "#281d13");
+          drawVerticalMappedQuad(context, environmentAsset(assets.door), points, faceDepth, data.light, "#281d13");
           strokeQuad(context, points, "rgba(238, 193, 101, 0.12)");
           return;
         }
-        drawVerticalMappedQuad(context, themedAsset("wall", "wallAlt", cell, 31), points, faceDepth, data.light, "#2e2a24");
+        drawVerticalMappedQuad(context, wallSurfaceTexture(cell), points, faceDepth, data.light, "#2e2a24");
+      }
+
+      function drawFrontSurfaceDetails(context, width, height, depth, offset, cell, occluders = []) {
+        const kind = mapKind(cell.x, cell.y);
+        if (kind !== "wall") return;
+        const faceDepth = nearEdgeDepth(depth);
+        const data = geometryAt(faceDepth);
+        const points = pctQuad(frontFacePoints(faceDepth, offset), width, height);
         const surface = frontFacePoints(faceDepth, offset);
-        drawWallRelief(context, width, height, faceDepth, cell, surface);
-        drawWallPatch(context, width, height, faceDepth, offset, cell, surface);
-        drawWallStain(context, width, height, faceDepth, offset, cell, surface);
-        drawWallAccent(context, width, height, faceDepth, offset, cell);
-        drawWallGlow(context, width, height, faceDepth, offset, cell, surface);
-        strokeQuad(context, points, `rgba(238, 193, 101, ${Math.max(0.05, data.light * 0.09)})`);
+        withFrontDetailClip(context, points, occluders, () => {
+          drawWallRelief(context, width, height, faceDepth, cell, surface);
+          drawWallPatch(context, width, height, faceDepth, offset, cell, surface);
+          drawWallStain(context, width, height, faceDepth, offset, cell, surface);
+          drawWallAccent(context, width, height, faceDepth, offset, cell);
+          drawWallGlow(context, width, height, faceDepth, offset, cell, surface);
+          strokeQuad(context, points, `rgba(238, 193, 101, ${Math.max(0.05, data.light * 0.09)})`);
+        });
+      }
+
+      function drawCellContents(context, width, height, depth, offset, cell) {
+        drawDecor(context, width, height, depth, offset, cell);
+        drawFloorFeature(context, width, height, depth, offset, cell);
+        drawActor(context, width, height, depth, offset, cell);
+        drawCloud(context, width, height, depth, offset, cell);
+        drawEffect(context, width, height, depth, offset, cell);
       }
 
       function drawViewCell(context, width, height, depth, cell) {
@@ -1197,37 +1762,83 @@
           return;
         }
         drawCellShell(context, width, height, depth, cell.offset, cell);
-        drawDecor(context, width, height, depth, cell.offset, cell);
-        drawFloorFeature(context, width, height, depth, cell.offset, cell);
-        drawActor(context, width, height, depth, cell.offset, cell);
-        drawCloud(context, width, height, depth, cell.offset, cell);
-        drawEffect(context, width, height, depth, cell.offset, cell);
+        for (const entry of sideWallEntries(cell, cell.offset)) drawSideWall(context, width, height, depth, cell.offset, entry, geometryAt(depth));
+        drawCellContents(context, width, height, depth, cell.offset, cell);
+      }
+
+      // THE WALL ORDER. Axis-aligned, band by band from the farthest row to the
+      // nearest, in each band: off-axis wall textures, side walls, facing wall
+      // textures, then every front wall's surface details and cell contents.
+      // A solid cell's face closes off the band one step nearer, so each row's
+      // solids are held as `pending` and drawn during the next (nearer) row:
+      // off-axis wall bodies go under the side walls (you see those blocks'
+      // flanks), while all front-wall decals and relief draw after the side
+      // walls so a block keeps the same visible markings when viewed head-on.
+      // Returns the layer list in draw order; renderViewport draws it verbatim
+      // and the render-order regression tests assert on this same list.
+      function sceneWallLayers(context, width, height) {
+        const layers = [];
+        const pushFrontBases = (fronts, facing) => {
+          for (const front of fronts) {
+            if ((front.cell.offset === 0) !== facing) continue;
+            layers.push({ kind: "front-base", depth: front.depth, offset: front.cell.offset, draw: () => drawFrontSurfaceBase(context, width, height, front.depth, front.cell.offset, front.cell) });
+          }
+        };
+        const pushFrontDetails = (fronts, occluders = []) => {
+          for (const front of fronts) {
+            layers.push({ kind: "front-detail", depth: front.depth, offset: front.cell.offset, draw: () => drawFrontSurfaceDetails(context, width, height, front.depth, front.cell.offset, front.cell, occluders) });
+          }
+        };
+        let pending = []; // solids one row deeper — their faces close off THIS row
+        for (const row of mapCellsInViewRows()) { // far → near
+          const depth = row.depth;
+          const open = row.cells.filter((cell) => !solidAt(cell.x, cell.y));
+          for (const cell of open) drawCellShell(context, width, height, depth, cell.offset, cell);
+          pushFrontBases(pending, false); // far wall: the off-axis faces, under the side walls
+          const sideOccluders = [];
+          for (const cell of open) {
+            for (const entry of sideWallEntries(cell, cell.offset)) {
+              sideOccluders.push(pctQuad(sideFacePoints(depth, entry.boundary), width, height));
+              layers.push({ kind: "side", depth, offset: cell.offset, draw: () => drawSideWall(context, width, height, depth, cell.offset, entry, geometryAt(depth)) });
+            }
+          }
+          pushFrontBases(pending, true); // the wall the party faces — after its side walls
+          pushFrontDetails(pending, sideOccluders);
+          for (const cell of open) layers.push({ kind: "contents", depth, offset: cell.offset, draw: () => drawCellContents(context, width, height, depth, cell.offset, cell) });
+          pending = row.cells.filter((cell) => solidAt(cell.x, cell.y)).map((cell) => ({ depth, cell }));
+        }
+        pushFrontBases(pending, false); // nearest band: blocks beside the party
+        pushFrontBases(pending, true);
+        pushFrontDetails(pending);
+        return layers;
       }
 
       function renderViewport() {
         const { context, width, height } = ensureViewportCanvas();
+        viewportCanvas.style.imageRendering = state.tileset === "linocut" ? "auto" : "pixelated";
         context.clearRect(0, 0, width, height);
         context.imageSmoothingEnabled = false;
         context.fillStyle = "#070606";
         context.fillRect(0, 0, width, height);
 
-        const rows = mapCellsInViewRows();
-        for (const row of rows) {
-          for (const cell of row.cells) drawViewCell(context, width, height, row.depth, cell);
-        }
+        for (const layer of sceneWallLayers(context, width, height)) layer.draw();
         drawEffectTrails(context, width, height);
 
         drawViewportHaze(context, width, height);
         drawBranchAtmosphere(context, width, height);
         drawEffectWash(context, width, height);
+        drawPartyStatusOverlays(context, width, height);
         if (state.victory || state.defeated) drawLabel(context, state.victory ? "escaped" : "defeated", { x: width * 0.4, y: height * 0.42, width: width * 0.2, height: 30 });
+        if (typeof renderViewportInteractions === "function") renderViewportInteractions(width, height);
       }
 
       Object.assign(context, {
         imageEntry,
+        tileContentBox,
         cellHash,
         assetValues,
         themedAsset,
+        wallSurfaceTexture,
         floorTexture,
         floorFallback,
         accentAsset,
@@ -1249,6 +1860,9 @@
         ceilingPoints,
         leftWallPoints,
         rightWallPoints,
+        calculateViewportProjection,
+        updateViewportProjection,
+        viewportProjectionFor,
         ensureViewportCanvas,
         pctPoint,
         pctQuad,
@@ -1270,6 +1884,10 @@
         drawSprite,
         drawHealthBar,
         drawRangedCue,
+        monsterStatusOverlays,
+        drawMonsterStatusOverlays,
+        partyStatusOverlays,
+        drawPartyStatusOverlays,
         drawMonsterStatusCue,
         drawLabel,
         drawViewportHaze,
@@ -1282,6 +1900,7 @@
         mapCellsInViewRows,
         shiftedBounds,
         actorBounds,
+        actorTileBounds,
         standingBounds,
         sideWallSortValue,
         sideWallEntries,
@@ -1304,6 +1923,14 @@
         drawSideWallAccent,
         drawFloorFeature,
         drawDecor,
+        viewportTargetView,
+        viewportFloorTargetRect,
+        viewportDoorTargetRect,
+        viewportDecorTargetRect,
+        viewportTargetIntersects,
+        viewportInteractionSpec,
+        viewportInteractionTarget,
+        viewportInteractionTargets,
         effectTexture,
         effectColor,
         effectBounds,
@@ -1316,7 +1943,11 @@
         drawCloud,
         drawActor,
         drawFrontSurface,
+        drawFrontSurfaceBase,
+        drawFrontSurfaceDetails,
         drawViewCell,
+        drawCellContents,
+        sceneWallLayers,
         renderViewport,
       });
     }

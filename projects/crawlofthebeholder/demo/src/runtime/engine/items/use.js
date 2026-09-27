@@ -18,6 +18,57 @@
         renderChrome();
       }
 
+      // One equip flow for every wearable kind and every front end: the same
+      // slot/verb/flourish whether the leader equips via useItem or a chosen
+      // member equips via equipItemToMember.
+      const EQUIP_SPECS = {
+        weapon: { slot: "weapon", verb: "readies" },
+        armour: { slot: "armour", verb: "buckles on" },
+        talisman: { slot: "talisman", verb: "attunes to", effect: "magic" },
+        ring: { slot: "ring", verb: "slips on", effect: "halo" },
+        amulet: { slot: "amulet", verb: "fastens", effect: "halo" }
+      };
+
+      function equipKindSpec(kind) {
+        return EQUIP_SPECS[kind] || null;
+      }
+
+      function performEquip(item, spec, member) {
+        if (!equipItem(item, spec.slot, spec.verb, member)) return false;
+        if (spec.effect) addEffect(spec.effect, [{ x: state.x, y: state.y }]);
+        advanceTurn();
+        render();
+        return true;
+      }
+
+      // Drag-a-thing-into-the-view throwing: only actual throwing weapons
+      // fly; anything else refuses with a message instead of vanishing.
+      const THROWN_KINDS = new Set(["throwable", "alch-fire"]);
+
+      function throwInventoryItem(id) {
+        const item = state.inventory.find((entry) => entry.id === id);
+        if (!item) return false;
+        if (!THROWN_KINDS.has(item.kind)) {
+          setMessage(`${typeof displayItemName === "function" ? displayItemName(item) : item.name} is not a throwing weapon.`);
+          return false;
+        }
+        useItem(id);
+        return true;
+      }
+
+      function equipItemToMember(memberIndex, id) {
+        const item = state.inventory.find((entry) => entry.id === id);
+        const spec = item ? EQUIP_SPECS[item.kind] : null;
+        if (!item || !spec) return false;
+        const member = state.party[memberIndex];
+        if (!member || member.hp <= 0) {
+          setMessage("No one upright can take that.");
+          return false;
+        }
+        if (typeof identifyItem === "function") identifyItem(item);
+        return performEquip(item, spec, member);
+      }
+
       const ITEM_USE = {
         "alch-fire"(item) {
           if (typeof useAlchemistFire !== "function") return useDefaultItem(item);
@@ -44,6 +95,16 @@
           const messages = [];
           const ok = deployGlyph(item, messages);
           if (!ok) { setMessage(messages[0] || "Cannot place the glyph here."); return; }
+          removeInventoryItem(item);
+          state.message = messages.join(" ");
+          advanceTurn(); render();
+        },
+
+        charm(item) {
+          if (typeof useCharm !== "function") return useDefaultItem(item);
+          const messages = [];
+          const ok = useCharm(item, messages);
+          if (!ok) { setMessage(messages[0] || `${item.name} fades without effect.`); return; }
           removeInventoryItem(item);
           state.message = messages.join(" ");
           advanceTurn(); render();
@@ -165,6 +226,12 @@
         },
 
         food(item) {
+          if (context.hungerDisabled) {
+            setMessage("There is no hunger clock in this expedition. Food was not consumed.");
+            return;
+          } else {
+            state.message = "The party eats a ration.";
+          }
           const restore = Math.max(50, item.power || 400);
           state.satiety = Math.min(1200, (state.satiety || 0) + restore);
           removeInventoryItem(item);
@@ -191,7 +258,18 @@
         },
 
         healing(item) {
-          const target = state.party.reduce((lowest, member) => (member.hp / member.maxHp < lowest.hp / lowest.maxHp ? member : lowest), state.party[0]);
+          const living = state.party.filter((member) => member.hp > 0);
+          if (living.length === 0) {
+            setMessage("No living adventurer can drink this. Healing supplies do not revive the fallen.");
+            return;
+          } else if (!Number.isFinite(item.power) || item.power <= 0) {
+            setMessage(`Cannot use ${item.name}: expected a positive healing amount, received ${item.power}.`);
+            return;
+          } else {
+            // Normal healing never targets a fallen member; revival is a separate consumable.
+            state.message = "The party uses a recovery supply.";
+          }
+          const target = living.reduce((lowest, member) => (member.hp / member.maxHp < lowest.hp / lowest.maxHp ? member : lowest), living[0]);
           target.hp = Math.min(target.maxHp, target.hp + item.power);
           const clearedPoison = item.name.includes("curing") && state.poisonedTurns > 0;
           const clearedBarbs = item.name.includes("curing") && state.barbedTurns > 0;
@@ -375,36 +453,23 @@
         },
 
         weapon(item) {
-          if (!equipItem(item, "weapon", "readies")) return;
-          advanceTurn();
-          render();
+          performEquip(item, EQUIP_SPECS.weapon);
         },
 
         armour(item) {
-          if (!equipItem(item, "armour", "buckles on")) return;
-          advanceTurn();
-          render();
+          performEquip(item, EQUIP_SPECS.armour);
         },
 
         talisman(item) {
-          if (!equipItem(item, "talisman", "attunes to")) return;
-          addEffect("magic", [{ x: state.x, y: state.y }]);
-          advanceTurn();
-          render();
+          performEquip(item, EQUIP_SPECS.talisman);
         },
 
         ring(item) {
-          if (!equipItem(item, "ring", "slips on")) return;
-          addEffect("halo", [{ x: state.x, y: state.y }]);
-          advanceTurn();
-          render();
+          performEquip(item, EQUIP_SPECS.ring);
         },
 
         amulet(item) {
-          if (!equipItem(item, "amulet", "fastens")) return;
-          addEffect("halo", [{ x: state.x, y: state.y }]);
-          advanceTurn();
-          render();
+          performEquip(item, EQUIP_SPECS.amulet);
         },
 
         quest(item) {
@@ -413,7 +478,7 @@
       };
 
       // Kinds whose use counts toward the "potions used" lifetime stat.
-      const CONSUMABLE_KINDS = new Set(["healing", "mapping", "might", "resistance", "haste", "blink", "teleport", "fear", "confuse", "fog", "poison", "immolation", "silence", "identify", "remove_curse"]);
+      const CONSUMABLE_KINDS = new Set(["healing", "mapping", "might", "resistance", "haste", "blink", "teleport", "fear", "confuse", "fog", "poison", "immolation", "silence", "identify", "remove_curse", "charm"]);
 
       function useItem(id) {
         const item = state.inventory.find((entry) => entry.id === id);
@@ -442,6 +507,9 @@
 
       context.ITEM_USE = ITEM_USE;
       context.useItem = useItem;
+      context.equipKindSpec = equipKindSpec;
+      context.equipItemToMember = equipItemToMember;
+      context.throwInventoryItem = throwInventoryItem;
     }
   };
 }());

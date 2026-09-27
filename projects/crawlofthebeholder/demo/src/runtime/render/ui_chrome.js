@@ -22,14 +22,17 @@
           const cooldown = member.signatureCooldown || 0;
           const sigNote = index === 0 && klass ? (cooldown > 0 ? ` · sig in ${cooldown}` : " · sig ready") : "";
           row.title = `${member.name} (${role}${classLabel ? `, ${klass.name}` : ""})${sigNote}${gear ? ` — ${gear}` : ""}`;
+          row.dataset.memberIndex = index;
+          const portrait = typeof memberPortrait === "function" ? memberPortrait(member) : null;
           row.innerHTML = `
-            <div class="party-name">${classLabel ? `<span class="class-tag">${escapeHtml(klass.glyph)}</span>` : ""}${escapeHtml(member.name)}</div>
+            <div class="party-name">${portrait ? `<img class="party-portrait" src="${portrait}" alt="">` : classLabel ? `<span class="class-tag">${escapeHtml(klass.glyph)}</span>` : ""}${escapeHtml(member.name)}</div>
             <div class="meter" aria-label="${member.name} hit points"><div class="meter-fill" style="--value:${percent(member.hp, member.maxHp)}"></div></div>
             <div class="hp-text">${member.hp}/${member.maxHp}</div>
             <div class="party-stats">${memberPower(member)}/${memberDefense(member)}</div>
           `;
           els.party.appendChild(row);
         }
+        bindItemDragDrop();
       }
 
       function renderShopList() {
@@ -56,22 +59,27 @@
         els.statsList.innerHTML = lines.map(([label, value]) => `<li><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></li>`).join("");
       }
 
+      // Name + portrait + class picker, with the fixed action pair and its costs.
+      // Keep lore out of this dialog; the rules must be visible before starting.
+      // Clicking the portrait cycles through the class's choices (our
+      // original art plus fitting DCSS tiles); changing class resets to that
+      // class's default.
       function renderCharacterCreate() {
         if (!els.characterCreateList) return;
         const klasses = typeof getClassDefinitions === "function" ? getClassDefinitions() : [];
-        els.characterCreateList.innerHTML = state.party.map((member, index) => {
+        const warning = context.saveLoadError ? `<p role="alert">${escapeHtml(context.saveLoadError)}</p>` : "";
+        els.characterCreateList.innerHTML = warning + state.party.map((member, index) => {
           const current = member.classKey || "";
+          const klass = klasses.find((entry) => entry.key === current);
           const optionsHtml = klasses.map((k) => `<option value="${k.key}" ${current === k.key ? "selected" : ""}>${k.glyph} ${k.name}</option>`).join("");
-          const desc = klasses.find((k) => k.key === current)?.description || "";
-          // Append the real DCSS background flavour the class echoes.
-          const lore = typeof classLore === "function" ? classLore(current) : "";
-          const loreHtml = lore ? `<span class="character-create-lore">${escapeHtml(lore)}</span>` : "";
+          const entry = typeof memberPortraitEntry === "function" ? memberPortraitEntry(member) : null;
           return `<div class="character-create-row">
             <label>
+              ${entry ? `<button type="button" class="create-portrait" data-portrait-for="${index}" title="${escapeHtml(entry.label)} — click for another portrait"><img src="${entry.src}" alt="${escapeHtml(entry.label)}"></button>` : ""}
               <strong>${escapeHtml(member.name)}</strong>
-              <select data-member-index="${index}">${optionsHtml}</select>
+              <select data-member-index="${index}" aria-label="Class and fixed actions for ${escapeHtml(member.name)}" ${state.characterCreated ? "disabled" : ""}>${optionsHtml}</select>
             </label>
-            <p class="character-create-desc" data-desc-for="${index}">${escapeHtml(desc)}${loreHtml}</p>
+            <p>${klass ? `${escapeHtml(klass.description)} Primary cooldown: ${klass.signatureCooldown} turns. Secondary cooldown: ${klass.ultimate.cooldown} turns.` : "Choose a class to see its two fixed actions."}</p>
           </div>`;
         }).join("");
       }
@@ -149,7 +157,8 @@
           const klass = typeof classFor === "function" ? classFor(member) : null;
           const role = index === 0 ? "front-line" : `back ${index}`;
           const cd = member.signatureCooldown || 0;
-          const sig = klass ? `<span>${escapeHtml(klass.signature.label)}: ${escapeHtml(klass.signature.body)} (${cd > 0 ? `cooldown ${cd}` : "ready"})</span>` : "";
+          const secondaryCd = member.ultimateCooldown || 0;
+          const sig = klass ? `<span>Primary (B): ${escapeHtml(klass.signature.label)} — ${escapeHtml(klass.signature.body)} (${cd > 0 ? `cooldown ${cd}` : "ready"}). Secondary (V): ${escapeHtml(klass.ultimate.label)} — ${escapeHtml(klass.ultimate.body)} (${secondaryCd > 0 ? `cooldown ${secondaryCd}` : "ready"}). Use Formation to bring this member to the front.</span>` : "";
           return `<li><strong>${escapeHtml(klass?.glyph || "·")} ${escapeHtml(member.name)} <em>(${escapeHtml(role)}${klass ? `, ${escapeHtml(klass.name)}` : ""})</em></strong><span>${klass ? escapeHtml(klass.description) : "No class assigned."}</span>${sig}</li>`;
         }).join("") + setNote;
       }
@@ -266,7 +275,8 @@
         const view = typeof visibleInventory === "function" ? visibleInventory() : state.inventory;
         const filterLabel = state.inventoryFilter && state.inventoryFilter !== "all" ? ` ${state.inventoryFilter}` : "";
         const sortLabel = state.inventorySort && state.inventorySort !== "default" ? ` · ${state.inventorySort}` : "";
-        els.inventoryCount.textContent = `${view.length}/${state.inventory.length}${filterLabel}${sortLabel}`;
+        const load = typeof carriedWeight === "function" && typeof carryCapacity === "function" ? ` · ${carriedWeight()}/${carryCapacity()}wt` : "";
+        els.inventoryCount.textContent = `${view.length}/${state.inventory.length}${filterLabel}${sortLabel}${load} · ${state.gold}g`;
         for (const item of view) {
           const originalIndex = state.inventory.indexOf(item);
           const shortcut = inventoryShortcut(originalIndex);
@@ -281,12 +291,10 @@
           if (blessed) classes.push("blessed");
           wrapper.className = classes.join(" ");
           const displayName = typeof displayItemName === "function" ? displayItemName(item) : item.name;
-          const valueText = typeof itemValue === "function" ? ` · ${itemValue(item)}g` : "";
-          // Real DCSS item flavour in the tooltip (identified items only).
-          const lore = !unidentified && typeof itemLore === "function" ? itemLore(item.name) : "";
-          const loreText = lore ? `\n${lore}` : "";
+          // No title attribute: the native tooltip is slow and thin. The
+          // instant one is drawn by the delegated hover handler below.
           wrapper.innerHTML = `
-            <button type="button" title="${shortcut ? `${shortcut}: ` : ""}${escapeHtml(displayName)}${valueText}${escapeHtml(loreText)}" aria-label="${escapeHtml(displayName)}" data-item="${item.id}">
+            <button type="button" draggable="true" aria-label="${escapeHtml(displayName)}" data-item="${item.id}">
               <img src="${item.tile}" alt="">
               ${shortcut ? `<b class="inventory-key">${shortcut}</b>` : ""}
             </button>
@@ -294,101 +302,115 @@
           `;
           els.inventory.appendChild(wrapper);
         }
+        bindItemTooltip();
+        bindItemDragDrop();
       }
 
-      function renderNearby() {
-        const forward = dirAt(0);
-        const target = monsterAt(state.x + forward.x, state.y + forward.y);
-        const item = itemAt(state.x, state.y);
-        const stairs = stairsAt(state.x, state.y);
-        const doorX = state.x + forward.x;
-        const doorY = state.y + forward.y;
-        const currentTrap = trapAt(state.x, state.y);
-        const frontTrap = trapAt(doorX, doorY);
-        const frontDoor = doorCellAt(doorX, doorY) ? { x: doorX, y: doorY, closed: closedDoorAt(doorX, doorY) } : null;
-        const features = visibleFeatures();
-        const rangedThreat = features.find((feature) => feature.ranged);
-        els.threatBadge.textContent = target ? "front" : currentTrap || frontTrap ? "trap" : item ? "item" : stairs ? "stairs" : frontDoor ? "door" : rangedThreat ? "ranged" : `${features.length} seen`;
-        if (target) {
-          const traitDetails = [];
-          if (target.fearTurns > 0) traitDetails.push(`afraid ${target.fearTurns}`);
-          if (target.rootedTurns > 0) traitDetails.push(`rooted ${target.rootedTurns}`);
-          if (target.poisonedTurns > 0) traitDetails.push(`poisoned ${target.poisonedTurns}`);
-          if (target.immolationTurns > 0) traitDetails.push(`inner flame ${target.immolationTurns}`);
-          if (target.hasteTurns > 0) traitDetails.push(`hasted ${target.hasteTurns}`);
-          if (target.mightTurns > 0) traitDetails.push(`might ${target.mightTurns}`);
-          if (target.rageTurns > 0) traitDetails.push(`rage ${target.rageTurns}`);
-          if (target.summoned) traitDetails.push(`summoned ${target.summonTurns || 0}`);
-          if (target.traits?.airborne) traitDetails.push("airborne");
-          if (target.traits?.maintainRange) traitDetails.push("keeps range");
-          if (target.speed !== 10) traitDetails.push(`spd ${target.speed}`);
-          if (target.ranged && state.silenceTurns > 0) traitDetails.push("silenced");
-          if (target.ranged && state.silenceTurns <= 0) traitDetails.push(target.ranged.name);
-          if (target.ranged?.element) traitDetails.push(target.ranged.element);
-          if (target.ranged?.cloud) traitDetails.push(`${target.ranged.cloud} cloud`);
-          if (target.ranged?.status) traitDetails.push(target.ranged.status);
-          traitDetails.push(...supportSpellLabels(target));
-          traitDetails.push(...mobilitySpellLabels(target));
-          traitDetails.push(...selfSpellLabels(target));
-          traitDetails.push(...summonSpellLabels(target));
-          if (target.traits?.drainDamage) traitDetails.push("drain");
-          if (target.traits?.blinkWith) traitDetails.push("blink");
-          if (target.traits?.poisonTurns) traitDetails.push("poison");
-          if (target.traits?.acidDamage) traitDetails.push("acid");
-          if (target.traits?.electricDamage) traitDetails.push("discharge");
-          if (target.traits?.fireDamage) traitDetails.push("fire");
-          if (target.traits?.coldDamage) traitDetails.push("cold");
-          if (target.traits?.vampiricDamage) traitDetails.push("vampiric");
-          if (target.traits?.reachDamage) traitDetails.push("reach");
-          if (target.traits?.dragDamage) traitDetails.push("drag");
-          if (target.traits?.floodTurns) traitDetails.push("engulf");
-          if (target.traits?.drownDamage) traitDetails.push("drown");
-          if (target.traits?.rageTurns) traitDetails.push("rage");
-          if (target.traits?.paralyseTurns) traitDetails.push("paralyse");
-          if (target.traits?.barbedTurns) traitDetails.push("barbs");
-          traitDetails.push(...monsterResistanceLabels(target));
-          const habitat = monsterHabitatLabel(target);
-          if (habitat) traitDetails.push(habitat);
-          const traitDetail = traitDetails.length > 0 ? `, ${traitDetails.join(", ")}` : "";
-          const intent = typeof predictMonsterIntent === "function" ? predictMonsterIntent(target) : "";
-          const intentTag = intent ? `<br><em class="intent">next: ${escapeHtml(intent)}</em>` : "";
-          const preview = typeof combatPreview === "function" ? combatPreview(target) : null;
-          const previewTag = preview ? `<br><em class="preview">~${preview.perTurn}/turn · ${preview.turnsToKill} ${preview.turnsToKill === 1 ? "turn" : "turns"} to kill</em>` : "";
-          els.nearby.innerHTML = `<strong>${target.name}</strong>${intentTag}${previewTag}<br>${target.hp}/${target.maxHp} HP, AC ${target.ac}, EV ${target.ev}${traitDetail}`;
+      // Drag items out of the pack: onto a party member to hand it to them
+      // (wearables equip on that member), or into the dungeon view to throw
+      // it. One delegated binding; rows/buttons are rebuilt every render.
+      function dropItemOnMember(itemId, memberIndex) {
+        const item = state.inventory.find((entry) => entry.id === itemId);
+        if (!item) return;
+        if (typeof equipKindSpec === "function" && equipKindSpec(item.kind) && typeof equipItemToMember === "function") {
+          equipItemToMember(memberIndex, itemId);
           return;
         }
-        if (currentTrap || frontTrap) {
-          const trap = currentTrap || frontTrap;
-          const place = currentTrap ? "underfoot" : "front";
-          els.nearby.innerHTML = `<strong>${trap.name}</strong><br>${place} · ${trap.kind} ${trap.power} · Use disarms`;
-          return;
-        }
-        if (item) {
-          const detail = item.kind === "gold" ? `${item.value || 0} gold` : item.kind;
-          els.nearby.innerHTML = `<strong>${item.name}</strong><br>at feet · ${detail}`;
-          return;
-        }
-        if (stairs) {
-          els.nearby.innerHTML = `<strong>${stairs.direction === "down" ? "Downstairs" : "Upstairs"}</strong><br>${hasPrize() && state.floorIndex === 0 ? "surface route" : currentFloor().name}`;
-          return;
-        }
-        if (frontDoor) {
-          const blocked = !frontDoor.closed && (monsterAt(frontDoor.x, frontDoor.y) || itemAt(frontDoor.x, frontDoor.y));
-          const detail = frontDoor.closed ? "Use opens it" : blocked ? "blocked open" : "Use closes it";
-          els.nearby.innerHTML = `<strong>${frontDoor.closed ? "Closed door" : "Open door"}</strong><br>${detail}`;
-          return;
-        }
-        if (!features.length) {
-          els.nearby.innerHTML = `<span class="nearby-empty">Only old air moves.</span>`;
-          return;
-        }
-        els.nearby.innerHTML = `<div class="nearby-list">${features.map((feature) => `
-          <div class="nearby-row ${feature.danger ? "danger" : ""} ${feature.ranged ? "ranged" : ""} ${feature.type === "prize" ? "prize" : ""} ${feature.type === "gold" ? "gold" : ""} ${feature.type === "trap" ? "trap" : ""} ${feature.type === "door" ? "door" : ""}">
-            <em>${escapeHtml(feature.bearing)}</em>
-            <strong>${escapeHtml(feature.name)}</strong>
-            <span>${escapeHtml(feature.detail)} · ${feature.distance}</span>
-          </div>
-        `).join("")}</div>`;
+        useItem(itemId);
+      }
+
+      let itemDragDropBound = false;
+
+      function bindItemDragDrop() {
+        if (itemDragDropBound) return;
+        if (!els.inventory?.addEventListener || !els.party?.addEventListener || !els.viewport?.addEventListener) return;
+        itemDragDropBound = true;
+        els.inventory.addEventListener("dragstart", (event) => {
+          const button = event.target?.closest?.("button[data-item]");
+          if (!button || !event.dataTransfer) return;
+          event.dataTransfer.setData("text/plain", button.dataset.item);
+          event.dataTransfer.effectAllowed = "move";
+          hideItemTooltip();
+        });
+        const allowDrop = (event) => {
+          if (event.dataTransfer?.types?.includes?.("text/plain")) event.preventDefault();
+        };
+        els.party.addEventListener("dragover", allowDrop);
+        els.party.addEventListener("drop", (event) => {
+          const row = event.target?.closest?.("[data-member-index]");
+          const id = event.dataTransfer?.getData("text/plain");
+          if (!row || !id) return;
+          event.preventDefault();
+          dropItemOnMember(id, Number.parseInt(row.dataset.memberIndex, 10));
+        });
+        els.viewport.addEventListener("dragover", allowDrop);
+        els.viewport.addEventListener("drop", (event) => {
+          const id = event.dataTransfer?.getData("text/plain");
+          if (!id) return;
+          event.preventDefault();
+          if (typeof throwInventoryItem === "function") throwInventoryItem(id);
+        });
+      }
+
+      // Instant, information-dense hover card for inventory items: what the
+      // item does, its numbers, and its flavour — shown the moment the cursor
+      // touches it, no native-tooltip delay.
+      let itemTooltipNode = null;
+      let itemTooltipBound = false;
+
+      function itemTooltipHtml(info) {
+        const flags = [info.cursed ? "cursed" : "", info.blessed ? "blessed" : "", info.slot ? `equips: ${info.slot}` : ""].filter(Boolean).join(" · ");
+        return `
+          <strong>${escapeHtml(info.name)}</strong>
+          ${flags ? `<em class="tooltip-flags">${escapeHtml(flags)}</em>` : ""}
+          <span class="tooltip-effect">${escapeHtml(info.effect)}</span>
+          <span class="tooltip-stats">${escapeHtml(info.stats.join(" · "))}</span>
+          ${info.lore ? `<span class="tooltip-lore">${escapeHtml(info.lore)}</span>` : ""}
+        `;
+      }
+
+      function positionItemTooltip(event) {
+        if (!itemTooltipNode || !itemTooltipNode.style) return;
+        const pad = 14;
+        const width = itemTooltipNode.offsetWidth || 240;
+        const height = itemTooltipNode.offsetHeight || 90;
+        const viewWidth = window.innerWidth || 1280;
+        const viewHeight = window.innerHeight || 800;
+        let x = event.clientX + pad;
+        let y = event.clientY + pad;
+        if (x + width > viewWidth - 4) x = event.clientX - width - pad;
+        if (y + height > viewHeight - 4) y = event.clientY - height - pad;
+        itemTooltipNode.style.left = `${Math.max(4, x)}px`;
+        itemTooltipNode.style.top = `${Math.max(4, y)}px`;
+      }
+
+      function hideItemTooltip() {
+        if (itemTooltipNode?.classList) itemTooltipNode.classList.add("hidden");
+      }
+
+      function bindItemTooltip() {
+        if (itemTooltipBound) return;
+        if (!els.inventory || typeof els.inventory.addEventListener !== "function") return;
+        if (typeof document.createElement !== "function" || !document.body?.appendChild) return;
+        itemTooltipBound = true;
+        itemTooltipNode = document.createElement("div");
+        itemTooltipNode.className = "item-tooltip hidden";
+        document.body.appendChild(itemTooltipNode);
+        els.inventory.addEventListener("mouseover", (event) => {
+          const button = event.target?.closest?.("button[data-item]");
+          if (!button || typeof itemInfo !== "function") return;
+          const item = state.inventory.find((entry) => entry.id === button.dataset.item);
+          const info = item && itemInfo(item);
+          if (!info) return;
+          itemTooltipNode.innerHTML = itemTooltipHtml(info);
+          itemTooltipNode.classList.remove("hidden");
+          positionItemTooltip(event);
+        });
+        els.inventory.addEventListener("mousemove", positionItemTooltip);
+        els.inventory.addEventListener("mouseout", (event) => {
+          if (!event.relatedTarget || !els.inventory.contains?.(event.relatedTarget)) hideItemTooltip();
+        });
+        els.inventory.addEventListener("click", hideItemTooltip);
       }
 
       function renderLog() {
@@ -415,13 +437,18 @@
         const difficultyTag = state.difficulty && state.difficulty !== "normal" ? ` · ${state.difficulty}` : "";
         const dailyTag = state.dailySeed ? ` · daily ${state.dailySeed}` : "";
         const satiety = state.satiety ?? 1000;
-        const hungerTag = satiety <= 0 ? " · famished" : satiety < 50 ? " · starving" : satiety < 200 ? " · hungry" : satiety < 400 ? " · peckish" : "";
+        const hungerTag = context.hungerDisabled ? "" : satiety <= 0 ? " · famished" : satiety < 50 ? " · starving" : satiety < 200 ? " · hungry" : satiety < 400 ? " · peckish" : "";
         const talentTag = (state.talentPoints || 0) > 0 ? ` · ${state.talentPoints} talent` : "";
         const comboTag = (state.killCombo || 0) >= 3 ? ` · combo x${Math.floor(state.killCombo / 3) + 1}` : "";
         const allyTag = typeof liveAllies === "function" && liveAllies().length > 0 ? ` · ${liveAllies().length} ally` : "";
         const deityTag = state.deity && state.deity !== "none" ? ` · ${state.deity}` : "";
         const encTag = typeof isOverEncumbered === "function" && isOverEncumbered() ? " · over-encumbered" : "";
-        els.statusLine.textContent = `T${state.turnCount} (F${state.floorTurnCount || 0}) · L${state.level} ${state.experience}/${state.nextLevel} XP · ${state.gold}g${hasteStatus}${mightStatus}${rageStatus}${resistanceStatus}${silenceStatus}${snareStatus}${barbedStatus}${engulfedStatus}${slowStatus}${poisonStatus}${dazedStatus}${corrodedStatus}${vitrifiedStatus}${hungerTag}${talentTag}${comboTag}${allyTag}${deityTag}${encTag} · ${hasPrize() ? "orb held" : "orb below"} · ${state.party.filter((member) => member.hp > 0).length}/4 up${difficultyTag}${dailyTag}`;
+        const orbHeld = hasPrize();
+        // Show rune progress toward the seal of Zot until the Orb is in hand.
+        const runesNeeded = state.runesInWorld != null && typeof requiredRunesForZot === "function" ? requiredRunesForZot() : 0;
+        const runeTag = !orbHeld && runesNeeded > 0 && typeof runesHeld === "function" ? ` · runes ${runesHeld()}/${runesNeeded}` : "";
+        const orbTag = orbHeld ? " · orb held — flee!" : "orb below";
+        els.statusLine.textContent = `T${state.turnCount} (F${state.floorTurnCount || 0}) · L${state.level} ${state.experience}/${state.nextLevel} XP · ${state.gold}g${hasteStatus}${mightStatus}${rageStatus}${resistanceStatus}${silenceStatus}${snareStatus}${barbedStatus}${engulfedStatus}${slowStatus}${poisonStatus}${dazedStatus}${corrodedStatus}${vitrifiedStatus}${hungerTag}${talentTag}${comboTag}${allyTag}${deityTag}${encTag}${runeTag} · ${orbTag} · ${state.party.filter((member) => member.hp > 0).length}/4 up${difficultyTag}${dailyTag}`;
         els.versionBadge.textContent = `v${resources.version}`;
         const hazard = typeof currentHazard === "function" && !context.hazardsDisabled ? currentHazard() : null;
         const hazardTag = hazard && hazard.id !== "none" ? ` · ${hazard.name}` : "";
@@ -429,7 +456,6 @@
         els.facingBadge.textContent = dirs[state.dir].name;
         renderParty();
         renderInventory();
-        renderNearby();
         renderLog();
       }
 
@@ -595,6 +621,64 @@
         }, 180);
       }
 
+      let viewportInteractionsBound = false;
+
+      function viewportInteractionLayer() {
+        const viewport = els.viewport;
+        if (!viewport) return null;
+        let layer = typeof viewport.querySelector === "function" ? viewport.querySelector(".viewport-interactive-layer") : null;
+        if (!layer && typeof document.createElement === "function" && typeof viewport.appendChild === "function") {
+          layer = document.createElement("div");
+          layer.className = "viewport-interactive-layer";
+          layer.setAttribute?.("aria-label", "Viewport actions");
+          viewport.appendChild(layer);
+        }
+        return layer;
+      }
+
+      function viewportTargetStyle(target, viewportWidth, viewportHeight) {
+        const targetWidth = Math.max(target.enabled ? 68 : 44, Math.min(180, target.rect.width * 1.18));
+        const targetHeight = Math.max(target.enabled ? 30 : 22, Math.min(52, target.rect.height * 1.12));
+        const centerX = target.rect.x + target.rect.width / 2;
+        const centerY = target.rect.y + target.rect.height / 2;
+        const clampedX = Math.max(targetWidth / 2 + 4, Math.min(viewportWidth - targetWidth / 2 - 4, centerX));
+        const clampedY = Math.max(targetHeight / 2 + 4, Math.min(viewportHeight - targetHeight / 2 - 4, centerY));
+        return `left:${clampedX.toFixed(2)}px;top:${clampedY.toFixed(2)}px;--target-w:${targetWidth.toFixed(2)}px;--target-h:${targetHeight.toFixed(2)}px`;
+      }
+
+      function viewportTargetHtml(target, viewportWidth, viewportHeight) {
+        const classes = `viewport-target ${target.enabled ? "enabled" : "passive"} target-${target.kind}`;
+        const label = escapeHtml(target.label);
+        const attrs = `class="${classes}" style="${viewportTargetStyle(target, viewportWidth, viewportHeight)}" data-viewport-target="${escapeHtml(target.id)}" data-kind="${escapeHtml(target.kind)}" data-enabled="${target.enabled ? "true" : "false"}" title="${label}"`;
+        if (target.enabled) return `<button type="button" ${attrs} data-action="${escapeHtml(target.action)}" aria-label="${label}">${label}</button>`;
+        return `<span ${attrs} aria-hidden="true">${label}</span>`;
+      }
+
+      function renderViewportInteractions(width, height) {
+        const layer = viewportInteractionLayer();
+        if (!layer || typeof viewportInteractionTargets !== "function") return;
+        bindViewportInteractionTargets();
+        layer.innerHTML = viewportInteractionTargets(width, height).map((target) => viewportTargetHtml(target, width, height)).join("");
+      }
+
+      function handleViewportInteractionClick(event) {
+        const target = event.target?.closest?.(".viewport-target[data-enabled='true'][data-action]");
+        if (!target) return false;
+        const action = target.dataset?.action;
+        if (!action || typeof handleAction !== "function") return false;
+        event.preventDefault?.();
+        event.stopPropagation?.();
+        handleAction(action);
+        return true;
+      }
+
+      function bindViewportInteractionTargets() {
+        if (viewportInteractionsBound) return;
+        if (!els.viewport || typeof els.viewport.addEventListener !== "function") return;
+        els.viewport.addEventListener("click", handleViewportInteractionClick);
+        viewportInteractionsBound = true;
+      }
+
       function renderCompass() {
         if (!els.compass) return;
         const arrow = els.compass.querySelector(".compass-arrow");
@@ -654,8 +738,9 @@
             ["Doors / traps / items", `${state.doorsOpened || 0} / ${state.trapsDisarmed || 0} / ${state.itemsCollected || 0}`],
             ["Party upright", `${survivors}/${state.party.length}`],
             ["Difficulty", `${state.difficulty || "normal"}${state.dailySeed ? ` · daily ${state.dailySeed}` : ""}${(state.ascension || 0) > 0 ? ` · NG+${state.ascension}` : ""}`],
+            state.defeated && state.lastAttacker ? ["Slain by", `${state.lastAttacker} on ${currentFloor().id}`] : null,
             ["Orb of Zot Soup", hasPrize() || state.victory ? "recovered" : "still below"]
-          ];
+          ].filter(Boolean);
           els.endModalStats.innerHTML = lines.map(([label, value]) => `<li><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></li>`).join("");
         }
         els.endModal.classList.remove("hidden");
@@ -676,7 +761,6 @@
         renderParty,
         renderMap,
         renderInventory,
-        renderNearby,
         renderLog,
         renderChrome,
         inventoryShortcut,
@@ -701,6 +785,12 @@
         hideDialogue,
         showToast,
         flashCrit,
+        viewportInteractionLayer,
+        viewportTargetStyle,
+        viewportTargetHtml,
+        renderViewportInteractions,
+        handleViewportInteractionClick,
+        bindViewportInteractionTargets,
         shakeViewport,
         queueFloater,
         renderCompass,

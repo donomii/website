@@ -21,7 +21,7 @@
         },
         {
           id: "relic-soulbell",  name: "Soulbell",             kind: "relic", relicKind: "soulbell",
-          description: "Active (2 charges): Restore 30% max HP to all live members.",
+          description: "Single use (2 charges): Restore 30% max HP to all live members, consuming the Soulbell.",
           chargesMax: 2, chargesPerKill: 1, value: 80,
           tile: "vendor/crawl/crawl-ref/source/rltiles/item/misc/bell.png"
         },
@@ -97,7 +97,8 @@
               const heal = Math.max(1, Math.ceil(m.maxHp * 0.3));
               m.hp = Math.min(m.maxHp, m.hp + heal);
             }
-            messages.push(`${relic.name} chimes — wounds knit closed.`);
+            state.inventory = state.inventory.filter((item) => item !== relic);
+            messages.push(`${relic.name} chimes — wounds knit closed. The bell crumbles after its single use.`);
             break;
           case "voidlens":
             for (const m of floorState.monsters) {

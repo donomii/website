@@ -16,17 +16,77 @@
       }
 
       function monsterStepOptions(monster) {
-        return [
+        const candidates = [
           { x: monster.x + Math.sign(state.x - monster.x), y: monster.y },
           { x: monster.x, y: monster.y + Math.sign(state.y - monster.y) },
           { x: monster.x - Math.sign(state.x - monster.x), y: monster.y },
-          { x: monster.x, y: monster.y - Math.sign(state.y - monster.y) }
-        ].filter((step) => step.x !== monster.x || step.y !== monster.y)
+          { x: monster.x, y: monster.y - Math.sign(state.y - monster.y) },
+          { x: monster.x + 1, y: monster.y },
+          { x: monster.x - 1, y: monster.y },
+          { x: monster.x, y: monster.y + 1 },
+          { x: monster.x, y: monster.y - 1 }
+        ].filter((step) => step.x !== monster.x || step.y !== monster.y);
+        const uniqueCandidates = candidates.filter((step, index) =>
+          candidates.findIndex((candidate) => candidate.x === step.x && candidate.y === step.y) === index
+        );
+        return uniqueCandidates
           .sort((a, b) => Math.abs(a.x - state.x) + Math.abs(a.y - state.y) - Math.abs(b.x - state.x) - Math.abs(b.y - state.y));
       }
 
       function monsterCanMoveTo(monster, x, y) {
         return !solidAt(x, y) && !monsterAt(x, y) && !allyAt(x, y) && (x !== state.x || y !== state.y) && monsterCanEnterTerrain(monster, terrainAt(x, y));
+      }
+
+      function monsterPathCanEnter(monster, x, y) {
+        if (!mapContains(x, y)) return false;
+        if (x === state.x && y === state.y) return true;
+        if (monsterAt(x, y) || allyAt(x, y)) return false;
+        if (solidAt(x, y) && !closedDoorAt(x, y)) return false;
+        return monsterCanEnterTerrain(monster, terrainAt(x, y));
+      }
+
+      function monsterPathStep(monster) {
+        const startKey = keyOf(monster.x, monster.y);
+        const targetKey = keyOf(state.x, state.y);
+        const visited = new Map([[startKey, null]]);
+        const queue = [{ x: monster.x, y: monster.y }];
+        let queueIndex = 0;
+
+        while (queueIndex < queue.length) {
+          const current = queue[queueIndex];
+          queueIndex += 1;
+          const candidates = monsterStepOptions(current);
+          for (const candidate of candidates) {
+            const candidateKey = keyOf(candidate.x, candidate.y);
+            if (visited.has(candidateKey) || !monsterPathCanEnter(monster, candidate.x, candidate.y)) continue;
+            visited.set(candidateKey, { x: current.x, y: current.y });
+            if (candidateKey === targetKey) {
+              let step = candidate;
+              let previous = visited.get(candidateKey);
+              while (previous && (previous.x !== monster.x || previous.y !== monster.y)) {
+                step = previous;
+                previous = visited.get(keyOf(step.x, step.y));
+              }
+              return step;
+            }
+            queue.push(candidate);
+          }
+        }
+        return null;
+      }
+
+      function moveMonsterTowardPlayer(monster, floorState, messages) {
+        const step = monsterPathStep(monster);
+        if (!step) return false;
+        if (closedDoorAt(step.x, step.y)) {
+          floorState.openedDoors.add(keyOf(step.x, step.y));
+          if (floorState.discovered.has(keyOf(step.x, step.y))) messages.push(`${monster.name} opens a door.`);
+          return true;
+        }
+        monster.x = step.x;
+        monster.y = step.y;
+        triggerPlayerTrap(monster, messages);
+        return true;
       }
 
       function monsterFlee(monster) {
@@ -58,6 +118,31 @@
           if (cloudBlocksLine(x, y)) return false;
           x += dx;
           y += dy;
+        }
+        return true;
+      }
+
+      function clearSightBetween(from, to) {
+        let x = from.x;
+        let y = from.y;
+        const deltaX = Math.abs(to.x - from.x);
+        const deltaY = Math.abs(to.y - from.y);
+        const stepX = Math.sign(to.x - from.x);
+        const stepY = Math.sign(to.y - from.y);
+        let error = deltaX - deltaY;
+
+        while (x !== to.x || y !== to.y) {
+          const doubledError = error * 2;
+          if (doubledError > -deltaY) {
+            error -= deltaY;
+            x += stepX;
+          }
+          if (doubledError < deltaX) {
+            error += deltaX;
+            y += stepY;
+          }
+          if (x === to.x && y === to.y) return true;
+          if (solidAt(x, y) || cloudBlocksLine(x, y)) return false;
         }
         return true;
       }
@@ -105,7 +190,7 @@
         return "magic";
       }
 
-      function hurtLiveMember(basePower, spread, element = null) {
+      function hurtLiveMember(basePower, spread, element = null, from = null) {
         const defender = liveMember();
         if (!defender) return null;
         const difficultyScale = state.difficulty === "easy" ? 0.75 : state.difficulty === "hard" ? 1.25 : 1;
@@ -127,7 +212,7 @@
         addDamageMark(state, element, damage);
         state.damageTaken = (state.damageTaken || 0) + damage;
         if (damage > 0) state.killCombo = 0; // taking a hit breaks the combo
-        if (damage > 0 && typeof pulse === "function") pulse("hit");
+        if (damage > 0 && typeof pulse === "function") pulse("hit", from);
         if (damage > 0 && typeof queueFloater === "function") queueFloater(`-${damage}`, "hurt");
         if (damage >= 8 && typeof shakeViewport === "function") shakeViewport(1);
         return { defender, baseDamage, damage };
@@ -276,11 +361,12 @@
       }
 
       function monsterMelee(monster, messages) {
+        if (typeof noteAttacker === "function") noteAttacker(monster);
         const attacks = monster.attacks?.length ? monster.attacks : [{ type: "hit", flavor: null, damage: monster.power || 3 }];
         const weakenedScale = (monster.weakenedTurns || 0) > 0 ? 0.5 : 1;
         for (const attack of attacks) {
           const baseBlow = (attack.damage * weakenedScale) / 3 + ((monster.mightTurns || 0) > 0 ? 2 : 0) + ((monster.rageTurns || 0) > 0 ? 2 : 0);
-          const hit = hurtLiveMember(baseBlow, 3);
+          const hit = hurtLiveMember(baseBlow, 3, null, monster);
           if (!hit || !hit.defender) return true;
           addEffect("impact", [{ x: state.x, y: state.y }]);
           // Heavy hits sometimes stun or bleed the party.
@@ -429,6 +515,8 @@
       }
 
       function tickTerrain(messages) {
+        // Levitation (delving module): the party floats clear of the terrain.
+        if (typeof levitating === "function" && levitating()) return false;
         const terrain = terrainAt(state.x, state.y);
         if (terrain === "floor") return false;
         const target = liveMember();
@@ -588,6 +676,15 @@
           messages.push(`${monster.name} flies into a rage.`);
           return true;
         }
+        const statusField = self.kind === "haste" ? "hasteTurns" : self.kind === "might" ? "mightTurns" : null;
+        if (statusField) {
+          if ((monster[statusField] || 0) > 0) return false;
+          monster[statusField] = self.turns;
+          monster.selfCooldown = self.cooldown || 10;
+          addEffect(self.effect || "halo", [monster]);
+          messages.push(`${monster.name} casts ${self.name}.`);
+          return true;
+        }
         return false;
       }
 
@@ -689,7 +786,7 @@
         if (context.stealthDisabled) return 6;
         const rogues = state.party.filter((m) => m.hp > 0 && m.classKey === "rogue").length;
         const talentStealth = typeof talentExtraStealth === "function" ? talentExtraStealth() : 0;
-        return Math.max(2, 6 - rogues * 2 - talentStealth);
+        return Math.max(3, 6 - (rogues > 0 ? 1 : 0) - talentStealth);
       }
 
       function checkMonsterAlertness(monster) {
@@ -701,7 +798,7 @@
         const distance = distanceToPlayer(monster);
         if (distance <= 1) { monster.alerted = true; return true; }
         if (distance > monsterVisionRange()) return false;
-        if (!clearLineBetween(monster, state)) return false;
+        if (!clearSightBetween(monster, state)) return false;
         monster.alerted = true;
         return true;
       }
@@ -742,8 +839,8 @@
         }
         const distance = distanceToPlayer(monster);
         const discovered = floorState.discovered.has(keyOf(monster.x, monster.y));
-        if (discovered && monster.traits?.maintainRange && monster.ranged && distance <= 2 && monsterFlee(monster)) {
-          messages.push(`${monster.name} keeps its distance.`);
+        if (monster.traits?.maintainRange && monster.ranged && distance <= 2 && monsterFlee(monster)) {
+          if (discovered) messages.push(`${monster.name} keeps its distance.`);
           return false;
         }
 
@@ -754,23 +851,24 @@
 
         if (!checkMonsterAlertness(monster)) return false;
 
-        if (distance === 2 && monster.traits?.reachDamage && discovered && clearLineToPlayer(monster)) {
+        if (distance === 2 && monster.traits?.reachDamage && clearLineToPlayer(monster)) {
           messages.push(`${monster.name} stretches forward.`);
           return monsterMelee(monster, messages);
         }
 
-        if (discovered && castMonsterSelf(monster, messages)) return false;
+        if (castMonsterSelf(monster, messages) && monster.self?.kind === "rage") return false;
 
-        if (discovered && castMonsterSummon(monster, floorState, messages)) return false;
+        if (castMonsterSummon(monster, floorState, messages)) return false;
 
-        if (discovered && castMonsterMobility(monster, messages)) return false;
+        if (castMonsterMobility(monster, messages)) return false;
 
-        if (discovered && castMonsterSupport(monster, floorState, messages)) return false;
+        if (castMonsterSupport(monster, floorState, messages)) return false;
 
-        if (state.silenceTurns <= 0 && discovered && rangedCanTargetPlayer(monster)) {
+        if (state.silenceTurns <= 0 && rangedCanTargetPlayer(monster)) {
+          if (typeof noteAttacker === "function") noteAttacker(monster);
           const defender = liveMember();
           const rangedPower = monster.ranged.power + ((monster.mightTurns || 0) > 0 ? 2 : 0);
-          const hit = rangedPower > 0 ? hurtLiveMember(rangedPower, 2, monster.ranged.element) : { defender, baseDamage: 0, damage: 0 };
+          const hit = rangedPower > 0 ? hurtLiveMember(rangedPower, 2, monster.ranged.element, monster) : { defender, baseDamage: 0, damage: 0 };
           if (!hit) return true;
           addEffect(spellEffectKind(monster.ranged), rangedEffectCells(monster));
           if (monster.ranged.cloud) spreadCloud(monster.ranged.cloud, 4, cellsNear(state, 1));
@@ -785,13 +883,7 @@
           return false;
         }
 
-        if (distance > 6 || !discovered) return false;
-        const step = monsterStepOptions(monster).find((candidate) => monsterCanMoveTo(monster, candidate.x, candidate.y));
-        if (step) {
-          monster.x = step.x;
-          monster.y = step.y;
-          triggerPlayerTrap(monster, messages);
-        }
+        moveMonsterTowardPlayer(monster, floorState, messages);
         return false;
       }
 
@@ -967,6 +1059,86 @@
         if (typeof saveGame === "function") saveGame();
       }
 
+      function normalizeMonsterFear(monster) {
+        if ((monster.fearedTurns || 0) <= 0) return;
+        monster.fearTurns = Math.max(monster.fearTurns || 0, monster.fearedTurns);
+        monster.fearedTurns = 0;
+      }
+
+      const MONSTER_TIMED_STATUS_FIELDS = [
+        "hasteTurns",
+        "mightTurns",
+        "slowedTurns",
+        "weakenedTurns",
+        "silencedTurns",
+        "confusedTurns",
+        "immolationTurns"
+      ];
+
+      function monsterTimedStatusState(monster) {
+        return Object.fromEntries(MONSTER_TIMED_STATUS_FIELDS.map((field) => [field, monster[field] || 0]));
+      }
+
+      function tickMonsterTimedStatuses(monster, floorState, messages, activeStatuses) {
+        for (const field of MONSTER_TIMED_STATUS_FIELDS) {
+          if (activeStatuses[field] > 0 && (monster[field] || 0) > 0) monster[field] -= 1;
+        }
+        if (activeStatuses.rageTurns <= 0 || (monster.rageTurns || 0) <= 0) return;
+        monster.rageTurns -= 1;
+        if (monster.rageTurns === 0 && floorState.discovered.has(keyOf(monster.x, monster.y))) {
+          messages.push(`${monster.name}'s rage fades.`);
+        }
+      }
+
+      function monsterControlState(monster) {
+        normalizeMonsterFear(monster);
+        if (monster.sleeping && (monster.sleepingTurns || 0) <= 0) monster.sleeping = false;
+        return {
+          sleeping: (monster.sleepingTurns || 0) > 0,
+          frozen: (monster.frozenTurns || 0) > 0,
+          stunned: (monster.stunnedTurns || 0) > 0,
+          rooted: (monster.rootedTurns || 0) > 0,
+          afraid: (monster.fearTurns || 0) > 0
+        };
+      }
+
+      function tickMonsterControlStatuses(monster, control) {
+        if (control.sleeping) monster.sleepingTurns -= 1;
+        if (control.frozen) monster.frozenTurns -= 1;
+        if (control.stunned) monster.stunnedTurns -= 1;
+        if (control.rooted) monster.rootedTurns -= 1;
+        if (control.afraid) monster.fearTurns -= 1;
+        if (monster.sleeping && monster.sleepingTurns <= 0) monster.sleeping = false;
+      }
+
+      function holdMonsterTurn(monster, floorState, messages, control) {
+        const visible = floorState.discovered.has(keyOf(monster.x, monster.y));
+        tickMonsterControlStatuses(monster, control);
+        if (control.sleeping) {
+          if (visible) messages.push(monster.sleeping ? `${monster.name} sleeps.` : `${monster.name} wakes.`);
+          return true;
+        }
+        if (control.frozen) {
+          if (visible) messages.push(monster.frozenTurns > 0 ? `${monster.name} is frozen in time.` : `${monster.name} returns to time.`);
+          return true;
+        }
+        if (control.stunned) {
+          if (visible) messages.push(monster.stunnedTurns > 0 ? `${monster.name} reels.` : `${monster.name} steadies.`);
+          return true;
+        }
+        if (control.rooted) {
+          if (visible) messages.push(`${monster.name} strains against roots.`);
+          if (monster.rootedTurns === 0 && visible) messages.push(`${monster.name} tears free.`);
+          return true;
+        }
+        if (control.afraid) {
+          if (monsterFlee(monster) && visible) messages.push(`${monster.name} flees.`);
+          if (monster.fearTurns === 0 && visible) messages.push(`${monster.name} rallies.`);
+          return true;
+        }
+        return false;
+      }
+
       function runMonsterTurns(floorState, messages) {
         for (const monster of floorState.monsters) {
           if (monster.hp <= 0) continue;
@@ -982,40 +1154,35 @@
               continue;
             }
           }
-          if (monster.hasteTurns > 0) monster.hasteTurns -= 1;
-          if (monster.mightTurns > 0) monster.mightTurns -= 1;
-          if (monster.slowedTurns > 0) monster.slowedTurns -= 1;
-          if (monster.weakenedTurns > 0) monster.weakenedTurns -= 1;
-          if (monster.silencedTurns > 0) monster.silencedTurns -= 1;
-          if (monster.confusedTurns > 0) monster.confusedTurns -= 1;
-          if (monster.rageTurns > 0) {
-            monster.rageTurns -= 1;
-            if (monster.rageTurns === 0 && floorState.discovered.has(keyOf(monster.x, monster.y))) messages.push(`${monster.name}'s rage fades.`);
-          }
-          if (monster.immolationTurns > 0) monster.immolationTurns -= 1;
           if (tickMonsterPoison(monster, floorState, messages)) continue;
-          if (monster.rootedTurns > 0) {
-            monster.rootedTurns -= 1;
-            if (floorState.discovered.has(keyOf(monster.x, monster.y))) messages.push(`${monster.name} strains against roots.`);
-            if (monster.rootedTurns === 0 && floorState.discovered.has(keyOf(monster.x, monster.y))) messages.push(`${monster.name} tears free.`);
+          const activeStatuses = { ...monsterTimedStatusState(monster), rageTurns: monster.rageTurns || 0 };
+          const control = monsterControlState(monster);
+          if (holdMonsterTurn(monster, floorState, messages, control)) {
+            tickMonsterTimedStatuses(monster, floorState, messages, activeStatuses);
             continue;
           }
-          if (monster.fearTurns > 0) {
-            monster.fearTurns -= 1;
-            if (floorState.discovered.has(keyOf(monster.x, monster.y)) && monsterFlee(monster)) messages.push(`${monster.name} flees.`);
-            if (monster.fearTurns === 0 && floorState.discovered.has(keyOf(monster.x, monster.y))) messages.push(`${monster.name} rallies.`);
+          const baseSpeed = Number.isFinite(monster.speed) ? monster.speed : 10;
+          if (baseSpeed <= 0) {
+            monster.energy = 0;
+            tickMonsterTimedStatuses(monster, floorState, messages, activeStatuses);
             continue;
           }
-          let monsterSpeed = (monster.speed || 10) + ((monster.hasteTurns || 0) > 0 ? 5 : 0) + ((monster.rageTurns || 0) > 0 ? 5 : 0);
+          let monsterSpeed = baseSpeed + ((monster.hasteTurns || 0) > 0 ? 5 : 0) + ((monster.rageTurns || 0) > 0 ? 5 : 0);
           if ((monster.slowedTurns || 0) > 0) monsterSpeed = Math.max(2, Math.round(monsterSpeed / 2));
           monster.energy = (monster.energy || 0) + monsterSpeed;
           let actions = Math.min(3, Math.floor(monster.energy / 10));
+          let playerDefeated = false;
           while (actions > 0) {
             monster.energy -= 10;
             actions -= 1;
-            if (monsterAction(monster, floorState, messages)) return true;
+            if (monsterAction(monster, floorState, messages)) {
+              playerDefeated = true;
+              break;
+            }
             if (monster.hp <= 0) break;
           }
+          tickMonsterTimedStatuses(monster, floorState, messages, activeStatuses);
+          if (playerDefeated) return true;
         }
         return false;
       }
@@ -1023,10 +1190,10 @@
       function predictMonsterIntent(monster) {
         if (!monster || monster.hp <= 0) return "down";
         if ((monster.rootedTurns || 0) > 0) return "rooted";
-        if ((monster.fearTurns || 0) > 0) return "fleeing";
+        if ((monster.fearTurns || 0) > 0 || (monster.fearedTurns || 0) > 0) return "fleeing";
         if (!monster.alerted && !context.stealthDisabled) {
           if (distanceToPlayer(monster) > monsterVisionRange()) return "unaware";
-          if (!clearLineBetween(monster, state)) return "unaware";
+          if (!clearSightBetween(monster, state)) return "unaware";
           return "spotted!";
         }
         if (distanceToPlayer(monster) === 1) return "melee";
@@ -1041,11 +1208,15 @@
         firstTargetInLine,
         monsterStepOptions,
         monsterCanMoveTo,
+        monsterPathCanEnter,
+        monsterPathStep,
+        moveMonsterTowardPlayer,
         monsterFlee,
         monsterVisionRange,
         checkMonsterAlertness,
         predictMonsterIntent,
         clearLineBetween,
+        clearSightBetween,
         clearLineToPlayer,
         rangedCanTargetPlayer,
         lineCells,

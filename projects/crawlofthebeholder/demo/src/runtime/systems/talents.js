@@ -5,8 +5,7 @@
       const TALENT_TREES = {
         warrior: [
           { id: "ironskin", name: "Iron Skin", description: "+1 defense per rank.", maxRank: 3 },
-          { id: "heavyswing", name: "Heavy Swing", description: "+1 power per rank.", maxRank: 3 },
-          { id: "secondwind", name: "Second Wind", description: "Heal +1 extra per safe wait/rest tick.", maxRank: 2 }
+          { id: "heavyswing", name: "Heavy Swing", description: "+1 power per rank.", maxRank: 3 }
         ],
         mage: [
           { id: "channel", name: "Channel", description: "+1 wand base damage per rank.", maxRank: 3 },
@@ -17,11 +16,6 @@
           { id: "shadowfoot", name: "Shadow Foot", description: "Monster vision drops by another 1 per rank.", maxRank: 2 },
           { id: "backstab", name: "Backstab", description: "+15% party damage when alone in front.", maxRank: 2 },
           { id: "deftfingers", name: "Deft Fingers", description: "+1 disarm reach per rank.", maxRank: 1 }
-        ],
-        cleric: [
-          { id: "laytouch", name: "Lay Touch", description: "+1 rest heal per rank.", maxRank: 3 },
-          { id: "ward", name: "Ward", description: "Reduce DoT damage by 1 per rank.", maxRank: 2 },
-          { id: "faith", name: "Faith", description: "Reduce blessing cooldown by 6 per rank.", maxRank: 2 }
         ]
       };
 
@@ -79,13 +73,7 @@
       }
 
       function talentBonusRestHeal() {
-        let total = 0;
-        for (const member of state.party) {
-          if (member.hp <= 0) continue;
-          total += getTalentRank(member, "secondwind");
-          total += getTalentRank(member, "laytouch");
-        }
-        return total;
+        return 0;
       }
 
       function talentWandBonus() {
@@ -97,7 +85,6 @@
       function talentSignatureCooldownReduction(member) {
         if (!member) return 0;
         if (member.classKey === "mage") return getTalentRank(member, "arcanepool") * 4;
-        if (member.classKey === "cleric") return getTalentRank(member, "faith") * 6;
         return 0;
       }
 
@@ -114,7 +101,7 @@
         let extra = 0;
         for (const member of state.party) {
           if (member.hp <= 0) continue;
-          extra += getTalentRank(member, "shadowfoot");
+          extra = Math.max(extra, getTalentRank(member, "shadowfoot"));
         }
         return extra;
       }

@@ -6,7 +6,7 @@
       const SAVE_SLOTS = ["cotb-save", "cotb-save-slot-2", "cotb-save-slot-3"];
       const META_KEY = "cotb-meta";
       const SETTINGS_KEY = "cotb-settings";
-      const SAVE_SCHEMA = 2;
+      const SAVE_SCHEMA = 3;
       const META_SCHEMA = 1;
       const ACHIEVEMENTS = [
         { id: "first_floor", name: "Step into the deep", description: "Descend below D:1." },
@@ -172,6 +172,12 @@
       }
 
       function applyState(saved) {
+        const problem = saveProblem(saved);
+        if (problem) {
+          throw new Error(problem);
+        } else {
+          context.saveLoadError = null;
+        }
         state.floorIndex = saved.floorIndex;
         state.x = saved.x;
         state.y = saved.y;
@@ -252,6 +258,12 @@
       }
 
       function saveGame() {
+        if (context.saveLoadError) {
+          return false;
+        } else {
+          // Never overwrite a save that this ruleset could not load.
+          context.saveLoadError = null;
+        }
         const storage = safeStorage();
         if (!storage) return false;
         try {
@@ -262,6 +274,20 @@
         }
       }
 
+      function saveProblem(saved) {
+        if (!saved || saved.schema !== SAVE_SCHEMA) {
+          return `Save requires an older or unsupported ruleset (schema ${saved?.schema}; expected ${SAVE_SCHEMA}). It has been preserved. Load a compatible slot or explicitly discard it to start again.`;
+        } else if (saved.version && saved.version !== resources.version) {
+          return `Save content version ${saved.version} does not match ${resources.version}. It has been preserved.`;
+        } else if (!Array.isArray(saved.party) || saved.party.length !== 4) {
+          return "Cannot load save: expected four party members. The saved data has been preserved.";
+        } else if (saved.party.some((member) => !member || ((saved.characterCreated || member.classKey) && !Object.hasOwn(CLASSES, member.classKey)))) {
+          return "Cannot load save: the party contains an unsupported class, including the removed healer. The saved data has been preserved.";
+        } else {
+          return null;
+        }
+      }
+
       function readSave() {
         const storage = safeStorage();
         if (!storage) return null;
@@ -269,10 +295,18 @@
           const raw = storage.getItem(state.activeSlot || SAVE_KEY);
           if (!raw) return null;
           const parsed = JSON.parse(raw);
-          if (!parsed || parsed.schema !== SAVE_SCHEMA) return null;
-          if (parsed.version && parsed.version !== resources.version) return null;
-          return parsed;
+          const problem = saveProblem(parsed);
+          if (problem) {
+            context.saveLoadError = problem;
+            state.message = problem;
+            return null;
+          } else {
+            context.saveLoadError = null;
+            return parsed;
+          }
         } catch (error) {
+          context.saveLoadError = `Cannot read saved expedition: ${error.message}. The saved data has been preserved.`;
+          state.message = context.saveLoadError;
           return null;
         }
       }
@@ -284,6 +318,8 @@
           applyState(saved);
           return true;
         } catch (error) {
+          context.saveLoadError = `Cannot restore saved expedition: ${error.message}. The saved data has been preserved.`;
+          state.message = context.saveLoadError;
           return false;
         }
       }
@@ -292,7 +328,8 @@
         const storage = safeStorage();
         if (!storage) return;
         try {
-          storage.removeItem(SAVE_KEY);
+          storage.removeItem(state.activeSlot || SAVE_KEY);
+          context.saveLoadError = null;
         } catch (error) {
           // ignore
         }
@@ -382,7 +419,7 @@
         if (state.floorIndex >= 4 && unlockAchievement("deep_diver")) fresh.push("deep_diver");
         const branchId = currentFloor().id || "";
         if (/^[A-Z]/.test(branchId) && !branchId.startsWith("D:") && unlockAchievement("branch_visitor")) fresh.push("branch_visitor");
-        if (state.inventory.some((item) => item.kind === "quest") && unlockAchievement("orb_held")) fresh.push("orb_held");
+        if (typeof hasOrb === "function" && hasOrb() && unlockAchievement("orb_held")) fresh.push("orb_held");
         if (state.victory && unlockAchievement("victorious")) fresh.push("victorious");
         if ((state.gold || 0) >= 500 && unlockAchievement("rich")) fresh.push("rich");
         // Newer trigger conditions tied to recent systems.
@@ -405,17 +442,37 @@
 
       function setActiveSlot(slotKey) {
         if (!SAVE_SLOTS.includes(slotKey)) return false;
+        const storage = safeStorage();
+        if (storage && storage.getItem(slotKey)) {
+          try {
+            const problem = saveProblem(JSON.parse(storage.getItem(slotKey)));
+            if (problem) {
+              setMessage(problem);
+              return false;
+            } else {
+              // Destination is valid before either slot is written or selected.
+              state.message = "Loading the selected expedition.";
+            }
+          } catch (error) {
+            setMessage(`Cannot switch save slots: ${error.message}. Both expeditions have been preserved.`);
+            return false;
+          }
+        } else if (context.saveLoadError) {
+          setMessage("The current save is incompatible. Explicitly discard it before starting a new expedition.");
+          return false;
+        } else {
+          state.message = "Selecting an empty save slot.";
+        }
         // Save current game to current slot before swapping.
         const previous = getActiveSlot();
         try {
           const storage = safeStorage();
-          if (storage) {
+          if (storage && !context.saveLoadError) {
             storage.setItem(previous, JSON.stringify(serializeState()));
           }
         } catch (e) {}
         state.activeSlot = slotKey;
         // Load destination slot if it exists.
-        const storage = safeStorage();
         if (storage) {
           const raw = storage.getItem(slotKey);
           if (raw) {
@@ -477,7 +534,7 @@
           monstersDefeated: state.monstersDefeated || 0,
           damageDealt: state.damageDealt || 0,
           damageTaken: state.damageTaken || 0,
-          orb: state.inventory.some((item) => item.kind === "quest") || !!state.victory,
+          orb: (typeof hasOrb === "function" && hasOrb()) || !!state.victory,
           durationMs: Math.max(0, Date.now() - (state.runStartedAt || Date.now()))
         };
         meta.runs = [summary, ...(meta.runs || [])].slice(0, 20);
@@ -530,7 +587,7 @@
           gold: state.gold || 0,
           monstersDefeated: state.monstersDefeated || 0,
           floorIndex: state.floorIndex || 0,
-          orb: state.inventory.some((item) => item.kind === "quest") || !!state.victory,
+          orb: (typeof hasOrb === "function" && hasOrb()) || !!state.victory,
           outcome: state.victory ? "victory" : state.defeated ? "defeat" : "abandoned",
           turns: state.turnCount || 0
         });
@@ -541,7 +598,7 @@
           `Turns ${state.turnCount || 0} · Score ${score} · ${classes} · ${state.difficulty || "normal"}${daily}`,
           `🐉 ${state.monstersDefeated || 0} kills · ${state.gold || 0} gold · ${state.criticalHits || 0} crits`,
           `Damage dealt ${state.damageDealt || 0} / taken ${state.damageTaken || 0}`,
-          state.victory ? "Orb of Zot Soup recovered ✨" : state.inventory.some((i) => i.kind === "quest") ? "Orb in hand but never escaped" : "Orb still below"
+          state.victory ? "Orb of Zot Soup recovered ✨" : (typeof hasOrb === "function" && hasOrb()) ? "Orb in hand but never escaped" : "Orb still below"
         ];
         return lines.join("\n");
       }
