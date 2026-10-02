@@ -1,0 +1,13 @@
+name=Egoboo Spider
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/spider.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/spider.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=6f698c1dad18d602071848cc53b4f512c8bb27a833e52f9084993e742d5d18d5
+body.png_sha256=a921ea3745374ff6482d6d33a665e58cbeec2e8255f77417c702be44e2945423
+data.txt_sha256=12fbb20303d8d97000e2629c7fbdc9c5310f375def2a87812223f232718066ba

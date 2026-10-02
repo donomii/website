@@ -1,0 +1,13 @@
+name=Egoboo Trog
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/trog.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/trog.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=57ee0f9e5905d996cb296546420b402580782c7430221ca6019c757378c5ca59
+body.png_sha256=aeeb91c9dae53b8f6cc45bc9b89e5267869fc3ebe0626dc8d30e5a4a5742c58a
+data.txt_sha256=3d5b400115d0104e24a5dbbcb2140870cffbc9ec7b2baeca4774064e006ee9d6

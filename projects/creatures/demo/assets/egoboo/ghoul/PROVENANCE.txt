@@ -1,0 +1,13 @@
+name=Egoboo Ghoul
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/ghoul.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/ghoul.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=9b85e15aa79722479513f70652a59331a72fba315861a8979412b6f9107ffe79
+body.png_sha256=cedba45a1f998350cf9a50ce38e8bc34e0e1cd1ccef812b2ef739bb73e9b42f4
+data.txt_sha256=b90d9dd40c85cecdc419c920ab35c56d646a1314d13314473f138672198e2f51

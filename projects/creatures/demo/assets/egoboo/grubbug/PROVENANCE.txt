@@ -1,0 +1,13 @@
+name=Egoboo Grub Bug
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/grubbug.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/grubbug.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=065617d84eb3cf482171686d5bec33462377bd235348ac7eeaee83894d2a1ef2
+body.png_sha256=1d6f7e28d0ba859a61712e365b6656e838087535cf9b7eb1ccf04adba3974e21
+data.txt_sha256=6dd9fc858c449b44ef23ea9f7368bf056b6e29ccaaf114a5d26ca97a14606d76

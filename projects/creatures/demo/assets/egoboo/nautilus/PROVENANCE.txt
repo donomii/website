@@ -1,0 +1,15 @@
+name=Egoboo Nautilus
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/nautilus.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/nautilus.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+credits.txt_source=credits.txt
+body.md2_sha256=baad55d4090eb6eb9245be0c3e6d3cca75cc7356f0e6df77327a756046c567e8
+body.png_sha256=06d6f23b15d3feca892fe241c02deb37f5df84b1a4ae1b3b0d5d8ed0dd7debbd
+data.txt_sha256=724ce8eaaf4e5339b495320f60723dd91f15093efe295078ce2d051a5ae79801
+credits.txt_sha256=b3cb545d07d418cfa9f808d71b77cadaf017f18f58f8051bb3a9423aa7c20d6f

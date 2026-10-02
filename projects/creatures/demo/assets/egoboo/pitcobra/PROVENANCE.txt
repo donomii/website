@@ -1,0 +1,13 @@
+name=Egoboo Pit Cobra
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/pitcobra.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/pitcobra.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=b12bdd22b610fdf1f70e07bc531d88610131b0ffd58702ad49e9dab77b635466
+body.png_sha256=94ed34a689ab35b5c3750b83ffbd50206ccf79d4d8e6dc87ef3dc1c4aea904f7
+data.txt_sha256=80c7b0eb32190ccc52c15c769938f7658c1e198ecdcb87dc2ea50fcfdb35cf17

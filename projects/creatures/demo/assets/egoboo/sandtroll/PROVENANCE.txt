@@ -1,0 +1,13 @@
+name=Egoboo Sand Troll
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/sandtroll.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/sandtroll.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=8220a71e29c6f3046c80c5c43a621a34d22d225c0442d07ab9ff0cd1fd59dc36
+body.png_sha256=0c425f317504ff5b4be9ac821ff390d2737ab7894e0b889177d984855e0d67e3
+data.txt_sha256=7d60e97bd895676015ee4ddfe6d9b2b3472e1f643cd5e226fec7c48b6542085b

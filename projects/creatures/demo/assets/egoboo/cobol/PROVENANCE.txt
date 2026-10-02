@@ -1,0 +1,13 @@
+name=Egoboo Cobol
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/cobol.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/cobol.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=fa5b1b485ac0a937be4920825b85b22eff8d11d06113f41fd0c9d407b572e022
+body.png_sha256=d617857ecbc11eef9d85b4989a4be2c4d2db41f3f8aa755916a74e4438255549
+data.txt_sha256=8185ca0a8854e11a2c355552af0af6802c474cb3dc383ef9e3489a7fb49c91bb

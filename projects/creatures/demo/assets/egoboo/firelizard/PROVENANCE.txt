@@ -1,0 +1,13 @@
+name=Egoboo Fire Lizard
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/firelizard.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/firelizard.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=f1a6dc6c8f7995aba9c644b76fb8a4a13302e11a696c8ea506f48a4672a8f708
+body.png_sha256=de14a26f8440e4123f1848b0beb846e052c28595e65b5a90a26686210321fe4c
+data.txt_sha256=55ea400ad97a290c0f7f2b15a340038983765607b7fcce4fbeb82a29ce8e48ef

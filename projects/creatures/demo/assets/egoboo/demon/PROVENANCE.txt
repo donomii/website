@@ -1,0 +1,13 @@
+name=Egoboo Demon
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/demon.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/demon.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=7fb9ac5b1a3258d48c7d8efa3e1db6cb8f6e8a2f900f853185f904564950f4c6
+body.png_sha256=3e367e79bd13e988f7884ac10d62d866b3542ce18bdc803791789bb400971c43
+data.txt_sha256=dcfa467d88ca1131e952f0d10e1fba0cd8d696dffc2f72318bb469c21055a2d6

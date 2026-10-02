@@ -1,0 +1,13 @@
+name=Egoboo Lumpkin
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/lumpkin.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/lumpkin.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=e9cf27f4c0352960965b8efe82aa84aa33d3b53da9a0297ab927179562677f3c
+body.png_sha256=c5aea7fc947a3d4c15334f3dd9b46483f1ee3f72c8da856cdaf7680aff26a2b6
+data.txt_sha256=4da259a4935020c62e141bec06bacba574d7ebbbc63106368a294eeb9f70e32e

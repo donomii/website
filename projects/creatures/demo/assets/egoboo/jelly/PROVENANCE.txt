@@ -1,0 +1,13 @@
+name=Egoboo Jelly
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/jelly.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/jelly.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=5c2169b45e92f3f18e49f61ba1eb86cb5e8866f8dd390d5ffc6992144a2413c4
+body.png_sha256=2f57abd65f199db337cf0f2ee745dcd5ba92c960b9cc637f2a45b773a94fa193
+data.txt_sha256=6afb219fb34563f51999d62c22f6f6389315080226feb33d238caa0c61253255
