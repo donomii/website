@@ -1,4 +1,4 @@
-import { createMD2ModelLoadJobs } from './ufo-models.js';
+import { createMD2ModelLoadJobs } from './ufo-models.js?v=20261003-2';
 
 const EGOBOO_ASSET_ROOT = './assets/egoboo';
 const SAUERBRATEN_ASSET_ROOT = './assets/sauerbraten';
@@ -202,7 +202,7 @@ const EXTRA_MODEL_DEFINITIONS = [
     },
     {
         id: 'sauerbraten-hellpig', label: 'Sauerbraten Hellpig', assetRoot: SAUERBRATEN_ASSET_ROOT, directory: 'hellpig',
-        body: 'body.md2', animations: 'md2.cfg', animationFormat: 'sauerbraten-md2cfg', skin: 'body.jpg',
+        body: 'body.md2', animations: 'md2-config.txt', animationFormat: 'sauerbraten-md2cfg', skin: 'body.jpg',
         head: null, headSkin: null, tags: null,
         walk: 'forward', idle: 'idle', height: 1.25, collisionRadius: 0.8
     }

@@ -1,6 +1,6 @@
-import { createUFOCreatureModelLoadJobs } from './ufo-models.js';
-import { createExtraCreatureModelLoadJobs } from './extra-models.js';
-import { createGLTFCreatureModelLoadJobs } from './gltf-models.js';
+import { createUFOCreatureModelLoadJobs } from './ufo-models.js?v=20261003-2';
+import { createExtraCreatureModelLoadJobs } from './extra-models.js?v=20261003-2';
+import { createGLTFCreatureModelLoadJobs } from './gltf-models.js?v=20261003-2';
 
 const MAX_CONCURRENT_MODEL_LOADS = 2;
 const MAX_MODEL_LOAD_ATTEMPTS = 3;

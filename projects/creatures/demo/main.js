@@ -1,7 +1,7 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/webxr/VRButton.js';
-import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js';
-import { RTSCameraControls } from './rts-camera-controls.js';
+import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js?v=20261003-2';
+import { RTSCameraControls } from './rts-camera-controls.js?v=20261003-2';
 
 // Scene setup
 const scene = new THREE.Scene();
