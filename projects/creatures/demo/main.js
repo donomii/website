@@ -533,26 +533,44 @@ for (let i = 0; i < initialBlockCount; i++) {
 // Create block emitter/fountain
 const blockEmitter = new BlockEmitter(-15, -15);
 
-// Create one creature for every available animated model.
+// Create each creature as soon as its animated model finishes loading.
 const creatures = [];
 const spawnRange = 20;
 
-function createCreaturePopulation(models) {
-    for (const model of models) {
-        const x = (Math.random() - 0.5) * spawnRange;
-        const z = (Math.random() - 0.5) * spawnRange;
-        const creature = new Creature(x, z, model);
-        creatures.push(creature);
-        taskManager.registerCreature(creature);
-    }
+function createCreature(model) {
+    const x = (Math.random() - 0.5) * spawnRange;
+    const z = (Math.random() - 0.5) * spawnRange;
+    const creature = new Creature(x, z, model);
+    creatures.push(creature);
+    taskManager.registerCreature(creature);
     document.body.dataset.creatureCount = String(creatures.length);
-    document.getElementById('model-status').textContent = `${creatures.length} animated models are running`;
 }
 
+function updateModelLoadingStatus(progress) {
+    const status = document.getElementById('model-status');
+    if (progress.state === 'retrying') {
+        status.textContent = `Retrying ${progress.label}: attempt ${progress.nextAttempt}/${progress.maxAttempts} (${progress.loaded} running)`;
+    } else if (progress.state === 'failed') {
+        status.textContent = `Loading creatures: ${progress.completed}/${progress.total}; ${progress.loaded} running, ${progress.failed} failed`;
+    } else {
+        status.textContent = `Loading creatures: ${progress.completed}/${progress.total} (${progress.loaded} running; ${progress.label})`;
+    }
+}
+
+document.body.dataset.creatureCount = '0';
 document.getElementById('model-status').textContent = `Loading ${CREATURE_MODEL_COUNT} animated models…`;
-loadCreatureModels((loaded, total, label) => {
-    document.getElementById('model-status').textContent = `Loading creatures: ${loaded}/${total} (${label})`;
-}).then(createCreaturePopulation).catch(error => {
+loadCreatureModels({
+    onModelLoaded: createCreature,
+    onProgress: updateModelLoadingStatus
+}).then(result => {
+    document.body.dataset.modelFailures = String(result.failed);
+    if (result.failed === 0) {
+        document.getElementById('model-status').textContent = `${result.loaded} animated models are running`;
+    } else {
+        document.getElementById('model-status').textContent = `${result.loaded} animated models are running; ${result.failed} failed to load`;
+        console.error('Creature models failed permanently after retries:', result.failures);
+    }
+}).catch(error => {
     document.getElementById('model-status').textContent = 'Creature models failed to load';
     console.error(`Creature model loading failed: ${error.message}`, error);
 });

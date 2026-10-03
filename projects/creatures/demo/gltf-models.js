@@ -192,12 +192,10 @@ async function loadModel(definition) {
     }
 }
 
-export async function loadGLTFCreatureModels(onProgress = () => {}) {
-    let loaded = 0;
-    return Promise.all(MODEL_DEFINITIONS.map(async definition => {
-        const asset = await loadModel(definition);
-        loaded++;
-        onProgress(loaded, MODEL_DEFINITIONS.length, definition.label);
-        return asset;
+export function createGLTFCreatureModelLoadJobs() {
+    return MODEL_DEFINITIONS.map(definition => ({
+        id: definition.id,
+        label: definition.label,
+        load: () => loadModel(definition)
     }));
 }

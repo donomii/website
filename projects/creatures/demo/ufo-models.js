@@ -655,17 +655,14 @@ async function loadModel(definition) {
     return new UFOModelAsset(definition, body, head, animations, headTags, bodyTexture, headTexture);
 }
 
-export async function loadModelDefinitions(definitions, onProgress = () => {}) {
-    let loaded = 0;
-    const assets = await Promise.all(definitions.map(async definition => {
-        const asset = await loadModel(definition);
-        loaded++;
-        onProgress(loaded, definitions.length, definition.label);
-        return asset;
+export function createMD2ModelLoadJobs(definitions) {
+    return definitions.map(definition => ({
+        id: definition.id,
+        label: definition.label,
+        load: () => loadModel(definition)
     }));
-    return assets;
 }
 
-export async function loadUFOCreatureModels(onProgress = () => {}) {
-    return loadModelDefinitions(MODEL_DEFINITIONS, onProgress);
+export function createUFOCreatureModelLoadJobs() {
+    return createMD2ModelLoadJobs(MODEL_DEFINITIONS);
 }

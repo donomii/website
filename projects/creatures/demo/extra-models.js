@@ -1,4 +1,4 @@
-import { loadModelDefinitions } from './ufo-models.js';
+import { createMD2ModelLoadJobs } from './ufo-models.js';
 
 const EGOBOO_ASSET_ROOT = './assets/egoboo';
 const SAUERBRATEN_ASSET_ROOT = './assets/sauerbraten';
@@ -210,6 +210,6 @@ const EXTRA_MODEL_DEFINITIONS = [
 
 export const EXTRA_MODEL_COUNT = EXTRA_MODEL_DEFINITIONS.length;
 
-export async function loadExtraCreatureModels(onProgress = () => {}) {
-    return loadModelDefinitions(EXTRA_MODEL_DEFINITIONS, onProgress);
+export function createExtraCreatureModelLoadJobs() {
+    return createMD2ModelLoadJobs(EXTRA_MODEL_DEFINITIONS);
 }
