@@ -1,0 +1,13 @@
+name=Egoboo Carpet Mimic
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/carpetmimic.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/carpetmimic.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=1656ea624e91d3a7ef6b4329523c64ed77c13ef3ecb686a31f455ce0ac4cde31
+body.png_sha256=afac6ea65e3b44879db370e40ed86d2205cea6e4aa8b19e5debe5400c5e83fc2
+data.txt_sha256=182e16f3dcc0427990e34ac7bd878e54e8e894d2fa25be67a8b943ddac69bab8

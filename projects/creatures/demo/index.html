@@ -48,13 +48,21 @@
     <div id="canvas-container"></div>
     <div id="info">
         <strong>World Stuff</strong><br>
-        Left Click + Drag: Pan camera<br>
-        Right Click + Drag: Rotate camera<br>
-        Scroll: Zoom in/out<br>
+        Left/Middle Drag: Grab and slide the ground<br>
+        Right Drag: Orbit and tilt the camera<br>
+        Scroll: Zoom toward the pointer<br>
         <span id="model-status">Loading animated models…</span>
     </div>
     <a id="credits" href="model-credits.html">Model credits</a>
 
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
     <script type="module" src="main.js"></script>
 </body>
 </html>

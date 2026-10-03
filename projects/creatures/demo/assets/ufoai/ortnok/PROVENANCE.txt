@@ -9,8 +9,14 @@ body.md2  base/models/aliens/ortnok/body01.md2
 body.anm  base/models/aliens/ortnok/body01.anm
 body.tag  base/models/aliens/ortnok/body01.tag
 body.png  base/models/aliens/ortnok/body01a.png
+body01b.png  base/models/aliens/ortnok/body01b.png
+body01c.png  base/models/aliens/ortnok/body01c.png
 head.md2  base/models/aliens/ortnok/head01.md2
 head.png  base/models/aliens/ortnok/head01.png
+head02.md2  base/models/aliens/ortnok/head02.md2
+head02.png  base/models/aliens/ortnok/head02.png
+head03.md2  base/models/aliens/ortnok/head03.md2
+head03.png  base/models/aliens/ortnok/head03.png
 ```
 
 Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/aliens/ortnok
@@ -25,7 +31,13 @@ License 2.0. `COPYING` is the corresponding unmodified upstream license text.
 36f3b87084ba4d07790b3179c7f90cf75d6e83d537c6a8bf686263da24e37f56  body.anm
 6553a34e352b5fb75d43f2a9776e09fd191922f4786996fb157c1644bc13c098  body.tag
 f76d08db52eab0db92f5c7863e51f3bd8852bae331e3302ef18910de60fbb90b  body.png
+e03147b529abea3275b4a10a4bc709e10cfb9faee8dca22ac8220a252a7ec2b4  body01b.png
+bffdd99adad20ade6de531196f6fa56381a13173aef35dc3931ef930d102da5d  body01c.png
 1d70c43d646ae48bfac78faabedf34d74066dd4cb05200fd56d0932fc1919b18  head.md2
 6b9b59bdee55cb4ea81dfa5f4c5a4b1dc46b71e823f1f42c6c70081d6caf2c88  head.png
+79f51d5551dc6576ccea36f426939728dd601394f6d4fbab1d42f2bc75a18181  head02.md2
+44baf13187b03683df826fbc27b2cc4f905e04f7da33f99de51817de9781e9e9  head02.png
+5c04b12e7609ab0ee866761ca5c0a8d03b09fa38ced280e3487c99c20b251a31  head03.md2
+0576f4e73072fba6b6f8bb2b257965c3ed576bda9b4f37737cfdd9d9c5bf9b85  head03.png
 f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
 ```

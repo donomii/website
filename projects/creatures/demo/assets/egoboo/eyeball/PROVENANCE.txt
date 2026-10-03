@@ -1,0 +1,13 @@
+name=Egoboo Eyeball
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/eyeball.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/eyeball.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=dda51175c38bcec290ca2825625402095aeea31eae5fb5c836b4ba84098e5570
+body.png_sha256=29a4a652fb2d9f612c6a1a5a5b4ef044d755a663c1cc08f8cdcf96e36168f13e
+data.txt_sha256=509321d86e7a832727fc4682f2a85c242857a7ede1b4dee6b8c36bba9fafcb9c

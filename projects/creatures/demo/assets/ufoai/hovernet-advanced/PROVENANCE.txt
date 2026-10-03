@@ -1,0 +1,31 @@
+# UFO: Alien Invasion Advanced Hovernet asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff`. Their local names and upstream
+paths are:
+
+```text
+body01.anm  base/models/aliens/hovernet_adv/body01.anm
+body01.md2  base/models/aliens/hovernet_adv/body01.md2
+body01.png  base/models/aliens/hovernet_adv/body01.png
+body01.tag  base/models/aliens/hovernet_adv/body01.tag
+head.md2  base/models/aliens/hovernet_adv/head.md2
+```
+
+Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/aliens/hovernet_adv
+
+The upstream `LICENSES` manifest credits Nate Wright, Werner Höhrer, and
+Protoarmor. The body bundle is GNU General Public License 2.0 and the head is
+Creative Commons Attribution-ShareAlike 3.0. The two named `COPYING` files are
+the corresponding unmodified license texts; `COPYING` duplicates the GPL text.
+
+```text
+08154fde11615c7f3367e91439926b859cb4136967218fbe2fd85556d0ef6a40  body01.anm
+0701f38fef0bcfc7735cd3ee76d486ffeaf19057fcfa86627b2576348abd0242  body01.md2
+2092d36490b595efdef7168e6d6355b5a97cd494426a93de44f0978bc18fe653  body01.png
+51c181ed597a3ed82043fc2172ba96a2b3399eab88dff9f82e036798e64623fd  body01.tag
+719b23209fde673e39591f9cc7baa4e4b5988fd6a530e11ff1051fe2ecdca29c  head.md2
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING.GPL2
+3f941b3b89cf7b8370ceb83cc76d2120d471b58735d8ca60238a751a48d7f72f  COPYING.CC-BY-SA-3.0
+```

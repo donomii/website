@@ -1,0 +1,13 @@
+name=Egoboo Mephit
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/mephit.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/mephit.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=098a50271cbefe5344bd1785a07e60b80fcf48bb69e4e4c81bc932a464e25fa7
+body.png_sha256=3118ac7bf1f0c7f8bc6c8f0a73a44deda6c5cecfd1183a6a458ea4c64d94b100
+data.txt_sha256=8b858d137d4e54da810dd54dd496ff21a01796cbea36304ad8746bf859fa1079

@@ -1,0 +1,20 @@
+# UFO: Alien Invasion Ortnok Medium Armour asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff` and
+`base/models/aliens/ortnokmedium`.
+
+The upstream `LICENSES` manifest credits Lukas "Rastaman" Beyeler for the
+models, animations, tags, and skins, with MCR additionally credited for the
+body skin. Every selected file is GNU General Public License 2.0. `COPYING` is
+the corresponding unmodified upstream license text.
+
+```text
+e2a47292e3c7f32c6d2f366d4d2a6aac71dcc2d51b151b60f5d9abf37c4fe4a2  body.png
+36f3b87084ba4d07790b3179c7f90cf75d6e83d537c6a8bf686263da24e37f56  body01.anm
+ec5808da400ad84b162122104c7fc4354d9fd76b118931c6208e66937c4f1496  body01.md2
+a174043275921d04c4b97cc77b11b1043209b1f30dd6dea891b8f632cf06317c  body01.tag
+4958287fcd9e0564ee846080abfa491afdefded6fc6b382562c9aba1bee34cbd  head01.jpg
+fb6f6961c11c54d6a5e1a297e895ae2f041a433b1090c305896583d2f4bc0c1a  head01.md2
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
+```

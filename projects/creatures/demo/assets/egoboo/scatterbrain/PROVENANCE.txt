@@ -1,0 +1,13 @@
+name=Egoboo Scatterbrain
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/scatterbrain.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/scatterbrain.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=b0eeb1bbb47f2950641c18159c250d598bcf6b3b6f70bb5d869f39cdd3744ade
+body.png_sha256=3db74ab06b204efd2087a043d904042c94afd91c3d4de5decc9d20c36f78bdba
+data.txt_sha256=ed95421a4f3a0df6b5e1cf8f75cbf0df48e8e90f37faeaa1f8b9bd58d9284bbc

@@ -1,0 +1,15 @@
+name=Egoboo Varguile
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/varguile.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/varguile.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+Credits.txt_source=Credits.txt
+body.md2_sha256=ee481ee8270202747f6e0ee2367bde693d2400d870c7fe0e961d2f5f829841f4
+body.png_sha256=008f03e7d90a8225042b8e4e6500ca39d9ae5f2c3f1b8a0a1b3d607429193bb1
+data.txt_sha256=d0ad8aea18ea8a3740048aece078ed6bff0278fe22dcb9e5fc189cdd8145975d
+Credits.txt_sha256=e00bb4319b8c552d42fa39f5ea9b90b0c45917bc5e9a89bcf2b962b5d017ac97

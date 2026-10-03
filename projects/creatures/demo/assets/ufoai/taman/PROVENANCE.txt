@@ -7,8 +7,17 @@ These are unmodified files from UFO: Alien Invasion revision
 - `base/models/aliens/taman/body01.anm`
 - `base/models/aliens/taman/body01.tag`
 - `base/models/aliens/taman/body01a.png`
+- `base/models/aliens/taman/body01b.png`
+- `base/models/aliens/taman/body01c.png`
+- `base/models/aliens/taman/body01d.png`
 - `base/models/aliens/taman/head01.md2`
 - `base/models/aliens/taman/head01.png`
+- `base/models/aliens/taman/head02.md2`
+- `base/models/aliens/taman/head02.png`
+- `base/models/aliens/taman/head03.md2`
+- `base/models/aliens/taman/head03.png`
+- `base/models/aliens/taman/head04.md2`
+- `base/models/aliens/taman/head04.png`
 
 Upstream repository: https://github.com/ufoaiorg/ufoai
 
@@ -28,7 +37,16 @@ d02eef94084fd6f6d071c3513330a9dfd45fb0c86cde8d641640969dd46d6e51  body01.md2
 36f3b87084ba4d07790b3179c7f90cf75d6e83d537c6a8bf686263da24e37f56  body01.anm
 14f546f6b6e4a7fbe0fda66f5b7515355e90b1b6fa2bcd2c55eedf0170cee2a1  body01.tag
 b32256764519549b130f4b3f9239227fe3a7a8601fb3b61d9023b2af5edd4723  body01a.png
+910be722af48784749f3a7e4b1bf5806ab348d86aed771e1e21ea7ca283f1594  body01b.png
+8c0531322d683c6e041b955393cff2350cc0d0ba81447077c9e7838c202f694f  body01c.png
+32353329c03a285408b70c9ec32b2af30e461c294eb2162c9ae7524f9712ed97  body01d.png
 be0868112207100be1284934a99533474e889dabc1a0b3de667f4e5f5be471dc  head01.md2
 1e56c4954afc2de24389c6a088979ebdee7e7c7c44a259c2d1864f4650024b56  head01.png
+1f3b8b7bb275140f82cddf583027d981e61f00136e7cb0512a5ffc08299a5935  head02.md2
+8f74f283a41d4e13f31198ee49dc957520f197dec23847abc4d3cdf7b0c699d1  head02.png
+e70459739d0a5dfd24a074e6256996b4224f8cc036a78f321b00819c4190bb0f  head03.md2
+7b23ad331b19f18bba672d00fec86e81d2df93fc1cf8075b79fd34cbb9e72c64  head03.png
+0893d085acc16fdcf49f8214c6c97d0193c36a7d28e58ed9c1b383275cd004ed  head04.md2
+cb12bee8a5287e0545d1736e90f4bc191513ed446ec925ee87ab5aa623e57c26  head04.png
 f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
 ```

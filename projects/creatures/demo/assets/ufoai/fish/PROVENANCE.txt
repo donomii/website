@@ -1,0 +1,24 @@
+# UFO: Alien Invasion fish asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff`. Their local names and upstream
+paths are:
+
+```text
+fish.anm  base/models/animals/fish2/fish.anm
+fish.md2  base/models/animals/fish2/fish.md2
+fish.png  base/models/animals/fish2/fish.png
+```
+
+Pinned source: https://github.com/ufoaiorg/ufoai/tree/763173ed036ebbee32c2a7bf6aefa19748df89ff/base/models/animals/fish2
+
+The upstream `LICENSES` manifest credits Willem Sitters and identifies each
+selected file as GNU General Public License 2.0 or later. `COPYING` is the
+corresponding unmodified upstream license text.
+
+```text
+4a17a1ca1f9c6602d49372c61f597b6a0ab29e9859effb1aa71d10469095bfac  fish.anm
+f50c6d274e0d17d205913fe71c313a6cf8737384caf93875600c2815ecb3a441  fish.md2
+d59b1846551d51d64d00ea0aea97433a0743dbb7d81a1147644b53574b88c380  fish.png
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
+```

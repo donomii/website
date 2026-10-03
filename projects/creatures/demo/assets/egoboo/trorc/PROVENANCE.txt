@@ -1,0 +1,13 @@
+name=Egoboo Trorc
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/trorc.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/trorc.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=b91db7e9291d3966af9bb4e583ceb12b368357aa7da906946d620249e6b94911
+body.png_sha256=848e6c25a59819c3f0bc5d92e12102b392153692b9d6fab78eed236ff90a69d2
+data.txt_sha256=98dfad04f1eca5f448c71f57ebdf212cfe6c41c4a8042b8fef4bc8be63ea6b24

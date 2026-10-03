@@ -1,0 +1,19 @@
+# UFO: Alien Invasion Taman Light Armour asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff` and
+`base/models/aliens/tamanlight`.
+
+The upstream `LICENSES` manifest credits Lukas "Rastaman" Beyeler for every
+selected file. Every selected file is GNU General Public License 2.0.
+`COPYING` is the corresponding unmodified upstream license text.
+
+```text
+af7ddc065132ee59c59ed4dd6526231a61fa04e2958b71239aa2d47d46abf75b  body.jpg
+36f3b87084ba4d07790b3179c7f90cf75d6e83d537c6a8bf686263da24e37f56  body01.anm
+457f99496a9ceb65c974fae52d3b9081f9c6248f73b43255e6671b722f68800f  body01.md2
+1fa1c1046e959c81069bd09a1a2b64fdacd190eb4b2f8ba722fd9d13af09d602  body01.tag
+79968a32717d897921cd60f2fe7ef4489e944b168d41820e81e10b8455a36132  head01.jpg
+4046cc969814145d5b8baebc003693901baaf5cdee78a3b20651d9cd0f88db61  head01.md2
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
+```

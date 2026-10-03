@@ -1,0 +1,13 @@
+name=Egoboo Vampyre
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/vampyre.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/vampyre.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=cb06e59162817d44614f62829453f0573327597b1ed73ec7be6eef70051fad27
+body.png_sha256=f37297717d5c9f4ec32eba4d138acf843c17a7730adf58647431b5701993b1e7
+data.txt_sha256=c6c9572039aa6e4e57639036461ed7e9e8d8b30b77bcd75ddae21e8a657dbeb8

@@ -1,0 +1,13 @@
+name=Egoboo Mosquito
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/mosquito.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/mosquito.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=8385e80731e93cd8ebcc1719464aea9f477d64ba5ba4718eebad8721c0887377
+body.png_sha256=5fcc1cdc10ae37a6a536365ec0ef295d3fa5958b805c1302b98d4f5f2d2f9cda
+data.txt_sha256=23b51ad7b78a03bdc2b986f62b68ad0b0f24aaaf3c62fbcb2133e9bd5ce348f3

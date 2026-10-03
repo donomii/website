@@ -1,0 +1,13 @@
+name=Egoboo Mimic
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/mimic.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/mimic.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=6dfe8263997c8db266cd9635d77c7fb7ad13f9fb28b7808becd8ff6b1afc3614
+body.png_sha256=505d073f95f44a585a5ff1ca9f6bb1f9016ff833826bf6489e4844722781da57
+data.txt_sha256=a8ecea43df0453dc6cce5ba7b50ee4ba1b5e2c10ff4b41b7ac384c1f4781624b

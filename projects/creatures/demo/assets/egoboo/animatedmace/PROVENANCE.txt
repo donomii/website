@@ -1,0 +1,13 @@
+name=Egoboo Animated Mace
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/animatedmace.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/animatedmace.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=286f484fa013271e6f8521dd92eb87ebf95da128c42f6a2ea4171f1a91ad3061
+body.png_sha256=95006afcf08833643296c874fbb9ae3e08be43840ae850a40b8ace5b5d49dc5f
+data.txt_sha256=df17ac187003cb316a96033706ee32761192c59b858306a5d57abf3bd39b4af7

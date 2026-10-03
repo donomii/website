@@ -117,6 +117,90 @@ const EXTRA_MODEL_DEFINITIONS = [
         walk: 'walk', idle: 'idle', height: 1.2, collisionRadius: 0.8
     },
     {
+        id: 'egoboo-eyeball', label: 'Egoboo Eyeball', assetRoot: EGOBOO_ASSET_ROOT, directory: 'eyeball',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'DA', fps: 8 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 0.9, collisionRadius: 0.6
+    },
+    {
+        id: 'egoboo-mimic', label: 'Egoboo Mimic', assetRoot: EGOBOO_ASSET_ROOT, directory: 'mimic',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'WB', fps: 8 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 1, collisionRadius: 0.75
+    },
+    {
+        id: 'egoboo-mosquito', label: 'Egoboo Mosquito', assetRoot: EGOBOO_ASSET_ROOT, directory: 'mosquito',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'DA', fps: 14 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 0.65, collisionRadius: 0.6
+    },
+    {
+        id: 'egoboo-scatterbrain', label: 'Egoboo Scatterbrain', assetRoot: EGOBOO_ASSET_ROOT, directory: 'scatterbrain',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'DA', fps: 8 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 1.15, collisionRadius: 0.7
+    },
+    {
+        id: 'egoboo-trorc', label: 'Egoboo Trorc', assetRoot: EGOBOO_ASSET_ROOT, directory: 'trorc',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'WB', fps: 10 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 1.8, collisionRadius: 0.8
+    },
+    {
+        id: 'egoboo-vampyre', label: 'Egoboo Vampyre', assetRoot: EGOBOO_ASSET_ROOT, directory: 'vampyre',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'WB', fps: 9 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 1.8, collisionRadius: 0.75
+    },
+    {
+        id: 'egoboo-animatedmace', label: 'Egoboo Animated Mace', assetRoot: EGOBOO_ASSET_ROOT, directory: 'animatedmace',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'DA', fps: 8 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 1.4, collisionRadius: 0.6
+    },
+    {
+        id: 'egoboo-carpetmimic', label: 'Egoboo Carpet Mimic', assetRoot: EGOBOO_ASSET_ROOT, directory: 'carpetmimic',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'WA', fps: 8 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 0.35, collisionRadius: 0.8
+    },
+    {
+        id: 'egoboo-mephit', label: 'Egoboo Mephit', assetRoot: EGOBOO_ASSET_ROOT, directory: 'mephit',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'DA', fps: 10 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 1.15, collisionRadius: 0.7
+    },
+    {
+        id: 'egoboo-rusteater', label: 'Egoboo Rust Eater', assetRoot: EGOBOO_ASSET_ROOT, directory: 'rusteater',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'WB', fps: 9 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 1.2, collisionRadius: 0.8
+    },
+    {
+        id: 'egoboo-varguile', label: 'Egoboo Varguile', assetRoot: EGOBOO_ASSET_ROOT, directory: 'varguile',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'DA', fps: 8 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 0.9, collisionRadius: 0.6
+    },
+    {
+        id: 'egoboo-zombi', label: 'Egoboo Zombi', assetRoot: EGOBOO_ASSET_ROOT, directory: 'zombi',
+        body: 'body.md2', animations: null, animationFormat: 'frame-prefix', skin: 'body.png',
+        head: null, headSkin: null, tags: null,
+        frameAnimations: [{ name: 'walk', prefix: 'WA', fps: 10 }, { name: 'idle', prefix: 'DA', fps: 4 }],
+        walk: 'walk', idle: 'idle', height: 1.65, collisionRadius: 0.75
+    },
+    {
         id: 'sauerbraten-hellpig', label: 'Sauerbraten Hellpig', assetRoot: SAUERBRATEN_ASSET_ROOT, directory: 'hellpig',
         body: 'body.md2', animations: 'md2.cfg', animationFormat: 'sauerbraten-md2cfg', skin: 'body.jpg',
         head: null, headSkin: null, tags: null,

@@ -1,0 +1,19 @@
+# UFO: Alien Invasion Taman Medium Armour asset provenance
+
+These files are unmodified copies from UFO: Alien Invasion revision
+`763173ed036ebbee32c2a7bf6aefa19748df89ff` and
+`base/models/aliens/tamanmedium`.
+
+The upstream `LICENSES` manifest credits Lukas "Rastaman" Beyeler for every
+selected file. Every selected file is GNU General Public License 2.0.
+`COPYING` is the corresponding unmodified upstream license text.
+
+```text
+6537fbad17f2f2012bcd9be70fffa94a566d5823aa545222ee4dbb6194888db4  body.jpg
+36f3b87084ba4d07790b3179c7f90cf75d6e83d537c6a8bf686263da24e37f56  body01.anm
+325fdadb88098370a4367ecb5b8156ee10bf48acde1244b38720556d06dff36c  body01.md2
+fff25168208a1f685966c491d516b7227c8e9bc90eb9c38fa7b943bf04d20f87  body01.tag
+79968a32717d897921cd60f2fe7ef4489e944b168d41820e81e10b8455a36132  head01.jpg
+4046cc969814145d5b8baebc003693901baaf5cdee78a3b20651d9cd0f88db61  head01.md2
+f9edfeacacbe115fe591cfa96e0e18a45b0656ffc2036ebd44c72669bb127630  COPYING
+```

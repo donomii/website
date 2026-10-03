@@ -1,0 +1,29 @@
+Project: Quaternius Ultimate Monsters
+Creator: Quaternius (@Quaternius)
+Project page: https://quaternius.com/packs/ultimatemonsters.html
+Public distribution: https://drive.google.com/drive/folders/18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C
+Retrieved: 2026-10-03
+License: CC0 1.0 Universal
+License page: https://creativecommons.org/publicdomain/zero/1.0/
+
+The project page identifies the pack as 50 fully animated monsters, lists glTF among the supplied formats, and marks the pack CC0.  The public distribution includes License.txt, whose operative text also dedicates the files under CC0 1.0.  Its heading says "Ultimate Platformer Pack" even though it is distributed at the root of the Ultimate Monsters folder; the project page and the license's operative CC0 text agree on the reuse terms.
+
+Only these self-contained glTF files were selected.  Each embeds its mesh, skeletal animations, material, and texture data.  Google Drive file ids and SHA-256 receipts:
+
+1ad3e42c088e01e0c179d54537c63efad0dd185031df61d2833b9f1709362730  Armabee_Evolved.gltf  drive-id=196ay2r-nuDXcRiwYu84CoE7Qy_gBj8sB
+9eb899fc619dff9a973669e0962452990c8ec44d4501dd41fe4f4fe5afd631f4  BlueDemon.gltf  drive-id=1mcxtHj9Aw1uu1FWYhl1rfPenuq3My-Z4
+89fce228bdcefac4e498378fa061b9d928bca01b680101530648f8b28c9c9ad9  Bunny.gltf  drive-id=1wy1OR4I3CHbWqgD_JMrMkQiUABRGKQfO
+29051fc39751fa5b3af69f7bce77297c620651b1b2235bbd644962bd6a895461  Cactoro.gltf  drive-id=19Po2Ae16TbImr6dCu7PRZdpPQhEA13OQ
+59aba7e4ea6da3ac11be9d5220304e649de8cb8cf975eef588d30a003c6cd275  Cat.gltf  drive-id=1DaLGZYClS3GTBHVP3F6tF3mVjQ4-rTc-
+a8ad394817989e1e68c111a3a60b3203b203a3ab4563350b4f3a6e1b5a6c98b1  Chicken.gltf  drive-id=1IB0MLe3-z1oKSR2AxXBWWx5t9wzreRIe
+d7c57a4ad6444f9c845ecdc13782a7430fcb377594a00f719cd2d37b9434b6de  Dino.gltf  drive-id=1xBAObQmJQP1kCslielMmS_KMfPZUsdNm
+21ed475bbf4d5fb7016085290f79663ad7107aedd2a5856318f2716c7ecc6402  Dog.gltf  drive-id=1zLzeCmfxleaolUOPvAEDSWzWXSlKAnQe
+d219a29b5e928da26c24218a64284bbf999b88484a508ac6c01e0edad9f1f56c  Dragon.gltf  drive-id=1-mQSm6_oGt7-EEQfNj1dFWYgPQy4AdPC
+8a73522affc7483fbd43736e95d5581ff993685312995d2c7ebb112eb7d5c004  Frog.gltf  drive-id=19QwNJOpMLNtw5jS2D6tOQQ48nPPk9VSI
+e2d2049ebe8d243bd0f60a3f48a7e174444f641ebc40cbea2f6c23cb97a82519  GreenBlob.gltf  drive-id=1Qj3EPCAzN7P3KNrfjV_sFMw98nsBUyob
+ea6c90e8522eeeba7c6c4cece3a031706de55e9b7e660b362f261a4e5bfaff95  Mushnub_Evolved.gltf  drive-id=1x86_FT5A-d7oVcCRuqczS7GB1t2GydyN
+ccf27e126b881d80a2046c3ab96ddd94eb996837480e783142009ecd6629a3a4  MushroomKing.gltf  drive-id=1sCGed1ce1CrdCdFz5bxVQMqphu5e3a1m
+ed41b8a3e4a49d0eb9522e52d3055a85e7c051607c6f1092aeb4242e0c87c77b  Squidle.gltf  drive-id=1VbcCYeqrlwYF6b64EY2S_e9hV0HXMr3O
+074302ab7039f3a6644c8f0be2580a0d747e8981bfa9725bcc6af422222c155a  Wizard.gltf  drive-id=1lkfBVrpoKi3JwrkJ3M_vwi7tQXG53RjV
+ab60f4fbc1c2e1fdc3ed4f63023dc2185240dbd55751df568099557b29af6fd5  Yeti.gltf  drive-id=1_skNq11VXoaGPu9D-hHb4-0OQXEWNTzY
+de990ef6fc68cffd7fd1ae342c4d0c823b541b8848d8f76bca5d3339f4de6f6e  LICENSE.txt  drive-id=16GqsDGESyEOfRbc4dS7EqAwkIUSIW4_y

@@ -1,0 +1,20 @@
+Project: Khronos glTF Sample Assets
+Model: Fox
+Repository: https://github.com/KhronosGroup/glTF-Sample-Assets
+Pinned revision: edc7c9e67c639d230715049ee31f9a96a6babbbe
+Model path: Models/Fox/glTF-Binary/Fox.glb
+Retrieved: 2026-10-03
+
+Licensing and attribution from Models/Fox/metadata.json at the pinned revision:
+- Model: PixelMannen, CC0 1.0, 2014.
+- Rigging and animation: tomkranis, CC BY 4.0, 2014.
+- Conversion to glTF: @AsoboStudio and @scurest, CC BY 4.0, 2017.
+
+The original LICENSE.md is included as LICENSE.txt so the static-site generator preserves it as a downloadable text file.  The original metadata.json is also included with the model.  Full CC0 1.0 and CC BY 4.0 texts were copied from the pinned repository's LICENSES directory.
+
+SHA-256 receipts:
+d97044e701822bac5a62696459b27d7b375aada5de8574ed4362edbba94771f7  Fox.glb
+9ddaa2edd6a8f72117eec9709d38cd7d284f61f77752d342c32c828e61f78eae  LICENSE.txt
+1d888d832b5eb2a32a461ae6d5e2bc00f925e3a571c1447842466d2061800604  Fox-metadata.json
+c8041334a99cb48852b2139253cbde5f8ac87e27f124aed51223e0d5bf0080eb  CC-BY-4.0.txt
+a43fc2004d1e073f1107a1f6146664d08dae6cea93cb828742a4bec6da828e91  CC0-1.0.txt

@@ -15,15 +15,81 @@ const MODEL_DEFINITIONS = [
         walk: 'walk2', idle: 'stand2', height: 2.0, collisionRadius: 0.7
     },
     {
+        id: 'taman-b', label: 'Taman Variant B', directory: 'taman',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body01b.png',
+        head: 'head02.md2', headSkin: 'head02.png', tags: 'body01.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.0, collisionRadius: 0.7
+    },
+    {
+        id: 'taman-c', label: 'Taman Variant C', directory: 'taman',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body01c.png',
+        head: 'head03.md2', headSkin: 'head03.png', tags: 'body01.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.0, collisionRadius: 0.7
+    },
+    {
+        id: 'taman-d', label: 'Taman Variant D', directory: 'taman',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body01d.png',
+        head: 'head04.md2', headSkin: 'head04.png', tags: 'body01.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.0, collisionRadius: 0.7
+    },
+    {
+        id: 'taman-light', label: 'Taman Light Armour', directory: 'taman-light',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body.jpg',
+        head: 'head01.md2', headSkin: 'head01.jpg', tags: 'body01.tag',
+        walk: 'walk0', idle: 'stand0', height: 2.0, collisionRadius: 0.75
+    },
+    {
+        id: 'taman-medium', label: 'Taman Medium Armour', directory: 'taman-medium',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body.jpg',
+        head: 'head01.md2', headSkin: 'head01.jpg', tags: 'body01.tag',
+        walk: 'walk0', idle: 'stand0', height: 2.0, collisionRadius: 0.8
+    },
+    {
         id: 'ortnok', label: 'Ortnok', directory: 'ortnok',
         body: 'body.md2', animations: 'body.anm', skin: 'body.png',
         head: 'head.md2', headSkin: 'head.png', tags: 'body.tag',
         walk: 'walk2', idle: 'stand2', height: 2.25, collisionRadius: 0.85
     },
     {
+        id: 'ortnok-b', label: 'Ortnok Variant B', directory: 'ortnok',
+        body: 'body.md2', animations: 'body.anm', skin: 'body01b.png',
+        head: 'head02.md2', headSkin: 'head02.png', tags: 'body.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.25, collisionRadius: 0.85
+    },
+    {
+        id: 'ortnok-c', label: 'Ortnok Variant C', directory: 'ortnok',
+        body: 'body.md2', animations: 'body.anm', skin: 'body01c.png',
+        head: 'head03.md2', headSkin: 'head03.png', tags: 'body.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.25, collisionRadius: 0.85
+    },
+    {
+        id: 'ortnok-light', label: 'Ortnok Light Armour', directory: 'ortnok-light',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body.png',
+        head: 'head01.md2', headSkin: 'head01.png', tags: 'body01.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.25, collisionRadius: 0.9
+    },
+    {
+        id: 'ortnok-medium', label: 'Ortnok Medium Armour', directory: 'ortnok-medium',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body.png',
+        head: 'head01.md2', headSkin: 'head01.jpg', tags: 'body01.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.25, collisionRadius: 1.0
+    },
+    {
         id: 'shevaar', label: 'Shevaar', directory: 'shevaar',
         body: 'body.md2', animations: 'body.anm', skin: 'body.jpg',
         head: 'head.md2', headSkin: 'head.jpg', tags: 'body.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.15, collisionRadius: 0.8
+    },
+    {
+        id: 'shevaar-b', label: 'Shevaar Variant B', directory: 'shevaar',
+        body: 'body.md2', animations: 'body.anm', skin: 'body01b.png',
+        head: 'head02.md2', headSkin: 'head02.png', tags: 'body.tag',
+        walk: 'walk2', idle: 'stand2', height: 2.15, collisionRadius: 0.8
+    },
+    {
+        id: 'shevaar-c', label: 'Shevaar Variant C', directory: 'shevaar',
+        body: 'body.md2', animations: 'body.anm', skin: 'body01c.png',
+        head: 'head03.md2', headSkin: 'head03.png', tags: 'body.tag',
         walk: 'walk2', idle: 'stand2', height: 2.15, collisionRadius: 0.8
     },
     {
@@ -33,10 +99,22 @@ const MODEL_DEFINITIONS = [
         walk: 'walk2', idle: 'stand2', height: 1.15, collisionRadius: 0.75
     },
     {
+        id: 'bloodspider-advanced', label: 'Advanced Bloodspider', directory: 'bloodspider-advanced',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body01.jpg',
+        head: 'head.md2', headSkin: null, tags: 'body01.tag',
+        walk: 'walk2', idle: 'stand2', height: 1.2, collisionRadius: 0.8
+    },
+    {
         id: 'hovernet', label: 'Hovernet', directory: 'hovernet',
         body: 'body.md2', animations: 'body.anm', skin: 'body.jpg',
         head: 'head.md2', headSkin: null, tags: 'body.tag',
         walk: 'walk0', idle: 'stand0', height: 1.45, collisionRadius: 0.8
+    },
+    {
+        id: 'hovernet-advanced', label: 'Advanced Hovernet', directory: 'hovernet-advanced',
+        body: 'body01.md2', animations: 'body01.anm', skin: 'body01.png',
+        head: 'head.md2', headSkin: null, tags: 'body01.tag',
+        walk: 'walk0', idle: 'stand0', height: 1.5, collisionRadius: 0.85
     },
     {
         id: 'alientank', label: 'Alien Tank', directory: 'alientank',
@@ -61,6 +139,12 @@ const MODEL_DEFINITIONS = [
         body: 'body.md2', animations: 'body.anm', skin: 'body.jpg',
         head: 'head.md2', headSkin: 'head.jpg', tags: 'body.tag',
         walk: 'walk0', idle: 'stand0', height: 1.95, collisionRadius: 0.7
+    },
+    {
+        id: 'fish', label: 'UFO:AI Fish', directory: 'fish',
+        body: 'fish.md2', animations: 'fish.anm', skin: 'fish.png',
+        head: null, headSkin: null, tags: null,
+        walk: 'swim', idle: 'swim', height: 0.65, collisionRadius: 0.55
     }
 ];
 

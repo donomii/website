@@ -1,0 +1,13 @@
+name=Egoboo Zombi
+project_url=https://github.com/egoboo/egoboo-assets
+revision=3d2598fd2fb38e8ced9b9e6821e167d4640bf594
+source_path=basicdat/globalobjects/monsters/zombi.obj
+source_url=https://github.com/egoboo/egoboo-assets/tree/3d2598fd2fb38e8ced9b9e6821e167d4640bf594/basicdat/globalobjects/monsters/zombi.obj
+license=GNU General Public License version 3
+license_file=../LICENSE.txt
+body.md2_source=tris.md2
+body.png_source=tris0.png
+data.txt_source=data.txt
+body.md2_sha256=76fdb200c802741513c2790ea0e83eb97185b5548e8de694be9c5d9071157918
+body.png_sha256=42852fddd0f8e18649c14c98fe2023df60756e4f2edada7caf07fd5bd90ea552
+data.txt_sha256=34d27dd0073cd4928459a93e1525a6e9deb705920f3fe27528b2305812ba261b

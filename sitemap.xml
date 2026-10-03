@@ -601,8 +601,16 @@
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
+    <loc>/projects/creatures/demo/assets/egoboo/animatedmace/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
     <loc>/projects/creatures/demo/assets/egoboo/bat/index.html</loc>
     <lastmod>2026-08-25</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/egoboo/carpetmimic/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/egoboo/cobol/index.html</loc>
@@ -618,6 +626,10 @@
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/egoboo/demon/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/egoboo/eyeball/index.html</loc>
     <lastmod>2026-10-02</lastmod>
   </url>
   <url>
@@ -645,8 +657,20 @@
     <lastmod>2026-10-02</lastmod>
   </url>
   <url>
+    <loc>/projects/creatures/demo/assets/egoboo/mephit/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/egoboo/mimic/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
     <loc>/projects/creatures/demo/assets/egoboo/minotore/index.html</loc>
     <lastmod>2026-08-25</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/egoboo/mosquito/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/egoboo/nautilus/index.html</loc>
@@ -657,7 +681,15 @@
     <lastmod>2026-10-02</lastmod>
   </url>
   <url>
+    <loc>/projects/creatures/demo/assets/egoboo/rusteater/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
     <loc>/projects/creatures/demo/assets/egoboo/sandtroll/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/egoboo/scatterbrain/index.html</loc>
     <lastmod>2026-10-02</lastmod>
   </url>
   <url>
@@ -669,8 +701,40 @@
     <lastmod>2026-10-02</lastmod>
   </url>
   <url>
+    <loc>/projects/creatures/demo/assets/egoboo/trorc/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/egoboo/vampyre/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/egoboo/varguile/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/egoboo/zombi/index.html</loc>
+    <lastmod>2026-10-02</lastmod>
+  </url>
+  <url>
     <loc>/projects/creatures/demo/assets/index.html</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/khronos/fox/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/khronos/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/quaternius/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/quaternius/ultimate-monsters/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/sauerbraten/hellpig/index.html</loc>
@@ -685,6 +749,10 @@
     <lastmod>2026-08-25</lastmod>
   </url>
   <url>
+    <loc>/projects/creatures/demo/assets/ufoai/bloodspider-advanced/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
     <loc>/projects/creatures/demo/assets/ufoai/bloodspider/index.html</loc>
     <lastmod>2026-08-25</lastmod>
   </url>
@@ -697,28 +765,52 @@
     <lastmod>2026-08-25</lastmod>
   </url>
   <url>
+    <loc>/projects/creatures/demo/assets/ufoai/fish/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/ufoai/hovernet-advanced/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
     <loc>/projects/creatures/demo/assets/ufoai/hovernet/index.html</loc>
     <lastmod>2026-08-25</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/ufoai/index.html</loc>
-    <lastmod>2026-07-27</lastmod>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/ufoai/ortnok-light/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/ufoai/ortnok-medium/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/ufoai/ortnok/index.html</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-10-03</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/ufoai/shevaar/index.html</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-10-03</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/ufoai/soldier/index.html</loc>
     <lastmod>2026-08-25</lastmod>
   </url>
   <url>
+    <loc>/projects/creatures/demo/assets/ufoai/taman-light/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/projects/creatures/demo/assets/ufoai/taman-medium/index.html</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
     <loc>/projects/creatures/demo/assets/ufoai/taman/index.html</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-10-03</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/index.html</loc>

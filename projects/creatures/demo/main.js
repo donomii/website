@@ -1,6 +1,7 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/webxr/VRButton.js';
 import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js';
+import { RTSCameraControls } from './rts-camera-controls.js';
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -19,6 +20,11 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.xr.enabled = true;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+const cameraControls = new RTSCameraControls(camera, renderer.domElement);
+const cameraTarget = cameraControls.target;
+renderer.xr.addEventListener('sessionstart', () => cameraControls.setEnabled(false));
+renderer.xr.addEventListener('sessionend', () => cameraControls.setEnabled(true));
 
 // Add VR button
 document.body.appendChild(VRButton.createButton(renderer));
@@ -744,16 +750,11 @@ function handleVRControllerInput() {
                 const thumbstickX = gamepad.axes[2] || 0; // Thumbstick X
                 const thumbstickY = gamepad.axes[3] || 0; // Thumbstick Y
 
-                // Rotate camera with horizontal thumbstick
-                if (Math.abs(thumbstickX) > 0.1) {
-                    cameraAngle += thumbstickX * 0.02;
-                }
-
-                // Zoom with vertical thumbstick
-                if (Math.abs(thumbstickY) > 0.1) {
-                    cameraDistance += thumbstickY * 0.5;
-                    cameraDistance = Math.max(10, Math.min(100, cameraDistance));
-                }
+                // Apply rotation and zoom only outside the thumbstick dead zone.
+                const rotationDelta = Math.abs(thumbstickX) > 0.1 ? thumbstickX * 0.02 : 0;
+                const zoomDelta = Math.abs(thumbstickY) > 0.1 ? thumbstickY * 0.5 : 0;
+                cameraControls.rotate(rotationDelta, 0);
+                cameraControls.changeDistance(zoomDelta);
             }
 
             // Handle trigger drag for panning
@@ -767,13 +768,13 @@ function handleVRControllerInput() {
                 );
 
                 // Scale the panning based on camera distance
-                const panScale = cameraDistance * 0.5;
+                const panScale = cameraControls.distance * 0.5;
 
                 // Transform delta to camera-relative coordinates
                 const right = new THREE.Vector3(1, 0, 0);
                 const forward = new THREE.Vector3(0, 0, -1);
-                right.applyAxisAngle(new THREE.Vector3(0, 1, 0), cameraAngle);
-                forward.applyAxisAngle(new THREE.Vector3(0, 1, 0), cameraAngle);
+                right.applyAxisAngle(new THREE.Vector3(0, 1, 0), cameraControls.azimuthAngle);
+                forward.applyAxisAngle(new THREE.Vector3(0, 1, 0), cameraControls.azimuthAngle);
 
                 // Apply panning
                 cameraTarget.add(right.multiplyScalar(delta.x * panScale));
@@ -793,86 +794,12 @@ function handleVRControllerInput() {
                 );
 
                 // Horizontal movement rotates camera
-                cameraAngle += delta.x * 2.0;
+                cameraControls.rotate(delta.x * 2.0, 0);
 
                 controller.userData.lastPosition.copy(currentPosition);
             }
         }
     }
-}
-
-// Camera controls
-let isDraggingLeft = false;
-let isDraggingRight = false;
-let previousMousePosition = { x: 0, y: 0 };
-let cameraTarget = new THREE.Vector3(0, 0, 0);
-let cameraDistance = 50;
-let cameraAngle = Math.PI / 4; // 45 degrees
-let cameraHeight = 30;
-
-renderer.domElement.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    if (e.button === 0) {
-        isDraggingLeft = true;
-    } else if (e.button === 2) {
-        isDraggingRight = true;
-    }
-    previousMousePosition = { x: e.clientX, y: e.clientY };
-});
-
-renderer.domElement.addEventListener('mouseup', (e) => {
-    if (e.button === 0) {
-        isDraggingLeft = false;
-    } else if (e.button === 2) {
-        isDraggingRight = false;
-    }
-});
-
-renderer.domElement.addEventListener('mousemove', (e) => {
-    if (isDraggingLeft) {
-        // Pan camera
-        const deltaX = e.clientX - previousMousePosition.x;
-        const deltaY = e.clientY - previousMousePosition.y;
-
-        const panSpeed = 0.05;
-        const right = new THREE.Vector3(1, 0, 0);
-        const forward = new THREE.Vector3(0, 0, -1);
-
-        right.applyAxisAngle(new THREE.Vector3(0, 1, 0), cameraAngle);
-        forward.applyAxisAngle(new THREE.Vector3(0, 1, 0), cameraAngle);
-
-        cameraTarget.add(right.multiplyScalar(-deltaX * panSpeed));
-        cameraTarget.add(forward.multiplyScalar(deltaY * panSpeed));
-    }
-
-    if (isDraggingRight) {
-        // Rotate camera
-        const deltaX = e.clientX - previousMousePosition.x;
-        cameraAngle += deltaX * 0.01;
-    }
-
-    previousMousePosition = { x: e.clientX, y: e.clientY };
-});
-
-renderer.domElement.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const zoomSpeed = 2;
-    cameraDistance += e.deltaY * zoomSpeed * 0.01;
-    cameraDistance = Math.max(10, Math.min(100, cameraDistance));
-});
-
-renderer.domElement.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-});
-
-// Update camera position based on controls
-function updateCamera() {
-    const x = cameraTarget.x + Math.sin(cameraAngle) * cameraDistance;
-    const z = cameraTarget.z + Math.cos(cameraAngle) * cameraDistance;
-    const y = cameraTarget.y + cameraHeight;
-
-    camera.position.set(x, y, z);
-    camera.lookAt(cameraTarget);
 }
 
 // Animation loop
@@ -917,7 +844,9 @@ function animate() {
 
     // Update camera (always update in non-VR presenting mode)
     if (!renderer.xr.isPresenting) {
-        updateCamera();
+        cameraControls.updateCamera();
+    } else {
+        cameraControls.cancelInteraction();
     }
 
     renderer.render(scene, camera);
