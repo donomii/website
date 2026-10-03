@@ -1,3 +1,0 @@
-
-# 2026-10-03 19:50:54.735993
-+Review this browser model-loader failure without editing files. The public host returned HTTP 503 for one glTF while all 69 models were fetched concurrently through nested Promise.all calls, and the page consequently spawned zero creatures. Propose the smallest robust design that progressively spawns successful models, limits model-bundle concurrency, retries transient failures, preserves detailed permanent failures, and keeps the UI responsive. Check for lifecycle and progress-reporting mistakes.
