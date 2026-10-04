@@ -3,54 +3,77 @@ export const examples = [
   {
     id: "hello",
     title: "01 · Hello, browser",
-    description: "Print a greeting, change the live page, then give it a new colour.",
+    description: "Zipper sequences the work. Unresolved calls go straight to the browser.",
     source: `seq(
   emit("Hello, browser!\\n"),
-  js("document.querySelector('#message').textContent = 'I was changed by a Zipper program.'"),
-  js("document.querySelector('#card').style.background = '#dfff85'")
+  Reflect.set(document.querySelector("#message"),
+    "textContent", "I was changed by a Zipper program."),
+  Reflect.set(Reflect.get(document.querySelector("#card"), "style"),
+    "background", "#dfff85")
 )`,
   },
   {
     id: "functions",
     title: "02 · Make a function",
-    description: "Arguments are little programs. Calling who() runs the argument where it is needed.",
+    description: "A Zipper argument is a delayed program. Here who() supplies a value to emit.",
     source: `seq(
   define(greet, who, q{
-    seq(emit("Hello, "), who(), emit("!\\n"))
+    seq(emit("Hello, "), emit(who()), emit("!\\n"))
   }),
-  greet(emit("Jeremy")),
-  greet(emit("world"))
+  greet("Jeremy"),
+  greet("world")
 )`,
   },
   {
     id: "lazy",
     title: "03 · Do it twice",
-    description: "The same delayed argument can run more than once. Watch it expand on the tape.",
+    description: "Zipper repeats a delayed action. Browser methods run only when that action is reached.",
     source: `seq(
   define(twice, action, q{ seq(action(), action()) }),
+  define(addItem, q{
+    call(document.querySelector("#items"), "insertAdjacentHTML",
+      "beforeend", "<li>Added by Zipper</li>")
+  }),
   twice(emit("Again!\\n")),
-  twice(js("const list = document.querySelector('#items'); const item = document.createElement('li'); item.textContent = 'Added by Zipper'; list.append(item)"))
+  twice(addItem())
 )`,
   },
   {
     id: "canvas",
     title: "04 · Draw on a canvas",
-    description: "Use the browser canvas API from Zipper. Each js call is one visible step.",
+    description: "Zipper defines the drawing helpers. Every browser method is its own visible step.",
     source: `seq(
-  js("document.querySelector('#heading').textContent = 'A tiny landscape'"),
-  js("const canvas = document.querySelector('#drawing'); canvas.style.display = 'block'; const ctx = canvas.getContext('2d'); ctx.fillStyle = '#dcece5'; ctx.fillRect(0, 0, 400, 150)"),
-  js("const ctx = document.querySelector('#drawing').getContext('2d'); ctx.fillStyle = '#174d39'; ctx.beginPath(); ctx.moveTo(0,150); ctx.lineTo(125,25); ctx.lineTo(250,150); ctx.fill()"),
-  js("const ctx = document.querySelector('#drawing').getContext('2d'); ctx.fillStyle = '#dfff85'; ctx.beginPath(); ctx.arc(310,42,24,0,Math.PI*2); ctx.fill()"),
-  emit("A landscape in four browser calls.\\n")
+  define(canvas, q{ document.querySelector("#drawing") }),
+  define(ctx, q{ call(canvas(), "getContext", "2d") }),
+  define(colour, paint, q{ Reflect.set(ctx(), "fillStyle", paint()) }),
+  Reflect.set(document.querySelector("#heading"), "textContent", "A tiny landscape"),
+  Reflect.set(Reflect.get(canvas(), "style"), "display", "block"),
+  colour("#dcece5"),
+  call(ctx(), "fillRect", 0, 0, 400, 150),
+  colour("#174d39"),
+  call(ctx(), "beginPath"),
+  call(ctx(), "moveTo", 0, 150),
+  call(ctx(), "lineTo", 125, 25),
+  call(ctx(), "lineTo", 250, 150),
+  call(ctx(), "fill"),
+  colour("#dfff85"),
+  call(ctx(), "beginPath"),
+  call(ctx(), "arc", 310, 42, 24, 0, 6.283185307179586),
+  call(ctx(), "fill"),
+  emit("A landscape, one call at a time.\\n")
 )`,
   },
   {
     id: "fetch",
     title: "05 · Fetch some data",
-    description: "Await the browser's fetch API. This example uses a built-in data URL, so it also works offline.",
+    description: "fetch returns a response; call invokes its json method. Promises are awaited automatically.",
     source: `seq(
   emit("Reading a JSON response...\\n"),
-  js("const response = await fetch('data:application/json,%7B%22message%22%3A%22Hello%20from%20fetch!%22%7D'); if (!response.ok) { throw new Error('HTTP ' + response.status); } else { const data = await response.json(); document.querySelector('#message').textContent = data.message; return data.message; }"),
+  Reflect.set(document.querySelector("#message"), "textContent",
+    Reflect.get(
+      call(fetch("data:application/json,%7B%22message%22%3A%22Hello%20from%20fetch!%22%7D"), "json"),
+      "message")),
+  emit(Reflect.get(document.querySelector("#message"), "textContent")),
   emit("\\nDone.\\n")
 )`,
   },

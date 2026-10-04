@@ -123,20 +123,23 @@
 </div>
 <div style="clear:both"></div>
 <div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
-<p>Write a program below, then use <strong>Step</strong> to watch each rewrite or <strong>Run</strong> to play it. The <strong>live page</strong> is a browser document your program can change with <code>js(&quot;…&quot;)</code>. There are examples for functions, drawing, closures, and fetching data.</p>
-<link rel="stylesheet" href="zipper/playground.css?v=20261004">
+<p>Write a program below, then use <strong>Step</strong> to watch each rewrite or <strong>Run</strong> to play it. The <strong>live page</strong> is a browser document your program can change by calling browser functions directly. There are examples for functions, drawing, closures, and fetching data.</p>
+<link rel="stylesheet" href="zipper/playground.css?v=20261004-2">
 <div id="zipper-playground" class="zipper-lab" aria-label="Zipper programming playground"><p>Loading the Zipper playground…</p></div>
-<script type="module" src="zipper/playground.js?v=20261004"></script>
+<script type="module" src="zipper/playground.js?v=20261004-2"></script>
 <noscript>Enable JavaScript to use the editor and debugger.</noscript>
 <p><a href="zipper/index.html">Open the playground on its own</a>.</p>
 <h3 id="browser-calls">Browser calls</h3>
-<p><code>js(&quot;…&quot;)</code> runs an async JavaScript function in the live page. Use <code>document</code> to change its elements, <code>window</code> to keep state between calls, <code>await fetch(…)</code> for requests, and <code>return</code> to print a result. Browser CORS and permission rules still apply. Each complete browser call is one Zipper step.</p>
+<p>Zipper looks up its own definitions first. Any unresolved function is called in the live page's JavaScript: <code>Math.round(...)</code>, <code>document.querySelector(...)</code>, <code>fetch(...)</code>, or another function supplied by the page. Arguments are evaluated left to right, one call per step. Promises are awaited automatically, and returned values can be passed to another call.</p>
 <pre><code class="language-text">seq(
-  js(&quot;document.querySelector('#heading').textContent = 'Hello from Zipper'&quot;),
-  js(&quot;document.querySelector('#card').style.background = '#dfff85'&quot;),
-  js(&quot;return navigator.language&quot;)
+  define(setText, selector, text, q{
+    Reflect.set(document.querySelector(selector()), &quot;textContent&quot;, text())
+  }),
+  setText(&quot;#heading&quot;, &quot;Hello from Zipper&quot;),
+  emit(Math.round(3.7))
 )
 </code></pre>
+<p><code>Reflect.get(object, &quot;property&quot;)</code> reads a property; <code>Reflect.set(object, &quot;property&quot;, value)</code> changes it. The live page supplies <code>call(object, &quot;method&quot;, args…)</code> for methods on returned objects, so <code>call(fetch(url), &quot;json&quot;)</code> fetches and decodes JSON. Browser objects keep their identity and appear as numbered references on the tape. Use <code>emit(...)</code> to print a result. CORS and browser permissions still apply.</p>
 <p><strong>Back</strong> restores language state and output, stopping at browser effects. <strong>Reset</strong> restarts the current source and creates a fresh live page. You can also edit the current tape and continue from its cursor. Programs run only when you press Run or Step; <strong>Save .piz</strong> downloads your source.</p>
 <h3 id="the-language">The language</h3>
 <p>A Zipper program looks like nested function calls:</p>

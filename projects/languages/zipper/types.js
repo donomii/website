@@ -4,8 +4,12 @@
  * @typedef {{tape: string, output: string, steps: number, status: string,
  *   message: string, external: boolean}} Snapshot
  * @typedef {Call & {text: string}} Definition
+ * @typedef {Call & {environment: Map<string, Definition>, nested: boolean, argument: boolean,
+ *   replacement?: string, values?: HostValue[], external?: boolean}} Reduction
  * @typedef {{id: string, title: string, description: string, source: string}} Example
- * @typedef {(code: string, signal: AbortSignal) => Promise<string>} EvaluateJavaScript
+ * @typedef {{kind: "literal", value: string | number | boolean | null | undefined} |
+ *   {kind: "reference", id: number}} HostValue
+ * @typedef {(name: string, args: HostValue[], signal: AbortSignal) => Promise<HostValue>} CallHost
  */
 export const CURSOR = "▮";
 
@@ -19,6 +23,7 @@ export const DEFAULTS = Object.freeze({
   maxOutputLength: 100000,
   maxHistoryLength: 100,
   maxHistoryBytes: 2000000,
+  maxHostReferences: 10000,
   browserTimeout: 10000,
   previewPort: 8796,
 });

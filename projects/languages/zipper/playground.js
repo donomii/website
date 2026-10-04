@@ -1,11 +1,11 @@
-import { Zipper } from "./zipper.js";
-import { BrowserBridge } from "./browser.js";
-import { examples } from "./examples.js";
-import { DEFAULTS, requireValue } from "./types.js";
-import { elements, updateLines, updateView } from "./view.js";
+import { Zipper } from "./zipper.js?v=20261004-2";
+import { BrowserBridge } from "./browser.js?v=20261004-2";
+import { examples } from "./examples.js?v=20261004-2";
+import { DEFAULTS, requireValue } from "./types.js?v=20261004-2";
+import { elements, updateLines, updateView } from "./view.js?v=20261004-2";
 
 async function mount(root) {
-  const response = await fetch(new URL("./playground.html", import.meta.url));
+  const response = await fetch(new URL("./playground.html?v=20261004-2", import.meta.url));
   requireValue(response.ok, `Could not load the editor: HTTP ${response.status}.`);
   root.innerHTML = await response.text();
   const ui = elements(root);
@@ -15,14 +15,14 @@ async function mount(root) {
     option.textContent = example.title;
     ui.example.append(option);
   }
-  root.querySelector(".zl-footer a").href = new URL("./zipper.js", import.meta.url).href;
+  root.querySelector(".zl-footer a").href = new URL("./zipper.js?v=20261004-2", import.meta.url).href;
   ui.delay.value = String(DEFAULTS.delay);
   ui.limit.value = String(DEFAULTS.stepLimit);
   ui.limit.max = String(DEFAULTS.maxStepLimit);
   const state = { running: false, busy: false, dirty: false, editing: false, generation: 0, runToken: 0, console: [] };
   const bridge = new BrowserBridge(ui.preview, text => appendConsole(text));
   const machine = new Zipper(examples[0].source, {
-    evaluateJavaScript: (code, signal) => bridge.evaluate(code, signal),
+    callHost: (name, args, signal) => bridge.call(name, args, signal),
   });
 
   function render() {

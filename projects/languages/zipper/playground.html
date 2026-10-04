@@ -1,7 +1,7 @@
 <header class="zl-header">
   <div class="zl-brand"><span class="zl-logo" aria-hidden="true">Z</span><span>zipper<span class="zl-brand-note"> / a language you can watch</span></span><span class="zl-local"><span aria-hidden="true">●</span> Runs in your browser</span></div>
   <div class="zl-intro"><div><p class="zl-eyebrow">SMALL PROGRAMS, NOTHING HIDDEN</p><h2>One tape.<br>Every little step.</h2></div><p>Write a program. Pull it apart one call at a time.<br>Then let it reach out and change the web.</p></div>
-  <div class="zl-tape-strip" aria-hidden="true"><span>seq(</span><span>emit("Hello")</span><span class="zl-strip-cursor">▮</span><span>js("…")</span><span>)</span><span class="zl-strip-caption">code becomes the next piece of code →</span></div>
+  <div class="zl-tape-strip" aria-hidden="true"><span>seq(</span><span>emit("Hello")</span><span class="zl-strip-cursor">▮</span><span>Math.round(3.7)</span><span>)</span><span class="zl-strip-caption">code becomes the next piece of code →</span></div>
 </header>
 
 <section class="zl-workbench" aria-label="Program controls">
@@ -41,13 +41,13 @@
   </section>
   <section class="zl-panel zl-output-panel" aria-labelledby="zl-output-title">
     <header class="zl-panel-header"><h3 id="zl-output-title"><span class="zl-section-number">03</span> Output</h3><span id="zl-output-count" class="zl-meta" title="Characters printed by emit or returned by JavaScript">0 characters</span></header>
-    <p class="zl-panel-help"><code>emit("…")</code> prints here. A value returned by <code>js("…")</code> does too.</p>
+    <p class="zl-panel-help"><code>emit(value)</code> prints here. Use <code>emit(Math.round(3.7))</code> to print a browser result.</p>
     <pre id="zl-output" class="zl-output" tabindex="0" aria-label="Program output"></pre>
-    <details class="zl-console"><summary>Browser console <span id="zl-console-count">0 messages</span></summary><p class="zl-help"><code>console.log(…)</code> inside your JavaScript appears here.</p><pre id="zl-console" aria-label="Browser console messages"></pre></details>
+    <details class="zl-console"><summary>Browser console <span id="zl-console-count">0 messages</span></summary><p class="zl-help"><code>console.log(…)</code> in your Zipper program appears here.</p><pre id="zl-console" aria-label="Browser console messages"></pre></details>
   </section>
   <section class="zl-panel zl-preview-panel" aria-labelledby="zl-preview-title">
     <header class="zl-panel-header"><h3 id="zl-preview-title"><span class="zl-section-number">04</span> The live page</h3><span class="zl-preview-badge">YOURS TO CHANGE</span></header>
-    <p class="zl-panel-help"><code>js("…")</code> runs in this page, with its own <code>window</code> and <code>document</code>.</p>
+    <p class="zl-panel-help">Unresolved calls run in this page. Try <code>document.querySelector("#heading")</code>.</p>
     <div id="zl-preview" class="zl-preview"></div>
     <p class="zl-preview-footer">Try <code>#heading</code>, <code>#message</code>, <code>#card</code> or <code>#drawing</code>. Reset creates a fresh page.</p>
   </section>
@@ -56,11 +56,13 @@
 <details class="zl-guide">
   <summary><span>Little language. Real browser.</span><span class="zl-meta">Syntax &amp; JavaScript guide <span aria-hidden="true">+</span></span></summary>
   <div class="zl-guide-grid">
-    <div><h3>Three small building blocks</h3><p><code>seq(a, b)</code> runs expressions in order. <code>emit("text")</code> prints a string. <code>define(name, x, q{…})</code> saves a body; calling <code>x()</code> inside it runs the argument.</p><p>Strings use double quotes, with <code>\n</code>, <code>\t</code>, <code>\&quot;</code> and <code>\\</code> escapes. Use <code>q{…}</code> to delay code. The internal <code>def(…)</code> and <code>env{…}</code> records show captured definitions.</p></div>
-    <div><h3>Reach into the page</h3><pre>js("document.querySelector('#heading').textContent = 'Hello!'")
-js("return Math.round(Math.PI * 100)")
-js("console.log(navigator.language)")</pre><p>JavaScript is an async function body: use <code>await</code> for browser calls and <code>return</code> to print a result. State persists on <code>window</code> until Reset. Each complete JavaScript call is one Zipper step.</p></div>
-    <div><h3>Make it yours</h3><p>The live page is a separate browser sandbox. DOM, canvas and browser APIs are available there; it cannot change the surrounding editor. Fetch uses normal browser CORS rules with an opaque origin, so a server must allow that origin (or <code>*</code>). Storage and permission-based APIs may be restricted.</p><p>Programs run only when you press Run or Step. Nothing is saved automatically. Save .piz downloads your code. Back keeps up to 100 recent language states and stops at browser calls. Async browser calls time out after 10 seconds and reset the live page; synchronous JavaScript must yield to keep the tab responsive.</p></div>
+    <div><h3>Zipper does the work</h3><p><code>seq(a, b)</code> runs in order. <code>emit(value)</code> prints a value. <code>define(name, x, q{…})</code> saves a body; <code>x()</code> evaluates its delayed argument each time it is used.</p><p>Zipper resolves its own definitions first. An unresolved function name passes through to the live page's JavaScript. Nested arguments run left to right, one rewrite at a time. Numbers, strings, booleans, <code>null</code> and <code>undefined</code> are values.</p></div>
+    <div><h3>Use browser functions directly</h3><pre>emit(Math.round(3.7))
+Reflect.set(document.querySelector("#heading"),
+  "textContent", "Hello from Zipper")
+call(document.querySelector("#items"),
+  "insertAdjacentHTML", "beforeend", "&lt;li&gt;Hello&lt;/li&gt;")</pre><p><code>Reflect.get(object, "property")</code> reads a property; <code>Reflect.set(object, "property", value)</code> changes it. The live page supplies <code>call(object, "method", args…)</code> to invoke a method on a returned object with the correct receiver.</p></div>
+    <div><h3>Follow every value</h3><p>Calls such as <code>fetch(url)</code> are awaited automatically. Use <code>call(fetch(url), "json")</code> to read a JSON response. Browser objects appear as <code>ref{1}</code> on the tape and keep their identity between calls. Internal <code>value(q{…})</code> tapes evaluate a Zipper function used as an argument and return its last value.</p><p>Only <code>emit</code> prints to Output. Browser calls change the live page and can write to Browser console. Back restores up to 100 language steps but stops at browser effects. Reset clears references and creates a fresh page. Async calls time out after 10 seconds.</p><p>The live page is a sandbox with its own document. Fetch follows browser CORS rules with an opaque origin; external servers must allow that origin or <code>*</code>. Programs run only when you press Run or Step. Save .piz keeps a copy of your source.</p></div>
   </div>
 </details>
 <footer class="zl-footer"><span>ZIPPER / TEXT IN MOTION</span><a href="zipper.js" download>JavaScript interpreter <span aria-hidden="true">↗</span></a></footer>

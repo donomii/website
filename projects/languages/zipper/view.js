@@ -1,5 +1,5 @@
-import { CURSOR } from "./types.js";
-import { cursorPosition } from "./syntax.js";
+import { CURSOR } from "./types.js?v=20261004-2";
+import { cursorPosition } from "./syntax.js?v=20261004-2";
 
 export function elements(root) {
   return Object.fromEntries([...root.querySelectorAll("[id]")].map(element =>

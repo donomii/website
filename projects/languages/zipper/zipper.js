@@ -1,10 +1,11 @@
-import { CURSOR, DEFAULTS, requireValue } from "./types.js";
-import { blockContent, cursorPosition, definitionsBefore, environmentDefinitions, nextCall,
-  parseString, validName, validateTape } from "./syntax.js";
+import { CURSOR, DEFAULTS, requireValue } from "./types.js?v=20261004-2";
+import { blockContent, cursorPosition, environmentDefinitions, nextCall, validName, validateTape } from "./syntax.js?v=20261004-2";
+import { nextReduction } from "./reduction.js?v=20261004-2";
+import { outputText, valueText } from "./values.js?v=20261004-2";
 
 /** @typedef {import("./types.js").Call} Call */
 /** @typedef {import("./types.js").Snapshot} Snapshot */
-const reserved = new Set(["seq", "emit", "define", "def", "js"]);
+const reserved = new Set(["seq", "emit", "define", "def", "value"]);
 
 function sequence(args) {
   switch (args.length) {
@@ -14,20 +15,19 @@ function sequence(args) {
   }
 }
 
-function define(tape, call) {
+function define(call) {
   requireValue(call.args.length >= 2, "define needs a name, optional parameters, and q{body}.");
   const names = call.args.slice(0, -1).map(name => name.trim());
   requireValue(names.every(validName), "Function and parameter names must be identifiers.");
   requireValue(names.every(name => !reserved.has(name)), "Built-in names cannot be used for functions or parameters.");
   requireValue(new Set(names).size === names.length, "Function and parameter names must be distinct.");
   blockContent(call.args.at(-1), "q");
-  const captured = [...definitionsBefore(tape, call.start).values()].map(item => item.text);
+  const captured = [...call.environment.values()].map(item => item.text);
   return "def(" + [...names, call.args.at(-1), "env{" + captured.join(" ") + "}"].join(",") + ")";
 }
 
-function expand(tape, call) {
-  const definition = definitionsBefore(tape, call.start).get(call.name);
-  requireValue(definition !== undefined, `Unknown function "${call.name}" at character ${call.start + 1}; define it before calling it.`);
+function expand(call) {
+  const definition = call.environment.get(call.name);
   requireValue(definition.args.length >= 3, `Invalid def record for ${call.name}; expected a body and environment.`);
   const params = definition.args.slice(1, -2).map(name => name.trim());
   requireValue(params.every(validName) && new Set(params).size === params.length,
@@ -36,23 +36,26 @@ function expand(tape, call) {
     `${call.name} expects ${params.length} argument(s), received ${call.args.length}.`);
   const body = blockContent(definition.args.at(-2), "q");
   const environment = environmentDefinitions(definition.args.at(-1));
-  const bindings = params.map((name, index) => `def(${name},q{${call.args[index]}},env{})`);
+  // Delayed arguments belong to the caller, including a forwarded parameter with the same name.
+  const caller = [...call.environment.values()].map(item => item.text).join(" ");
+  const bindings = params.map((name, index) =>
+    `def(${name},q{${call.args[index]}},env{${nextCall(call.args[index]) === null ? "" : caller}})`);
   const expressions = body.trim() === "" ? [] : [body];
   return environment.length + bindings.length === 0 ? body : "seq(" + [...environment, ...bindings, ...expressions].join(",") + ")";
 }
 
-function rewrite(tape, call) {
+function rewrite(call) {
   switch (call.name) {
     case "seq": return sequence(call.args);
-    case "define": return define(tape, call);
-    default: return expand(tape, call);
+    case "define": return define(call);
+    default: return expand(call);
   }
 }
 
 /** A resumable interpreter. All browser access is supplied explicitly by the host. */
 export class Zipper {
-  constructor(source, { evaluateJavaScript = null, stepLimit = DEFAULTS.stepLimit } = {}) {
-    this.evaluateJavaScript = evaluateJavaScript;
+  constructor(source, { callHost = null, stepLimit = DEFAULTS.stepLimit } = {}) {
+    this.callHost = callHost;
     this.generation = 0;
     this.pending = null;
     this.setStepLimit(stepLimit);
@@ -87,7 +90,7 @@ export class Zipper {
   }
 
   get next() {
-    return nextCall(this.tape, cursorPosition(this.tape) + CURSOR.length);
+    return nextReduction(this.tape);
   }
 
   get canBack() {
@@ -128,21 +131,21 @@ export class Zipper {
   }
 
   async browserCall(call, signal) {
-    requireValue(call.args.length === 1, "js needs exactly one double-quoted JavaScript string.");
-    const code = parseString(call.args[0]);
-    requireValue(this.evaluateJavaScript !== null, "js requires a browser host. Open the playground to use browser calls.");
+    requireValue(this.callHost !== null, `Unresolved function "${call.name}" needs a JavaScript host. Open the playground to use browser functions.`);
     this.status = "waiting";
     this.message = "Waiting for JavaScript. Reset cancels this page.";
-    return await this.evaluateJavaScript(code, signal);
+    return await this.callHost(call.name, call.values, signal);
   }
 
   commit(call, replacement, emitted, literal) {
     const cursor = cursorPosition(this.tape);
     const prefix = this.tape.slice(0, cursor) + this.tape.slice(cursor + CURSOR.length, call.start);
     const suffix = this.tape.slice(call.end);
-    // Emitted text is quoted on the tape, so printed code remains literal data.
-    const inserted = literal ? (emitted === "" ? "" : JSON.stringify(emitted)) + CURSOR : CURSOR + replacement;
-    const tape = prefix + inserted + suffix;
+    // Literal values stay inert on the tape, including text returned by browser functions.
+    const inserted = literal ? replacement + CURSOR : CURSOR + replacement;
+    // Local tapes have no cursor between results, so separate adjacent scalar tokens.
+    const nestedValue = literal && !call.argument ? replacement + " " : replacement;
+    const tape = call.nested ? this.tape.slice(0, call.start) + nestedValue + suffix : prefix + inserted + suffix;
     requireValue(tape.length <= DEFAULTS.maxTapeLength, `Rewrite exceeds the ${DEFAULTS.maxTapeLength}-character tape limit.`);
     requireValue(this.output.length + emitted.length <= DEFAULTS.maxOutputLength,
       `Output exceeds the ${DEFAULTS.maxOutputLength}-character output limit.`);
@@ -154,15 +157,16 @@ export class Zipper {
   }
 
   async reduce(call, signal) {
-    if (call.name === "emit") {
-      requireValue(call.args.length === 1, "emit needs exactly one double-quoted string.");
-      return { replacement: "", emitted: parseString(call.args[0]), literal: true };
-    } else if (call.name === "js") {
-      const emitted = await this.browserCall(call, signal);
-      requireValue(typeof emitted === "string", "The JavaScript host must return a string result.");
-      return { replacement: "", emitted, literal: true };
+    if (call.replacement !== undefined) {
+      return { replacement: call.replacement, emitted: "", literal: call.name === "value" };
+    } else if (call.name === "emit") {
+      requireValue(call.values.length === 1, "emit needs exactly one value.");
+      return { replacement: valueText(call.values[0]), emitted: outputText(call.values[0]), literal: true };
+    } else if (call.external) {
+      const value = await this.browserCall(call, signal);
+      return { replacement: valueText(value), emitted: "", literal: true };
     } else {
-      return { replacement: rewrite(this.tape, call), emitted: "", literal: false };
+      return { replacement: rewrite(call), emitted: "", literal: false };
     }
   }
 
@@ -187,7 +191,7 @@ export class Zipper {
         this.status = "limit";
         this.message = `Paused at ${this.stepLimit} rewrites. Raise the step limit to continue.`;
       } else {
-        before.external = call.name === "js";
+        before.external = call.external === true;
         this.pending = new AbortController();
         const result = await this.reduce(call, this.pending.signal);
         if (generation !== this.generation) {

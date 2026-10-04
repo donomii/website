@@ -1,7 +1,7 @@
-import { CURSOR, DEFAULTS, requireValue } from "./types.js";
+import { CURSOR, DEFAULTS, requireValue } from "./types.js?v=20261004-2";
 
 /** @typedef {import("./types.js").Call} Call */
-const identifier = /^[\p{L}_][\p{L}\p{N}_-]*/u;
+const identifier = /^[\p{L}_][\p{L}\p{N}_-]*(?:\.[\p{L}_][\p{L}\p{N}_-]*)*/u;
 const identifierWhole = /^[\p{L}_][\p{L}\p{N}_-]*$/u;
 
 export function validName(name) {
@@ -51,11 +51,14 @@ export function parseString(source) {
   const text = source.trim();
   requireValue(text.startsWith('"') && stringEnd(text, 0) === text.length,
     `Expected one double-quoted string, received ${text.slice(0, 70)}.`);
-  return text.slice(1, -1).replace(/\\([\s\S])/g, (_, character) => {
+  return text.slice(1, -1).replace(/\\(u[0-9a-fA-F]{4}|[\s\S])/g, (_, character) => {
     switch (character) {
       case "n": return "\n";
       case "t": return "\t";
-      default: return character;
+      case "r": return "\r";
+      case "b": return "\b";
+      case "f": return "\f";
+      default: return /^u[0-9a-fA-F]{4}$/.test(character) ? String.fromCharCode(parseInt(character.slice(1), 16)) : character;
     }
   });
 }

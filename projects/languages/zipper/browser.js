@@ -1,4 +1,4 @@
-import { DEFAULTS, requireValue } from "./types.js";
+import { DEFAULTS, requireValue } from "./types.js?v=20261004-2";
 
 /** Owns a fresh, isolated page and one private message channel per reset. */
 export class BrowserBridge {
@@ -20,7 +20,7 @@ export class BrowserBridge {
     const frame = document.createElement("iframe");
     frame.title = "Live page controlled by your Zipper program";
     frame.setAttribute("sandbox", "allow-scripts");
-    frame.src = new URL("./preview.html", import.meta.url).href;
+    frame.src = new URL("./preview.html?v=20261004-2", import.meta.url).href;
     frame.addEventListener("load", () => this.connect(frame), { once: true });
     this.frame = frame;
     this.container.replaceChildren(frame);
@@ -39,7 +39,8 @@ export class BrowserBridge {
           return;
         }
       };
-      frame.contentWindow.postMessage({ type: "zipper:init", maxOutputLength: DEFAULTS.maxOutputLength },
+      frame.contentWindow.postMessage({ type: "zipper:init", maxOutputLength: DEFAULTS.maxOutputLength,
+        maxHostReferences: DEFAULTS.maxHostReferences },
         "*", [channel.port2]);
     }
   }
@@ -48,7 +49,7 @@ export class BrowserBridge {
     if (message?.type === "ready") {
       this.ready = true;
       for (const request of this.pending.values()) {
-        this.port.postMessage({ type: "execute", id: request.id, code: request.code });
+        this.port.postMessage({ type: "execute", id: request.id, name: request.name, args: request.args });
       }
     } else if (message?.type === "console" && typeof message.text === "string") {
       this.onConsole(message.text.slice(0, DEFAULTS.maxOutputLength));
@@ -56,23 +57,23 @@ export class BrowserBridge {
       const request = this.pending.get(message?.id);
       if (request === undefined) {
         return;
-      } else if (message.type === "result" && typeof message.text === "string") {
-        request.finish(null, message.text);
+      } else if (message.type === "result" && message.value !== undefined) {
+        request.finish(null, message.value);
       } else {
         request.finish(new Error(typeof message.error === "string" ? message.error : "Invalid response from the browser page."));
       }
     }
   }
 
-  evaluate(code, signal) {
-    requireValue(typeof code === "string", "Browser code must be a string.");
+  call(name, args, signal) {
+    requireValue(typeof name === "string" && Array.isArray(args), "Browser call needs a function name and argument values.");
     return new Promise((resolve, reject) => {
       const id = ++this.sequence;
       const abort = () => finish(new Error("Browser call cancelled by Reset."));
       const timer = setTimeout(() => this.reset(
         `Browser call exceeded ${DEFAULTS.browserTimeout / 1000} seconds. The live page was reset.`),
       DEFAULTS.browserTimeout);
-      const finish = (error, value = "") => {
+      const finish = (error, value) => {
         clearTimeout(timer);
         signal.removeEventListener("abort", abort);
         this.pending.delete(id);
@@ -82,12 +83,12 @@ export class BrowserBridge {
           reject(error);
         }
       };
-      this.pending.set(id, { id, code, finish });
+      this.pending.set(id, { id, name, args, finish });
       signal.addEventListener("abort", abort, { once: true });
       if (signal.aborted) {
         abort();
       } else if (this.ready) {
-        this.port.postMessage({ type: "execute", id, code });
+        this.port.postMessage({ type: "execute", id, name, args });
       } else {
         return;
       }
