@@ -123,6 +123,22 @@
 </div>
 <div style="clear:both"></div>
 <div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<p>Write a program below, then use <strong>Step</strong> to watch each rewrite or <strong>Run</strong> to play it. The <strong>live page</strong> is a browser document your program can change with <code>js(&quot;…&quot;)</code>. There are examples for functions, drawing, closures, and fetching data.</p>
+<link rel="stylesheet" href="zipper/playground.css?v=20261004">
+<div id="zipper-playground" class="zipper-lab" aria-label="Zipper programming playground"><p>Loading the Zipper playground…</p></div>
+<script type="module" src="zipper/playground.js?v=20261004"></script>
+<noscript>Enable JavaScript to use the editor and debugger.</noscript>
+<p><a href="zipper/index.html">Open the playground on its own</a>.</p>
+<h3 id="browser-calls">Browser calls</h3>
+<p><code>js(&quot;…&quot;)</code> runs an async JavaScript function in the live page. Use <code>document</code> to change its elements, <code>window</code> to keep state between calls, <code>await fetch(…)</code> for requests, and <code>return</code> to print a result. Browser CORS and permission rules still apply. Each complete browser call is one Zipper step.</p>
+<pre><code class="language-text">seq(
+  js(&quot;document.querySelector('#heading').textContent = 'Hello from Zipper'&quot;),
+  js(&quot;document.querySelector('#card').style.background = '#dfff85'&quot;),
+  js(&quot;return navigator.language&quot;)
+)
+</code></pre>
+<p><strong>Back</strong> restores language state and output, stopping at browser effects. <strong>Reset</strong> restarts the current source and creates a fresh live page. You can also edit the current tape and continue from its cursor. Programs run only when you press Run or Step; <strong>Save .piz</strong> downloads your source.</p>
+<h3 id="the-language">The language</h3>
 <p>A Zipper program looks like nested function calls:</p>
 <pre><code class="language-text">▮seq(
   define(
@@ -147,13 +163,13 @@ Done.
 <p>The interesting part is how it gets there.  A simple expression changes directly on the tape:</p>
 <pre><code class="language-text">▮seq(emit(&quot;A&quot;), emit(&quot;B&quot;))
 ▮emit(&quot;A&quot;) seq(emit(&quot;B&quot;))
-▮A seq(emit(&quot;B&quot;))
-A ▮emit(&quot;B&quot;)
-A ▮B
-AB
+&quot;A&quot;▮ seq(emit(&quot;B&quot;))
+&quot;A&quot; ▮emit(&quot;B&quot;)
+&quot;A&quot; &quot;B&quot;▮
+Output: AB
 </code></pre>
-<p><code>seq</code> exposes one expression at a time, <code>emit</code> replaces itself with literal output, and <code>define</code> replaces itself with a stored function definition.  Bodies inside <code>q{...}</code> are delayed until called.  Function arguments become zero-argument thunks, so they are substituted and evaluated only where the body asks for them; definitions also capture the definitions already on the tape, which provides lexical closures.</p>
-<p>The cursor always moves into the newest replacement.  Printing the formatted tape at each step makes function expansion, argument substitution, output, and closure capture visible instead of hiding them inside the interpreter.</p>
+<p><code>seq</code> exposes one expression at a time, <code>emit</code> prints a string and leaves it quoted on the tape, and <code>define</code> replaces itself with a stored function definition. Bodies inside <code>q{...}</code> are delayed until called. Function arguments become zero-argument thunks, so they are evaluated only where the body asks for them; definitions capture the definitions already on the tape, which provides lexical closures.</p>
+<p>The cursor moves into each new code replacement, or past literal output. The live tape makes function expansion, argument substitution, output, and closure capture visible. This JavaScript version keeps printed strings and quoted blocks inert, validates malformed input, and restores captured definitions for zero-argument functions as well.</p>
 <p>The <a href="https://gitlab.com/donomii/racketprogs/-/tree/master/agentic/zipper">source and example program</a> are in the racketprogs repository.</p>
 
 			</article>

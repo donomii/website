@@ -1,0 +1,66 @@
+<header class="zl-header">
+  <div class="zl-brand"><span class="zl-logo" aria-hidden="true">Z</span><span>zipper<span class="zl-brand-note"> / a language you can watch</span></span><span class="zl-local"><span aria-hidden="true">●</span> Runs in your browser</span></div>
+  <div class="zl-intro"><div><p class="zl-eyebrow">SMALL PROGRAMS, NOTHING HIDDEN</p><h2>One tape.<br>Every little step.</h2></div><p>Write a program. Pull it apart one call at a time.<br>Then let it reach out and change the web.</p></div>
+  <div class="zl-tape-strip" aria-hidden="true"><span>seq(</span><span>emit("Hello")</span><span class="zl-strip-cursor">▮</span><span>js("…")</span><span>)</span><span class="zl-strip-caption">code becomes the next piece of code →</span></div>
+</header>
+
+<section class="zl-workbench" aria-label="Program controls">
+  <div class="zl-example-row">
+    <div class="zl-example-picker"><label for="zl-example">START WITH AN EXAMPLE</label><div><select id="zl-example" aria-describedby="zl-example-help"></select><button id="zl-load" type="button" title="Replace the editor with the selected example and reset the live page">Load example <span aria-hidden="true">↗</span></button></div></div>
+    <p id="zl-example-help">Choose an example, then Load example to replace the editor and reset the page.</p>
+  </div>
+  <div class="zl-controls">
+    <div class="zl-actions">
+      <button id="zl-run" class="zl-primary" type="button" aria-describedby="zl-controls-help"><span aria-hidden="true">▶</span> Run</button>
+      <button id="zl-step" type="button" aria-describedby="zl-controls-help"><span aria-hidden="true">↦</span> Step</button>
+      <button id="zl-back" type="button" aria-describedby="zl-controls-help"><span aria-hidden="true">↶</span> Back</button>
+      <button id="zl-reset" class="zl-quiet" type="button" aria-describedby="zl-controls-help">Reset</button>
+    </div>
+    <div class="zl-settings">
+      <label>Step delay <select id="zl-delay" title="Time between rewrites during Run; Step always performs one rewrite"><option value="80">80 ms</option><option value="350" selected>350 ms</option><option value="800">800 ms</option></select></label>
+      <label>Step limit <input id="zl-limit" type="number" value="500" min="1" max="10000" step="1" title="Pause after this many rewrites. Increase the limit to continue a paused program."></label>
+    </div>
+  </div>
+  <p id="zl-controls-help" class="zl-help">Run plays; Step rewrites one call; Back undoes a language step. Reset restarts your code and the live page. Browser effects cannot be rewound. Step delay sets the pace; the limit pauses long programs.</p>
+  <div class="zl-status-row" role="status" aria-live="polite"><span id="zl-status" class="zl-status">Ready</span><span id="zl-step-count" title="Number of completed tape rewrites">0 rewrites</span><span id="zl-message">Ready to begin.</span></div>
+</section>
+
+<div class="zl-grid">
+  <section class="zl-panel zl-editor-panel" aria-labelledby="zl-editor-title">
+    <header class="zl-panel-header"><h3 id="zl-editor-title"><span class="zl-section-number">01</span> Your program</h3><button id="zl-download" class="zl-text-button" type="button" title="Download the editor contents as a .piz text file">Save .piz <span aria-hidden="true">↓</span></button></header>
+    <p class="zl-panel-help">Edit the code. Run or Step starts edited code from the beginning.</p>
+    <div class="zl-code-editor"><pre id="zl-lines" aria-hidden="true">1</pre><textarea id="zl-source" aria-label="Zipper program source" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea></div>
+    <div class="zl-editor-footer"><span id="zl-example-description">Hello, browser</span><span>Ctrl / ⌘ + Enter to run</span></div>
+  </section>
+  <section class="zl-panel zl-tape-panel" aria-labelledby="zl-tape-title">
+    <header class="zl-panel-header"><h3 id="zl-tape-title"><span class="zl-section-number">02</span> The live tape</h3><button id="zl-edit-tape" class="zl-text-button" type="button" title="Edit the current program state, keeping one ▮ cursor, then apply it to continue">Edit tape</button></header>
+    <p class="zl-panel-help"><span class="zl-legend-cursor">▮</span> is the cursor. <span class="zl-legend-call">Highlighted text</span> is the next call.</p>
+    <pre id="zl-tape" class="zl-tape" tabindex="0" aria-label="Current tape with the next call highlighted"></pre>
+    <div id="zl-tape-editor" class="zl-tape-editor" hidden><label for="zl-tape-source">Keep exactly one ▮ cursor. Edits keep the current output and page.</label><textarea id="zl-tape-source" spellcheck="false" aria-label="Edit the current tape"></textarea><div><button id="zl-apply-tape" type="button">Apply tape</button><button id="zl-cancel-tape" type="button">Cancel edit</button></div></div>
+    <div class="zl-tape-footer"><span id="zl-next">Next: seq(…)</span><span>Everything the evaluator knows.</span></div>
+  </section>
+  <section class="zl-panel zl-output-panel" aria-labelledby="zl-output-title">
+    <header class="zl-panel-header"><h3 id="zl-output-title"><span class="zl-section-number">03</span> Output</h3><span id="zl-output-count" class="zl-meta" title="Characters printed by emit or returned by JavaScript">0 characters</span></header>
+    <p class="zl-panel-help"><code>emit("…")</code> prints here. A value returned by <code>js("…")</code> does too.</p>
+    <pre id="zl-output" class="zl-output" tabindex="0" aria-label="Program output"></pre>
+    <details class="zl-console"><summary>Browser console <span id="zl-console-count">0 messages</span></summary><p class="zl-help"><code>console.log(…)</code> inside your JavaScript appears here.</p><pre id="zl-console" aria-label="Browser console messages"></pre></details>
+  </section>
+  <section class="zl-panel zl-preview-panel" aria-labelledby="zl-preview-title">
+    <header class="zl-panel-header"><h3 id="zl-preview-title"><span class="zl-section-number">04</span> The live page</h3><span class="zl-preview-badge">YOURS TO CHANGE</span></header>
+    <p class="zl-panel-help"><code>js("…")</code> runs in this page, with its own <code>window</code> and <code>document</code>.</p>
+    <div id="zl-preview" class="zl-preview"></div>
+    <p class="zl-preview-footer">Try <code>#heading</code>, <code>#message</code>, <code>#card</code> or <code>#drawing</code>. Reset creates a fresh page.</p>
+  </section>
+</div>
+
+<details class="zl-guide">
+  <summary><span>Little language. Real browser.</span><span class="zl-meta">Syntax &amp; JavaScript guide <span aria-hidden="true">+</span></span></summary>
+  <div class="zl-guide-grid">
+    <div><h3>Three small building blocks</h3><p><code>seq(a, b)</code> runs expressions in order. <code>emit("text")</code> prints a string. <code>define(name, x, q{…})</code> saves a body; calling <code>x()</code> inside it runs the argument.</p><p>Strings use double quotes, with <code>\n</code>, <code>\t</code>, <code>\&quot;</code> and <code>\\</code> escapes. Use <code>q{…}</code> to delay code. The internal <code>def(…)</code> and <code>env{…}</code> records show captured definitions.</p></div>
+    <div><h3>Reach into the page</h3><pre>js("document.querySelector('#heading').textContent = 'Hello!'")
+js("return Math.round(Math.PI * 100)")
+js("console.log(navigator.language)")</pre><p>JavaScript is an async function body: use <code>await</code> for browser calls and <code>return</code> to print a result. State persists on <code>window</code> until Reset. Each complete JavaScript call is one Zipper step.</p></div>
+    <div><h3>Make it yours</h3><p>The live page is a separate browser sandbox. DOM, canvas and browser APIs are available there; it cannot change the surrounding editor. Fetch uses normal browser CORS rules with an opaque origin, so a server must allow that origin (or <code>*</code>). Storage and permission-based APIs may be restricted.</p><p>Programs run only when you press Run or Step. Nothing is saved automatically. Save .piz downloads your code. Back keeps up to 100 recent language states and stops at browser calls. Async browser calls time out after 10 seconds and reset the live page; synchronous JavaScript must yield to keep the tab responsive.</p></div>
+  </div>
+</details>
+<footer class="zl-footer"><span>ZIPPER / TEXT IN MOTION</span><a href="zipper.js" download>JavaScript interpreter <span aria-hidden="true">↗</span></a></footer>
