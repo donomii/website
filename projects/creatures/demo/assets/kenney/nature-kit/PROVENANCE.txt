@@ -1,0 +1,27 @@
+Source: Kenney Nature Kit 2.1
+Asset page: https://kenney.nl/assets/nature-kit
+Downloaded archive: https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip
+Archive SHA-256: fa7974a0d342bfe63c38664ba9f8ec1a4aab8ea25f099bdc56870e33588c4d9d
+License: Creative Commons Zero 1.0 (see License.txt)
+
+The web copies are unchanged self-contained files from Models/GLTF format/.
+
+Included models:
+tree_default.glb
+tree_detailed.glb
+tree_tall.glb
+tree_pineDefaultA.glb
+tree_pineDefaultB.glb
+plant_bush.glb
+plant_bushDetailed.glb
+plant_bushLarge.glb
+rock_smallFlatA.glb
+rock_smallH.glb
+rock_tallH.glb
+rock_largeA.glb
+grass_large.glb
+flower_redA.glb
+flower_purpleA.glb
+flower_yellowA.glb
+log.glb
+mushroom_redGroup.glb

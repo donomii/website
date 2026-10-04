@@ -1,7 +1,8 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/webxr/VRButton.js';
-import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js?v=20261004-2';
-import { RTSCameraControls } from './rts-camera-controls.js?v=20261004-2';
+import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js?v=20261004-3';
+import { RTSCameraControls } from './rts-camera-controls.js?v=20261004-3';
+import { loadScenery, SCENERY_MODEL_COUNT, SCENERY_PLACEMENT_COUNT } from './scenery.js?v=20261004-3';
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -60,6 +61,35 @@ const gridHelper = new THREE.GridHelper(100, 50, 0x888888, 0x888888);
 gridHelper.material.opacity = 0.2;
 gridHelper.material.transparent = true;
 scene.add(gridHelper);
+
+function updateSceneryLoadingStatus(progress) {
+    const status = document.getElementById('scenery-status');
+    if (progress.state === 'retrying') {
+        status.textContent = `Retrying ${progress.label}: attempt ${progress.nextAttempt}/${progress.maxAttempts} (${progress.placed} scenery objects placed)`;
+    } else if (progress.state === 'failed') {
+        status.textContent = `Loading scenery: ${progress.completed}/${progress.total} assets; ${progress.placed} objects placed, ${progress.failed} failed`;
+    } else {
+        status.textContent = `Loading scenery: ${progress.completed}/${progress.total} assets; ${progress.placed}/${progress.totalPlacements} objects placed`;
+    }
+}
+
+document.body.dataset.sceneryCount = '0';
+document.body.dataset.sceneryFailures = '0';
+document.getElementById('scenery-status').textContent = `Loading ${SCENERY_MODEL_COUNT} scenery assets for ${SCENERY_PLACEMENT_COUNT} objects…`;
+loadScenery(scene, { onProgress: updateSceneryLoadingStatus }).then(result => {
+    document.body.dataset.sceneryCount = String(result.placed);
+    document.body.dataset.sceneryFailures = String(result.failed);
+    if (result.failed === 0) {
+        document.getElementById('scenery-status').textContent = `${result.placed} scenery objects loaded from ${result.loaded} assets`;
+    } else {
+        document.getElementById('scenery-status').textContent = `${result.placed} scenery objects loaded; ${result.failed} assets failed`;
+        console.error('Scenery assets failed permanently after retries:', result.failures);
+    }
+}).catch(error => {
+    document.body.dataset.sceneryFailures = String(SCENERY_MODEL_COUNT);
+    document.getElementById('scenery-status').textContent = 'Scenery failed to load';
+    console.error(`Scenery loading failed: ${error.message}`, error);
+});
 
 // Creature class
 class Creature {

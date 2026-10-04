@@ -1,0 +1,26 @@
+Source: KayKit Medieval Hexagon Pack 1.0 by Kay Lousberg
+Repository: https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0
+Pinned revision: 84fa4e91af6a88989be7c99e0891cede11f2ca38
+Downloaded archive: https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/archive/84fa4e91af6a88989be7c99e0891cede11f2ca38.zip
+Archive SHA-256: cfa7faff403c93fb90e8eeb448c78e6192782802a532bebed0bdb853b39f7028
+License: Creative Commons Zero 1.0 (see LICENSE.txt)
+
+The web copies are unchanged files from:
+addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/blue/
+
+Included models:
+building_archeryrange_blue.gltf and .bin
+building_barracks_blue.gltf and .bin
+building_blacksmith_blue.gltf and .bin
+building_castle_blue.gltf and .bin
+building_church_blue.gltf and .bin
+building_home_A_blue.gltf and .bin
+building_home_B_blue.gltf and .bin
+building_lumbermill_blue.gltf and .bin
+building_market_blue.gltf and .bin
+building_mine_blue.gltf and .bin
+building_tavern_blue.gltf and .bin
+building_watermill_blue.gltf and .bin
+building_well_blue.gltf and .bin
+building_windmill_blue.gltf and .bin
+hexagons_medieval.png

@@ -1,7 +1,7 @@
-import { createUFOCreatureModelLoadJobs } from './ufo-models.js?v=20261004-2';
-import { createExtraCreatureModelLoadJobs } from './extra-models.js?v=20261004-2';
-import { createGLTFCreatureModelLoadJobs } from './gltf-models.js?v=20261004-2';
-import { createFBXCreatureModelLoadJobs } from './fbx-models.js?v=20261004-2';
+import { createUFOCreatureModelLoadJobs } from './ufo-models.js?v=20261004-3';
+import { createExtraCreatureModelLoadJobs } from './extra-models.js?v=20261004-3';
+import { createGLTFCreatureModelLoadJobs } from './gltf-models.js?v=20261004-3';
+import { createFBXCreatureModelLoadJobs } from './fbx-models.js?v=20261004-3';
 
 const MAX_CONCURRENT_MODEL_LOADS = 2;
 const MAX_MODEL_LOAD_ATTEMPTS = 3;
