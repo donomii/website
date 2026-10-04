@@ -1,4 +1,4 @@
-import { createMD2ModelLoadJobs } from './ufo-models.js?v=20261003-2';
+import { createMD2ModelLoadJobs } from './ufo-models.js?v=20261004-2';
 
 const EGOBOO_ASSET_ROOT = './assets/egoboo';
 const SAUERBRATEN_ASSET_ROOT = './assets/sauerbraten';

@@ -1,0 +1,20 @@
+Source: KayKit Character Pack Skeletons 1.0
+Creator: Kay Lousberg
+License: Creative Commons Zero 1.0
+Repository: https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0
+Pinned revision: 15b62b9bad122f72926c10fb14d622c73819fa54
+Original directory: addons/kaykit_character_pack_skeletons/Characters/gltf/
+
+Included originals and SHA-256:
+Skeleton_Mage.glb  e05b0f5cfa395271c9f75fd07c0a0613c56f401ece4ab644e080001a79971075
+Skeleton_Minion.glb  6ffc003f895bed0b074791e0e490846210a2e2f8fc7da300aba53cc185f95968
+Skeleton_Rogue.glb  4003f2b77891bb56f7e0de7d555abcb497aebbcaee35b614211f16275f9ccae3
+Skeleton_Warrior.glb  178b6fda810b814c250d8a2010c24dfd9b458b9006dd323353e620b7ff118bbe
+
+Web copies were processed with glTF Transform 4.2.1. All animation clips except Idle and Running_A were removed, animation samples were losslessly resampled, unused data was pruned, and uncompressed vertex attributes were quantized. Geometry, materials, textures, rigging, and the two retained animations remain in each self-contained GLB.
+
+Included web copies and SHA-256:
+Skeleton_Mage.glb  d26e39ebafdfa384192e6d04486983b3d4e4ddf107a44631c79c02b9dd2d074a
+Skeleton_Minion.glb  8402a5b3179460e19e43d1856b603c7446dea4cae4a2dd0d23a8f8ef30005ec5
+Skeleton_Rogue.glb  ed4b353872057b9755dea0c1363d44ddcf0f081909c68457d23f024a6f7830cb
+Skeleton_Warrior.glb  dd7477eeb80eeb2e099882c9c16cf3bc3ea70f9338526ee202be562c8d9594ba

@@ -4,6 +4,9 @@ import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js';
 
 const QUATERNIUS_ROOT = './assets/quaternius/ultimate-monsters';
 const KHRONOS_ROOT = './assets/khronos/fox';
+const KAYKIT_ADVENTURERS_ROOT = './assets/kaykit/adventurers';
+const KAYKIT_SKELETONS_ROOT = './assets/kaykit/skeletons';
+const ROBOT_EXPRESSIVE_ROOT = './assets/threejs/robot-expressive';
 const CROSS_FADE_SECONDS = 0.2;
 const MAX_MIXER_STEP_SECONDS = 0.1;
 
@@ -75,6 +78,46 @@ const MODEL_DEFINITIONS = [
     {
         id: 'khronos-fox', label: 'Khronos Fox', assetRoot: KHRONOS_ROOT,
         file: 'Fox.glb', walk: 'Run', idle: 'Survey', height: 0.8, collisionRadius: 0.65
+    },
+    {
+        id: 'kaykit-barbarian', label: 'KayKit Barbarian', assetRoot: KAYKIT_ADVENTURERS_ROOT,
+        file: 'Barbarian.glb', walk: 'Running_A', idle: 'Idle', height: 1.7, collisionRadius: 0.75
+    },
+    {
+        id: 'kaykit-knight', label: 'KayKit Knight', assetRoot: KAYKIT_ADVENTURERS_ROOT,
+        file: 'Knight.glb', walk: 'Running_A', idle: 'Idle', height: 1.7, collisionRadius: 0.75
+    },
+    {
+        id: 'kaykit-mage', label: 'KayKit Mage', assetRoot: KAYKIT_ADVENTURERS_ROOT,
+        file: 'Mage.glb', walk: 'Running_A', idle: 'Idle', height: 1.7, collisionRadius: 0.75
+    },
+    {
+        id: 'kaykit-rogue', label: 'KayKit Rogue', assetRoot: KAYKIT_ADVENTURERS_ROOT,
+        file: 'Rogue.glb', walk: 'Running_A', idle: 'Idle', height: 1.7, collisionRadius: 0.75
+    },
+    {
+        id: 'kaykit-hooded-rogue', label: 'KayKit Hooded Rogue', assetRoot: KAYKIT_ADVENTURERS_ROOT,
+        file: 'Rogue_Hooded.glb', walk: 'Running_A', idle: 'Idle', height: 1.7, collisionRadius: 0.75
+    },
+    {
+        id: 'kaykit-skeleton-mage', label: 'KayKit Skeleton Mage', assetRoot: KAYKIT_SKELETONS_ROOT,
+        file: 'Skeleton_Mage.glb', walk: 'Running_A', idle: 'Idle', height: 1.75, collisionRadius: 0.75
+    },
+    {
+        id: 'kaykit-skeleton-minion', label: 'KayKit Skeleton Minion', assetRoot: KAYKIT_SKELETONS_ROOT,
+        file: 'Skeleton_Minion.glb', walk: 'Running_A', idle: 'Idle', height: 1.75, collisionRadius: 0.75
+    },
+    {
+        id: 'kaykit-skeleton-rogue', label: 'KayKit Skeleton Rogue', assetRoot: KAYKIT_SKELETONS_ROOT,
+        file: 'Skeleton_Rogue.glb', walk: 'Running_A', idle: 'Idle', height: 1.75, collisionRadius: 0.75
+    },
+    {
+        id: 'kaykit-skeleton-warrior', label: 'KayKit Skeleton Warrior', assetRoot: KAYKIT_SKELETONS_ROOT,
+        file: 'Skeleton_Warrior.glb', walk: 'Running_A', idle: 'Idle', height: 1.75, collisionRadius: 0.75
+    },
+    {
+        id: 'quaternius-expressive-robot', label: 'Quaternius Expressive Robot', assetRoot: ROBOT_EXPRESSIVE_ROOT,
+        file: 'RobotExpressive.glb', walk: 'Running', idle: 'Idle', height: 1.7, collisionRadius: 0.75
     }
 ];
 

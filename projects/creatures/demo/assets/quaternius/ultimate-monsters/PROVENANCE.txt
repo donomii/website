@@ -8,7 +8,7 @@ License page: https://creativecommons.org/publicdomain/zero/1.0/
 
 The project page identifies the pack as 50 fully animated monsters, lists glTF among the supplied formats, and marks the pack CC0.  The public distribution includes License.txt, whose operative text also dedicates the files under CC0 1.0.  Its heading says "Ultimate Platformer Pack" even though it is distributed at the root of the Ultimate Monsters folder; the project page and the license's operative CC0 text agree on the reuse terms.
 
-Only these self-contained glTF files were selected.  Each embeds its mesh, skeletal animations, material, and texture data.  Google Drive file ids and SHA-256 receipts:
+The selected self-contained glTF files embed their mesh, skeletal animations, material, and texture data.  Four original FBX files use the pack's shared Atlas_Monsters.png texture.  Google Drive file ids and SHA-256 receipts:
 
 1ad3e42c088e01e0c179d54537c63efad0dd185031df61d2833b9f1709362730  Armabee_Evolved.gltf  drive-id=196ay2r-nuDXcRiwYu84CoE7Qy_gBj8sB
 9eb899fc619dff9a973669e0962452990c8ec44d4501dd41fe4f4fe5afd631f4  BlueDemon.gltf  drive-id=1mcxtHj9Aw1uu1FWYhl1rfPenuq3My-Z4
@@ -26,4 +26,9 @@ ccf27e126b881d80a2046c3ab96ddd94eb996837480e783142009ecd6629a3a4  MushroomKing.g
 ed41b8a3e4a49d0eb9522e52d3055a85e7c051607c6f1092aeb4242e0c87c77b  Squidle.gltf  drive-id=1VbcCYeqrlwYF6b64EY2S_e9hV0HXMr3O
 074302ab7039f3a6644c8f0be2580a0d747e8981bfa9725bcc6af422222c155a  Wizard.gltf  drive-id=1lkfBVrpoKi3JwrkJ3M_vwi7tQXG53RjV
 ab60f4fbc1c2e1fdc3ed4f63023dc2185240dbd55751df568099557b29af6fd5  Yeti.gltf  drive-id=1_skNq11VXoaGPu9D-hHb4-0OQXEWNTzY
+060c6e503092fc48e0d552ecfeead953442b7e154181bc12e5da03ac6cf716d5  Alien.fbx  drive-id=1PIXeadDsQtWAEJOYdR02cBqZCButiX6M
+6c216066eb0af92b82b9c132fbf9437f12fc2fea5d8e0184a72f2f7b5baf4484  Birb.fbx  drive-id=1niXx4k7g6jYGsjRyqqTFXUw6ooPwYIuB
+88ca081ed981e44e79dc9bb0ccca58759848f70b300e4893c3a7a34a3ee4d5af  Demon.fbx  drive-id=1sTTMBk576jvY59k6kI4zNim3elEWqC3g
+2aec5899afce298af0ac187db80254d84746ccf42a68e1c55086c5e7b5806c4e  Fish.fbx  drive-id=1kq1uEeXs9Njmh_dhl-V8weddPXpapptA
+b970ed1359ce749fd81a8395d58ff5f3044d843213e17fb94b97892d417c0af9  Atlas_Monsters.png  source-path=Big/Blends/Atlas_Monsters.png
 de990ef6fc68cffd7fd1ae342c4d0c823b541b8848d8f76bca5d3339f4de6f6e  LICENSE.txt  drive-id=16GqsDGESyEOfRbc4dS7EqAwkIUSIW4_y
