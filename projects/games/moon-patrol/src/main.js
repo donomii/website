@@ -11,7 +11,8 @@ import { clearPointerAim, createGame, press, release, setPointerAim, setPointerF
   const ctx = canvas.getContext("2d");
   const game = createGame();
   const pointer = { active: false, inside: false, x: 0, y: 0 };
-  let last = performance.now();
+  // The first animation-frame timestamp can precede script startup.
+  let last = null;
 
   function resize() {
     const rect = shell.getBoundingClientRect();
@@ -100,7 +101,7 @@ import { clearPointerAim, createGame, press, release, setPointerAim, setPointerF
   }
 
   function frame(now) {
-    const dt = Math.min(0.033, (now - last) / 1000);
+    const dt = last === null ? 0 : Math.min(0.033, (now - last) / 1000);
     last = now;
     refreshPointerAim();
     update(game, dt);
