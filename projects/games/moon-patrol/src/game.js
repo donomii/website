@@ -1,4 +1,4 @@
-import { createGameState, inputFromKeys, updateGameState } from "../web/game_state.mjs";
+import { createGameState, inputFromKeys, updateGameState } from "../web/game_state.js";
 
 const keys = new Set();
 const pointerAim = { active: false, x: 1, y: 0 };
