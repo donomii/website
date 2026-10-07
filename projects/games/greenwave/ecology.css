@@ -1,0 +1,87 @@
+.ecology-layout { grid-template-columns: minmax(0, 1fr) 330px; }
+.ecology-card { min-width: 0; }
+.ecology-board-note { padding: 17px 21px; margin: 0; color: #57695d; font-size: 0.82rem; line-height: 1.55; }
+.ecology-quick { display: none; padding: 0 20px 15px; }
+.ecology-select { display: block; width: 100%; padding: 10px; margin: 7px 0; border: 1px solid #a3b299; border-radius: 8px; color: #234932; background: #edf0dc; font: inherit; }
+.ecology-quick .panel-note { margin-bottom: 10px; }
+.ecology-board-scroll { overflow-x: auto; padding: 18px; background: #344e3e; scrollbar-color: #adba8c #344e3e; }
+.ecology-grid { display: grid; min-width: 480px; gap: 3px; padding: 8px; border: 1px solid #ffffff24; border-radius: 12px; background: #bbaa7b; }
+.ecology-row { display: grid; grid-template-columns: repeat(var(--columns), minmax(0, 1fr)); gap: 3px; }
+.ecology-tile { position: relative; display: grid; place-items: center; aspect-ratio: 1; padding: 0; border: 1px solid #ffffff1c; border-radius: 5px; cursor: pointer; color: #f6f4d6; background: #bbaa7b; transition: background 180ms ease, box-shadow 180ms ease; }
+.ecology-tile:hover { transform: none; box-shadow: inset 0 0 0 2px #fff3bd; z-index: 1; }
+.ecology-tile:focus-visible { outline: 3px solid #fff4c0; outline-offset: 0; z-index: 2; }
+.ecology-tile:disabled { cursor: default; opacity: 1; }
+.ecology-tile .tile-mark { font-size: clamp(1rem, 2.3vw, 2rem); line-height: 1; text-shadow: 0 1px 1px #0002; }
+.tile-badge { position: absolute; top: 2px; right: 3px; font-size: clamp(0.55rem, 1vw, 0.78rem); line-height: 1; font-weight: 800; }
+.tile-soil { color: #5c5438; background: #c8b782; }
+.tile-soil:nth-child(3n) { background: #c1ad78; }
+.tile-meadow { background: #90ac51; color: #253e27; }
+.tile-shrub { background: #5c8951; }
+.tile-forest { background: #275845; }
+.tile-channel { background: #747d6e; color: #e6ebe2; }
+.tile-pond { background: #557b78; color: #e4f3e5; }
+.tile-source { background: #397f8b; color: #e0f1e9; }
+.tile-wetland { background: #548e8e; }
+.tile-basin { background: #acc4b5; color: #365f5b; }
+.tile-rock { background: #777667; color: #d1d0b8; }
+.tile-home { background: #e8cf8a; color: #4c553a; }
+.tile-dormant { background: #897b69; color: #dccfac; }
+.tile-bloom { background: #b2879c; color: #fff0d4; }
+.is-highlighted { box-shadow: inset 0 0 0 2px #c6dfb0; }
+.theme-water .is-highlighted { box-shadow: inset 0 0 0 2px #9ed9d0; }
+.theme-water .tile-channel.is-highlighted { background: #578d91; }
+.theme-water .tile-soil.is-highlighted { background: #acb382; }
+.theme-water .tile-badge { color: #394b3f; background: #f6e4a9cf; border-radius: 50%; padding: 2px; }
+.theme-spring { min-width: 530px; }
+.theme-spring .tile-badge { color: #ffe09b; }
+.theme-spring .is-highlighted { box-shadow: inset 0 0 0 3px #ffe6aa; }
+.theme-wildlife .tile-badge { background: #f7e9bd; color: #395644; border-radius: 5px; padding: 2px 3px; }
+.theme-wildlife .tile-badge:empty { display: none; }
+.ecology-inspect { margin: 0; padding: 12px 20px; min-height: 61px; color: #627165; font-size: 0.75rem; line-height: 1.5; background: #f0efdf; }
+.ecology-message { margin: 0; font-size: 0.84rem; min-height: 70px; line-height: 1.5; }
+.ecology-message.is-complete { background: #deebc9; color: #274e35; font-weight: 700; }
+.ecology-stats > div { min-width: 0; min-height: 135px; }
+.ecology-stats small { color: #5e6d60; }
+.ecology-stats strong { font-size: 1.9rem; }
+.ecology-panel { gap: 13px; }
+.ecology-goal { background: #edf0dc; }
+.ecology-goal-copy { font-size: 0.88rem; line-height: 1.6; margin-bottom: 14px; }
+.ecology-tool .tool-swatch { background: #dce6cd; color: #416746; }
+.ecology-tool small { font-size: 0.73rem; font-weight: 450; line-height: 1.45; }
+.ecology-tool.is-selected { box-shadow: inset 3px 0 #466f4b; }
+.ecology-tool:disabled { cursor: default; }
+.ecology-controls { padding-top: 12px; }
+.ecology-controls .panel-note { margin: 4px 0 13px; color: #627163; }
+.ecology-directions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.ecology-directions button:first-child { grid-column: 2; }
+.ecology-directions button:nth-child(2) { grid-column: 1; }
+.ecology-directions button { min-height: 42px; margin: 0; }
+.ecology-rules p { font-size: 0.79rem; line-height: 1.65; color: #596d5e; }
+.ecology-rules p:last-child { margin-bottom: 0; }
+.study-art { display: flex; align-items: center; justify-content: center; gap: 25px; font-family: Georgia, serif; font-size: 4rem; color: #deebbd; background: #385e4d; }
+.study-art span { display: grid; place-items: center; width: 90px; height: 90px; border: 1px solid #ffffff33; border-radius: 18px; transform: rotate(-8deg); }
+.study-art span:nth-child(2) { transform: translateY(-15px) rotate(5deg); }
+.watershed-art { background: linear-gradient(145deg, #2c6570, #657a51); }
+.corridors-art { background: linear-gradient(145deg, #766e42, #3e6548); }
+.mosaic-art { background: linear-gradient(145deg, #4c7761, #7f9561); }
+.spring-art { background: linear-gradient(145deg, #565b4b, #916c85); }
+.mosaic-art span:nth-child(1) { background: #829f4b; }
+.mosaic-art span:nth-child(2) { background: #2c5c47; }
+.mosaic-art span:nth-child(3) { background: #548e8e; }
+@media (max-width: 1040px) {
+  .ecology-quick { display: block; }
+  .ecology-layout { grid-template-columns: 1fr; }
+  .ecology-panel { grid-template-columns: 1fr 1fr; }
+  .ecology-goal { grid-column: 1 / -1; }
+}
+@media (max-width: 700px) {
+  .ecology-panel { grid-template-columns: 1fr; }
+  .ecology-board-scroll { padding: 9px; }
+  .ecology-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ecology-stats > div { padding: 13px; min-height: 125px; }
+  .ecology-stats > div:first-child:last-child { grid-column: 1 / -1; }
+  .ecology-tile .tile-mark { font-size: 1.3rem; }
+  .ecology-tile .tile-badge { font-size: 0.63rem; }
+  .study-art { gap: 14px; }
+  .study-art span { width: 70px; height: 70px; }
+}

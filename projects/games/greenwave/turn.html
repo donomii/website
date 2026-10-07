@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#263f32">
+  <title>Turn the Earth — Green Wave</title>
+  <link rel="stylesheet" href="variations.css">
+  <link rel="stylesheet" href="turn.css">
+  <script defer src="turn-core.js"></script>
+  <script defer src="turn-game.js"></script>
+</head>
+<body class="experiment-body turn-body">
+  <nav class="experiment-nav" aria-label="Green Wave navigation">
+    <a class="wordmark" href="variations.html">Green Wave</a>
+    <a class="back-link" href="variations.html">← All variations</a>
+  </nav>
+
+  <main class="experiment-page">
+    <header class="experiment-header">
+      <div>
+        <p class="experiment-eyebrow">Variation 04 · Click-driven seasons</p>
+        <h1>Turn the Earth</h1>
+      </div>
+      <p>There is no timer. Click one tile to act; the whole ecosystem then advances exactly one season and waits for you again.</p>
+    </header>
+
+    <section class="experiment-layout" aria-label="Turn the Earth game">
+      <div class="simulation-card turn-simulation-card">
+        <div class="turn-board-wrap">
+          <div id="turn-grid" class="turn-grid" role="grid" aria-label="Click-driven restoration board"></div>
+          <div id="turn-overlay" class="experiment-overlay turn-overlay">
+            <span class="turn-glyph" aria-hidden="true">↻</span>
+            <p class="experiment-eyebrow">One action, then one season</p>
+            <h2 id="turn-overlay-title">The land waits for your touch</h2>
+            <p id="turn-overlay-copy">Every tile is an action. Sow empty soil, deepen grass into trees, tend saplings, or ask a forest to scatter seeds.</p>
+            <button id="turn-start" class="experiment-primary" type="button">Begin the first season</button>
+          </div>
+        </div>
+
+        <div class="simulation-message" aria-live="polite">
+          <span aria-hidden="true">◆</span>
+          <span id="turn-message">Click a tile. Your action happens first; then every tile responds together.</span>
+        </div>
+
+        <div class="simulation-stats">
+          <div><span>Season</span><strong id="turn-season">0</strong><small>Every completed tile click advances this by exactly one.</small></div>
+          <div><span>Seeds stored</span><strong id="turn-seeds">10</strong><small>New stores arrive every three seasons; forests increase the amount.</small></div>
+          <div><span>Land restored</span><strong id="turn-progress">0%</strong><small>Reach 65% living cover to establish the landscape.</small></div>
+        </div>
+      </div>
+
+      <aside class="experiment-panel turn-panel">
+        <section class="panel-section">
+          <div class="panel-heading">
+            <div><p class="experiment-eyebrow">Tile language</p><h2>Every tile is a verb</h2></div>
+            <span id="turn-status" class="experiment-status">Ready</span>
+          </div>
+
+          <div class="tile-action-list">
+            <div><span class="action-tile barren-action">·</span><p><strong>Barren soil</strong><small>Click to sow grass for 1 seed. With no seeds, the click restores moisture instead.</small></p></div>
+            <div><span class="action-tile grass-action">╱</span><p><strong>Grass</strong><small>Click to plant a sapling for 2 seeds. With no seeds, tend the meadow.</small></p></div>
+            <div><span class="action-tile sapling-action">♣</span><p><strong>Sapling</strong><small>Click to tend it toward mature forest. No seed cost.</small></p></div>
+            <div><span class="action-tile forest-action">♠</span><p><strong>Forest</strong><small>Click to scatter grass into as many as four neighboring tiles.</small></p></div>
+          </div>
+        </section>
+
+        <section class="panel-section turn-sequence">
+          <p class="experiment-eyebrow">The turn cycle</p>
+          <ol>
+            <li><span>1</span><p><strong>You click</strong><small>The selected tile performs its visible action.</small></p></li>
+            <li><span>2</span><p><strong>The world answers</strong><small>All grass, saplings, forests, and neighboring soil update together.</small></p></li>
+            <li><span>3</span><p><strong>The game waits</strong><small>Nothing else happens until your next click.</small></p></li>
+          </ol>
+          <button id="turn-reset" class="experiment-text-button" type="button">Start a new landscape</button>
+        </section>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

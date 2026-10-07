@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f35">
+  <title>Influence Garden — Green Wave</title>
+  <link rel="stylesheet" href="variations.css">
+  <script defer src="influence-core.js"></script>
+  <script defer src="influence-game.js"></script>
+</head>
+<body class="experiment-body influence-body">
+  <nav class="experiment-nav" aria-label="Green Wave navigation">
+    <a class="wordmark" href="variations.html">Green Wave</a>
+    <a class="back-link" href="variations.html">← All variations</a>
+  </nav>
+
+  <main class="experiment-page">
+    <header class="experiment-header">
+      <div>
+        <p class="experiment-eyebrow">Variation 02 · Planting strategy</p>
+        <h1>Influence Garden</h1>
+      </div>
+      <p>Plant living systems, not isolated trees. Each species changes the ground around it; overlapping effects create symbiosis.</p>
+    </header>
+
+    <section class="experiment-layout" aria-label="Influence Garden game">
+      <div class="simulation-card">
+        <div class="simulation-canvas-wrap">
+          <canvas id="influence-canvas" width="960" height="576" aria-label="Influence Garden landscape"></canvas>
+          <div id="influence-overlay" class="experiment-overlay">
+            <span class="overlay-orbit" aria-hidden="true"><i></i><i></i><i></i></span>
+            <p class="experiment-eyebrow">Begin with eighteen seeds</p>
+            <h2 id="influence-overlay-title">Compose a living network</h2>
+            <p id="influence-overlay-copy">Place different plants close enough for their circles to overlap. Shared ground grows fastest.</p>
+            <button id="influence-start" class="experiment-primary" type="button">Enter the garden</button>
+          </div>
+        </div>
+
+        <div class="simulation-message" aria-live="polite">
+          <span aria-hidden="true">✦</span>
+          <span id="influence-message">Pale circles show the area each plant changes.</span>
+        </div>
+
+        <div class="simulation-stats">
+          <div><span>Land restored</span><strong id="influence-progress">0%</strong><small>Reach 70% to establish the ecosystem.</small></div>
+          <div><span>Seeds available</span><strong id="influence-seeds">18</strong><small>Healthy ground returns seeds every two seasons.</small></div>
+          <div><span>Shared ground</span><strong id="influence-overlap">0</strong><small>Cells inside two or more effect areas gain symbiosis.</small></div>
+        </div>
+      </div>
+
+      <aside class="experiment-panel">
+        <section class="panel-section">
+          <div class="panel-heading">
+            <div><p class="experiment-eyebrow">Plant palette</p><h2>Choose a species</h2></div>
+            <span id="influence-status" class="experiment-status">Ready</span>
+          </div>
+
+          <button class="plant-tool is-selected" type="button" data-plant="clover" aria-pressed="true">
+            <span class="tool-swatch clover-swatch">✤</span>
+            <span><strong>Clover Circle</strong><small>2 seeds · radius 2</small><em>Builds fertility and starts grass.</em></span>
+          </button>
+          <button class="plant-tool" type="button" data-plant="pioneer" aria-pressed="false">
+            <span class="tool-swatch pioneer-swatch">♣</span>
+            <span><strong>Pioneer Tree</strong><small>4 seeds · radius 3</small><em>Casts seeds that turn grass into young trees.</em></span>
+          </button>
+          <button class="plant-tool" type="button" data-plant="rain" aria-pressed="false">
+            <span class="tool-swatch rain-swatch">♠</span>
+            <span><strong>Rain Grove</strong><small>6 seeds · radius 4</small><em>Adds moisture so saplings become forest.</em></span>
+          </button>
+        </section>
+
+        <section class="panel-section compact-section">
+          <p class="panel-note"><strong>How to plant:</strong> choose a species, then click or tap the soil. Brighter overlaps are more productive.</p>
+          <button id="influence-pause" class="experiment-secondary" type="button" disabled>Pause the seasons</button>
+          <button id="influence-reset" class="experiment-text-button" type="button">Start a new garden</button>
+        </section>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

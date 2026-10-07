@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#143c32">
+  <title>Green Wave</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="core.js"></script>
+  <script defer src="renderer.js"></script>
+  <script defer src="game.js"></script>
+</head>
+<body>
+  <div class="page-glow page-glow-one"></div>
+  <div class="page-glow page-glow-two"></div>
+
+  <main class="page">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">A gentle restoration game</p>
+        <h1>Green Wave</h1>
+      </div>
+      <p class="intro">Guide a living edge of grass, young trees, and forest across a quiet, barren land.</p>
+    </header>
+
+    <section class="game-layout" aria-label="Green Wave game">
+      <div class="game-card">
+        <div class="canvas-wrap">
+          <canvas id="game-canvas" width="1080" height="660" aria-label="The Green Wave landscape"></canvas>
+
+          <div id="start-overlay" class="overlay">
+            <div class="overlay-leaf" aria-hidden="true">❧</div>
+            <p class="overlay-kicker">The land is waiting</p>
+            <h2 id="overlay-title">Leave a forest in your wake</h2>
+            <p id="overlay-copy">Steer the glowing wave. Cross older growth to join the canopy; closing a loop creates a protected sanctuary.</p>
+            <button id="start-button" class="primary-button" type="button">Begin growing</button>
+          </div>
+        </div>
+
+        <div class="message-strip" aria-live="polite">
+          <span class="message-icon" aria-hidden="true">✦</span>
+          <span id="message">Your path stays alive and slowly matures behind you.</span>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <section class="status-card" aria-labelledby="land-health-title">
+          <div class="card-heading">
+            <div>
+              <p class="section-label">Land health</p>
+              <h2 id="land-health-title">Restoration</h2>
+            </div>
+            <span id="game-status" class="status-pill">Ready</span>
+          </div>
+
+          <div class="progress-row">
+            <strong id="restored-value">0%</strong>
+            <span>Restore 70% to awaken the whole landscape.</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+
+          <div class="canopy-readout">
+            <span class="canopy-mark" aria-hidden="true">♧</span>
+            <div>
+              <strong><span id="connection-value">0</span> canopy joins</strong>
+              <span>Each reunion scatters seeds; large loops become sanctuaries.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="instruction-card" aria-labelledby="controls-title">
+          <p class="section-label">How to grow</p>
+          <h2 id="controls-title">Guide the wave</h2>
+          <p>Use <strong>arrow keys</strong> or <strong>W A S D</strong> to turn. Press <strong>Space</strong> to pause. Stone and water simply ask you to choose another direction.</p>
+
+          <div class="touch-controls" aria-label="Direction controls">
+            <button class="direction-button direction-up" type="button" data-direction="up" aria-label="Grow upward">↑</button>
+            <button class="direction-button direction-left" type="button" data-direction="left" aria-label="Grow left">←</button>
+            <button class="direction-button direction-down" type="button" data-direction="down" aria-label="Grow downward">↓</button>
+            <button class="direction-button direction-right" type="button" data-direction="right" aria-label="Grow right">→</button>
+          </div>
+
+          <button id="pause-button" class="secondary-button" type="button" disabled>Pause growth</button>
+        </section>
+
+        <section class="reconnect-card" aria-labelledby="reconnect-title">
+          <span class="loop-symbol" aria-hidden="true">∞</span>
+          <div>
+            <h2 id="reconnect-title">Reconnection is a reward</h2>
+            <p>Touching your older trail never hurts. It blooms nearby land and encloses rich new habitat.</p>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

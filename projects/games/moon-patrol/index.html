@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moon Patrol</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <main id="game-shell" aria-labelledby="game-title">
+    <section id="hud-layer" aria-label="Moon Patrol status">
+      <h1 id="game-title">Moon Patrol</h1>
+      <div id="hud-stats">
+        <span id="hud-score">Score 0</span>
+        <span id="hud-distance">Distance 0m</span>
+        <span id="hud-integrity">Integrity 100</span>
+        <span id="hud-time">Time 90</span>
+      </div>
+    </section>
+    <canvas id="game" width="960" height="540" tabindex="0" aria-label="Moon Patrol chase level"></canvas>
+    <img id="rover-asset" src="assets/rover.svg" alt="">
+  </main>
+  <script src="src/render.js"></script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

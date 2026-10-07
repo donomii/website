@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>No One Can Stop Mr. Domino!</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<section class="cabinet" aria-label="Mr. Domino game">
+<div class="playfield">
+<canvas id="game" width="640" height="480" aria-label="Three dimensional domino course. Left and right change lanes; hold Space to lay dominoes."></canvas>
+<div class="hud">
+<div class="stamina" title="Stamina drains while running. Green plus tiles restore it."><span class="diamond">◆</span><div class="meter"><i id="meter"></i></div><span id="energy">95</span><small>STAMINA</small></div>
+<div class="trick-bar" id="tricks" aria-label="Trick switches"></div>
+<div class="score" title="Score comes from falling dominoes, linked tricks and remaining stamina."><strong id="score">000000</strong><span>points!</span></div>
+<div id="score-gain" hidden aria-label="Points gained in the current scoring burst"></div>
+<div id="hazard-warning" hidden>! OBSTACLE AHEAD · CHANGE LANE</div>
+<div id="route-hint"></div>
+<div class="stage-tag"><span id="place"></span><h1 id="stage-name"></h1></div>
+<div class="lap"><span id="lap">LAP 01</span><b id="lane">MIDDLE LANE</b></div>
+<div class="domino-count" title="Number of dominoes currently laid on the course."><span class="mini-domino">⠿</span><strong id="laid-count">0</strong><small>LAID</small></div>
+</div>
+<div id="chain-badge" hidden>CHAIN <strong id="chain-count">0</strong></div>
+<div id="overlay" class="overlay">
+<div class="title-mark"><span>NO ONE CAN STOP</span><b>MR. DOMINO<span>!</span></b></div>
+<div class="overlay-card">
+<span id="overlay-kicker">STAGE 1</span>
+<h2 id="overlay-title">PHAT TONY’S CASINO</h2>
+<p id="overlay-text">Lay a trail, circle around, and knock it down.</p>
+<p id="results" hidden aria-label="Score breakdown for this stage"></p>
+<p id="award" aria-label="Medal and challenge results"></p>
+<div id="start-controls"><label for="stage">STAGE SELECT <small>Choose a course to play.</small></label><select id="stage"><option value="0">1 · Phat Tony’s Casino</option><option value="1">2 · Shop ’til You Drop</option><option value="2">3 · Grandpa’s in the House</option></select></div>
+<div class="menu-buttons"><button id="primary">START GAME</button><button id="demo">WATCH DEMO</button></div>
+<p class="enter-hint">ENTER to start · ARROWS to steer · Hold SPACE to lay</p>
+</div>
+</div>
+<div id="toast" class="toast" role="status"></div>
+</div>
+<div class="controls">
+<div><kbd>← →</kbd><span>Change lane<small>outside / inside</small></span></div>
+<div><kbd>SPACE</kbd><span>Hold to lay<small>circle back to topple</small></span></div>
+<div><kbd>X</kbd><span>Push<small>domino at your feet</small></span></div>
+<button id="pause" title="Pause or resume (P)">Ⅱ <span>Pause<small>P · stop the clock</small></span></button>
+<button id="retry" title="Restart this stage (R)">↻ <span>Retry<small>R · start over</small></span></button>
+<button id="sound" title="Enable stage music and domino sound effects">♪ <span>Sound: off<small>music + effects</small></span></button>
+<button id="fullscreen" title="Fill your screen with the game">⛶ <span>Full screen<small>Esc to leave</small></span></button>
+</div>
+<div class="touch-controls"><button id="outside">← OUTSIDE</button><button id="lay">HOLD TO LAY</button><button id="inside">INSIDE →</button></div>
+</section>
+<details><summary>How to play</summary><p>Mr. Domino keeps running. Hold Space to leave a trail on the numbered red switches. On your next lap, run into the first domino to start the chain. A red ring is where a trick knocks over the next trail—lay from that ring to the next switch.</p><p>Trigger all four switches to clear the stage. Green + restores stamina. Orange R resets your trails and switches. Striped obstacle stacks hurt, block domino placement, and break a trail. Steer around them one lane at a time to keep your chain connected. The warning highlights a hazard ahead in your lane; the switch hint tells you which lane to reach next. Falling dominoes earn 10 points times the trick multiplier. Successive tricks in one chain earn 500, 1000, 1500 and 2000 points; remaining stamina earns a stage-clear bonus. The +points readout totals the current scoring burst. The diamonds show completed tricks; the bottom-right counter shows dominoes on the course. Sound starts off.</p></details>
+</main>
+<p id="controller-status" class="extra-help" role="status">Connect a USB/Bluetooth controller and press a button. Release controls after connecting; centre the stick between lane changes.</p>
+<details class="extra-help"><summary>Records and optional challenges</summary><p id="records"></p><p>Clear normally for bronze. Clear without obstacle hits or resets, or link all four tricks in one chain, for silver; do both in the same run for gold. These are optional goals. Best stage scores, medals and earned challenges save in this browser at this address. Demos never save records. Moving chips, carts and cats hurt and interrupt placement when you cross their tile; their patrol always leaves one lane safe. Pause freezes their movement.</p></details>
+<p class="extra-help">A red pulsing ring marks where the chain stopped. While laying, steering allows one lane change per tile to keep your trail connected; release Space to move freely. Results show domino points, trick bonuses and stamina bonus for this stage, plus your overall score.</p>
+<script type="module" src="app.mjs"></script>
+</body>
+</html>

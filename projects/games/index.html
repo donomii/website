@@ -1,0 +1,189 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Games</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+				article img {
+					cursor: pointer;
+					transition: opacity 0.2s;
+				}
+				article img:hover {
+					opacity: 0.85;
+				}
+				.lightbox-overlay {
+					display: none;
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: rgba(0, 0, 0, 0.9);
+					z-index: 9999;
+					justify-content: center;
+					align-items: center;
+					cursor: pointer;
+				}
+				.lightbox-overlay.active {
+					display: flex;
+				}
+				.lightbox-overlay img {
+					max-width: 90%;
+					max-height: 90%;
+					object-fit: contain;
+					border-radius: 4px;
+					box-shadow: 0 0 30px rgba(0,0,0,0.5);
+					float: none;
+					margin: 0;
+					cursor: default;
+				}
+				.lightbox-close {
+					position: absolute;
+					top: 20px;
+					right: 30px;
+					color: white;
+					font-size: 40px;
+					font-weight: bold;
+					cursor: pointer;
+				}
+				.lightbox-close:hover {
+					color: #ccc;
+				}
+				.home-link {
+					position: fixed;
+					top: 1rem;
+					left: 1rem;
+					text-decoration: none;
+					color: #888;
+					font-size: 0.9em;
+					transition: color 0.2s;
+					z-index: 1000;
+				}
+				.home-link:hover {
+					color: #333;
+				}
+				@media (prefers-color-scheme: dark){
+					.home-link {
+						color: #555;
+					}
+					.home-link:hover {
+						color: #ccc;
+					}
+				}
+			</style>
+			<a href="../../index.html" class="home-link" title="Home">(↑)</a>
+			<article>
+			<header>
+
+			<h1>Games</h1>
+			</header>
+			<div class="summary">
+<p>Browser games, ecological puzzles, dungeon crawling, and other playable experiments. Follow a game link to start playing.</p>
+</div>
+<div style="clear:both"></div>
+<div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+<h2 id="brushwork">Brushwork</h2>
+<p><a href="brushwork/index.html">Play Brushwork</a>. Drag an oversized brush through a swarm of ink creatures. Your strokes damage enemies; closed circles become traps, and crossed lines unleash a burst of magic.</p>
+<h2 id="no-one-can-stop-mr-domino">No One Can Stop Mr. Domino!</h2>
+<p><a href="domino-rush/index.html">Play Mr. Domino</a>. Run around three miniature courses, lay domino trails, and set off chain reactions through their trick switches. Supports keyboard, touch controls, and standard gamepads.</p>
+<h2 id="the-crown-below">The Crown Below</h2>
+<p><a href="kingdomcrown/index.html">Play The Crown Below</a>. Ride through a moonlit kingdom as an eldritch herald, recruit acolytes, build strange structures, and summon horrors. Defend the buried Heart while preparing the ritual that awakens the Sleeper Below.</p>
+<h2 id="evil-empires">Evil Empires</h2>
+<p><a href="evilempires/index.html">Play Evil Empires</a>. Serve as High Economist to an ancient evil and respond to seven economic decrees. Balance the treasury, prosperity, social peace, and your patron's patience as each policy produces benefits and costs.</p>
+<h2 id="moon-patrol">Moon Patrol</h2>
+<p><a href="moon-patrol/index.html">Play Moon Patrol</a>. Drive a rover through a night landscape, jump terrain hazards, and shoot enemies on the ground and in the air. Reach the finish before time or rover integrity runs out.</p>
+<h2 id="green-wave">Green Wave</h2>
+<p><a href="greenwave/index.html">Play Green Wave</a>. Steer a growing trail across barren ground, leaving grass, saplings, and forest behind. Reconnect with older growth to scatter seeds and enclose protected sanctuaries.</p>
+<p><a href="greenwave/influence.html">Play Influence Garden</a>. Plant clover, pioneer trees, and rain groves. Overlapping areas of influence create symbiosis and help the landscape recover.</p>
+<p><a href="greenwave/automaton.html">Play Forest Life</a>. Introduce pioneer plants and watch a forest spread through a cellular ecology model. Advance one generation at a time or let the landscape grow.</p>
+<p><a href="greenwave/turn.html">Play Turn the Earth</a>. Sow, tend, or scatter seeds with each click, then watch the whole ecosystem advance one season. There is no timer; every turn is yours.</p>
+<p><a href="greenwave/watershed.html">Play Watershed</a>. Dig channels, shape ponds, and plant trees to carry rain from a spring into three dry valleys.</p>
+<p><a href="greenwave/corridors.html">Play Wildlife Corridors</a>. Connect isolated shelters with vegetation suited to rabbits, birds, and deer. Travelling animals carry seeds along the routes you create.</p>
+<p><a href="greenwave/mosaic.html">Play Forest Mosaic</a>. Build a connected patch of meadow, shrubs, forest, and wetland. Keep the habitats in balance as woodland matures.</p>
+<p><a href="greenwave/spring.html">Play Travelling Spring</a>. Guide warmth between ancient groves, leave sleeping roots along your path, and return to awaken flowering reunions.</p>
+<h2 id="crawl-of-the-beholder">Crawl of the Beholder</h2>
+<p><a href="crawlofthebeholder/index.html">Play Crawl of the Beholder</a>. Lead four adventurers through a first-person, grid-stepping dungeon built from Dungeon Crawl Stone Soup creatures, tiles, and spells. Explore branching floors, manage supplies, and hunt the Orb of Zot Soup.</p>
+<h2 id="stars-and-ships">Stars and Ships</h2>
+<p><a href="starsandships/index.html">Play Stars and Ships</a>. An early space-trading experiment with vector-drawn stars and ships. Click a ship or star to inspect it, and drag the background to explore the map.</p>
+<h2 id="vtes">VTES</h2>
+<p><a href="vtes.zip">Download VTES</a> (119 MiB; Python 3). Play the vampire card game against six computer opponents, build custom decks, and negotiate votes and combat. Unzip the download, start <code>run.sh</code>, then open <code>http://127.0.0.1:8791</code> in your browser.</p>
+<h2 id="dungeon-crawl-bullet-hell">Dungeon Crawl Bullet Hell</h2>
+<p><a href="dcbh-source.zip">Download Dungeon Crawl Bullet Hell</a> (242 KiB; Go source). Survive a top-down swarm of pursuing monsters while firing at nearby enemies. Unzip and run <code>run.sh</code> on a desktop with Go and its native graphics build dependencies installed.</p>
+
+			</article>
+			<div class="lightbox-overlay" id="lightbox">
+				<span class="lightbox-close" id="lightbox-close">&times;</span>
+				<img src="" alt="" id="lightbox-img">
+			</div>
+			<script>
+			(function() {
+				var overlay = document.getElementById('lightbox');
+				var lightboxImg = document.getElementById('lightbox-img');
+				var closeBtn = document.getElementById('lightbox-close');
+				
+				// Add click handler to all images in the article (skip linked images)
+				document.querySelectorAll('article img:not(.no-lightbox)').forEach(function(img) {
+					img.addEventListener('click', function(e) {
+						e.preventDefault();
+						lightboxImg.src = this.src;
+						lightboxImg.alt = this.alt;
+						overlay.classList.add('active');
+					});
+				});
+				
+				// Close on any click
+				overlay.addEventListener('click', function() {
+					overlay.classList.remove('active');
+				});
+				
+				// Close on escape key
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape') {
+						overlay.classList.remove('active');
+					}
+				});
+			})();
+			</script>
+			</html>
+			

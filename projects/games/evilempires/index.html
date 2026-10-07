@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evil Empires: The Dismal God</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="masthead">
+      <div class="sigil" aria-hidden="true">§</div>
+      <div>
+        <p class="eyebrow">Ministry of Infernal Economics</p>
+        <h1>Evil Empires</h1>
+        <p class="subtitle">The Dismal God has awakened. Balance the books or burn forever.</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="status-panel" aria-label="Kingdom readouts">
+        <div class="status-card" title="Infernal Favour measures the Dark Lord's patience. If it reaches zero, you go to Hell.">
+          <div class="status-heading"><span>Infernal Favour</span><span id="favour-value">62</span></div>
+          <div class="meter"><div class="meter-fill favour" id="favour-meter"></div></div>
+          <p>The Dark Lord's patience. Zero means damnation.</p>
+        </div>
+        <div class="status-card" title="Treasury measures the Crown's financial health. If it reaches zero, the kingdom is bankrupt.">
+          <div class="status-heading"><span>Treasury</span><span id="treasury-value">48</span></div>
+          <div class="meter"><div class="meter-fill treasury" id="treasury-meter"></div></div>
+          <p>The Crown's finances. Zero means bankruptcy.</p>
+        </div>
+        <div class="status-card" title="Prosperity measures investment, output, and private wealth. Higher is better, but it does not show who benefits.">
+          <div class="status-heading"><span>Prosperity</span><span id="prosperity-value">42</span></div>
+          <div class="meter"><div class="meter-fill prosperity" id="prosperity-meter"></div></div>
+          <p>Output and private wealth—not their distribution.</p>
+        </div>
+        <div class="status-card" title="Social Peace measures public solidarity and political stability. If it reaches zero, the people overthrow you.">
+          <div class="status-heading"><span>Social Peace</span><span id="peace-value">68</span></div>
+          <div class="meter"><div class="meter-fill peace" id="peace-meter"></div></div>
+          <p>Solidarity and stability. Zero means revolution.</p>
+        </div>
+      </section>
+
+      <section class="game-grid">
+        <article class="decree-card" id="decree-card">
+          <div class="decree-meta">
+            <span id="year-label">Year I</span>
+            <span id="doctrine-label">Privatisation</span>
+          </div>
+          <p class="speaker">The Dismal God commands:</p>
+          <h2 id="decree-title">Auction the Crown Industries</h2>
+          <blockquote id="decree-command"></blockquote>
+          <div class="economist-note">
+            <span>High Economist's briefing</span>
+            <p id="decree-briefing"></p>
+          </div>
+          <div class="choices" id="choices" aria-label="Policy choices"></div>
+        </article>
+
+        <section class="ending-card" id="ending-card" hidden>
+          <p class="eyebrow">The reckoning</p>
+          <h2 id="ending-title"></h2>
+          <p id="ending-text"></p>
+          <button class="restart-button" id="restart-button" type="button">Awaken the Evil Again</button>
+        </section>
+
+        <aside class="chronicle-card">
+          <h2>Royal Chronicle</h2>
+          <p class="chronicle-help">Your decisions and their consequences appear here.</p>
+          <ol id="chronicle" aria-live="polite"></ol>
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <strong>How to play:</strong> enact, temper, or resist each decree. Every choice changes the four readouts above. Survive seven years without damnation, bankruptcy, or revolution.
+    </footer>
+  </div>
+
+  <div class="opening" id="opening" role="dialog" aria-modal="true" aria-labelledby="opening-title">
+    <div class="opening-panel">
+      <p class="eyebrow">A constitutional emergency</p>
+      <h2 id="opening-title">The ancient evil has awakened.</h2>
+      <p>The kingdom is stagnant, indebted, and thoroughly uncompetitive. From beneath the Treasury, the Dismal God demands reform.</p>
+      <p>You are the High Priest—recently retitled <strong>High Economist</strong>. Satisfy the demands, preserve the realm, or go to Hell.</p>
+      <button id="begin-button" type="button">Assume the Robes of Office</button>
+    </div>
+  </div>
+
+  <script src="game-core.js"></script>
+  <script src="game-ui.js"></script>
+</body>
+</html>

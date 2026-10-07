@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17160f">
+  <title>Brushwork</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game" aria-label="Brushwork game arena"></canvas>
+
+    <header id="hud" aria-label="Current run readouts">
+      <div class="brand" aria-hidden="true">
+        <span class="brand-mark">文</span>
+        <span>BRUSHWORK</span>
+      </div>
+      <div class="meter-block" title="Health is the damage you can still survive. Avoid touching ink creatures.">
+        <div class="meter-label"><span>Health</span><span id="health-value">100</span></div>
+        <div class="meter"><span id="health-bar"></span></div>
+      </div>
+      <div class="meter-block" title="Ink is spent as you paint. Lift the brush to refill it.">
+        <div class="meter-label"><span>Ink</span><span id="ink-value">100</span></div>
+        <div class="meter ink"><span id="ink-bar"></span></div>
+      </div>
+      <div class="readout" title="Time is how long this run has survived.">
+        <span>Time</span><strong id="time-value">0:00</strong>
+      </div>
+      <div class="readout" title="Defeated counts every ink creature destroyed this run.">
+        <span>Defeated</span><strong id="score-value">0</strong>
+      </div>
+      <div class="readout" title="Runes counts completed circle traps and crossed-line bursts.">
+        <span>Runes</span><strong id="rune-value">0</strong>
+      </div>
+    </header>
+
+    <section id="start-panel" class="panel visible" aria-labelledby="start-title">
+      <p class="eyebrow">A survival sketch</p>
+      <h1 id="start-title">Draw your way out.</h1>
+      <p class="intro">You are small. The brush is not. Drag it through the horde and turn your escape route into magic.</p>
+      <div class="instructions">
+        <div><kbd>WASD</kbd><span><strong>Move</strong> the painter and drag the brush.</span></div>
+        <div><kbd>SPACE</kbd><span><strong>Hold to paint.</strong> Ink refills while the brush is lifted.</span></div>
+        <div><span class="rune-icon circle-icon"></span><span><strong>Close a loop</strong> to create a slowing damage trap.</span></div>
+        <div><span class="rune-icon cross-icon">×</span><span><strong>Cross two lines</strong> to blast everything near the crossing.</span></div>
+      </div>
+      <button id="start-button" type="button">Begin the run <span>↵</span></button>
+      <p class="small-print">Arrow keys also move. The primary pointer button also paints. Press P to pause.</p>
+    </section>
+
+    <section id="pause-panel" class="panel compact" aria-live="polite">
+      <p class="eyebrow">Brush lifted</p>
+      <h2>Paused</h2>
+      <p>Press <kbd>P</kbd> to return to the run.</p>
+    </section>
+
+    <section id="game-over-panel" class="panel" aria-labelledby="game-over-title">
+      <p class="eyebrow">The page goes dark</p>
+      <h2 id="game-over-title">Overrun.</h2>
+      <div class="results">
+        <div><span>Survived</span><strong id="final-time">0:00</strong></div>
+        <div><span>Defeated</span><strong id="final-score">0</strong></div>
+        <div><span>Runes drawn</span><strong id="final-runes">0</strong></div>
+      </div>
+      <button id="restart-button" type="button">Paint again <span>R</span></button>
+    </section>
+
+    <aside id="rune-toast" aria-live="polite">
+      <span id="rune-toast-mark">○</span>
+      <span><strong id="rune-toast-title">Circle ward</strong><small id="rune-toast-copy">The loop becomes a trap.</small></span>
+    </aside>
+
+    <div id="draw-hint" aria-hidden="true">Hold SPACE to lower the brush</div>
+  </main>
+
+  <script src="runes.js"></script>
+  <script src="effects.js"></script>
+  <script src="renderer.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

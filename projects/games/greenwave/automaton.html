@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#182f31">
+  <title>Forest Life — Green Wave</title>
+  <link rel="stylesheet" href="variations.css">
+  <script defer src="automaton-core.js"></script>
+  <script defer src="automaton-game.js"></script>
+</head>
+<body class="experiment-body life-body">
+  <nav class="experiment-nav" aria-label="Green Wave navigation">
+    <a class="wordmark" href="variations.html">Green Wave</a>
+    <a class="back-link" href="variations.html">← All variations</a>
+  </nav>
+
+  <main class="experiment-page">
+    <header class="experiment-header">
+      <div>
+        <p class="experiment-eyebrow">Variation 03 · Cellular model</p>
+        <h1>Forest Life</h1>
+      </div>
+      <p>A synchronous model of succession. Every generation, cells respond to habitat, neighbors, and an eastward seed wind.</p>
+    </header>
+
+    <section class="experiment-layout" aria-label="Forest Life simulation">
+      <div class="simulation-card life-simulation-card">
+        <div class="simulation-canvas-wrap life-canvas-wrap">
+          <canvas id="automaton-canvas" width="1080" height="600" aria-label="Cellular forest simulation"></canvas>
+          <div class="wind-indicator" aria-hidden="true">prevailing seed wind&nbsp;&nbsp;→</div>
+          <div id="automaton-overlay" class="experiment-overlay life-overlay">
+            <span class="life-glyph" aria-hidden="true">▦</span>
+            <p class="experiment-eyebrow">A small grove is already alive</p>
+            <h2 id="automaton-overlay-title">Watch a forest think</h2>
+            <p id="automaton-overlay-copy">Run the model and a green front will emerge. Click the land at any time to introduce another pioneer grove.</p>
+            <button id="automaton-start" class="experiment-primary" type="button">Run the simulation</button>
+          </div>
+        </div>
+
+        <div class="simulation-message" aria-live="polite">
+          <span aria-hidden="true">⌁</span>
+          <span id="automaton-message">Cells update together: grass becomes saplings, saplings become forest, and forest seeds its neighbors.</span>
+        </div>
+
+        <div class="simulation-stats">
+          <div><span>Generation</span><strong id="automaton-generation">0</strong><small>One simultaneous application of the ecology rules.</small></div>
+          <div><span>Living cover</span><strong id="automaton-progress">0%</strong><small>Share of habitable cells containing vegetation.</small></div>
+          <div><span>Growth frontier</span><strong id="automaton-frontier">06</strong><small>Furthest column reached by the eastward forest wave.</small></div>
+        </div>
+      </div>
+
+      <aside class="experiment-panel">
+        <section class="panel-section">
+          <div class="panel-heading">
+            <div><p class="experiment-eyebrow">Model controls</p><h2>Observe or intervene</h2></div>
+            <span id="automaton-status" class="experiment-status">Paused</span>
+          </div>
+
+          <button id="automaton-run" class="experiment-secondary" type="button">Run generations</button>
+          <button id="automaton-step" class="experiment-secondary subtle-button" type="button">Advance one generation</button>
+          <button id="automaton-reset" class="experiment-text-button" type="button">Reset the starting grove</button>
+          <p class="panel-note"><strong>Plant a grove:</strong> click or tap any habitable soil. New pioneers join the next generation.</p>
+        </section>
+
+        <section class="panel-section speed-section" aria-labelledby="speed-title">
+          <p class="experiment-eyebrow">Simulation pace</p>
+          <h2 id="speed-title">Time between generations</h2>
+          <div class="speed-buttons">
+            <button type="button" data-speed="slow" aria-pressed="false"><strong>Slow</strong><span>650 ms · inspect each change</span></button>
+            <button class="is-selected" type="button" data-speed="steady" aria-pressed="true"><strong>Steady</strong><span>260 ms · default observation pace</span></button>
+            <button type="button" data-speed="fast" aria-pressed="false"><strong>Fast</strong><span>90 ms · reveal the large pattern</span></button>
+          </div>
+        </section>
+
+        <section class="stage-legend" aria-label="Forest stage legend">
+          <span><i class="legend-grass"></i>Grass</span>
+          <span><i class="legend-sapling"></i>Sapling</span>
+          <span><i class="legend-forest"></i>Forest</span>
+          <span><i class="legend-dry"></i>Dry ground</span>
+        </section>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>
