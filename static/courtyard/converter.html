@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entirety · Map conversion bench</title>
+  <link rel="stylesheet" href="./courtyard.css">
+  <style>textarea {display:block;width:min(38rem,76vw);margin:.3rem 0;font:inherit} output {display:block;margin:.35rem 0}</style>
+</head>
+<body>
+  <main>
+    <div id="viewport" aria-label="Globe displaying converted map points"></div>
+    <header>
+      <a href="./index.html">← Courtyard</a>
+      <h1>Map conversion bench</h1>
+      <p>Convert GeoJSON points to Entirety's binary map format.</p>
+      <output id="conversion-status"></output>
+    </header>
+    <section aria-label="Conversion controls">
+      <label>GeoJSON Point features, one per line
+        <textarea id="points-input" rows="3">{"type":"Feature","geometry":{"type":"Point","coordinates":[103.85,1.29]},"properties":{}}
+{"type":"Feature","geometry":{"type":"Point","coordinates":[12.49,41.89]},"properties":{}}
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-122.42,37.77]},"properties":{}}</textarea>
+      </label>
+      <p>Use longitude first, then latitude. Drag the globe to inspect the converted positions.</p>
+      <button id="convert">Convert points</button>
+      <a id="download-points" download="gallery.map_points" hidden>Download map points</a>
+      <a id="download-data" download="gallery.map_data" hidden>Download point data</a>
+      <output id="conversion-detail"></output>
+      <a href="/projects/entirety/index.html">Entirety project ↗</a>
+    </section>
+  </main>
+  <script type="module" src="./converter.js"></script>
+</body>
+</html>

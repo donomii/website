@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>L-World · Courtyard workshop</title>
+  <link rel="stylesheet" href="./courtyard.css">
+  <style>
+    main { display:block; max-width:90rem; margin:auto }
+    header { width:auto; max-width:none }
+    .window { margin:1rem; border:5px ridge #ae825c; background:#30231f }
+    iframe { display:block; width:100%; height:76vh; min-height:20rem; border:0; background:#fff }
+    input { width:min(42rem,90%); font:inherit }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a href="./index.html">← Courtyard</a>
+      <h1>L-World Workshop</h1>
+      <p>The original WebGL world, running inside the gallery.</p>
+      <p>Drag in the world to rotate the view. Try adding <code>F cube</code> to the scene commands.</p>
+      <form id="scene-form">
+        <label>Scene commands <input id="scene-program" maxlength="3000" required></label>
+        <button id="apply-scene" disabled>Apply to world</button>
+      </form>
+      <p id="scene-status" role="status"></p>
+      <a href="/projects/lworld/lworld.html">Open the original full page ↗</a>
+    </header>
+    <div class="window">
+      <iframe id="world" title="Live L-World editor and renderer"></iframe>
+    </div>
+  </main>
+  <script type="module" src="./lworld-room.js"></script>
+</body>
+</html>

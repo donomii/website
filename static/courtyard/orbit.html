@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Stars &amp; Ships · Orbital gallery</title>
+  <link rel="stylesheet" href="./courtyard.css">
+</head>
+<body>
+  <main>
+    <div id="viewport" aria-label="Orbital chart with three destinations and a ship"></div>
+    <header>
+      <a href="./index.html">← Courtyard</a>
+      <h1>Stars &amp; Ships</h1>
+      <p>Orbital chart</p>
+      <p id="voyage" role="status"></p>
+      <button id="vr" hidden>Enter VR</button>
+    </header>
+    <section aria-label="Navigation">
+      <p>Choose a planet or moon to dispatch the ship. In VR, select the destination again after arrival to open its exhibit.</p>
+      <nav id="destinations"></nav>
+      <p id="arrival"></p>
+      <a id="exhibit" hidden>Open exhibit ↗</a>
+      <a href="/projects/starsandships/webview.html">Original Stars &amp; Ships ↗</a>
+    </section>
+  </main>
+  <script src="../../projects/starsandships/datasets.js"></script>
+  <script type="module" src="./orbit.js"></script>
+</body>
+</html>

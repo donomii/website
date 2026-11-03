@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jump · Portfolio Courtyard</title>
+  <link rel="stylesheet" href="./courtyard.css">
+</head>
+<body>
+  <main>
+    <div id="viewport" aria-label="Articulated dancer on a stage"></div>
+    <header>
+      <a href="./index.html">← Courtyard</a>
+      <h1>Might as well jump</h1>
+      <p>Move, record, and replay a short phrase on the articulated figure.</p>
+      <p id="jump-status" role="status">The figure is playing its built-in jump.</p>
+      <button id="vr" hidden>Enter VR</button>
+    </header>
+    <section aria-label="Jump controls">
+      <p>Drag to move one hand. In VR, grip to record or stop and trigger to start or stop the dance loop.</p>
+      <button id="record">Record movement</button>
+      <button id="replay" disabled>Replay recording</button>
+      <button id="loop" disabled>Loop the dance</button>
+      <button id="demo">Play built-in jump</button>
+      <a href="/projects/jump/index.html">Original Racket demo ↗</a>
+    </section>
+  </main>
+  <script type="module" src="./jump.js"></script>
+</body>
+</html>

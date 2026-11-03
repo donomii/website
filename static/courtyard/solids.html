@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pocket Bonsai · Solid modelling</title>
+  <link rel="stylesheet" href="./courtyard.css">
+  <style>textarea {display:block;width:min(32rem,75vw);font:inherit;margin:.35rem 0} input[type=number] {width:4rem}</style>
+</head>
+<body>
+  <main>
+    <div id="viewport" aria-label="Turntable preview of the generated solid"></div>
+    <header>
+      <a href="./index.html">← Courtyard</a>
+      <h1>Pocket Bonsai Foundry</h1>
+      <p id="solid-status" role="status"></p>
+    </header>
+    <section aria-label="Solid modelling controls">
+      <label>Replacement for X <textarea id="rule" rows="2">F [ Y s X ] [ y R s X ] [ P r s X ] s X</textarea></label>
+      <p>X expands recursively. F draws a solid branch. Brackets save and restore the turtle.<br>Y/y bend, P/p pitch, R/r twist, and s shrinks the next branch.</p>
+      <label>Generations <input id="depth" type="number" min="0" max="4" step="1" value="3" required></label>
+      <button id="build">Build solid</button>
+      <p>Drag to orbit the model.</p>
+      <a href="/projects/bonsai/index.html">Pocket Bonsai project ↗</a>
+    </section>
+  </main>
+  <script type="module" src="./solids.js"></script>
+</body>
+</html>

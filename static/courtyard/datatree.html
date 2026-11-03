@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Datatree · Portfolio Courtyard</title>
+  <link rel="stylesheet" href="./courtyard.css">
+</head>
+<body>
+  <main>
+    <div id="viewport" aria-label="Three-dimensional tree of a sample archive"></div>
+    <header>
+      <a href="./index.html">← Courtyard</a>
+      <h1>Datatree</h1>
+      <p>Explore a sample, open a local ZIP, or load a snapshot saved from Datatree. Files stay in this browser.</p>
+      <p id="tree-path" role="status"></p>
+      <button id="vr" hidden>Enter VR</button>
+    </header>
+    <section aria-label="Datatree browser">
+      <p>Choose a branch to open it or a leaf to read its value.</p>
+      <label>Open local ZIP or Datatree snapshot <input id="tree-file" type="file" accept=".zip,.json,application/zip,application/json"></label>
+      <button id="tree-sample">Restore sample</button>
+      <nav id="tree-controls" aria-label="Current branches and leaves"></nav>
+      <p id="tree-value" role="status"></p>
+      <a href="/projects/datatree/index.html">Open the Datatree project ↗</a>
+    </section>
+  </main>
+  <script type="module" src="./datatree.js"></script>
+</body>
+</html>

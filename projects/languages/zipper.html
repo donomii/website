@@ -119,11 +119,11 @@
 			<h1>Zipper</h1>
 			</header>
 			<div class="summary">
-<p>Zipper is a small text-replacement programming language.  Its complete program state is one string called the tape; the interpreter scans to the right of a visible cursor (<code>▮</code>), finds the next reducible call, replaces it in place, and repeats.  The tape can be printed after every replacement, turning evaluation into a readable sequence of steps.</p>
+<p>Zipper is a small text-replacement programming language.  It works the way people think an interpreter works.  I evaluates code, and replaces the code with the result.</p>
+<p>Its complete program state is one string, the interpreter scans to the right of a visible cursor (<code>▮</code>), finds the next reducible call, replaces it in place, and repeats.  The program text can be edited at any point, making it its own debugger.</p>
 </div>
 <div style="clear:both"></div>
 <div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
-<p>Write a program below, then use <strong>Step</strong> to watch each rewrite or <strong>Run</strong> to play it. The <strong>live page</strong> is a browser document your program can change by calling browser functions directly. There are examples for functions, drawing, closures, and fetching data.</p>
 <link rel="stylesheet" href="zipper/playground.css?v=20261004-2">
 <div id="zipper-playground" class="zipper-lab" aria-label="Zipper programming playground"><p>Loading the Zipper playground…</p></div>
 <script type="module" src="zipper/playground.js?v=20261004-2"></script>

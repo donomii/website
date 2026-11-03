@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Themelab · Depth studies</title>
+<link rel="stylesheet" href="./courtyard.css">
+<style>
+  #scene { width: 100%; height: min(68vh, 680px); background: #211914; touch-action: none; }
+  #scene canvas { display: block; width: 100%; height: 100%; }
+</style>
+<main style="display:block; padding:1rem">
+  <a href="./index.html">← Courtyard</a>
+  <h1>Themelab</h1>
+  <div id="scene" tabindex="0" aria-label="Depth scene. Use arrow keys to move the viewpoint."></div>
+  <label>Scene
+    <select id="theme">
+      <option value="window">Courtyard window</option>
+      <option value="grate">Iron grate</option>
+      <option value="bookshelf">Bookshelf alley</option>
+    </select>
+  </label>
+  <button id="camera">Use camera tracking</button>
+  <button id="center">Center view</button>
+  <p id="tracking" role="status">Move the pointer over the scene or use the arrow keys. Camera tracking is off.</p>
+</main>
+<script type="module" src="./themelab.js"></script>
+</html>
+

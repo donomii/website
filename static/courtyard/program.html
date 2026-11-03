@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zipper · Programmable sculpture</title>
+  <link rel="stylesheet" href="./courtyard.css">
+  <style>textarea {display:block;width:min(35rem,74vw);margin:.35rem 0;font:inherit} output {display:block;margin:.35rem 0}</style>
+</head>
+<body>
+  <main>
+    <div id="viewport" aria-label="Sculpture built by the Zipper program"></div>
+    <header>
+      <a href="./index.html">← Courtyard</a>
+      <h1>Programmable sculpture</h1>
+      <p>Watch Zipper build a sculpture one command at a time.</p>
+      <output id="program-status"></output>
+    </header>
+    <section aria-label="Zipper controls">
+      <label>Zipper program
+        <textarea id="program" rows="7">seq(
+  define(pillar, x, q{ seq(
+    block(x(), 0, 0, "bronze"),
+    block(x(), 1, 0, "gold")
+  ) }),
+  pillar(-1), pillar(1),
+  block(0, 2, 0, "teal"),
+  block(-1, 2, 0, "teal"), block(1, 2, 0, "teal")
+)</textarea>
+      </label>
+      <p>block(x, y, z, colour) places a block. Colours are bronze, gold, and teal.</p>
+      <button id="step">Step</button>
+      <button id="run">Run</button>
+      <button id="reset">Reset sculpture</button>
+      <a href="/projects/languages/zipper/index.html">Zipper playground ↗</a>
+    </section>
+  </main>
+  <script type="module" src="./program.js"></script>
+</body>
+</html>

@@ -221,7 +221,7 @@ class GLTFModelAsset {
 }
 
 async function loadModel(definition) {
-    const path = `${definition.assetRoot}/${definition.file}`;
+    const path = new URL(`${definition.assetRoot}/${definition.file}`, import.meta.url).href;
     let gltf;
     try {
         gltf = await new GLTFLoader().loadAsync(path);

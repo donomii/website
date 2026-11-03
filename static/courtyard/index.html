@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio Courtyard</title>
+  <link rel="stylesheet" href="./courtyard.css">
+</head>
+<body>
+  <main>
+    <div id="viewport" aria-label="Walkable Roman courtyard"></div>
+    <header>
+      <a href="/index.html">← Portfolio</a>
+      <p>OPEN-AIR GALLERY</p>
+      <h1>The Courtyard</h1>
+      <p id="status" role="status">Choose an exhibit to visit.</p>
+      <button id="vr" hidden>Enter VR</button>
+    </header>
+    <section aria-label="Exhibits">
+      <p>Drag to look · WASD or arrow keys to walk · Choose an exhibit to go directly there</p>
+      <nav id="exhibits">
+        <a href="/projects/entirety/index.html">Entirety</a>
+        <a href="/projects/javascriptraymarcher/index.html">Raymarcher</a>
+        <a href="/projects/starsandships/webview.html">Stars &amp; Ships</a>
+        <a href="/projects/creatures/index.html">Creatures</a>
+        <a href="/projects/monalisaoverdraw/index.html">Letter fitting</a>
+      </nav>
+      <a href="./datatree.html">Enter the Datatree gallery ↗</a>
+      <a href="./jump.html">Enter the Jump stage ↗</a>
+      <a href="./solids.html">Enter the Pocket Bonsai foundry ↗</a>
+      <a href="./converter.html">Enter the map conversion bench ↗</a>
+      <a href="./program.html">Enter the Zipper sculpture studio ↗</a>
+      <a href="./orbit.html">Enter the Stars &amp; Ships orbital gallery ↗</a>
+      <a href="./lworld-room.html">Enter the L-World workshop ↗</a>
+      <a href="./themelab.html">Enter Themelab depth studies ↗</a>
+      <a id="project" hidden>Open project ↗</a>
+      <button id="river-door">Visit the riverbank</button>
+      <button id="library-door">Visit the library</button>
+      <button id="map-door" hidden>Enter the map</button>
+      <span id="map-choices" hidden>
+        <button data-map="0">Mediterranean rug</button>
+        <button data-map="1">Japan rug</button>
+      </span>
+      <button id="call-creatures" hidden>Call the creatures</button>
+      <button id="carve" hidden>Carve the stone</button>
+      <output id="carving-progress" hidden></output>
+      <label id="fit-target-label" hidden>Reference shape
+        <select id="fit-target">
+          <option value="arch">Arch</option>
+          <option value="pyramid">Stepped pyramid</option>
+        </select>
+      </label>
+      <button id="fit" hidden>Fit the shape</button>
+      <output id="fit-progress" aria-live="off" hidden></output>
+    </section>
+  </main>
+  <script type="importmap">
+    {"imports":{"three":"../../projects/games/domino-rush/vendor/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+  </script>
+  <script type="module" src="./courtyard.js"></script>
+</body>
+</html>
