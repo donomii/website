@@ -2,6 +2,7 @@ export function mixPose(a, b, t) {
     const lerp = (from, to) => from + (to - from) * t;
     return {
         hip: lerp(a.hip, b.hip), foot: lerp(a.foot, b.foot), bend: lerp(a.bend, b.bend),
+        shift: a.shift.map((axis, index) => lerp(axis, b.shift[index], t)),
         hands: a.hands.map((hand, index) => hand.map((axis, j) => lerp(axis, b.hands[index][j]))),
     };
 }
@@ -17,6 +18,7 @@ export function poseAt(samples, time) {
 
 function difference(a, b) {
     let error = (a.hip - b.hip) ** 2 + (a.foot - b.foot) ** 2;
+    for (let axis = 0; axis < 2; axis++) error += (a.shift[axis] - b.shift[axis]) ** 2;
     for (let hand = 0; hand < 2; hand++) {
         for (let axis = 0; axis < 3; axis++) error += (a.hands[hand][axis] - b.hands[hand][axis]) ** 2;
     }

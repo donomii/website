@@ -1,12 +1,13 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { learnLoop, poseAt } from "./dance-loop.js";
+import { createDanceCapture, restingHands } from "./dance-capture.js";
 import { readGamepad } from "./gamepad.js";
 import { attachVrInput, vrSessionOptions } from "./xr-input.js";
 import { galleryRoom } from "./gallery-room.js";
 
 const viewport = document.querySelector("#viewport");
 const standalone = document.querySelector("#jump-status") !== null;
-const status = document.querySelector("#jump-status") ?? document.createTextNode("Move your hands to pose the figure.");
+const status = document.querySelector("#jump-status") ?? document.createTextNode("Move your hands or take small steps to pose the figure.");
 const recordButton = document.querySelector("#record") ?? document.createElement("button");
 const replayButton = document.querySelector("#replay") ?? document.createElement("button");
 const loopButton = document.querySelector("#loop") ?? document.createElement("button");
@@ -26,6 +27,8 @@ scene.add(light);
 const stage = new T.Group();
 stage.position.z = -2.1;
 scene.add(stage);
+const dancer = new T.Group();
+stage.add(dancer);
 const material = color => new T.MeshStandardMaterial({ color, roughness: 0.86 });
 const wood = material(0x85543e);
 const trim = material(0xdab37d);
@@ -78,7 +81,7 @@ const cylinder = new T.CylinderGeometry(1, 1, 1, 12);
 const V = (x, y, z = 0) => new T.Vector3(x, y, z);
 function piece(geometry, finish) {
     const mesh = new T.Mesh(geometry, finish);
-    stage.add(mesh);
+    dancer.add(mesh);
     return mesh;
 }
 function limb(object, a, b, radius) {
@@ -101,6 +104,7 @@ const limbs = [-1, 1].map(side => ({
 }));
 
 function drawPose(pose) {
+    dancer.position.set(pose.shift[0], 0, pose.shift[1]);
     const hip = V(0, pose.hip);
     const neck = V(0, pose.hip + 0.58);
     limb(torso, hip, neck, 0.2);
@@ -126,12 +130,11 @@ function drawPose(pose) {
 }
 
 const clamp = T.MathUtils.clamp;
-const defaultHands = () => [[-0.53, 1.29, 0.12], [0.53, 1.29, 0.12]];
 function demoPose(seconds) {
     const wave = Math.sin(seconds * Math.PI / 1.12);
     const lift = Math.max(0, wave) ** 2 * 0.48;
     const dip = Math.max(0, -wave) * 0.23;
-    return { hip: 0.91 + lift - dip, foot: lift, bend: 0.14 + dip,
+    return { hip: 0.91 + lift - dip, foot: lift, bend: 0.14 + dip, shift: [0, 0],
         hands: [-1, 1].map(side => [side * (0.53 + wave * 0.16), 1.35 + lift + wave * 0.47, 0.2]) };
 }
 
@@ -141,39 +144,31 @@ let learnedLoop = null;
 let startedAt = 0;
 let lastSample = 0;
 let desktopHand = null;
-let calibration = null;
+let capture = createDanceCapture();
 let renderer;
 const vrInputs = [];
 
 function livePose(frame, xr) {
-    const hands = defaultHands();
-    let hip = 0.91;
-    let foot = 0;
     if (xr?.isPresenting) {
-        const viewer = frame?.getViewerPose(xr.getReferenceSpace());
-        if (viewer) {
-            const p = viewer.transform.position;
-            if (!calibration) calibration = V(p.x, p.y, p.z);
-            const delta = clamp(p.y - calibration.y, -0.45, 0.55);
-            hip += delta;
-            foot = Math.max(0, delta - 0.12);
-            for (const input of frame.session.inputSources) {
-                const wrist = input.hand?.get("wrist");
-                const space = xr.getReferenceSpace();
-                const pose = wrist ? frame.getJointPose(wrist, space)
-                    : input?.gripSpace && frame.getPose(input.gripSpace, space);
-                if (pose) {
-                    const hand = pose.transform.position;
-                    const index = input.handedness === "left" ? 0 : 1;
-                    hands[index] = [clamp(hand.x - p.x, -1, 1),
-                        clamp(1.68 + hand.y - calibration.y, 0.4, 2.75), clamp(p.z - hand.z, -0.3, 0.65)];
-                }
+        const space = xr.getReferenceSpace();
+        const viewer = frame?.getViewerPose(space);
+        if (!viewer) return null;
+        const hands = [null, null];
+        for (const input of frame.session.inputSources) {
+            if (input.handedness !== "left" && input.handedness !== "right") continue;
+            const wrist = input.hand?.get("wrist");
+            const pose = wrist ? frame.getJointPose(wrist, space)
+                : input.gripSpace && frame.getPose(input.gripSpace, space);
+            if (pose) {
+                hands[input.handedness === "left" ? 0 : 1] = pose.transform.position;
             }
         }
-    } else if (desktopHand) {
-        hands[1] = desktopHand;
+        return capture(viewer.transform, hands);
+    } else {
+        const hands = restingHands();
+        if (desktopHand) hands[1] = desktopHand;
+        return { hip: 0.91, foot: 0, bend: 0.15, shift: [0, 0], hands };
     }
-    return { hip, foot, bend: 0.15 + Math.max(0, 0.91 - hip), hands };
 }
 
 function playDemo() {
@@ -187,7 +182,7 @@ function updateDancer(now, frame, xr) {
     const elapsed = Math.max(0, now - startedAt);
     const pose = mode === "demo" ? demoPose(now / 1000) : mode === "replay" ? poseAt(recording, elapsed) :
         mode === "loop" ? learnedLoop.pose(elapsed) : livePose(frame, xr);
-    if (mode === "record" && elapsed - lastSample >= 1000 / 30) {
+    if (pose && mode === "record" && elapsed - lastSample >= 1000 / 30) {
         recording.push({ time: elapsed, pose });
         lastSample = elapsed;
     }
@@ -196,7 +191,7 @@ function updateDancer(now, frame, xr) {
         mode = "live";
         status.textContent = "Replay finished.";
     }
-    drawPose(pose);
+    if (pose) drawPose(pose);
     updateSign(!standalone || xr.isPresenting);
 }
 
@@ -205,9 +200,9 @@ export function createJumpRoom() {
         actions: [["Record / stop", toggleRecord], ["Loop / stop", toggleLoop], ["Replay", replay], ["Built-in jump", playDemo]],
         update: updateDancer,
         enter() {
-            calibration = null;
+            capture = createDanceCapture();
             mode = "live";
-            status.textContent = "Move your hands to pose the figure.";
+            status.textContent = "Move your hands or take small steps to pose the figure.";
         },
         leave() {
             if (mode === "record") stopRecording();
@@ -232,13 +227,13 @@ function toggleRecord() {
         learnedLoop = null;
         startedAt = performance.now();
         lastSample = -Infinity;
-        calibration = null;
+        capture = createDanceCapture();
         mode = "record";
         recordButton.textContent = "Stop recording";
         replayButton.disabled = true;
         loopButton.disabled = true;
         loopButton.textContent = "Loop the dance";
-        status.textContent = "Recording movement for up to 12 seconds.";
+        status.textContent = "Recording hands and steps for up to 12 seconds.";
     }
 }
 
@@ -288,9 +283,9 @@ async function setupVr() {
         try {
             const session = await navigator.xr.requestSession("immersive-vr", vrSessionOptions);
             await renderer.xr.setSession(session);
-            calibration = null;
+            capture = createDanceCapture();
             mode = "live";
-            status.textContent = "Move your hands to pose the figure.";
+            status.textContent = "Move your hands or take small steps to pose the figure.";
             session.addEventListener("end", () => {
                 if (mode === "record") stopRecording();
                 mode = "demo";
