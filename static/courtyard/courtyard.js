@@ -1,4 +1,5 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
+import { gamepadMenu, readGamepad } from "./gamepad.js";
 
 const viewport = document.querySelector("#viewport");
 const status = document.querySelector("#status");
@@ -423,9 +424,11 @@ function bindDesktop(renderer) {
     }));
 }
 
-function walk(dt) {
-    const forward = Number(keys.has("w") || keys.has("arrowup")) - Number(keys.has("s") || keys.has("arrowdown"));
-    const right = Number(keys.has("d") || keys.has("arrowright")) - Number(keys.has("a") || keys.has("arrowleft"));
+function walk(dt, [strafe = 0, travel = 0, lookX = 0, lookY = 0] = []) {
+    yaw -= lookX * dt * 2;
+    pitch = T.MathUtils.clamp(pitch - lookY * dt * 2, -1.25, 1.25);
+    const forward = Number(keys.has("w") || keys.has("arrowup")) - Number(keys.has("s") || keys.has("arrowdown")) - travel;
+    const right = Number(keys.has("d") || keys.has("arrowright")) - Number(keys.has("a") || keys.has("arrowleft")) + strafe;
     const speed = dt * 3.4 / Math.max(1, Math.hypot(forward, right));
     const nextX = rig.position.x + speed * (right * Math.cos(yaw) - forward * Math.sin(yaw));
     const nextZ = rig.position.z - speed * (right * Math.sin(yaw) + forward * Math.cos(yaw));
@@ -534,12 +537,18 @@ function start() {
         letterFit?.setTarget(fitTarget.value);
     });
     bindVR(renderer).catch(() => { vr.hidden = true; });
+    const pollGamepad = readGamepad();
+    const useMenu = gamepadMenu("main button, main a[href]");
     let previous = performance.now();
     renderer.setAnimationLoop(now => {
         const frameMs = Math.max(0, now - previous);
         const dt = Math.min(0.05, frameMs / 1000);
         previous = now;
-        if (!renderer.xr.isPresenting) walk(dt);
+        if (!renderer.xr.isPresenting) {
+            const pad = pollGamepad();
+            walk(dt, pad?.axes);
+            if (pad) useMenu(pad);
+        }
         updateExhibit();
         if (!inLandscape) creatures?.update(now / 1000, dt);
         if (!inLandscape && active === 1 && carving) {

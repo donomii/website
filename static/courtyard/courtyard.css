@@ -22,3 +22,4 @@ nav a[aria-current="true"], #project { background: #84462f; }
 #project { margin-top: .45rem; }
 [hidden] { display: none !important; }
 :focus-visible { outline: 2px solid #ffd891; outline-offset: 3px; }
+main :is(a, button):focus { outline: 2px solid #ffd891; outline-offset: 3px; }

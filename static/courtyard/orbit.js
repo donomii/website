@@ -1,4 +1,5 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
+import { gamepadMenu, readGamepad } from "./gamepad.js";
 
 const viewport = document.querySelector("#viewport");
 const voyage = document.querySelector("#voyage");
@@ -166,7 +167,11 @@ try {
         hitDestination();
     });
     setupVr().catch(() => { vr.hidden = true; });
+    const pollGamepad = readGamepad();
+    const useMenu = gamepadMenu("main button, main a[href]");
     renderer.setAnimationLoop(now => {
+        const pad = !renderer.xr.isPresenting && pollGamepad();
+        if (pad) useMenu(pad);
         if (route) {
             const t = T.MathUtils.clamp((now - route.start) / 1600, 0, 1);
             ship.position.lerpVectors(route.from, route.to, t * t * (3 - 2 * t));

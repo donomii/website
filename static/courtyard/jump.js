@@ -1,5 +1,6 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { learnLoop, poseAt } from "./dance-loop.js";
+import { readGamepad } from "./gamepad.js";
 
 const viewport = document.querySelector("#viewport");
 const status = document.querySelector("#jump-status");
@@ -287,7 +288,20 @@ try {
         status.textContent = "The figure is playing its built-in jump.";
     });
     setupVr().catch(() => { vrButton.hidden = true; });
+    const pollGamepad = readGamepad();
     renderer.setAnimationLoop((now, frame) => {
+        const pad = !renderer.xr.isPresenting && pollGamepad();
+        if (pad) {
+            const [x, y] = pad.axes;
+            if (x || y) {
+                if (mode !== "record") mode = "live";
+                loopButton.textContent = "Loop the dance";
+                desktopHand = [x, 1.525 - y * 1.125, 0.15];
+            }
+            if (pad.pressed[0]) toggleRecord();
+            else if (pad.pressed[2]) replay();
+            else if (pad.pressed[3]) toggleLoop();
+        }
         const elapsed = Math.max(0, now - startedAt);
         const pose = mode === "demo" ? demoPose(now / 1000) : mode === "replay" ? poseAt(recording, elapsed) :
             mode === "loop" ? learnedLoop.pose(elapsed) : livePose(frame);

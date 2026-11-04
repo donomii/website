@@ -1,5 +1,6 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { ArchiveEntry, fileLimit, parseArchive } from "./archive.js";
+import { gamepadMenu, readGamepad } from "./gamepad.js";
 
 const archive = {
     "maps.zip": {
@@ -285,7 +286,13 @@ try {
         selectTarget();
     });
     setupVr().catch(() => { vr.hidden = true; });
-    renderer.setAnimationLoop(() => renderer.render(scene, camera));
+    const pollGamepad = readGamepad();
+    const useMenu = gamepadMenu("main button, main a[href]");
+    renderer.setAnimationLoop(() => {
+        const pad = !renderer.xr.isPresenting && pollGamepad();
+        if (pad) useMenu(pad);
+        renderer.render(scene, camera);
+    });
 } catch {
     viewport.hidden = true;
 }
