@@ -1,6 +1,7 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { learnLoop, poseAt } from "./dance-loop.js";
 import { readGamepad } from "./gamepad.js";
+import { attachVrInput, vrSessionOptions } from "./xr-input.js";
 
 const viewport = document.querySelector("#viewport");
 const status = document.querySelector("#jump-status");
@@ -141,6 +142,7 @@ let desktopHand = null;
 let calibration = null;
 let renderer;
 const controllers = [];
+const vrInputs = [];
 
 function livePose(frame) {
     const hands = defaultHands();
@@ -156,7 +158,10 @@ function livePose(frame) {
             foot = Math.max(0, delta - 0.12);
             for (const controller of controllers) {
                 const input = controller.userData.input;
-                const pose = input?.gripSpace && frame.getPose(input.gripSpace, renderer.xr.getReferenceSpace());
+                const wrist = input?.hand?.get("wrist");
+                const space = renderer.xr.getReferenceSpace();
+                const pose = wrist ? frame.getJointPose(wrist, space)
+                    : input?.gripSpace && frame.getPose(input.gripSpace, space);
                 if (pose) {
                     const hand = pose.transform.position;
                     const index = input.handedness === "left" ? 0 : 1;
@@ -227,18 +232,25 @@ async function setupVr() {
     renderer.xr.enabled = true;
     renderer.xr.setReferenceSpaceType("local-floor");
     for (let i = 0; i < 2; i++) {
-        const controller = renderer.xr.getController(i);
-        rig.add(controller);
+        const input = attachVrInput(renderer.xr, rig, i, false);
+        vrInputs.push(input);
+        const controller = input.ray;
         controllers.push(controller);
         controller.addEventListener("connected", event => { controller.userData.input = event.data; });
         controller.addEventListener("disconnected", () => { controller.userData.input = null; });
         controller.addEventListener("squeezestart", toggleRecord);
-        controller.addEventListener("selectstart", toggleLoop);
+        controller.addEventListener("selectstart", event => {
+            if (event.data?.hand && event.data.handedness === "left") {
+                toggleRecord();
+            } else {
+                toggleLoop();
+            }
+        });
     }
     vrButton.hidden = false;
     vrButton.addEventListener("click", async () => {
         try {
-            const session = await navigator.xr.requestSession("immersive-vr", { requiredFeatures: ["local-floor"] });
+            const session = await navigator.xr.requestSession("immersive-vr", vrSessionOptions);
             await renderer.xr.setSession(session);
             calibration = null;
             mode = "live";
@@ -290,6 +302,7 @@ try {
     setupVr().catch(() => { vrButton.hidden = true; });
     const pollGamepad = readGamepad();
     renderer.setAnimationLoop((now, frame) => {
+        for (const input of vrInputs) input.update();
         const pad = !renderer.xr.isPresenting && pollGamepad();
         if (pad) {
             const [x, y] = pad.axes;

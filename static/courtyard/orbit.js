@@ -1,5 +1,6 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { gamepadMenu, readGamepad } from "./gamepad.js";
+import { attachVrInput, vrSessionOptions } from "./xr-input.js";
 
 const viewport = document.querySelector("#viewport");
 const voyage = document.querySelector("#voyage");
@@ -123,16 +124,18 @@ async function hitDestination() {
     }
 }
 
+const vrInputs = [];
+
 async function setupVr() {
     if (!navigator.xr || !await navigator.xr.isSessionSupported("immersive-vr")) return;
     renderer.xr.enabled = true;
     renderer.xr.setReferenceSpaceType("local-floor");
     for (let i = 0; i < 2; i++) {
-        const controller = renderer.xr.getController(i);
-        rig.add(controller);
-        controller.add(new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(), new T.Vector3(0, 0, -5)]),
-            new T.LineBasicMaterial({ color: 0xffdfab })));
+        const input = attachVrInput(renderer.xr, rig, i);
+        vrInputs.push(input);
+        const controller = input.ray;
         controller.addEventListener("select", () => {
+            if (!controller.visible) return;
             ray.set(controller.getWorldPosition(new T.Vector3()),
                 new T.Vector3(0, 0, -1).applyQuaternion(controller.getWorldQuaternion(new T.Quaternion())));
             hitDestination();
@@ -141,7 +144,7 @@ async function setupVr() {
     vr.hidden = false;
     vr.addEventListener("click", async () => {
         try {
-            await renderer.xr.setSession(await navigator.xr.requestSession("immersive-vr", { requiredFeatures: ["local-floor"] }));
+            await renderer.xr.setSession(await navigator.xr.requestSession("immersive-vr", vrSessionOptions));
         } catch {
             voyage.textContent = "The headset session could not start.";
         }
@@ -170,6 +173,7 @@ try {
     const pollGamepad = readGamepad();
     const useMenu = gamepadMenu("main button, main a[href]");
     renderer.setAnimationLoop(now => {
+        for (const input of vrInputs) input.update();
         const pad = !renderer.xr.isPresenting && pollGamepad();
         if (pad) useMenu(pad);
         if (route) {

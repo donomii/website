@@ -1,5 +1,6 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { gamepadMenu, readGamepad } from "./gamepad.js";
+import { attachVrInput, thumbsticks, vrSessionOptions } from "./xr-input.js";
 
 const viewport = document.querySelector("#viewport");
 const status = document.querySelector("#status");
@@ -429,9 +430,14 @@ function walk(dt, [strafe = 0, travel = 0, lookX = 0, lookY = 0] = []) {
     pitch = T.MathUtils.clamp(pitch - lookY * dt * 2, -1.25, 1.25);
     const forward = Number(keys.has("w") || keys.has("arrowup")) - Number(keys.has("s") || keys.has("arrowdown")) - travel;
     const right = Number(keys.has("d") || keys.has("arrowright")) - Number(keys.has("a") || keys.has("arrowleft")) + strafe;
-    const speed = dt * 3.4 / Math.max(1, Math.hypot(forward, right));
-    const nextX = rig.position.x + speed * (right * Math.cos(yaw) - forward * Math.sin(yaw));
-    const nextZ = rig.position.z - speed * (right * Math.sin(yaw) + forward * Math.cos(yaw));
+    moveRig(dt * 3.4, forward, right, yaw);
+    camera.rotation.set(pitch, yaw, 0, "YXZ");
+}
+
+function moveRig(distance, forward, right, heading) {
+    const speed = distance / Math.max(1, Math.hypot(forward, right));
+    const nextX = rig.position.x + speed * (right * Math.cos(heading) - forward * Math.sin(heading));
+    const nextZ = rig.position.z - speed * (right * Math.sin(heading) + forward * Math.cos(heading));
     if (inLandscape) {
         const limitX = landscape.limitX ?? 27.5;
         const x = T.MathUtils.clamp(nextX, -limitX, limitX);
@@ -450,20 +456,43 @@ function walk(dt, [strafe = 0, travel = 0, lookX = 0, lookY = 0] = []) {
             if (room) enterMap(room);
         }
     }
-    camera.rotation.set(pitch, yaw, 0, "YXZ");
 }
 
-async function bindVR(renderer) {
+const up = new T.Vector3(0, 1, 0);
+const courtyardFloor = new T.Plane(up, 0);
+let turnReady = true;
+
+function walkVr(renderer, frame, dt) {
+    const pose = frame?.getViewerPose(renderer.xr.getReferenceSpace());
+    if (!pose) return;
+    const [strafe, travel, turn] = thumbsticks(frame.session.inputSources);
+    const deadZone = value => Math.sign(value) * Math.max(0, Math.abs(value) - 0.18) / 0.82;
+    if (Math.abs(turn) < 0.3) turnReady = true;
+    if (turnReady && Math.abs(turn) >= 0.65) {
+        turnReady = false;
+        const delta = -Math.sign(turn) * Math.PI / 6;
+        // Turn about the headset so room-scale movement does not shift the view sideways.
+        const offset = new T.Vector3().copy(pose.transform.position).setY(0).applyAxisAngle(up, rig.rotation.y);
+        rig.position.add(offset).sub(offset.clone().applyAxisAngle(up, delta));
+        rig.rotation.y += delta;
+    }
+    if (Math.abs(strafe) > 0.18 || Math.abs(travel) > 0.18) {
+        const facing = new T.Vector3(0, 0, -1).applyQuaternion(pose.transform.orientation);
+        const heading = Math.atan2(-facing.x, -facing.z) + rig.rotation.y;
+        moveRig(dt * 1.7, -deadZone(travel), deadZone(strafe), heading);
+    }
+}
+
+async function bindVR(renderer, inputs) {
     if (!navigator.xr || !await navigator.xr.isSessionSupported("immersive-vr")) return;
     renderer.xr.enabled = true;
     renderer.xr.setReferenceSpaceType("local-floor");
     for (let i = 0; i < 2; i++) {
-        const controller = renderer.xr.getController(i);
-        const beam = new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(), new T.Vector3(0, 0, -12)]),
-            new T.LineBasicMaterial({ color: 0xffdf9f }));
-        controller.add(beam);
-        rig.add(controller);
+        const input = attachVrInput(renderer.xr, rig, i);
+        inputs.push(input);
+        const controller = input.ray;
         controller.addEventListener("select", () => {
+            if (!controller.visible) return;
             const ray = new T.Raycaster(controller.getWorldPosition(new T.Vector3()),
                 new T.Vector3(0, 0, -1).applyQuaternion(controller.getWorldQuaternion(new T.Quaternion())));
             if (inLandscape) {
@@ -482,6 +511,12 @@ async function bindVR(renderer) {
                     if (index === 1 && active === 1 && carving) carving.start();
                     else if (index === 4 && active === 4 && letterFit) letterFit.start();
                     else visit(index);
+                } else {
+                    const point = ray.ray.intersectPlane(courtyardFloor, new T.Vector3());
+                    if (point && ray.ray.direction.y < -0.05 && Math.abs(point.x) <= 7.7 &&
+                        point.z >= -10.1 && point.z <= 10.5 && Math.hypot(point.x, point.z + 1) > 1.5) {
+                        rig.position.copy(point);
+                    }
                 }
             }
         });
@@ -489,7 +524,9 @@ async function bindVR(renderer) {
     vr.hidden = false;
     vr.addEventListener("click", async () => {
         try {
-            const session = await navigator.xr.requestSession("immersive-vr", { requiredFeatures: ["local-floor"] });
+            const session = await navigator.xr.requestSession("immersive-vr", vrSessionOptions);
+            turnReady = true;
+            session.addEventListener("end", () => { rig.rotation.y = 0; }, { once: true });
             await renderer.xr.setSession(session);
         } catch (error) {
             status.textContent = `VR could not start: ${error.message}`;
@@ -536,15 +573,30 @@ function start() {
         await loadLetterFit();
         letterFit?.setTarget(fitTarget.value);
     });
-    bindVR(renderer).catch(() => { vr.hidden = true; });
+    const vrGuide = new T.Group();
+    ["VR · Left stick walks · Right stick turns", "Point at the floor · Trigger or pinch to teleport",
+        "Point at an exhibit or doorway to select it"].forEach((line, index) => {
+        const sign = new T.Mesh(new T.PlaneGeometry(2.7, 0.4), plaque(line));
+        sign.position.y = -index * 0.39;
+        vrGuide.add(sign);
+    });
+    vrGuide.position.set(0, 2.08, 5.3);
+    vrGuide.visible = false;
+    scene.add(vrGuide);
+    const inputs = [];
+    bindVR(renderer, inputs).catch(() => { vr.hidden = true; });
     const pollGamepad = readGamepad();
     const useMenu = gamepadMenu("main button, main a[href]");
     let previous = performance.now();
-    renderer.setAnimationLoop(now => {
+    renderer.setAnimationLoop((now, frame) => {
         const frameMs = Math.max(0, now - previous);
         const dt = Math.min(0.05, frameMs / 1000);
         previous = now;
-        if (!renderer.xr.isPresenting) {
+        vrGuide.visible = renderer.xr.isPresenting;
+        if (renderer.xr.isPresenting) {
+            for (const input of inputs) input.update();
+            walkVr(renderer, frame, dt);
+        } else {
             const pad = pollGamepad();
             walk(dt, pad?.axes);
             if (pad) useMenu(pad);
