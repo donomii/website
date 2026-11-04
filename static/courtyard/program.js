@@ -1,12 +1,14 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { Zipper } from "../../projects/languages/zipper/zipper.js";
+import { exhibitDocument, galleryRoom } from "./gallery-room.js";
 
 const viewport = document.querySelector("#viewport");
-const status = document.querySelector("#program-status");
-const editor = document.querySelector("#program");
-const step = document.querySelector("#step");
-const run = document.querySelector("#run");
-const reset = document.querySelector("#reset");
+const standalone = document.querySelector("#program-status") !== null;
+const status = document.querySelector("#program-status") ?? document.createTextNode("");
+const editor = document.querySelector("#program") ?? document.createElement("textarea");
+const step = document.querySelector("#step") ?? document.createElement("button");
+const run = document.querySelector("#run") ?? document.createElement("button");
+const reset = document.querySelector("#reset") ?? document.createElement("button");
 const scene = new T.Scene();
 scene.background = new T.Color(0x241e24);
 const camera = new T.PerspectiveCamera(46, 1, 0.05, 40);
@@ -91,7 +93,16 @@ reset.addEventListener("click", () => {
     try { buildMachine(); } catch (error) { status.textContent = error.message; }
 });
 
-try {
+export async function createProgramRoom() {
+    editor.value = (await exhibitDocument("./program.html")).querySelector("#program").value;
+    buildMachine();
+    return galleryRoom(scene, {
+        actions: [["Step", () => step.click()], ["Run", () => run.click()], ["Reset", () => reset.click()]],
+        update(now) { plinth.rotation.y = 0.24 + Math.sin(now / 2800) * 0.35; },
+    });
+}
+
+if (standalone) try {
     const renderer = new T.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     viewport.append(renderer.domElement);
@@ -111,4 +122,4 @@ try {
 } catch {
     viewport.hidden = true;
 }
-execute(true);
+if (standalone) execute(true);

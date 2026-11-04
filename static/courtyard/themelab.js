@@ -1,12 +1,15 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
+import { galleryRoom } from "./gallery-room.js";
 
 const viewport = document.querySelector("#scene");
 const select = document.querySelector("#theme");
 const cameraButton = document.querySelector("#camera");
 const status = document.querySelector("#tracking");
-const renderer = new T.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-viewport.append(renderer.domElement);
+const renderer = viewport ? new T.WebGLRenderer({ antialias: true }) : null;
+if (renderer) {
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    viewport.append(renderer.domElement);
+}
 const camera = new T.PerspectiveCamera();
 const scene = new T.Scene();
 const scenery = new T.Group();
@@ -21,13 +24,12 @@ function box(color, x, y, z, width, height, depth) {
     scenery.add(object);
 }
 
-function build() {
+function build(theme) {
     for (const object of [...scenery.children]) {
         object.geometry.dispose();
         object.material.dispose();
         scenery.remove(object);
     }
-    const theme = select.value;
     const frame = theme === "bookshelf" ? 0x573326 : 0x9d795d;
     scene.background = new T.Color(0x8298a1);
     box(0x9c8a78, 0, -1.38, -5, 12, 0.22, 12);
@@ -60,6 +62,7 @@ function look(nextX, nextY) {
 }
 
 function render() {
+    if (!renderer) return;
     const distance = 4;
     const halfHeight = 1.75;
     const halfWidth = halfHeight * viewport.clientWidth / Math.max(1, viewport.clientHeight);
@@ -122,7 +125,7 @@ async function track() {
     }
 }
 
-cameraButton.addEventListener("click", () => {
+cameraButton?.addEventListener("click", () => {
     if (cameraButton.textContent === "Stop camera tracking") {
         stopCamera("Camera tracking off. Use the pointer or arrow keys.");
     } else if (!globalThis.FaceDetector || !navigator.mediaDevices?.getUserMedia) {
@@ -131,14 +134,14 @@ cameraButton.addEventListener("click", () => {
         track();
     }
 });
-window.addEventListener("pagehide", () => stopCamera("Camera tracking off."));
-select.addEventListener("change", build);
-document.querySelector("#center").addEventListener("click", () => look(0, 0));
-viewport.addEventListener("pointermove", event => {
+if (renderer) window.addEventListener("pagehide", () => stopCamera("Camera tracking off."));
+select?.addEventListener("change", () => build(select.value));
+document.querySelector("#center")?.addEventListener("click", () => look(0, 0));
+viewport?.addEventListener("pointermove", event => {
     const rect = viewport.getBoundingClientRect();
     look(2 * (event.clientX - rect.left) / rect.width - 1, 1 - 2 * (event.clientY - rect.top) / rect.height);
 });
-viewport.addEventListener("keydown", event => {
+viewport?.addEventListener("keydown", event => {
     const moves = { ArrowLeft: [-0.14, 0], ArrowRight: [0.14, 0], ArrowUp: [0, 0.14], ArrowDown: [0, -0.14] };
     const delta = moves[event.key];
     if (delta) {
@@ -146,9 +149,20 @@ viewport.addEventListener("keydown", event => {
         look(x + delta[0], y + delta[1]);
     }
 });
-new ResizeObserver(() => {
-    renderer.setSize(viewport.clientWidth, viewport.clientHeight, false);
-    render();
-}).observe(viewport);
-build();
+if (renderer) {
+    new ResizeObserver(() => {
+        renderer.setSize(viewport.clientWidth, viewport.clientHeight, false);
+        render();
+    }).observe(viewport);
+    build(select.value);
+}
+
+export function createThemelabRoom() {
+    scenery.position.y = 1.28;
+    build("window");
+    return galleryRoom(scene, {
+        actions: [["Window", () => build("window")], ["Grate", () => build("grate")],
+            ["Bookshelf", () => build("bookshelf")]],
+    });
+}
 

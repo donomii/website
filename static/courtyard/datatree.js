@@ -2,6 +2,7 @@ import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { ArchiveEntry, fileLimit, parseArchive } from "./archive.js";
 import { gamepadMenu, readGamepad } from "./gamepad.js";
 import { attachVrInput, vrSessionOptions } from "./xr-input.js";
+import { galleryRoom } from "./gallery-room.js";
 
 const archive = {
     "maps.zip": {
@@ -12,9 +13,10 @@ const archive = {
     "readme.txt": "A sample archive for the Datatree exhibit.",
 };
 const viewport = document.querySelector("#viewport");
-const controls = document.querySelector("#tree-controls");
-const pathText = document.querySelector("#tree-path");
-const valueText = document.querySelector("#tree-value");
+const standalone = document.querySelector("#tree-controls") !== null;
+const controls = document.querySelector("#tree-controls") ?? document.createElement("nav");
+const pathText = document.querySelector("#tree-path") ?? document.createTextNode("");
+const valueText = document.querySelector("#tree-value") ?? document.createTextNode("");
 const vr = document.querySelector("#vr");
 const filePicker = document.querySelector("#tree-file");
 const path = [{ name: "exhibits.zip", value: archive }];
@@ -217,7 +219,7 @@ function snapshotTree(text) {
     return branch(snapshot.resources, 1);
 }
 
-filePicker.addEventListener("change", async () => {
+filePicker?.addEventListener("change", async () => {
     const file = filePicker.files[0];
     if (!file) return;
     const request = ++revision;
@@ -232,14 +234,20 @@ filePicker.addEventListener("change", async () => {
         if (request === revision) valueText.textContent = error.message;
     }
 });
-document.querySelector("#tree-sample").addEventListener("click", () => {
+document.querySelector("#tree-sample")?.addEventListener("click", () => {
     revision++;
     openRoot("exhibits.zip", archive);
 });
 
 const ray = new T.Raycaster();
-function selectTarget() {
-    ray.intersectObjects(targets)[0]?.object.userData.action();
+function selectTarget(pointer = ray) {
+    const hit = pointer.intersectObjects(targets)[0];
+    if (hit) hit.object.userData.action();
+    return Boolean(hit);
+}
+
+export function createDatatreeRoom() {
+    return galleryRoom(scene, { select: selectTarget });
 }
 
 const vrInputs = [];
@@ -270,7 +278,7 @@ async function setupVr() {
     });
 }
 
-try {
+if (standalone) try {
     renderer = new T.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     viewport.append(renderer.domElement);

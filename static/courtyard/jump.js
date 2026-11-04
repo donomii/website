@@ -2,12 +2,14 @@ import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { learnLoop, poseAt } from "./dance-loop.js";
 import { readGamepad } from "./gamepad.js";
 import { attachVrInput, vrSessionOptions } from "./xr-input.js";
+import { galleryRoom } from "./gallery-room.js";
 
 const viewport = document.querySelector("#viewport");
-const status = document.querySelector("#jump-status");
-const recordButton = document.querySelector("#record");
-const replayButton = document.querySelector("#replay");
-const loopButton = document.querySelector("#loop");
+const standalone = document.querySelector("#jump-status") !== null;
+const status = document.querySelector("#jump-status") ?? document.createTextNode("Move your hands to pose the figure.");
+const recordButton = document.querySelector("#record") ?? document.createElement("button");
+const replayButton = document.querySelector("#replay") ?? document.createElement("button");
+const loopButton = document.querySelector("#loop") ?? document.createElement("button");
 const vrButton = document.querySelector("#vr");
 const scene = new T.Scene();
 scene.background = new T.Color(0x292124);
@@ -49,8 +51,8 @@ sign.position.set(0, 3.09, -1.25);
 sign.visible = false;
 stage.add(sign);
 let signText;
-function updateSign() {
-    sign.visible = renderer.xr.isPresenting;
+function updateSign(visible) {
+    sign.visible = visible;
     if (!sign.visible || signText === status.textContent) return;
     signText = status.textContent;
     const ctx = signCanvas.getContext("2d");
@@ -61,7 +63,7 @@ function updateSign() {
     ctx.font = "32px system-ui";
     ctx.fillText(signText, 384, 63, 720);
     ctx.font = "27px system-ui";
-    ctx.fillText("Grip: record / stop     Trigger: loop / stop", 384, 115);
+    ctx.fillText(standalone ? "Grip: record / stop     Trigger: loop / stop" : "Point at the controls and select", 384, 115);
     signTexture.needsUpdate = true;
 }
 for (const x of [-2.1, 2.1]) {
@@ -141,25 +143,23 @@ let lastSample = 0;
 let desktopHand = null;
 let calibration = null;
 let renderer;
-const controllers = [];
 const vrInputs = [];
 
-function livePose(frame) {
+function livePose(frame, xr) {
     const hands = defaultHands();
     let hip = 0.91;
     let foot = 0;
-    if (renderer.xr.isPresenting) {
-        const viewer = frame?.getViewerPose(renderer.xr.getReferenceSpace());
+    if (xr?.isPresenting) {
+        const viewer = frame?.getViewerPose(xr.getReferenceSpace());
         if (viewer) {
             const p = viewer.transform.position;
             if (!calibration) calibration = V(p.x, p.y, p.z);
             const delta = clamp(p.y - calibration.y, -0.45, 0.55);
             hip += delta;
             foot = Math.max(0, delta - 0.12);
-            for (const controller of controllers) {
-                const input = controller.userData.input;
-                const wrist = input?.hand?.get("wrist");
-                const space = renderer.xr.getReferenceSpace();
+            for (const input of frame.session.inputSources) {
+                const wrist = input.hand?.get("wrist");
+                const space = xr.getReferenceSpace();
                 const pose = wrist ? frame.getJointPose(wrist, space)
                     : input?.gripSpace && frame.getPose(input.gripSpace, space);
                 if (pose) {
@@ -174,6 +174,45 @@ function livePose(frame) {
         hands[1] = desktopHand;
     }
     return { hip, foot, bend: 0.15 + Math.max(0, 0.91 - hip), hands };
+}
+
+function playDemo() {
+    if (mode === "record") stopRecording();
+    mode = "demo";
+    loopButton.textContent = "Loop the dance";
+    status.textContent = "The figure is playing its built-in jump.";
+}
+
+function updateDancer(now, frame, xr) {
+    const elapsed = Math.max(0, now - startedAt);
+    const pose = mode === "demo" ? demoPose(now / 1000) : mode === "replay" ? poseAt(recording, elapsed) :
+        mode === "loop" ? learnedLoop.pose(elapsed) : livePose(frame, xr);
+    if (mode === "record" && elapsed - lastSample >= 1000 / 30) {
+        recording.push({ time: elapsed, pose });
+        lastSample = elapsed;
+    }
+    if (mode === "record" && elapsed >= 12000) stopRecording();
+    if (mode === "replay" && elapsed >= recording[recording.length - 1].time) {
+        mode = "live";
+        status.textContent = "Replay finished.";
+    }
+    drawPose(pose);
+    updateSign(!standalone || xr.isPresenting);
+}
+
+export function createJumpRoom() {
+    return galleryRoom(scene, {
+        actions: [["Record / stop", toggleRecord], ["Loop / stop", toggleLoop], ["Replay", replay], ["Built-in jump", playDemo]],
+        update: updateDancer,
+        enter() {
+            calibration = null;
+            mode = "live";
+            status.textContent = "Move your hands to pose the figure.";
+        },
+        leave() {
+            if (mode === "record") stopRecording();
+        },
+    });
 }
 
 function stopRecording() {
@@ -235,9 +274,6 @@ async function setupVr() {
         const input = attachVrInput(renderer.xr, rig, i, false);
         vrInputs.push(input);
         const controller = input.ray;
-        controllers.push(controller);
-        controller.addEventListener("connected", event => { controller.userData.input = event.data; });
-        controller.addEventListener("disconnected", () => { controller.userData.input = null; });
         controller.addEventListener("squeezestart", toggleRecord);
         controller.addEventListener("selectstart", event => {
             if (event.data?.hand && event.data.handedness === "left") {
@@ -266,7 +302,7 @@ async function setupVr() {
     });
 }
 
-try {
+if (standalone) try {
     renderer = new T.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     viewport.append(renderer.domElement);
@@ -293,12 +329,7 @@ try {
     recordButton.addEventListener("click", toggleRecord);
     replayButton.addEventListener("click", replay);
     loopButton.addEventListener("click", toggleLoop);
-    document.querySelector("#demo").addEventListener("click", () => {
-        if (mode === "record") stopRecording();
-        mode = "demo";
-        loopButton.textContent = "Loop the dance";
-        status.textContent = "The figure is playing its built-in jump.";
-    });
+    document.querySelector("#demo").addEventListener("click", playDemo);
     setupVr().catch(() => { vrButton.hidden = true; });
     const pollGamepad = readGamepad();
     renderer.setAnimationLoop((now, frame) => {
@@ -315,20 +346,7 @@ try {
             else if (pad.pressed[2]) replay();
             else if (pad.pressed[3]) toggleLoop();
         }
-        const elapsed = Math.max(0, now - startedAt);
-        const pose = mode === "demo" ? demoPose(now / 1000) : mode === "replay" ? poseAt(recording, elapsed) :
-            mode === "loop" ? learnedLoop.pose(elapsed) : livePose(frame);
-        if (mode === "record" && elapsed - lastSample >= 1000 / 30) {
-            recording.push({ time: elapsed, pose });
-            lastSample = elapsed;
-        }
-        if (mode === "record" && elapsed >= 12000) stopRecording();
-        if (mode === "replay" && elapsed >= recording[recording.length - 1].time) {
-            mode = "live";
-            status.textContent = "Replay finished.";
-        }
-        drawPose(pose);
-        updateSign();
+        updateDancer(now, frame, renderer.xr);
         renderer.render(scene, camera);
     });
 } catch {

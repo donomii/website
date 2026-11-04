@@ -1,12 +1,12 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { gamepadMenu, readGamepad } from "./gamepad.js";
-import { attachVrInput, vrSessionOptions } from "./xr-input.js";
+import { galleryRoom } from "./gallery-room.js";
 
 const viewport = document.querySelector("#viewport");
-const voyage = document.querySelector("#voyage");
-const arrival = document.querySelector("#arrival");
-const exhibit = document.querySelector("#exhibit");
-const vr = document.querySelector("#vr");
+const standalone = document.querySelector("#destinations") !== null;
+const voyage = document.querySelector("#voyage") ?? document.createTextNode("");
+const arrival = document.querySelector("#arrival") ?? document.createTextNode("");
+const exhibit = document.querySelector("#exhibit") ?? document.createElement("a");
 const scene = new T.Scene();
 scene.background = new T.Color(0x101923);
 const rig = new T.Group();
@@ -102,56 +102,43 @@ destinations.forEach((entry, index) => {
     button.textContent = entry.name;
     button.setAttribute("aria-pressed", "false");
     button.addEventListener("click", () => depart(index));
-    document.querySelector("#destinations").append(button);
+    document.querySelector("#destinations")?.append(button);
     entry.button = button;
 });
 
 const ray = new T.Raycaster();
-async function hitDestination() {
-    const hit = ray.intersectObjects(targets)[0];
-    if (!hit) return;
-    const index = hit.object.userData.index;
-    const session = renderer.xr.getSession();
-    if (session && index === selected && !route && !exhibit.hidden) {
-        try {
-            await session.end();
-            window.location.assign(destinations[index].path);
-        } catch {
-            voyage.textContent = "Exit VR to open the exhibit.";
-        }
-    } else {
-        depart(index);
+function advanceShip(now) {
+    if (route) {
+        const t = T.MathUtils.clamp((now - route.start) / 1600, 0, 1);
+        ship.position.lerpVectors(route.from, route.to, t * t * (3 - 2 * t));
+        ship.position.z += Math.sin(t * Math.PI) * 0.28;
+        if (t === 1) arrive();
     }
 }
 
-const vrInputs = [];
-
-async function setupVr() {
-    if (!navigator.xr || !await navigator.xr.isSessionSupported("immersive-vr")) return;
-    renderer.xr.enabled = true;
-    renderer.xr.setReferenceSpaceType("local-floor");
-    for (let i = 0; i < 2; i++) {
-        const input = attachVrInput(renderer.xr, rig, i);
-        vrInputs.push(input);
-        const controller = input.ray;
-        controller.addEventListener("select", () => {
-            if (!controller.visible) return;
-            ray.set(controller.getWorldPosition(new T.Vector3()),
-                new T.Vector3(0, 0, -1).applyQuaternion(controller.getWorldQuaternion(new T.Quaternion())));
-            hitDestination();
-        });
-    }
-    vr.hidden = false;
-    vr.addEventListener("click", async () => {
-        try {
-            await renderer.xr.setSession(await navigator.xr.requestSession("immersive-vr", vrSessionOptions));
-        } catch {
-            voyage.textContent = "The headset session could not start.";
-        }
+export function createOrbitRoom(openExhibit) {
+    const instructions = plaque("Select a planet", "Select again on arrival to enter");
+    instructions.position.set(0, 2.8, -2.85);
+    scene.add(instructions);
+    return galleryRoom(scene, {
+        update: advanceShip,
+        select(pointer) {
+            const hit = pointer.intersectObjects(targets)[0];
+            if (!hit) return false;
+            const index = hit.object.userData.index;
+            if (index === selected && !route) openExhibit(destinations[index].path);
+            else depart(index);
+            return true;
+        },
     });
 }
 
-try {
+function hitDestination() {
+    const hit = ray.intersectObjects(targets)[0];
+    if (hit) depart(hit.object.userData.index);
+}
+
+if (standalone) try {
     renderer = new T.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     viewport.append(renderer.domElement);
@@ -169,19 +156,12 @@ try {
             1 - (event.clientY - rect.top) / rect.height * 2), camera);
         hitDestination();
     });
-    setupVr().catch(() => { vr.hidden = true; });
     const pollGamepad = readGamepad();
     const useMenu = gamepadMenu("main button, main a[href]");
     renderer.setAnimationLoop(now => {
-        for (const input of vrInputs) input.update();
-        const pad = !renderer.xr.isPresenting && pollGamepad();
+        const pad = pollGamepad();
         if (pad) useMenu(pad);
-        if (route) {
-            const t = T.MathUtils.clamp((now - route.start) / 1600, 0, 1);
-            ship.position.lerpVectors(route.from, route.to, t * t * (3 - 2 * t));
-            ship.position.z += Math.sin(t * Math.PI) * 0.28;
-            if (t === 1) arrive();
-        }
+        advanceShip(now);
         renderer.render(scene, camera);
     });
 } catch {

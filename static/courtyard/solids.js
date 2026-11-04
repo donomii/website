@@ -1,9 +1,11 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
+import { exhibitDocument, galleryRoom } from "./gallery-room.js";
 
 const viewport = document.querySelector("#viewport");
-const status = document.querySelector("#solid-status");
-const rule = document.querySelector("#rule");
-const depth = document.querySelector("#depth");
+const standalone = document.querySelector("#solid-status") !== null;
+const status = document.querySelector("#solid-status") ?? document.createTextNode("");
+const rule = document.querySelector("#rule") ?? document.createElement("textarea");
+const depth = document.querySelector("#depth") ?? document.createElement("input");
 const scene = new T.Scene();
 scene.background = new T.Color(0x29211d);
 const camera = new T.PerspectiveCamera(45, 1, 0.05, 30);
@@ -148,7 +150,21 @@ function build() {
     }
 }
 
-try {
+export async function createSolidsRoom() {
+    const source = await exhibitDocument("./solids.html");
+    rule.value = source.querySelector("#rule").value;
+    depth.type = "number";
+    depth.min = "0";
+    depth.max = "4";
+    depth.value = source.querySelector("#depth").value;
+    build();
+    return galleryRoom(scene, {
+        actions: [["Fewer generations", () => { depth.value = Math.max(0, Number(depth.value) - 1); build(); }],
+            ["More generations", () => { depth.value = Math.min(4, Number(depth.value) + 1); build(); }]],
+    });
+}
+
+if (standalone) try {
     const renderer = new T.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     viewport.append(renderer.domElement);

@@ -13,7 +13,24 @@ const roomDoors = [
         load: () => import("./riverbank.js").then(module => module.createRiverbank()) },
     { name: "Library", x: -4, z: 10.25, button: document.querySelector("#library-door"),
         load: () => import("./library.js").then(module => module.createLibrary()) },
+    { name: "Datatree", x: -6.8, z: 6.4, button: document.querySelector("#datatree-door"),
+        load: () => import("./datatree.js").then(module => module.createDatatreeRoom()) },
+    { name: "Jump", x: 6.8, z: 7.1, button: document.querySelector("#jump-door"),
+        load: () => import("./jump.js").then(module => module.createJumpRoom()) },
+    { name: "Stars & Ships", x: 6.8, z: 3.2, button: document.querySelector("#orbit-door"),
+        load: () => import("./orbit.js").then(module => module.createOrbitRoom(openOrbitalRoom)) },
+    { name: "Map conversion", x: 6.8, z: -0.7, button: document.querySelector("#converter-door"),
+        load: () => import("./converter.js").then(module => module.createConverterRoom()) },
+    { name: "Pocket Bonsai", x: -6.8, z: -1.4, button: document.querySelector("#solids-door"),
+        load: () => import("./solids.js").then(module => module.createSolidsRoom()) },
+    { name: "Zipper studio", x: 6.8, z: -4.6, button: document.querySelector("#program-door"),
+        load: () => import("./program.js").then(module => module.createProgramRoom()) },
+    { name: "Themelab", x: -6.8, z: -7.3, button: document.querySelector("#themelab-door"),
+        load: () => import("./themelab.js").then(module => module.createThemelabRoom()) },
+    { name: "L-World", x: -6.8, z: 4.3, button: document.querySelector("#lworld-door"),
+        load: () => import("./lworld-gallery.js").then(module => module.createLWorldRoom()) },
 ];
+const orbitalRooms = { "./converter.html": "converter-door", "./solids.html": "solids-door", "./program.html": "program-door" };
 const mapChoices = document.querySelector("#map-choices");
 const callCreatures = document.querySelector("#call-creatures");
 const carveButton = document.querySelector("#carve");
@@ -52,6 +69,7 @@ const greenery = [material(0x597340), material(0x425931), material(0x809050)];
 const floor = [0xd5b88c, 0xc3a783, 0xe2c49b, 0xbfa180].map(material);
 let landscape;
 let activeMap = maps[0];
+let returnRoom;
 let visibleMap;
 let entering = false;
 let inLandscape = false;
@@ -297,8 +315,13 @@ function visit(index) {
     loadExhibit(entry);
 }
 
-async function enterMap(entry = visibleMap || maps[0]) {
-    if (entering || inLandscape) return;
+function openOrbitalRoom(path) {
+    const room = roomDoors.find(entry => entry.button.id === orbitalRooms[path]);
+    if (room) enterMap(room, activeMap);
+}
+
+async function enterMap(entry = visibleMap || maps[0], fromRoom) {
+    if (entering || (inLandscape && !fromRoom)) return;
     entering = true;
     const version = navigationVersion;
     try {
@@ -311,6 +334,8 @@ async function enterMap(entry = visibleMap || maps[0]) {
             }
         }
         if (version !== navigationVersion) return;
+        if (inLandscape) landscape.leave?.();
+        returnRoom = fromRoom;
         activeMap = entry;
         landscape = entry.landscape;
         inLandscape = true;
@@ -322,11 +347,13 @@ async function enterMap(entry = visibleMap || maps[0]) {
         for (const room of roomDoors) room.button.hidden = true;
         mapDoor.hidden = false;
         landscape.scene.add(rig);
-        rig.position.set(0, landscape.height(0, 8), 8);
+        const spawnZ = landscape.spawnZ ?? 8;
+        rig.position.set(0, landscape.height(0, spawnZ), spawnZ);
+        landscape.enter?.();
         yaw = 0;
         pitch = -0.16;
-        status.textContent = `${entry.load ? entry.name : `Entirety · ${entry.name} relief`}. Walk to the bronze ring to return.`;
-        mapDoor.textContent = "Return to courtyard";
+        status.textContent = `${entry.load ? entry.name : `Entirety · ${entry.name} relief`}. Select Return or walk to the exit.`;
+        mapDoor.textContent = fromRoom ? `Return to ${fromRoom.name}` : "Return to courtyard";
     } catch {
         if (version === navigationVersion) status.textContent = `${entry.name} could not load. Try again.`;
     } finally {
@@ -335,10 +362,16 @@ async function enterMap(entry = visibleMap || maps[0]) {
 }
 
 function leaveMap() {
+    navigationVersion++;
+    const previousRoom = returnRoom;
+    returnRoom = undefined;
+    landscape.leave?.();
     inLandscape = false;
     scene.add(rig);
     if (activeMap.load) {
-        rig.position.set(activeMap.x, 0, 8.5);
+        const side = Math.abs(activeMap.x) === 6.8;
+        rig.position.set(side ? activeMap.x - Math.sign(activeMap.x) * 1.4 : activeMap.x,
+            0, side ? activeMap.z : 8.5);
         yaw = pitch = 0;
         camera.rotation.set(0, 0, 0);
         for (const room of roomDoors) room.button.hidden = false;
@@ -347,6 +380,7 @@ function leaveMap() {
     }
     active = null;
     mapDoor.textContent = "Enter the map";
+    if (previousRoom) enterMap(previousRoom);
 }
 
 function updateExhibit() {
@@ -398,15 +432,25 @@ function bindDesktop(renderer) {
     const surface = renderer.domElement;
     let pointer = null;
     surface.addEventListener("pointerdown", event => {
-        pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
+        pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, distance: 0 };
         surface.setPointerCapture(event.pointerId);
     });
     surface.addEventListener("pointermove", event => {
         if (pointer?.id !== event.pointerId) return;
+        pointer.distance += Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y);
         yaw -= (event.clientX - pointer.x) * 0.004;
         pitch = T.MathUtils.clamp(pitch - (event.clientY - pointer.y) * 0.004, -1.25, 1.25);
         pointer.x = event.clientX;
         pointer.y = event.clientY;
+    });
+    surface.addEventListener("pointerup", event => {
+        if (!inLandscape || pointer?.id !== event.pointerId || pointer.distance > 5) return;
+        const rect = surface.getBoundingClientRect();
+        const ray = new T.Raycaster();
+        ray.setFromCamera(new T.Vector2((event.clientX - rect.left) / rect.width * 2 - 1,
+            1 - (event.clientY - rect.top) / rect.height * 2), camera);
+        if (ray.intersectObject(landscape.exit).length) leaveMap();
+        else landscape.select?.(ray);
     });
     surface.addEventListener("lostpointercapture", () => { pointer = null; });
     window.addEventListener("keydown", event => {
@@ -444,7 +488,7 @@ function moveRig(distance, forward, right, heading) {
         const limitZ = landscape.limitZ ?? 15.5;
         const z = T.MathUtils.clamp(nextZ, -limitZ, limitZ);
         rig.position.set(x, landscape.height(x, z), z);
-        if (Math.hypot(x, z - 12) < 0.75) leaveMap();
+        if (Math.hypot(x - landscape.exit.position.x, z - landscape.exit.position.z) < 0.75) leaveMap();
     } else {
         const x = T.MathUtils.clamp(nextX, -7.7, 7.7);
         const z = T.MathUtils.clamp(nextZ, -10.1, 10.5);
@@ -496,14 +540,17 @@ async function bindVR(renderer, inputs) {
             const ray = new T.Raycaster(controller.getWorldPosition(new T.Vector3()),
                 new T.Vector3(0, 0, -1).applyQuaternion(controller.getWorldQuaternion(new T.Quaternion())));
             if (inLandscape) {
-                const hit = ray.intersectObjects([landscape.exit, landscape.surface])[0];
-                if (hit?.object === landscape.exit) leaveMap();
-                else if (hit) rig.position.copy(hit.point);
+                if (ray.intersectObject(landscape.exit).length) {
+                    leaveMap();
+                } else if (!landscape.select?.(ray)) {
+                    const hit = ray.intersectObject(landscape.surface)[0];
+                    if (hit) rig.position.set(hit.point.x, landscape.height(hit.point.x, hit.point.z), hit.point.z);
+                }
             } else {
-                const hit = ray.intersectObjects([...roomDoors.map(entry => entry.marker), ...maps.map(entry => entry.rug),
+                const hit = ray.intersectObjects([...roomDoors.flatMap(entry => [entry.marker, entry.label]), ...maps.map(entry => entry.rug),
                     ...exhibits.flatMap(entry => [entry.marker, entry.panel].filter(Boolean))])[0];
                 const map = maps.find(entry => entry.rug === hit?.object);
-                const room = roomDoors.find(entry => entry.marker === hit?.object);
+                const room = roomDoors.find(entry => entry.marker === hit?.object || entry.label === hit?.object);
                 if (room) enterMap(room);
                 else if (map) enterMap(map);
                 else if (hit) {
@@ -550,10 +597,16 @@ function start() {
     for (const room of roomDoors) {
         room.marker = new T.Mesh(new T.TorusGeometry(1, 0.12, 10, 40), stone);
         room.marker.position.set(room.x, 1.1, room.z);
-        scene.add(room.marker);
+        room.label = new T.Mesh(new T.PlaneGeometry(2, 0.4), plaque(room.name));
+        room.label.position.set(room.x, 2.4, room.z);
+        room.label.rotation.y = Math.abs(room.x) === 6.8 ? -Math.sign(room.x) * Math.PI / 2 : Math.PI;
+        room.marker.rotation.y = room.label.rotation.y;
+        scene.add(room.marker, room.label);
         room.button.addEventListener("click", () => enterMap(room));
     }
     bindDesktop(renderer);
+    const initialRoom = roomDoors.find(room => room.button.id === `${new URLSearchParams(location.search).get("room")}-door`);
+    if (initialRoom) enterMap(initialRoom);
     mapDoor.addEventListener("click", () => { if (inLandscape) leaveMap(); else enterMap(); });
     mapChoices.querySelectorAll("button").forEach(button =>
         button.addEventListener("click", () => visitMap(maps[Number(button.dataset.map)])));
@@ -602,6 +655,7 @@ function start() {
             if (pad) useMenu(pad);
         }
         updateExhibit();
+        if (inLandscape) landscape.update?.(now, frame, renderer.xr);
         if (!inLandscape) creatures?.update(now / 1000, dt);
         if (!inLandscape && active === 1 && carving) {
             const { active: working, nextRay, rayCount, removed } = carving.update();

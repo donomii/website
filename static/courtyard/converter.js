@@ -1,10 +1,12 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { convertPoints } from "./entirety-points.js";
+import { exhibitDocument, galleryRoom } from "./gallery-room.js";
 
 const viewport = document.querySelector("#viewport");
-const status = document.querySelector("#conversion-status");
-const detail = document.querySelector("#conversion-detail");
-const input = document.querySelector("#points-input");
+const standalone = document.querySelector("#points-input") !== null;
+const status = document.querySelector("#conversion-status") ?? document.createTextNode("");
+const detail = document.querySelector("#conversion-detail") ?? document.createTextNode("");
+const input = document.querySelector("#points-input") ?? document.createElement("textarea");
 const pointsLink = document.querySelector("#download-points");
 const dataLink = document.querySelector("#download-data");
 const scene = new T.Scene();
@@ -47,8 +49,10 @@ function convert() {
     try {
         const { points, attributes, count } = convertPoints(input.value);
         showPoints(points);
-        setDownload(pointsLink, points);
-        setDownload(dataLink, attributes);
+        if (standalone) {
+            setDownload(pointsLink, points);
+            setDownload(dataLink, attributes);
+        }
         const first = new DataView(points);
         status.textContent = `${count} converted · ${points.byteLength} point bytes · ${attributes.byteLength} attribute bytes`;
         detail.textContent = `First binary pair: latitude × 60 = ${first.getFloat64(0, true)}; longitude × −60 = ${first.getFloat64(8, true)}.`;
@@ -58,9 +62,18 @@ function convert() {
     }
 }
 
-document.querySelector("#convert").addEventListener("click", convert);
-convert();
-try {
+export async function createConverterRoom() {
+    input.value = (await exhibitDocument("./converter.html")).querySelector("#points-input").value;
+    globe.position.y = 1.55;
+    convert();
+    return galleryRoom(scene, {
+        actions: [["Convert sample", convert], ["Turn globe", () => { globe.rotation.y += Math.PI / 4; }]],
+    });
+}
+
+document.querySelector("#convert")?.addEventListener("click", convert);
+if (standalone) convert();
+if (standalone) try {
     const renderer = new T.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     viewport.append(renderer.domElement);
