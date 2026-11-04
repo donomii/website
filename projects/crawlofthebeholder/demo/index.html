@@ -11,7 +11,7 @@
     <link rel="icon" type="image/svg+xml" href="icon.svg">
     <link rel="apple-touch-icon" href="icon.svg">
     <title>Crawl of the Beholder</title>
-    <link rel="stylesheet" href="styles.css?v=0.5.32">
+    <link rel="stylesheet" href="styles.css?v=0.5.32-fit">
   </head>
   <body>
     <div class="app">
@@ -310,45 +310,46 @@
     <div id="characterCreateModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="characterCreateTitle">
       <div class="modal-card">
         <h2 id="characterCreateTitle">Choose your party</h2>
-        <p>Choose each member's class and its two fixed actions. Both actions are available from the start and stay with that character for the run. There is no healer; carry healing supplies. Waiting does not heal and there is no hunger clock.</p>
+        <p>Classes fix both actions for the run. Use supplies to heal.</p>
         <div id="characterCreateList" class="character-create-list"></div>
-        <div class="character-create-row">
-          <label>
-            <strong>Difficulty</strong>
-            <select id="characterCreateDifficulty">
-              <option value="easy">Easy</option>
-              <option value="normal" selected>Normal</option>
-              <option value="hard">Hard</option>
-            </select>
-          </label>
-        </div>
-        <div class="character-create-row">
-          <label>
-            <strong>Patron deity</strong>
-            <select id="characterCreateDeity">
-              <option value="none" selected>No patron</option>
-              <option value="trog">Trog — rage; +party power (no magic)</option>
-              <option value="okawaru">Okawaru — battle; +power &amp; XP</option>
-              <option value="makhleb">Makhleb — carnage; +power</option>
-              <option value="kikubaaqudgha">Kikubaaqudgha — death; +power &amp; XP</option>
-              <option value="the_shining_one">The Shining One — vigour; +power</option>
-              <option value="elyvilon">Elyvilon — legacy healing patron; rest bonus inactive</option>
-              <option value="sif_muna">Sif Muna — lore; +XP</option>
-              <option value="gozag">Gozag — gold; +gold (no piety)</option>
-            </select>
-          </label>
-          <p>Legacy patron rest-healing bonuses are inactive. No patron restores health while waiting.</p>
-        </div>
-        <div class="character-create-row">
-          <label>
-            <input type="checkbox" id="characterCreateDaily">
-            <strong>Daily seed run</strong>
-          </label>
+        <div class="character-create-options">
+          <div class="character-create-row">
+            <label>
+              <strong>Difficulty</strong>
+              <select id="characterCreateDifficulty">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+              </select>
+            </label>
+          </div>
+          <div class="character-create-row">
+            <label>
+              <strong>Patron deity</strong>
+              <select id="characterCreateDeity">
+                <option value="none" selected>No patron</option>
+                <option value="trog">Trog — rage; +party power (no magic)</option>
+                <option value="okawaru">Okawaru — battle; +power &amp; XP</option>
+                <option value="makhleb">Makhleb — carnage; +power</option>
+                <option value="kikubaaqudgha">Kikubaaqudgha — death; +power &amp; XP</option>
+                <option value="the_shining_one">The Shining One — vigour; +power</option>
+                <option value="elyvilon">Elyvilon — legacy healing patron; rest bonus inactive</option>
+                <option value="sif_muna">Sif Muna — lore; +XP</option>
+                <option value="gozag">Gozag — gold; +gold (no piety)</option>
+              </select>
+            </label>
+          </div>
+          <div class="character-create-row">
+            <label>
+              <input type="checkbox" id="characterCreateDaily">
+              <strong>Daily seed run</strong>
+            </label>
+          </div>
         </div>
         <div class="modal-actions">
           <button type="button" id="characterCreateRandom">Randomize</button>
           <button type="button" id="characterCreateStart">Begin</button>
-          <button type="button" data-action="confirmNewRun" title="Explicitly discard the current slot's saved expedition and reload party creation. Asks for confirmation.">Discard saved expedition</button>
+          <button type="button" data-action="confirmNewRun" title="Explicitly discard the current slot's saved expedition and reload party creation. Asks for confirmation.">Discard save</button>
         </div>
       </div>
     </div>
@@ -448,7 +449,7 @@
     <script src="src/runtime/engine/items/use.js?v=0.5.25"></script>
     <script src="src/runtime/engine/party/turn.js?v=0.5.25"></script>
     <script src="src/runtime/render/viewport_rendering.js?v=0.5.35"></script>
-    <script src="src/runtime/render/ui_chrome.js?v=0.5.32"></script>
+    <script src="src/runtime/render/ui_chrome.js?v=0.5.32-fit"></script>
     <script src="src/runtime/engine/classes.js?v=0.5.25"></script>
     <script src="src/runtime/engine/mapgen.js?v=0.5.25"></script>
     <script src="src/runtime/io/persistence.js?v=0.5.25"></script>

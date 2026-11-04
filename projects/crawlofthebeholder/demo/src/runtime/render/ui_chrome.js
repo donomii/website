@@ -79,7 +79,7 @@
               <strong>${escapeHtml(member.name)}</strong>
               <select data-member-index="${index}" aria-label="Class and fixed actions for ${escapeHtml(member.name)}" ${state.characterCreated ? "disabled" : ""}>${optionsHtml}</select>
             </label>
-            <p>${klass ? `${escapeHtml(klass.description)} Primary cooldown: ${klass.signatureCooldown} turns. Secondary cooldown: ${klass.ultimate.cooldown} turns.` : "Choose a class to see its two fixed actions."}</p>
+            <p title="${klass ? escapeHtml(klass.description) : ""}">${klass ? `${escapeHtml(klass.signature.label)} ${klass.signatureCooldown}t · ${escapeHtml(klass.ultimate.label)} ${klass.ultimate.cooldown}t` : "Choose a class."}</p>
           </div>`;
         }).join("");
       }

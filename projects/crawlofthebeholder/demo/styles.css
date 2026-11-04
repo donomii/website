@@ -21,7 +21,8 @@ html,
 body {
   height: 100%;
   min-height: 0;
-  overflow: hidden;
+  overflow: clip;
+  overscroll-behavior: none;
 }
 
 body {
@@ -60,6 +61,7 @@ button {
 .topbar-info {
   flex: 1;
   min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
   display: grid;
   gap: 2px;
   justify-items: end;
@@ -124,6 +126,15 @@ h2 {
   color: var(--muted);
   font-size: 14px;
   text-align: right;
+}
+
+.message-line,
+.status-line {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .status-line {
@@ -670,7 +681,6 @@ h2 {
 @media (max-width: 720px) {
   /* Phone layout: single column stacked, with controls in a dedicated bottom row. */
   html, body {
-    overflow: hidden;
     /* Prevent iOS rubber-band scrolling on the game shell. */
     overscroll-behavior: none;
   }
@@ -1377,19 +1387,80 @@ body.low-hp-warning::after {
 }
 
 /* Character creation */
-.character-create-list {
-  display: grid;
-  gap: 6px;
-  margin: 10px 0 10px;
+#characterCreateModal {
+  align-items: center;
+  padding: 6px;
 }
-/* Two members per line once there's width for it — keeps the dialog inside
-   even a 500px-tall window (the no-scroll rule) now that rows carry
-   portrait pickers. */
-@media (min-width: 560px) {
-  .character-create-list {
-    grid-template-columns: 1fr 1fr;
+
+#characterCreateModal .modal-card {
+  width: min(100%, 560px);
+  max-height: calc(100dvh - 12px);
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+#characterCreateModal h2 {
+  margin-bottom: 4px;
+}
+
+.character-create-list,
+.character-create-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin: 6px 0;
+}
+
+.character-create-list [role="alert"],
+.character-create-options [aria-describedby] {
+  min-width: 0;
+}
+
+.character-create-list [role="alert"] {
+  grid-column: 1 / -1;
+}
+
+#characterCreateModal .character-create-row {
+  gap: 2px;
+  padding: 3px;
+}
+
+#characterCreateModal label {
+  gap: 3px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+#characterCreateModal select {
+  min-width: 0;
+  max-width: 100%;
+  padding: 2px;
+}
+
+#characterCreateModal .create-portrait {
+  width: 22px;
+  height: 22px;
+}
+
+#characterCreateModal .modal-actions button {
+  padding: 5px 8px;
+}
+
+@media (max-height: 380px) and (min-width: 480px) {
+  #characterCreateModal .modal-card {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 8px;
+  }
+
+  #characterCreateModal h2,
+  #characterCreateModal .modal-card > p,
+  #characterCreateModal .modal-actions {
+    grid-column: 1 / -1;
   }
 }
+
 .character-create-row {
   display: grid;
   gap: 4px;
