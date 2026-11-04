@@ -89,16 +89,38 @@ function stopCamera(message) {
     stream?.getTracks().forEach(track => track.stop());
     stream = null;
     video.srcObject = null;
+    look(0, 0);
     cameraButton.textContent = "Use camera tracking";
     status.textContent = message;
+}
+
+async function faceTracker() {
+    if (globalThis.FaceDetector) {
+        const detector = new globalThis.FaceDetector({ fastMode: true, maxDetectedFaces: 1 });
+        return { async bounds() { return (await detector.detect(video))[0]?.boundingBox; } };
+    }
+    const library = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21";
+    const { FaceDetector, FilesetResolver } = await import(library + "/vision_bundle.mjs");
+    const files = await FilesetResolver.forVisionTasks(library + "/wasm");
+    const detector = await FaceDetector.createFromOptions(files, {
+        baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite" },
+        runningMode: "VIDEO",
+    });
+    return {
+        bounds() {
+            const box = detector.detectForVideo(video, performance.now()).detections[0]?.boundingBox;
+            return box && { x: box.originX, y: box.originY, width: box.width, height: box.height };
+        },
+        close() { detector.close(); },
+    };
 }
 
 async function track() {
     const current = ++generation;
     cameraButton.textContent = "Stop camera tracking";
     status.textContent = "Waiting for camera access.";
+    let detector;
     try {
-        const detector = new globalThis.FaceDetector({ fastMode: true, maxDetectedFaces: 1 });
         const candidate = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: 320 }, audio: false });
         if (current !== generation) {
             candidate.getTracks().forEach(track => track.stop());
@@ -107,48 +129,40 @@ async function track() {
         stream = candidate;
         video.srcObject = stream;
         await video.play();
+        if (current !== generation) return;
+        status.textContent = "Starting face tracking.";
+        detector = await faceTracker();
         while (current === generation) {
-            const faces = await detector.detect(video);
+            const bounds = await detector.bounds();
             if (current !== generation) return;
-            const bounds = faces[0]?.boundingBox;
             if (bounds) {
                 look(x * 0.65 + (1 - 2 * (bounds.x + bounds.width / 2) / video.videoWidth) * 0.7,
                     y * 0.65 + (1 - 2 * (bounds.y + bounds.height / 2) / video.videoHeight) * 0.7);
                 status.textContent = "Camera tracking on. Video stays in this tab.";
             } else {
-                status.textContent = "No face in view. Move the pointer or use the arrow keys.";
+                if (x !== 0 || y !== 0) look(0, 0);
+                status.textContent = "No face in view.";
             }
             await new Promise(resolve => setTimeout(resolve, 80));
         }
     } catch {
-        if (current === generation) stopCamera("Camera tracking unavailable. Use the pointer or arrow keys.");
+        if (current === generation) stopCamera("Camera tracking unavailable.");
+    } finally {
+        detector?.close?.();
     }
 }
 
 cameraButton?.addEventListener("click", () => {
     if (cameraButton.textContent === "Stop camera tracking") {
-        stopCamera("Camera tracking off. Use the pointer or arrow keys.");
-    } else if (!globalThis.FaceDetector || !navigator.mediaDevices?.getUserMedia) {
-        status.textContent = "This browser has no camera face detection. Use the pointer or arrow keys.";
+        stopCamera("Camera tracking off.");
+    } else if (!navigator.mediaDevices?.getUserMedia) {
+        status.textContent = "Camera access is unavailable in this browser.";
     } else {
         track();
     }
 });
 if (renderer) window.addEventListener("pagehide", () => stopCamera("Camera tracking off."));
 select?.addEventListener("change", () => build(select.value));
-document.querySelector("#center")?.addEventListener("click", () => look(0, 0));
-viewport?.addEventListener("pointermove", event => {
-    const rect = viewport.getBoundingClientRect();
-    look(2 * (event.clientX - rect.left) / rect.width - 1, 1 - 2 * (event.clientY - rect.top) / rect.height);
-});
-viewport?.addEventListener("keydown", event => {
-    const moves = { ArrowLeft: [-0.14, 0], ArrowRight: [0.14, 0], ArrowUp: [0, 0.14], ArrowDown: [0, -0.14] };
-    const delta = moves[event.key];
-    if (delta) {
-        event.preventDefault();
-        look(x + delta[0], y + delta[1]);
-    }
-});
 if (renderer) {
     new ResizeObserver(() => {
         renderer.setSize(viewport.clientWidth, viewport.clientHeight, false);
