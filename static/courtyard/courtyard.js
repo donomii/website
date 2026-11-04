@@ -26,7 +26,8 @@ const roomDoors = [
     { name: "Zipper studio", x: 6.8, z: -4.6, button: document.querySelector("#program-door"),
         load: () => import("./program.js").then(module => module.createProgramRoom()) },
     { name: "Themelab", x: -6.8, z: -7.3, button: document.querySelector("#themelab-door"),
-        load: () => import("./themelab.js").then(module => module.createThemelabRoom()) },
+        load: () => import("./themelab.js?v=face-room").then(module =>
+            module.createThemelabRoom(message => { status.textContent = message; })) },
     { name: "L-World", x: -6.8, z: 4.3, button: document.querySelector("#lworld-door"),
         load: () => import("./lworld-gallery.js").then(module => module.createLWorldRoom()) },
 ];
@@ -655,7 +656,7 @@ function start() {
             if (pad) useMenu(pad);
         }
         updateExhibit();
-        if (inLandscape) landscape.update?.(now, frame, renderer.xr);
+        if (inLandscape) landscape.update?.(now, frame, renderer.xr, renderer);
         if (!inLandscape) creatures?.update(now / 1000, dt);
         if (!inLandscape && active === 1 && carving) {
             const { active: working, nextRay, rayCount, removed } = carving.update();

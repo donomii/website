@@ -62,10 +62,14 @@ function look(nextX, nextY) {
 }
 
 function render() {
-    if (!renderer) return;
+    depthDirty = true;
+    if (renderer) renderDepth(renderer, viewport.clientWidth / Math.max(1, viewport.clientHeight));
+}
+
+function renderDepth(renderer, aspect) {
     const distance = 4;
     const halfHeight = 1.75;
-    const halfWidth = halfHeight * viewport.clientWidth / Math.max(1, viewport.clientHeight);
+    const halfWidth = halfHeight * aspect;
     camera.position.set(x * 1.3, y * 0.85, distance);
     const near = 0.1;
     const scale = near / distance;
@@ -80,18 +84,27 @@ function render() {
 
 let stream = null;
 let generation = 0;
+let tracking = false;
+let depthDirty = true;
+let reportRoomStatus;
 const video = document.createElement("video");
 video.muted = true;
 video.playsInline = true;
 
 function stopCamera(message) {
     generation++;
+    tracking = false;
     stream?.getTracks().forEach(track => track.stop());
     stream = null;
     video.srcObject = null;
     look(0, 0);
-    cameraButton.textContent = "Use camera tracking";
-    status.textContent = message;
+    if (cameraButton) cameraButton.textContent = "Use camera tracking";
+    reportStatus(message);
+}
+
+function reportStatus(message) {
+    if (status) status.textContent = message;
+    reportRoomStatus?.(message);
 }
 
 async function faceTracker() {
@@ -116,9 +129,15 @@ async function faceTracker() {
 }
 
 async function track() {
+    if (tracking) return;
+    if (!navigator.mediaDevices?.getUserMedia) {
+        reportStatus("Camera access is unavailable in this browser.");
+        return;
+    }
+    tracking = true;
     const current = ++generation;
-    cameraButton.textContent = "Stop camera tracking";
-    status.textContent = "Waiting for camera access.";
+    if (cameraButton) cameraButton.textContent = "Stop camera tracking";
+    reportStatus("Waiting for camera access.");
     let detector;
     try {
         const candidate = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: 320 }, audio: false });
@@ -130,7 +149,7 @@ async function track() {
         video.srcObject = stream;
         await video.play();
         if (current !== generation) return;
-        status.textContent = "Starting face tracking.";
+        reportStatus("Starting face tracking.");
         detector = await faceTracker();
         while (current === generation) {
             const bounds = await detector.bounds();
@@ -138,10 +157,10 @@ async function track() {
             if (bounds) {
                 look(x * 0.65 + (1 - 2 * (bounds.x + bounds.width / 2) / video.videoWidth) * 0.7,
                     y * 0.65 + (1 - 2 * (bounds.y + bounds.height / 2) / video.videoHeight) * 0.7);
-                status.textContent = "Camera tracking on. Video stays in this tab.";
+                reportStatus("Camera tracking on. Video stays in this tab.");
             } else {
                 if (x !== 0 || y !== 0) look(0, 0);
-                status.textContent = "No face in view.";
+                reportStatus("No face in view.");
             }
             await new Promise(resolve => setTimeout(resolve, 80));
         }
@@ -153,15 +172,13 @@ async function track() {
 }
 
 cameraButton?.addEventListener("click", () => {
-    if (cameraButton.textContent === "Stop camera tracking") {
+    if (tracking) {
         stopCamera("Camera tracking off.");
-    } else if (!navigator.mediaDevices?.getUserMedia) {
-        status.textContent = "Camera access is unavailable in this browser.";
     } else {
         track();
     }
 });
-if (renderer) window.addEventListener("pagehide", () => stopCamera("Camera tracking off."));
+window.addEventListener("pagehide", () => stopCamera("Camera tracking off."));
 select?.addEventListener("change", () => build(select.value));
 if (renderer) {
     new ResizeObserver(() => {
@@ -171,12 +188,34 @@ if (renderer) {
     build(select.value);
 }
 
-export function createThemelabRoom() {
-    scenery.position.y = 1.28;
+export function createThemelabRoom(report) {
+    const room = new T.Scene();
+    const depth = new T.WebGLRenderTarget(960, 600, { samples: 4 });
+    const display = new T.Mesh(new T.PlaneGeometry(3.2, 2),
+        new T.MeshBasicMaterial({ map: depth.texture }));
+    display.position.set(0, 1.38, -0.9);
+    room.add(display);
+    reportRoomStatus = report;
     build("window");
-    return galleryRoom(scene, {
+    return galleryRoom(room, {
         actions: [["Window", () => build("window")], ["Grate", () => build("grate")],
-            ["Bookshelf", () => build("bookshelf")]],
+            ["Bookshelf", () => build("bookshelf")], ["Use camera tracking", track],
+            ["Stop camera tracking", () => stopCamera("Camera tracking off.")]],
+        update(_now, _frame, _xr, renderer) {
+            if (!depthDirty) return;
+            const previous = renderer.getRenderTarget();
+            const xrEnabled = renderer.xr.enabled;
+            renderer.xr.enabled = false;
+            try {
+                renderer.setRenderTarget(depth);
+                renderDepth(renderer, depth.width / depth.height);
+                depthDirty = false;
+            } finally {
+                renderer.setRenderTarget(previous);
+                renderer.xr.enabled = xrEnabled;
+            }
+        },
+        leave() { stopCamera("Camera tracking off."); },
     });
 }
 
