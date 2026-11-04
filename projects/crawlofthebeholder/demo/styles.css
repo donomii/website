@@ -1422,11 +1422,13 @@ body.low-hp-warning::after {
 }
 
 #characterCreateModal .character-create-row {
+  grid-template-columns: minmax(0, 1fr);
   gap: 2px;
   padding: 3px;
 }
 
 #characterCreateModal label {
+  min-width: 0;
   gap: 3px;
   flex-wrap: wrap;
   font-size: 12px;
@@ -1441,6 +1443,10 @@ body.low-hp-warning::after {
 #characterCreateModal .create-portrait {
   width: 22px;
   height: 22px;
+}
+
+#characterCreateModal .modal-actions {
+  flex-wrap: wrap;
 }
 
 #characterCreateModal .modal-actions button {
