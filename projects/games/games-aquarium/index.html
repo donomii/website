@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Games Aquarium</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main>
+    <header><p>ARTIFICIAL HABITAT</p><h1>Games Aquarium</h1>
+      <p>Builders raise walls, breakers pull them down, and hunters chase builders.</p></header>
+    <canvas id="tank" aria-label="Aquarium showing creatures and their walls"></canvas>
+    <section aria-label="Aquarium controls">
+      <button id="pause">Pause</button>
+      <button id="step" disabled>Advance one tick</button>
+      <button id="reset">Reset tank</button>
+      <label>Place <select id="tool"><option value="builder">Builder</option><option value="breaker">Breaker</option>
+        <option value="hunter">Hunter</option><option value="block">Wall</option></select></label>
+      <button id="add">Add to empty cell</button>
+      <p>Click an empty cell to place the selected creature or wall. Hunters stun builders briefly.</p>
+      <p id="stats"></p>
+      <p id="result" role="status"></p>
+    </section>
+  </main>
+  <script type="module" src="./main.mjs"></script>
+</body>
+</html>

@@ -22,7 +22,7 @@ function plaque(label, action) {
     return mesh;
 }
 
-export function galleryRoom(scene, { select, actions = [], update, enter, leave } = {}) {
+export function galleryRoom(scene, { select, actions = [], actionLift = 0, update, enter, leave } = {}) {
     const surface = new T.Mesh(new T.PlaneGeometry(12, 14).rotateX(-Math.PI / 2),
         new T.MeshBasicMaterial({ color: 0x534238 }));
     surface.position.y = -0.02;
@@ -31,7 +31,7 @@ export function galleryRoom(scene, { select, actions = [], update, enter, leave 
     scene.add(surface, exit);
     const targets = actions.map(([label, action], index) => {
         const target = plaque(label, action);
-        target.position.set(index % 2 === 0 ? -2.5 : 2.5, 1.45 - Math.floor(index / 2) * 0.52, -0.6);
+        target.position.set(index % 2 === 0 ? -2.5 : 2.5, 1.45 + actionLift - Math.floor(index / 2) * 0.52, -0.6);
         scene.add(target);
         return target;
     });

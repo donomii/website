@@ -13,6 +13,8 @@ const roomDoors = [
         load: () => import("./riverbank.js").then(module => module.createRiverbank()) },
     { name: "Library", x: -4, z: 10.25, button: document.querySelector("#library-door"),
         load: () => import("./library.js").then(module => module.createLibrary()) },
+    { name: "Games Aquarium", x: 4, z: 10.25, button: document.querySelector("#aquarium-door"),
+        load: () => import("./aquarium-room.js").then(module => module.createAquariumRoom()) },
     { name: "Datatree", x: -6.8, z: 6.4, button: document.querySelector("#datatree-door"),
         load: () => import("./datatree.js").then(module => module.createDatatreeRoom()) },
     { name: "Jump", x: 6.8, z: 7.1, button: document.querySelector("#jump-door"),
@@ -488,6 +490,7 @@ function moveRig(distance, forward, right, heading) {
         const x = T.MathUtils.clamp(nextX, -limitX, limitX);
         const limitZ = landscape.limitZ ?? 15.5;
         const z = T.MathUtils.clamp(nextZ, -limitZ, limitZ);
+        if (landscape.canStand?.(x, z) === false) return;
         rig.position.set(x, landscape.height(x, z), z);
         if (Math.hypot(x - landscape.exit.position.x, z - landscape.exit.position.z) < 0.75) leaveMap();
     } else {
@@ -545,7 +548,9 @@ async function bindVR(renderer, inputs) {
                     leaveMap();
                 } else if (!landscape.select?.(ray)) {
                     const hit = ray.intersectObject(landscape.surface)[0];
-                    if (hit) rig.position.set(hit.point.x, landscape.height(hit.point.x, hit.point.z), hit.point.z);
+                    if (hit && landscape.canStand?.(hit.point.x, hit.point.z) !== false) {
+                        rig.position.set(hit.point.x, landscape.height(hit.point.x, hit.point.z), hit.point.z);
+                    }
                 }
             } else {
                 const hit = ray.intersectObjects([...roomDoors.flatMap(entry => [entry.marker, entry.label]), ...maps.map(entry => entry.rug),
