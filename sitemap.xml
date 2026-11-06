@@ -182,7 +182,7 @@
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/art/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/art/tilesets/index.html</loc>
@@ -302,39 +302,39 @@
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/config/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/engine/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/engine/items/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/engine/party/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-05</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/io/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/render/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/src/runtime/systems/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/demo/vendor/crawl/crawl-ref/index.html</loc>
@@ -598,7 +598,7 @@
   </url>
   <url>
     <loc>/projects/crawlofthebeholder/index.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/creatures/demo/assets/egoboo/animatedmace/index.html</loc>
@@ -874,7 +874,7 @@
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/art/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/art/tilesets/index.html</loc>
@@ -994,39 +994,39 @@
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/runtime/config/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/runtime/engine/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/runtime/engine/items/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/runtime/engine/party/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/runtime/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-05</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/runtime/io/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/runtime/render/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/src/runtime/systems/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/crawlofthebeholder/vendor/crawl/crawl-ref/index.html</loc>
@@ -1294,7 +1294,7 @@
   </url>
   <url>
     <loc>/projects/games/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/projects/games/kingdomcrown/src/index.html</loc>
@@ -1911,6 +1911,10 @@
   <url>
     <loc>/static/bootstrap/js/index.html</loc>
     <lastmod>2023-10-03</lastmod>
+  </url>
+  <url>
+    <loc>/static/courtyard/pseudocode/index.html</loc>
+    <lastmod>2026-11-06</lastmod>
   </url>
   <url>
     <loc>/static/index.html</loc>

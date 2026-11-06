@@ -40,8 +40,8 @@ Reload begins a new station. The 2D game remains a separate session.
 Art Deco salon is available in the destination menu and through the northeast
 courtyard doorway. Load its geometry only on entry and retain the existing
 renderer, camera rig, XR session and controller/hand inputs. The room is twelve
-meters wide, sixteen deep and six and a half high, with emerald walls, black
-and ivory checkerboard stone, brass inlay, fluted pilasters, stepped capitals,
+meters wide, sixteen deep and six and a half high, with emerald walls, a matte
+jade stone floor with thin brass borders and stepped corner inlays, fluted pilasters, stepped capitals,
 sunburst wall reliefs, opal chandeliers, velvet lounges and geometric palms.
 A brass armillary turns slowly above an octagonal plinth. The entry view has
 no text panels. Menu, help and readouts remain closed by default.
@@ -50,7 +50,7 @@ The flat floor accepts walking, gamepad movement and controller/pinch
 teleportation. Keep visitors inside the walls and outside the sculpture plinth,
 lounges and planters. A pale doorway behind the spawn point returns to the
 courtyard by approach or selection; Return is also available in the menu.
-Architecture uses instanced boxes and floor tiles and procedural geometry,
+Architecture uses instanced boxes and procedural geometry,
 with no image assets, external fetches, extra renderer or animation loop.
 The room exposes scene, floor surface, exit, floor-height and walkability
 functions, spawn and movement limits, and an update function for the sculpture.

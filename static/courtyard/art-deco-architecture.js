@@ -44,6 +44,7 @@ export function createDecoArchitecture(scene) {
     const ivory = material("ivory stone", 0xe0d6bd, 0.08, 0.35);
     const black = material("black onyx", 0x151d21, 0.22, 0.27);
     const green = material("emerald lacquer", 0x164744, 0.22, 0.38);
+    const jade = material("honed jade stone", 0x294d46, 0.04, 0.68);
     const velvet = material("peacock velvet", 0x235658, 0.02, 0.86);
     const glass = material("warm opal glass", 0xffe6b4, 0.04, 0.4, 0x71552b);
     const b = batches(scene);
@@ -65,26 +66,20 @@ export function createDecoArchitecture(scene) {
             arc.rotation.y = turn;
         }
     }
-    const surface = object(new T.PlaneGeometry(12, 16).rotateX(-Math.PI / 2), black, 0, 0, 0);
+    const surface = object(new T.PlaneGeometry(12, 16).rotateX(-Math.PI / 2), jade, 0, 0, 0);
     surface.name = "Deco salon floor";
-    const tileGeometry = new T.BoxGeometry(0.49, 0.012, 0.49);
-    for (let parity = 0; parity < 2; parity++) {
-        const tiles = new T.InstancedMesh(tileGeometry, parity ? ivory : black, 384);
-        const matrix = new T.Matrix4();
-        let count = 0;
-        for (let x = 0; x < 24; x++) {
-            for (let z = 0; z < 32; z++) {
-                if ((x + z) % 2 !== parity) continue;
-                matrix.makeTranslation(-5.75 + x * 0.5, -0.001, -7.75 + z * 0.5);
-                tiles.setMatrixAt(count++, matrix);
+    for (const side of [-1, 1]) {
+        for (const end of [-1, 1]) {
+            const corner = [[5.65, 6.8], [4.95, 6.8], [4.95, 7.25], [4.25, 7.25]];
+            for (let index = 1; index < corner.length; index++) {
+                const from = corner[index - 1];
+                const to = corner[index];
+                b.bar(gold, new T.Vector3(side * from[0], 0.012, end * from[1]),
+                    new T.Vector3(side * to[0], 0.012, end * to[1]), 0.025);
             }
         }
-        tiles.name = "Deco checkerboard";
-        tiles.computeBoundingSphere();
-        scene.add(tiles);
     }
-    b.box(black, 3.5, 0.012, 15.6, 0, 0.01, 0);
-    for (const x of [-1.76, 1.76, -5.65, 5.65]) b.box(gold, 0.035, 0.015, 15.3, x, 0.018, 0);
+    for (const x of [-5.65, 5.65]) b.box(gold, 0.035, 0.015, 15.3, x, 0.018, 0);
     for (const z of [-7.65, 7.65]) b.box(gold, 11.3, 0.015, 0.035, 0, 0.018, z);
     for (const x of [-6.1, 6.1]) b.box(green, 0.2, 6.5, 16.2, x, 3.25, 0);
     b.box(green, 12.2, 6.5, 0.2, 0, 3.25, -8.1);

@@ -1,0 +1,9 @@
+Open the Games Aquarium room
+  Load the existing simulation and create a raised tank with one cell per simulation position.
+  Draw walls and distinct shapes and colors for builders, breakers, and hunters.
+  Advance the world every 230 milliseconds while the room is active and running.
+  Pause or resume, step once when paused, or restore the original world.
+  Choose a species and select a tank cell to place it through the simulation's placement rules.
+  Report placement, tick, creature, wall, and catch status on the board.
+  Keep visitors outside the raised tank and allow walking or teleporting around it.
+  On re-entry, keep the world and restart the tick clock.

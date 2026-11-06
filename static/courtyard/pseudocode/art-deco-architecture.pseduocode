@@ -1,7 +1,8 @@
 createDecoArchitecture(scene)
     Build a twelve by sixteen meter salon with a six-and-a-half meter ceiling.
     Use emerald lacquer, brass, ivory, black onyx, velvet and opal materials.
-    Batch repeated box architecture and checkerboard tiles into instances.
+    Use a continuous honed jade floor with thin brass borders and stepped corner inlays.
+    Batch repeated box architecture and brass inlays into instances.
     Add stepped cornices, fluted pilasters, fan and sunburst reliefs,
     chandeliers, lounges, geometric palms and a central armillary on a plinth.
     Return floor surface, doorway selection surface, sculpture and canStand.
