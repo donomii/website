@@ -15,6 +15,9 @@ const roomDoors = [
         load: () => import("./library.js").then(module => module.createLibrary()) },
     { name: "Games Aquarium", x: 4, z: 10.25, button: document.querySelector("#aquarium-door"),
         load: () => import("./aquarium-room.js").then(module => module.createAquariumRoom()) },
+    { name: "Asteroid Farmer", x: -6.8, z: 1.4, button: document.querySelector("#asteroid-door"),
+        load: () => import("./asteroid-room.js").then(module =>
+            module.createAsteroidRoom(message => { status.textContent = message; })) },
     { name: "Datatree", x: -6.8, z: 6.4, button: document.querySelector("#datatree-door"),
         load: () => import("./datatree.js").then(module => module.createDatatreeRoom()) },
     { name: "Jump", x: 6.8, z: 7.1, button: document.querySelector("#jump-door"),
@@ -342,6 +345,9 @@ async function enterMap(entry = visibleMap || maps[0], fromRoom) {
         activeMap = entry;
         landscape = entry.landscape;
         inLandscape = true;
+        project.hidden = true;
+        document.body.dataset.room = "true";
+        document.querySelector("#destinations").hidden = true;
         callCreatures.hidden = true;
         carveButton.hidden = true;
         carvingProgress.hidden = true;
@@ -352,11 +358,12 @@ async function enterMap(entry = visibleMap || maps[0], fromRoom) {
         landscape.scene.add(rig);
         const spawnZ = landscape.spawnZ ?? 8;
         rig.position.set(0, landscape.height(0, spawnZ), spawnZ);
-        landscape.enter?.();
+        if (landscape.aimSelect) viewport.querySelector("canvas").focus();
         yaw = 0;
         pitch = -0.16;
         status.textContent = `${entry.load ? entry.name : `Entirety · ${entry.name} relief`}. Select Return or walk to the exit.`;
         mapDoor.textContent = fromRoom ? `Return to ${fromRoom.name}` : "Return to courtyard";
+        landscape.enter?.();
     } catch {
         if (version === navigationVersion) status.textContent = `${entry.name} could not load. Try again.`;
     } finally {
@@ -370,6 +377,8 @@ function leaveMap() {
     returnRoom = undefined;
     landscape.leave?.();
     inLandscape = false;
+    delete document.body.dataset.room;
+    document.querySelector("#destinations").hidden = false;
     scene.add(rig);
     if (activeMap.load) {
         const side = Math.abs(activeMap.x) === 6.8;
@@ -433,8 +442,10 @@ function loadLetterFit() {
 
 function bindDesktop(renderer) {
     const surface = renderer.domElement;
+    surface.tabIndex = 0;
     let pointer = null;
     surface.addEventListener("pointerdown", event => {
+        surface.focus();
         pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, distance: 0 };
         surface.setPointerCapture(event.pointerId);
     });
@@ -457,6 +468,11 @@ function bindDesktop(renderer) {
     });
     surface.addEventListener("lostpointercapture", () => { pointer = null; });
     window.addEventListener("keydown", event => {
+        if (inLandscape && landscape.aimSelect && event.target === surface && event.code === "Space") {
+            event.preventDefault();
+            if (!event.repeat) selectCenter();
+            return;
+        }
         if (event.target instanceof HTMLSelectElement) return;
         const key = event.key.toLowerCase();
         if (event.altKey || event.metaKey || event.ctrlKey || !["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) return;
@@ -470,6 +486,13 @@ function bindDesktop(renderer) {
         event.preventDefault();
         visit(index);
     }));
+}
+
+function selectCenter() {
+    const ray = new T.Raycaster();
+    ray.setFromCamera(new T.Vector2(), camera);
+    if (ray.intersectObject(landscape.exit).length) leaveMap();
+    else landscape.select?.(ray);
 }
 
 function walk(dt, [strafe = 0, travel = 0, lookX = 0, lookY = 0] = []) {
@@ -611,6 +634,20 @@ function start() {
         room.button.addEventListener("click", () => enterMap(room));
     }
     bindDesktop(renderer);
+    const destination = document.querySelector("#destination");
+    for (const [index, link] of links.entries()) {
+        destination.add(new Option(link.textContent, "exhibit:" + index));
+    }
+    for (const room of roomDoors) destination.add(new Option(room.name, room.button.id));
+    destination.add(new Option("Asteroid Farmer · 2D", "../../projects/games/asteroid-farmer/index.html"));
+    destination.add(new Option("Games Aquarium · 2D", "../../projects/games/games-aquarium/index.html"));
+    destination.add(new Option("L-World · original editor", "./lworld-room.html"));
+    document.querySelector("#visit").addEventListener("click", () => {
+        const room = roomDoors.find(entry => entry.button.id === destination.value);
+        if (room) enterMap(room);
+        else if (destination.value.startsWith("exhibit:")) visit(Number(destination.value.split(":")[1]));
+        else location.href = destination.value;
+    });
     const initialRoom = roomDoors.find(room => room.button.id === `${new URLSearchParams(location.search).get("room")}-door`);
     if (initialRoom) enterMap(initialRoom);
     mapDoor.addEventListener("click", () => { if (inLandscape) leaveMap(); else enterMap(); });
@@ -645,20 +682,29 @@ function start() {
     const inputs = [];
     bindVR(renderer, inputs).catch(() => { vr.hidden = true; });
     const pollGamepad = readGamepad();
-    const useMenu = gamepadMenu("main button, main a[href]");
+    const useMenu = gamepadMenu("main button, main a[href], #destination");
+    const aim = document.querySelector("#aim");
     let previous = performance.now();
     renderer.setAnimationLoop((now, frame) => {
         const frameMs = Math.max(0, now - previous);
         const dt = Math.min(0.05, frameMs / 1000);
         previous = now;
         vrGuide.visible = renderer.xr.isPresenting;
+        aim.hidden = !inLandscape || !landscape.aimSelect || renderer.xr.isPresenting;
         if (renderer.xr.isPresenting) {
             for (const input of inputs) input.update();
             walkVr(renderer, frame, dt);
         } else {
             const pad = pollGamepad();
             walk(dt, pad?.axes);
-            if (pad) useMenu(pad);
+            if (pad) {
+                if (inLandscape && landscape.aimSelect && pad.pressed[0] && document.activeElement === renderer.domElement) selectCenter();
+                else if (document.activeElement === destination && [0, 14, 15].some(index => pad.pressed[index])) {
+                    if (pad.pressed[0]) document.querySelector("#visit").click();
+                    else destination.selectedIndex = (destination.selectedIndex + (pad.pressed[14] ? -1 : 1) + destination.length) % destination.length;
+                }
+                else useMenu(pad);
+            }
         }
         updateExhibit();
         if (inLandscape) landscape.update?.(now, frame, renderer.xr, renderer);
@@ -683,6 +729,9 @@ function start() {
 try {
     start();
 } catch (error) {
+    document.querySelector("#destinations").hidden = true;
+    document.querySelector("#exhibits").parentElement.hidden = false;
+    for (const room of roomDoors) room.button.hidden = true;
     status.textContent = "3D is unavailable here. The exhibit links open the projects directly.";
     console.error(error);
 }

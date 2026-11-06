@@ -1,0 +1,8 @@
+asteroidModels(scene)
+    Build three named floating rocks with crop beds and construction blueprints.
+    Give each visible target an island, command and optional plot identity.
+    Show settlement and attack rings only on unowned islands.
+    draw(game) updates crops, timers, labels, ownership, construction and readouts.
+    animate(time, fleet) displays at most twelve orbiting ships.
+    hit(ray) returns the nearest visible order target, or no selection.
+    Camera-free rays and desktop camera rays must select the same objects.

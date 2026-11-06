@@ -1,0 +1,28 @@
+:root { color-scheme: dark; font: 16px system-ui,sans-serif; background:#101820; color:#e5eeeb }
+body { margin:0 }
+main { width:min(960px,calc(100% - 2rem)); margin:1.5rem auto }
+header p:first-child { letter-spacing:.2em; color:#9fd5b8; font-size:.75rem }
+h1 { font:clamp(2rem,6vw,3.6rem) Georgia,serif; margin:.2rem 0 }
+h2 { font:1.65rem Georgia,serif; margin:.25rem 0 .75rem }
+#stats { padding:.65rem; background:#233540; border:1px solid #4a6368 }
+#chart {
+  position:relative; height:clamp(17rem,42vw,25rem); border:1px solid #4a6368; overflow:hidden;
+  background:radial-gradient(ellipse at 49% 40%,#2c4350,transparent 72%),#151f2b;
+}
+#chart svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none }
+.rock {
+  position:absolute; transform:translate(-50%,-50%); display:grid; place-items:center;
+  width:clamp(5.4rem,21vw,11rem); min-height:5rem; border:2px solid #a88f68;
+  border-radius:42% 34% 47% 32%; background:linear-gradient(155deg,#7b7252,#494939);
+  color:white; box-shadow:inset 0 -.65rem #252b2a,0 .7rem 1.5rem #0a1014;
+}
+.rock[data-owner="true"] { background:linear-gradient(155deg,#557951,#384f40) }
+.rock[aria-pressed="true"] { outline:3px solid #ffe0a4; outline-offset:4px }
+.rock small { color:#f1dfb8; padding-bottom:.45rem }
+#orders { background:#1e2d35; padding:1rem; border:1px solid #4a6368 }
+#actions { display:flex; flex-wrap:wrap; gap:.45rem }
+button { font:inherit; cursor:pointer }
+#actions button { background:#314751; color:#fff; border:1px solid #708e86; padding:.45rem .7rem }
+#actions button:disabled { opacity:.65; cursor:default }
+#message { min-height:1.3rem; margin:.7rem 0 0; color:#ffe0a4 }
+:focus-visible { outline:2px solid #ffe0a4; outline-offset:3px }

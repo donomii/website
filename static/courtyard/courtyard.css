@@ -21,5 +21,12 @@ nav a, button, #project {
 nav a[aria-current="true"], #project { background: #84462f; }
 #project { margin-top: .45rem; }
 [hidden] { display: none !important; }
+#aim { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; pointer-events: none; text-shadow: 0 0 3px #000; }
+#destinations { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem; }
+#destination { max-width: 100%; font: inherit; color: inherit; background: #49342b; padding: .35rem; }
+details { margin-top: .5rem; }
+summary { cursor: pointer; }
+#status { max-width: 34rem; font-size: .85rem; }
+body[data-room] header p:first-of-type, body[data-room] h1 { display: none; }
 :focus-visible { outline: 2px solid #ffd891; outline-offset: 3px; }
 main :is(a, button):focus { outline: 2px solid #ffd891; outline-offset: 3px; }

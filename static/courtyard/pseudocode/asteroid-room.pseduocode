@@ -1,0 +1,11 @@
+createAsteroidRoom(report)
+    Return a room using the shared courtyard renderer, rig and XR session.
+    Demand-load the original Asteroid Farmer simulation, storage and geometry.
+    On entry load the validated same-origin save and apply bounded away growth.
+    Select soil to plant or harvest; select construction to buy it;
+    select the neutral ring to settle or the rival ring to attack.
+    Use the original simulation for every order and elapsed second.
+    Report results, save after actions and ticks, and retain invalid saved bytes.
+    While active update crops, raids and ship presentation.
+    On exit save, stop ticking and resume only on re-entry.
+    Provide floor collision, a Return target and crosshair selection capability.

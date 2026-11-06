@@ -9,6 +9,7 @@
 <body>
   <main>
     <div id="viewport" aria-label="Walkable Roman courtyard"></div>
+    <span id="aim" hidden aria-hidden="true">+</span>
     <header>
       <a href="/index.html">← Portfolio</a>
       <p>OPEN-AIR GALLERY</p>
@@ -17,9 +18,18 @@
       <button id="vr" hidden>Enter VR</button>
     </header>
     <section aria-label="Exhibits">
+      <div id="destinations">
+        <label for="destination">Choose an exhibit</label>
+        <select id="destination"></select>
+        <button id="visit">Visit</button>
+      </div>
+      <details><summary>Controls</summary>
       <p>Drag to look · WASD or arrow keys to walk · Choose an exhibit to go directly there</p>
-      <p>Gamepad · Left stick to walk, right stick to look. Use the D-pad to highlight a control and A or Cross to select it.</p>
+      <p>Gamepad · Left stick walks, right stick looks. D-pad up/down highlights controls; left/right changes the exhibit choice. A/Cross visits it or selects the crosshair target.</p>
       <p>VR · Left thumbstick to walk, right thumbstick to turn. Point at the floor and pull the trigger or pinch to teleport. Point at exhibits and doorways to select them.</p>
+      <p>Asteroid Farmer · Select soil to plant or harvest and structures to build. Aim the crosshair and press Space or A/Cross, or click, trigger or pinch directly.</p>
+      </details>
+      <div hidden>
       <nav id="exhibits">
         <a href="/projects/entirety/index.html">Entirety</a>
         <a href="/projects/javascriptraymarcher/index.html">Raymarcher</a>
@@ -36,11 +46,13 @@
       <button id="lworld-door">Enter the L-World workshop</button>
       <a href="./lworld-room.html">Open the L-World editor ↗</a>
       <button id="themelab-door">Enter Themelab depth studies</button>
-      <a id="project" hidden>Open project ↗</a>
       <button id="river-door">Visit the riverbank</button>
       <button id="library-door">Visit the library</button>
       <button id="aquarium-door">Enter the Games Aquarium</button>
+      <button id="asteroid-door">Enter Asteroid Farmer</button>
       <a href="../../projects/games/games-aquarium/index.html">Open the 2D aquarium ↗</a>
+      </div>
+      <a id="project" hidden>Open project ↗</a>
       <button id="map-door" hidden>Enter the map</button>
       <span id="map-choices" hidden>
         <button data-map="0">Mediterranean rug</button>
@@ -63,6 +75,6 @@
     {"imports":{"three":"../../projects/games/domino-rush/vendor/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
   </script>
   <script src="../../projects/starsandships/datasets.js"></script>
-  <script type="module" src="./courtyard.js?v=aquarium-room"></script>
+  <script type="module" src="./courtyard.js?v=asteroid-room"></script>
 </body>
 </html>
