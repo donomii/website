@@ -13,6 +13,24 @@ automatically displayed instruction placards.
 Gamepads use D-pad up/down to focus controls and left/right to change a focused
 destination picker; A/Cross visits the selected exhibit.
 
+Art Deco salon is available in the destination menu and through the northeast
+courtyard doorway. Load its geometry only on entry and retain the existing
+renderer, camera rig, XR session and controller/hand inputs. The room is twelve
+meters wide, sixteen deep and six and a half high, with emerald walls, black
+and ivory checkerboard stone, brass inlay, fluted pilasters, stepped capitals,
+sunburst wall reliefs, opal chandeliers, velvet lounges and geometric palms.
+A brass armillary turns slowly above an octagonal plinth. The entry view has
+no text panels. Menu, help and readouts remain closed by default.
+
+The flat floor accepts walking, gamepad movement and controller/pinch
+teleportation. Keep visitors inside the walls and outside the sculpture plinth,
+lounges and planters. A pale doorway behind the spawn point returns to the
+courtyard by approach or selection; Return is also available in the menu.
+Architecture uses instanced boxes and floor tiles and procedural geometry,
+with no image assets, external fetches, extra renderer or animation loop.
+The room exposes scene, floor surface, exit, floor-height and walkability
+functions, spawn and movement limits, and an update function for the sculpture.
+
 Asteroid Farmer is a demand-loaded room entered through its labeled west
 doorway or the destination picker. It imports the original game's simulation
 and validated save module. Soil beds plant and harvest; physical depot, turret

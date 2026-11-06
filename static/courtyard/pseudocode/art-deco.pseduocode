@@ -1,0 +1,8 @@
+createArtDecoRoom()
+    Create a lit salon scene and demand-loaded procedural architecture.
+    Return the shared-room interface: scene, surface, exit, height, canStand,
+    spawnZ, limitX, limitZ and update.
+    Use the existing courtyard renderer and camera rig.
+    Keep the entry view free of text and instruction panels.
+    On update rotate the armillary at one radian per eighteen seconds.
+    Use the doorway and existing menu for return navigation.

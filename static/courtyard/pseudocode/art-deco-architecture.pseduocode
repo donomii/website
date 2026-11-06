@@ -1,0 +1,10 @@
+createDecoArchitecture(scene)
+    Build a twelve by sixteen meter salon with a six-and-a-half meter ceiling.
+    Use emerald lacquer, brass, ivory, black onyx, velvet and opal materials.
+    Batch repeated box architecture and checkerboard tiles into instances.
+    Add stepped cornices, fluted pilasters, fan and sunburst reliefs,
+    chandeliers, lounges, geometric palms and a central armillary on a plinth.
+    Return floor surface, doorway selection surface, sculpture and canStand.
+    canStand rejects points outside the room or inside furnishings and plinth.
+    Keep the central aisle and approach to the doorway clear.
+    All geometry is procedural; no text, images or outside resource fetches.

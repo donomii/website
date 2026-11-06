@@ -1,0 +1,20 @@
+import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
+import { createDecoArchitecture } from "./art-deco-architecture.js";
+
+export function createArtDecoRoom() {
+    const scene = new T.Scene();
+    scene.background = new T.Color(0x101b20);
+    const ambient = new T.HemisphereLight(0xffe9c4, 0x193c3a, 2.3);
+    scene.add(ambient);
+    const warm = new T.DirectionalLight(0xffe4b1, 3.1);
+    warm.position.set(-3, 5.8, 5);
+    const fill = new T.DirectionalLight(0xb9d9d5, 1.4);
+    fill.position.set(4, 4, -6);
+    scene.add(warm, fill);
+    const room = createDecoArchitecture(scene);
+    return {
+        scene, surface: room.surface, exit: room.exit, canStand: room.canStand,
+        height: () => 0, spawnZ: 5.1, limitX: 5.35, limitZ: 7.5,
+        update(now) { room.sculpture.rotation.y = now / 18000; },
+    };
+}

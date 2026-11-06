@@ -18,6 +18,8 @@ function setMenu(open) {
 }
 menuToggle.addEventListener("click", () => setMenu(!document.body.hasAttribute("data-menu-open")));
 const roomDoors = [
+    { name: "Art Deco salon", x: 6.8, z: -8.2, button: document.querySelector("#art-deco-door"),
+        load: () => import("./art-deco.js").then(module => module.createArtDecoRoom()) },
     { name: "Riverbank", x: 0, z: 10.25, button: document.querySelector("#river-door"),
         load: () => import("./riverbank.js").then(module => module.createRiverbank()) },
     { name: "Library", x: -4, z: 10.25, button: document.querySelector("#library-door"),
