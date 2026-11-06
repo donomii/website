@@ -1,5 +1,5 @@
 :root { color-scheme: dark; font-family: system-ui, sans-serif; }
-body { margin: 0; background: #2d2521; color: #fbebcf; }
+body { margin: 0; background: #2d2521; color: #fbebcf; overflow: hidden; }
 main { min-height: 100svh; display: grid; align-content: space-between; }
 #viewport { position: fixed; inset: 0; touch-action: none; }
 #viewport canvas { display: block; width: 100%; height: 100%; }
@@ -21,6 +21,8 @@ nav a, button, #project {
 nav a[aria-current="true"], #project { background: #84462f; }
 #project { margin-top: .45rem; }
 [hidden] { display: none !important; }
+body:not([data-menu-open]) main > header, body:not([data-menu-open]) main > section { display: none; }
+#menu-toggle { position: fixed; top: .65rem; right: .65rem; z-index: 2; padding: .3rem .5rem; font-size: 1rem; background: #241b16b3; }
 #aim { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; pointer-events: none; text-shadow: 0 0 3px #000; }
 #destinations { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem; }
 #destination { max-width: 100%; font: inherit; color: inherit; background: #49342b; padding: .35rem; }

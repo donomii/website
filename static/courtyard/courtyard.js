@@ -8,6 +8,15 @@ const links = [...document.querySelectorAll("#exhibits a")];
 const project = document.querySelector("#project");
 const vr = document.querySelector("#vr");
 const mapDoor = document.querySelector("#map-door");
+const menuToggle = document.querySelector("#menu-toggle");
+function setMenu(open) {
+    document.body.toggleAttribute("data-menu-open", open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Close gallery menu" : "Open gallery menu");
+    if (open) menuToggle.focus();
+    else viewport.querySelector("canvas")?.focus();
+}
+menuToggle.addEventListener("click", () => setMenu(!document.body.hasAttribute("data-menu-open")));
 const roomDoors = [
     { name: "Riverbank", x: 0, z: 10.25, button: document.querySelector("#river-door"),
         load: () => import("./riverbank.js").then(module => module.createRiverbank()) },
@@ -328,6 +337,7 @@ function openOrbitalRoom(path) {
 
 async function enterMap(entry = visibleMap || maps[0], fromRoom) {
     if (entering || (inLandscape && !fromRoom)) return;
+    setMenu(false);
     entering = true;
     const version = navigationVersion;
     try {
@@ -372,6 +382,7 @@ async function enterMap(entry = visibleMap || maps[0], fromRoom) {
 }
 
 function leaveMap() {
+    setMenu(false);
     navigationVersion++;
     const previousRoom = returnRoom;
     returnRoom = undefined;
@@ -468,6 +479,11 @@ function bindDesktop(renderer) {
     });
     surface.addEventListener("lostpointercapture", () => { pointer = null; });
     window.addEventListener("keydown", event => {
+        if (event.code === "Escape") {
+            event.preventDefault();
+            if (!event.repeat) setMenu(!document.body.hasAttribute("data-menu-open"));
+            return;
+        }
         if (inLandscape && landscape.aimSelect && event.target === surface && event.code === "Space") {
             event.preventDefault();
             if (!event.repeat) selectCenter();
@@ -643,6 +659,7 @@ function start() {
     destination.add(new Option("Games Aquarium · 2D", "../../projects/games/games-aquarium/index.html"));
     destination.add(new Option("L-World · original editor", "./lworld-room.html"));
     document.querySelector("#visit").addEventListener("click", () => {
+        setMenu(false);
         const room = roomDoors.find(entry => entry.button.id === destination.value);
         if (room) enterMap(room);
         else if (destination.value.startsWith("exhibit:")) visit(Number(destination.value.split(":")[1]));
@@ -669,27 +686,16 @@ function start() {
         await loadLetterFit();
         letterFit?.setTarget(fitTarget.value);
     });
-    const vrGuide = new T.Group();
-    ["VR · Left stick walks · Right stick turns", "Point at the floor · Trigger or pinch to teleport",
-        "Point at an exhibit or doorway to select it"].forEach((line, index) => {
-        const sign = new T.Mesh(new T.PlaneGeometry(2.7, 0.4), plaque(line));
-        sign.position.y = -index * 0.39;
-        vrGuide.add(sign);
-    });
-    vrGuide.position.set(0, 2.08, 5.3);
-    vrGuide.visible = false;
-    scene.add(vrGuide);
     const inputs = [];
     bindVR(renderer, inputs).catch(() => { vr.hidden = true; });
     const pollGamepad = readGamepad();
-    const useMenu = gamepadMenu("main button, main a[href], #destination");
+    const useMenu = gamepadMenu("#menu-toggle, main button, main a[href], #destination");
     const aim = document.querySelector("#aim");
     let previous = performance.now();
     renderer.setAnimationLoop((now, frame) => {
         const frameMs = Math.max(0, now - previous);
         const dt = Math.min(0.05, frameMs / 1000);
         previous = now;
-        vrGuide.visible = renderer.xr.isPresenting;
         aim.hidden = !inLandscape || !landscape.aimSelect || renderer.xr.isPresenting;
         if (renderer.xr.isPresenting) {
             for (const input of inputs) input.update();
@@ -698,6 +704,7 @@ function start() {
             const pad = pollGamepad();
             walk(dt, pad?.axes);
             if (pad) {
+                if (pad.pressed[9]) setMenu(!document.body.hasAttribute("data-menu-open"));
                 if (inLandscape && landscape.aimSelect && pad.pressed[0] && document.activeElement === renderer.domElement) selectCenter();
                 else if (document.activeElement === destination && [0, 14, 15].some(index => pad.pressed[index])) {
                     if (pad.pressed[0]) document.querySelector("#visit").click();
@@ -729,6 +736,7 @@ function start() {
 try {
     start();
 } catch (error) {
+    setMenu(true);
     document.querySelector("#destinations").hidden = true;
     document.querySelector("#exhibits").parentElement.hidden = false;
     for (const room of roomDoors) room.button.hidden = true;

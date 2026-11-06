@@ -42,7 +42,7 @@ export function asteroidModels(scene) {
         group.position.set(x, 0, z);
         scene.add(group);
         mesh(group, new T.CylinderGeometry(1.25, 0.48, 0.8, 9), 0x65594f, 0, 0.72, 0);
-        const name = label(group, 2, 0, 2.6, -0.65);
+        const name = label(group, 0.9, 0, 0.93, 1.05);
         name.draw(islands[index].name);
         const commandTarget = (object, command, plot) => {
             object.userData.order = { index, command, plot };
@@ -77,9 +77,7 @@ export function asteroidModels(scene) {
         new T.ConeGeometry(0.09, 0.3, 4).rotateX(Math.PI / 2), 0xa6d9ec, 0, 0, 0));
     const board = label(scene, 3.4, -3.5, 2.7, 0);
     const result = label(scene, 3.4, -3.5, 2.15, 0);
-    const instructions = label(scene, 3.4, -3.5, 1.6, 0);
-    for (const sign of [board, result, instructions]) sign.object.rotation.y = Math.PI / 3;
-    instructions.draw("Soil: plant / harvest · Blueprints: build");
+    for (const sign of [board, result]) sign.object.rotation.y = Math.PI / 3;
     return {
         targets,
         draw(game) {

@@ -1,10 +1,15 @@
 # Portfolio Courtyard
 
-The navigation panel starts compact: choose an exhibit and select Visit.
-Controls expands the input reference on request. Project links remain beside
-an approached exhibit; standalone 2D games and the L-World editor are destination
-choices. Without WebGL, retain the original project links instead of the 3D
-picker. Room visits compact the header and show Return to courtyard.
+The scene opens unobstructed, with only a small gallery-menu icon and, in
+Asteroid Farmer, the aiming crosshair. The title, status prose, navigation,
+Return button and help remain hidden until the visitor opens that menu.
+Escape or gamepad Start opens or closes it; the icon also toggles it.
+Choose an exhibit and select Visit to enter it and close the menu.
+Controls expands the input reference only on request. Project links remain
+available in the menu; standalone 2D games and the L-World editor are destination
+choices. Without WebGL, open the menu and retain the original project links
+instead of the 3D picker. The scene page does not scroll. Immersive VR has no
+automatically displayed instruction placards.
 Gamepads use D-pad up/down to focus controls and left/right to change a focused
 destination picker; A/Cross visits the selected exhibit.
 
@@ -14,7 +19,9 @@ and validated save module. Soil beds plant and harvest; physical depot, turret
 and ship blueprints buy the named construction for its labeled price. Select
 Cinder Shoal's ring to settle, or Redoubt's ring to raid. Crops grow visibly and
 show countdowns. Ships orbit Lantern Farm, with at most twelve drawn. The side
-board and status show credits, fleet, raid countdown and action results.
+board and on-demand menu status show credits, fleet, raid countdown and action
+results. There is no in-world instruction board; asteroid names are small signs
+attached to their rims.
 Mouse clicks, VR trigger rays and pinch rays share the same targets. In this
 room the desktop canvas takes focus, a crosshair appears, and Space or gamepad
 A/Cross selects its target. D-pad focus can still reach Return.
@@ -50,7 +57,7 @@ On a browser that supports immersive WebXR, offer Enter VR. The headset supplies
 
 Enter VR once for the courtyard and its rooms. Walk into a labeled doorway or select it to load the room on demand in the same renderer and session. The camera rig, movement controls, hand tracking, and pointing inputs move into the room together. Select Return or approach the exit to return to the doorway. Datatree's sample archive, Jump's recording and playback controls, the map conversion sample, Pocket Bonsai's generation controls, Zipper's sample program, and Themelab's three themes are interactive in their rooms. In Stars & Ships, select a destination to dispatch the ship. Select it again after arrival to enter its room and use Return to come back to the chart. The L-World workshop renders the original default turtle program as spatial panels using its local textures and simplified shader materials. Its full editor remains available through its separate link. Local file selection, downloads, and full text editors remain in the standalone exhibits.
 
-The courtyard shows a control sign inside VR. The left thumbstick moves at up to 1.7 meters per second relative to headset direction. The right stick turns 30 degrees per push and must return toward center before turning again. With one thumbstick, use it to move. Point at the courtyard floor and select to teleport within the walking bounds, outside the fountain. Point at a wall exhibit, its floor marker, or a doorway and select to visit it. Walking and turning also work in the relief maps, riverbank, and library.
+Movement help is available in the on-demand Controls section. No control sign appears automatically inside VR. The left thumbstick moves at up to 1.7 meters per second relative to headset direction. The right stick turns 30 degrees per push and must return toward center before turning again. With one thumbstick, use it to move. Point at the courtyard floor and select to teleport within the walking bounds, outside the fountain. Point at a wall exhibit, its floor marker, or a doorway and select to visit it. Walking and turning also work in the relief maps, riverbank, and library.
 
 Outside immersive VR, accept gamepads that the browser maps to its standard layout. Press a button to activate a gamepad. In the courtyard, the left stick walks and strafes and the right stick looks around. In the courtyard, Datatree, and Orbit, the D-pad moves focus through visible enabled buttons and links. A or Cross activates the focused control. In Jump, the left stick poses the right hand. A or Cross starts or stops recording, X or Square replays, and Y or Triangle toggles the dance loop. Ignore small stick motion around center and handle button actions once per press.
 
