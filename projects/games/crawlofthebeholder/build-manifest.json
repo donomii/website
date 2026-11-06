@@ -1145,5 +1145,6 @@
     "vendor/crawl/crawl-ref/source/rltiles/mon/undead/zombies/zombie_small.png",
     "vendor/crawl/crawl-ref/source/rltiles/mon/unique/ilsuiw.png",
     "vendor/crawl/crawl-ref/source/rltiles/mon/unique/xakkrixis.png"
-  ]
+  ],
+  "runtimeSourceRevision": "2f9d0e36612d4d192652e4c30d9802347ff0d6ed"
 }

@@ -121,6 +121,7 @@
         stairs: () => useStairs(),
         wait: () => waitTurn(),
         rest: () => restUntilReady(),
+        recover: () => quickRecovery(),
         cycleFormation: () => cycleFormation(),
         autoExplore: () => autoExplore(),
         travelToStairs: () => travelToStairs(),

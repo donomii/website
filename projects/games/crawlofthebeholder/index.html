@@ -11,7 +11,7 @@
     <link rel="icon" type="image/svg+xml" href="icon.svg">
     <link rel="apple-touch-icon" href="icon.svg">
     <title>Crawl of the Beholder</title>
-    <link rel="stylesheet" href="styles.css?v=0.5.32">
+    <link rel="stylesheet" href="styles.css?v=0.5.32-fit2">
   </head>
   <body>
     <div class="app">
@@ -172,6 +172,13 @@
       <div class="modal-card">
         <button type="button" class="modal-close" data-modal-close="helpModal" aria-label="Close help">&times;</button>
         <h2 id="helpModalTitle">Controls</h2>
+        <details id="gamepadHelp">
+          <summary>Gamepad</summary>
+          <p>Left stick steps and sidesteps. Right stick turns. The D-pad steps or turns. Center the sticks between moves.</p>
+          <p>A / Cross interacts, X / Square attacks, B / Circle waits, and Y / Triangle picks up. The left and right bumpers use the primary and secondary actions.</p>
+          <p>Left trigger / L2 uses a recovery potion when needed. View / Share opens the pack in browser play. Cycle items with the D-pad, use one with A / Cross, and close with B / Circle.</p>
+          <p>Start / Options opens these controls during play. In dialogs, D-pad up/down moves focus and left/right changes choices. A / Cross activates buttons or toggles checkboxes. B / Circle closes dismissible dialogs.</p>
+        </details>
         <div class="help-grid">
           <div><kbd>W</kbd> <kbd>&uarr;</kbd></div><div>Step forward</div>
           <div><kbd>S</kbd> <kbd>&darr;</kbd></div><div>Step back</div>
@@ -310,45 +317,46 @@
     <div id="characterCreateModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="characterCreateTitle">
       <div class="modal-card">
         <h2 id="characterCreateTitle">Choose your party</h2>
-        <p>Choose each member's class and its two fixed actions. Both actions are available from the start and stay with that character for the run. There is no healer; carry healing supplies. Waiting does not heal and there is no hunger clock.</p>
+        <p>Classes fix both actions for the run. Use supplies to heal. Gamepad: up/down to move, left/right to choose, A / Cross to activate.</p>
         <div id="characterCreateList" class="character-create-list"></div>
-        <div class="character-create-row">
-          <label>
-            <strong>Difficulty</strong>
-            <select id="characterCreateDifficulty">
-              <option value="easy">Easy</option>
-              <option value="normal" selected>Normal</option>
-              <option value="hard">Hard</option>
-            </select>
-          </label>
-        </div>
-        <div class="character-create-row">
-          <label>
-            <strong>Patron deity</strong>
-            <select id="characterCreateDeity">
-              <option value="none" selected>No patron</option>
-              <option value="trog">Trog — rage; +party power (no magic)</option>
-              <option value="okawaru">Okawaru — battle; +power &amp; XP</option>
-              <option value="makhleb">Makhleb — carnage; +power</option>
-              <option value="kikubaaqudgha">Kikubaaqudgha — death; +power &amp; XP</option>
-              <option value="the_shining_one">The Shining One — vigour; +power</option>
-              <option value="elyvilon">Elyvilon — legacy healing patron; rest bonus inactive</option>
-              <option value="sif_muna">Sif Muna — lore; +XP</option>
-              <option value="gozag">Gozag — gold; +gold (no piety)</option>
-            </select>
-          </label>
-          <p>Legacy patron rest-healing bonuses are inactive. No patron restores health while waiting.</p>
-        </div>
-        <div class="character-create-row">
-          <label>
-            <input type="checkbox" id="characterCreateDaily">
-            <strong>Daily seed run</strong>
-          </label>
+        <div class="character-create-options">
+          <div class="character-create-row">
+            <label>
+              <strong>Difficulty</strong>
+              <select id="characterCreateDifficulty">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+              </select>
+            </label>
+          </div>
+          <div class="character-create-row">
+            <label>
+              <strong>Patron deity</strong>
+              <select id="characterCreateDeity">
+                <option value="none" selected>No patron</option>
+                <option value="trog">Trog — rage; +party power (no magic)</option>
+                <option value="okawaru">Okawaru — battle; +power &amp; XP</option>
+                <option value="makhleb">Makhleb — carnage; +power</option>
+                <option value="kikubaaqudgha">Kikubaaqudgha — death; +power &amp; XP</option>
+                <option value="the_shining_one">The Shining One — vigour; +power</option>
+                <option value="elyvilon">Elyvilon — legacy healing patron; rest bonus inactive</option>
+                <option value="sif_muna">Sif Muna — lore; +XP</option>
+                <option value="gozag">Gozag — gold; +gold (no piety)</option>
+              </select>
+            </label>
+          </div>
+          <div class="character-create-row">
+            <label>
+              <input type="checkbox" id="characterCreateDaily">
+              <strong>Daily seed run</strong>
+            </label>
+          </div>
         </div>
         <div class="modal-actions">
           <button type="button" id="characterCreateRandom">Randomize</button>
           <button type="button" id="characterCreateStart">Begin</button>
-          <button type="button" data-action="confirmNewRun" title="Explicitly discard the current slot's saved expedition and reload party creation. Asks for confirmation.">Discard saved expedition</button>
+          <button type="button" data-action="confirmNewRun" title="Explicitly discard the current slot's saved expedition and reload party creation. Asks for confirmation.">Discard save</button>
         </div>
       </div>
     </div>
@@ -448,7 +456,7 @@
     <script src="src/runtime/engine/items/use.js?v=0.5.25"></script>
     <script src="src/runtime/engine/party/turn.js?v=0.5.25"></script>
     <script src="src/runtime/render/viewport_rendering.js?v=0.5.35"></script>
-    <script src="src/runtime/render/ui_chrome.js?v=0.5.32"></script>
+    <script src="src/runtime/render/ui_chrome.js?v=0.5.32-fit"></script>
     <script src="src/runtime/engine/classes.js?v=0.5.25"></script>
     <script src="src/runtime/engine/mapgen.js?v=0.5.25"></script>
     <script src="src/runtime/io/persistence.js?v=0.5.25"></script>

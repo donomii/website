@@ -258,8 +258,8 @@
         },
 
         healing(item) {
-          const living = state.party.filter((member) => member.hp > 0);
-          if (living.length === 0) {
+          const target = recoveryTarget();
+          if (!target) {
             setMessage("No living adventurer can drink this. Healing supplies do not revive the fallen.");
             return;
           } else if (!Number.isFinite(item.power) || item.power <= 0) {
@@ -269,7 +269,6 @@
             // Normal healing never targets a fallen member; revival is a separate consumable.
             state.message = "The party uses a recovery supply.";
           }
-          const target = living.reduce((lowest, member) => (member.hp / member.maxHp < lowest.hp / lowest.maxHp ? member : lowest), living[0]);
           target.hp = Math.min(target.maxHp, target.hp + item.power);
           const clearedPoison = item.name.includes("curing") && state.poisonedTurns > 0;
           const clearedBarbs = item.name.includes("curing") && state.barbedTurns > 0;
@@ -480,6 +479,39 @@
       // Kinds whose use counts toward the "potions used" lifetime stat.
       const CONSUMABLE_KINDS = new Set(["healing", "mapping", "might", "resistance", "haste", "blink", "teleport", "fear", "confuse", "fog", "poison", "immolation", "silence", "identify", "remove_curse", "charm"]);
 
+      function recoveryTarget() {
+        const living = state.party.filter((member) => member.hp > 0);
+        return living.reduce((lowest, member) =>
+          !lowest || member.hp / member.maxHp < lowest.hp / lowest.maxHp ? member : lowest, null);
+      }
+
+      function quickRecovery() {
+        const target = recoveryTarget();
+        const needsCure = state.poisonedTurns > 0 || state.barbedTurns > 0;
+        if (!target || (target.hp >= target.maxHp && !needsCure)) {
+          setMessage(target ? "Nobody needs a recovery supply." : "Recovery supplies cannot revive fallen adventurers.");
+          return;
+        }
+        const missing = target.maxHp - target.hp;
+        const supplies = state.inventory.filter((item) =>
+          item.kind === "healing" && Number.isFinite(item.power) && item.power > 0);
+        const cures = supplies.filter((item) => item.name.includes("curing"));
+        if (needsCure && missing === 0 && cures.length === 0) {
+          setMessage("The pack has no curing potion for the active condition.");
+          return;
+        }
+        const eligible = needsCure && cures.length > 0 ? cures : supplies;
+        const sufficient = eligible.filter((item) => item.power >= missing);
+        const selected = sufficient.length > 0
+          ? sufficient.reduce((best, item) => item.power < best.power ? item : best)
+          : eligible.reduce((best, item) => !best || item.power > best.power ? item : best, null);
+        if (selected) {
+          useItem(selected.id);
+        } else {
+          setMessage("The pack has no recovery supply.");
+        }
+      }
+
       function useItem(id) {
         const item = state.inventory.find((entry) => entry.id === id);
         if (!item) return;
@@ -507,6 +539,7 @@
 
       context.ITEM_USE = ITEM_USE;
       context.useItem = useItem;
+      context.quickRecovery = quickRecovery;
       context.equipKindSpec = equipKindSpec;
       context.equipItemToMember = equipItemToMember;
       context.throwInventoryItem = throwInventoryItem;

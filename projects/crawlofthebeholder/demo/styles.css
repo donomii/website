@@ -594,6 +594,11 @@ h2 {
   min-height: 0;
 }
 
+.inventory-item button:focus {
+  outline: 2px solid #f1d07a;
+  outline-offset: 1px;
+}
+
 .inventory-key {
   position: absolute;
   top: 2px;

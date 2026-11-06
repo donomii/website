@@ -4,8 +4,7 @@
   // dungeon architecture in true 3D, everything that lives in it as flat
   // "paper doll" sprites standing on their tiles. This file is a front end
   // only: it reads state through the same helpers the 2D map/viewport use and
-  // issues player commands exclusively through handleAction, so the game being
-  // played is byte-for-byte the webpage game.
+  // runs player commands through the shared game engine.
   window.CotBRuntime.installVr = function (context) {
     with (context) {
       const VR = {
@@ -26,31 +25,28 @@
       };
       // Thumbstick sectors, 45° each starting at north: N NE E SE S SW W NW.
       // Diagonal sectors are dead on purpose: diagonal-strafe via thumbstick
-      // never registered reliably on real sticks. Sidesteps live on the
-      // palette (Step L/R); point-to-move covers everything else.
+      // never registered reliably on real sticks. Use point-to-move for sidesteps.
       const VR_STICK_ACTIONS = ["moveForward", null, "turnRight", null, "moveBack", null, "turnLeft", null];
       const VR_MARKER_COLORS = { goal: "#58c470", warn: "#e05a3a", treasure: "#f1d07a" };
       const VR_SHADE = { floor: 1, faceNS: 0.82, faceEW: 0.68, top: 0.52, doorFace: 0.92, doorTop: 0.6 };
 
       // The in-VR control panel: a labelled button grid the player points at and
-      // clicks with the trigger, so nobody has to remember the stick sectors or
-      // grip combos. Row-major, 3 columns; a "vr:" action is a local view op,
+      // clicks with the trigger for game commands and view settings.
+      // Row-major, 3 columns; a "vr:" action is handled by this panel,
       // everything else is a plain handleAction id — the same commands the 2D
       // page's button strip issues, so this stays a front end over one game.
       const VR_CONTROL_COLS = 3;
       const VR_CONTROL_BUTTONS = [
-        { label: "Turn L", action: "turnLeft" }, { label: "Forward", action: "moveForward" }, { label: "Turn R", action: "turnRight" },
-        { label: "Step L", action: "moveLeft" }, { label: "Back", action: "moveBack" }, { label: "Step R", action: "moveRight" },
         { label: "Attack", action: "attack" }, { label: "Interact", action: "interact" }, { label: "Wait", action: "wait" },
         { label: "Recovery help", action: "rest" }, { label: "Explore", action: "autoExplore" }, { label: "To Stairs", action: "travelToStairs" },
         { label: "Formation", action: "cycleFormation" }, { label: "Primary", action: "signature" }, { label: "Secondary", action: "ultimate" }, { label: "Search", action: "search" },
         { label: "Pickup", action: "pickup" }, { label: "Disarm", action: "disarm" }, { label: "Level", action: "vr:level" },
         { label: "Doll Mode", action: "vr:dolls" }, { label: "Art Style", action: "vr:art" }, { label: "Reset View", action: "vr:reset" },
-        { label: "Exit VR", action: "vr:exit" }
+        { label: "Use potion", action: "vr:recovery" }, { label: "Overhead", action: "vr:overhead" }, { label: "Exit VR", action: "vr:exit" }
       ];
       // Panel plane, in metres: anchored to the left of the diorama, billboarded
       // to face the head. width/height are the full quad; cols/rows tile it.
-      const VR_PANEL = { offsetX: -0.6, offsetY: 0.14, offsetZ: 0.12, width: 0.5, height: 0.77 };
+      const VR_PANEL = { offsetX: -0.6, offsetY: 0.14, offsetZ: 0.12, width: 0.5, height: 0.60 };
 
       let vrSession = null;
       let vrSessionMode = null;   // "immersive-vr" | "immersive-ar" while active
@@ -77,6 +73,7 @@
       let vrInvDrawnSig = null;
       let vrPointerSegs = [];     // laser rays to draw this frame: [{ ox,oy,oz, px,py,pz, bright }]
       let vrHandMarkers = [];     // controller positions to draw this frame: [{ x,y,z }]
+      let vrTrackedHands = [];    // tracked joint positions for each hand this frame
       let vrDragGhosts = [];      // laser-dragged item art this frame: [{ tile, x,y,z }]
       // Game feel: dolls GLIDE between tiles instead of teleporting, flash
       // when hurt, and shed floating damage/heal numbers. All of it is
@@ -206,8 +203,9 @@
       // reference space. null = automatic layout; set once the user
       // grip-drags that pane somewhere. All are grabbable and billboarded.
       const vrPanelOffsets = { palette: null, hud: null, party: null, inventory: null };
-      let vrAimTile = null; // dungeon tile under the laser this frame (point-to-move)
+      const vrAimTiles = new Map(); // tile targets under the lasers this frame
       let vrSelectedMemberIndex = 0; // equip target picked on the party pane
+      let vrInventoryPage = 0;
       // Game commands queued during an XR frame, run between frames.
       let vrPendingOps = [];
       let vrOpsScheduled = false;
@@ -421,9 +419,9 @@
             if (seen(cell.x, cell.y)) surfaces.push({ kind: "decal", x: cell.x, y: cell.y, texture: effectTexture(effect.kind), inset: 0.16, lift: 0.38, alpha: 0.78, tint: vrEffectTint(effect.kind) });
           }
         }
-        // Point-to-move target: the tile the laser is resting on lights up.
-        if (vrAimTile) {
-          surfaces.push({ kind: "decal", x: vrAimTile.x, y: vrAimTile.y, glyph: "▣", color: "#f1d07a", inset: 0.08, lift: 0.028, alpha: 0.85 });
+        // Each active ray lights its own target on the floor or door cap.
+        for (const { x, y, glyph, lift } of vrAimTiles.values()) {
+          surfaces.push({ kind: "decal", x, y, glyph, color: "#f1d07a", inset: 0.08, lift, alpha: 0.85 });
         }
         return surfaces;
       }
@@ -576,7 +574,7 @@
           message,
           party: state.party.map((member) => ({ name: member.name, hp: Math.max(0, member.hp), maxHp: member.maxHp })),
           mode: vrDollMode(),
-          hints: "aim at a floor tile + A/X walks there · trigger clicks the palette · stick move/turn · B/Y wait (hold rest) · grip drags what you point at"
+          hints: "Point at a lit tile or control · trigger, A/X or pinch selects · select your stair again to use it · stick moves/turns · B/Y waits (hold to rest) · grip drags"
         };
       }
 
@@ -605,11 +603,10 @@
           grabDist: 0,
           prevAnchor: null,
           prevGripQ: null,
-          // Hand tracking: pinch/grab hysteresis and what THIS pinch means
-          // (chosen at the pinch's start, held until release).
+          // Hand tracking: pinch/grab hysteresis.
           handPinch: false,
           handGrab: false,
-          pinchRole: null
+          handNeedsNeutral: true
         };
       }
 
@@ -639,17 +636,30 @@
 
       // Read a tracked hand as if it were a controller: pinch → trigger,
       // fist → grip. No thumbstick — hands move the party by pointing at a
-      // floor tile and pinching (the pinch acts as the travel button when it
-      // STARTS on a lit tile), and everything else lives on the palette.
-      function vrReadHand(source, frame, hand, refSpace = vrRefSpace) {
-        if (!source.hand || typeof frame.getJointPose !== "function") return null;
-        const joint = (name) => {
-          const space = typeof source.hand.get === "function" ? source.hand.get(name) : null;
-          const pose = space ? frame.getJointPose(space, refSpace) : null;
-          return pose ? pose.transform.position : null;
-        };
-        const joints = { thumb: joint("thumb-tip"), index: joint("index-finger-tip"), middle: joint("middle-finger-tip"), wrist: joint("wrist") };
-        if (!joints.thumb || !joints.index) return null; // joints not tracked this frame
+      // floor tile and pinching, and other actions live on the palette.
+      const VR_HAND_CHAINS = [
+        ["thumb-metacarpal", "thumb-phalanx-proximal", "thumb-phalanx-distal", "thumb-tip"],
+        ...["index", "middle", "ring", "pinky"].map((finger) =>
+          ["metacarpal", "phalanx-proximal", "phalanx-intermediate", "phalanx-distal", "tip"]
+            .map((joint) => `${finger}-finger-${joint}`))
+      ];
+      const VR_HAND_JOINTS = ["wrist", ...VR_HAND_CHAINS.flat()];
+
+      function vrReadHandJoints(source, frame, refSpace) {
+        const joints = {};
+        if (typeof source.hand?.get === "function" && typeof frame.getJointPose === "function") {
+          for (const name of VR_HAND_JOINTS) {
+            const space = source.hand.get(name);
+            const position = space ? frame.getJointPose(space, refSpace)?.transform.position : null;
+            if (position && [position.x, position.y, position.z].every(Number.isFinite)) joints[name] = position;
+          }
+        }
+        return joints;
+      }
+
+      function vrReadHand(source, frame, hand, refSpace = vrRefSpace, positions = vrReadHandJoints(source, frame, refSpace)) {
+        const joints = { thumb: positions["thumb-tip"], index: positions["index-finger-tip"], middle: positions["middle-finger-tip"], wrist: positions.wrist };
+        if (!joints.thumb || !joints.index || !joints.middle || !joints.wrist) return null;
         const gesture = vrHandGesture(joints, { pinch: hand.handPinch, grab: hand.handGrab });
         hand.handPinch = gesture.pinch;
         hand.handGrab = gesture.grab;
@@ -670,7 +680,7 @@
       }
 
       function vrControllerStep(hand, input, nowMs) {
-        const out = { actions: [], rotate: 0, scaleRate: 0, grabbing: false, toggleDolls: false, resetView: false, click: -1, clickPane: null };
+        const out = { actions: [], floorOp: null, rotate: 0, scaleRate: 0, grabbing: false, toggleDolls: false, resetView: false, click: -1, clickPane: null };
         const stickClicked = input.stickClick && !hand.prevStickClick;
 
         if (input.squeeze) {
@@ -691,18 +701,19 @@
           hand.secondaryConsumed = true;
         } else {
           if (stickClicked) out.toggleDolls = true;
-          // Trigger clicks the pane cell under the pointer when one is
-          // highlighted; otherwise it attacks. Panes sit off to the side, so
-          // aiming at the diorama (normal play) always attacks.
-          if (input.trigger && !hand.prevTrigger) {
-            if (input.pointerButton >= 0) {
-              out.click = input.pointerButton;
-              out.clickPane = input.pointerPane || "palette";
-            } else {
-              out.actions.push("attack");
-            }
+          const triggerPressed = input.trigger && !hand.prevTrigger;
+          const primaryPressed = input.primary && !hand.prevPrimary;
+          const selectPressed = triggerPressed || primaryPressed;
+          // An aimed selection takes precedence over the buttons' unaimed actions.
+          if (selectPressed && input.aimTile) {
+            out.floorOp = input.aimTile;
+          } else if (selectPressed && input.pointerButton >= 0) {
+            out.click = input.pointerButton;
+            out.clickPane = input.pointerPane || "palette";
+          } else if (!input.pointerBlocked) {
+            if (triggerPressed) out.actions.push("attack");
+            if (primaryPressed) out.actions.push("interact");
           }
-          if (input.primary && !hand.prevPrimary) out.actions.push("interact");
           if (input.secondary) {
             if (!hand.prevSecondary) {
               hand.secondaryDownAt = nowMs;
@@ -1880,6 +1891,20 @@
         return vrTable; // live object, mutated by grabs/tests
       }
 
+      function vrTableOverhead(head = vrLastHeadPose?.position) {
+        if (!head) return;
+        const dx = head.x - vrTable.x;
+        const dy = Math.max(0, head.y - vrTable.y);
+        const dz = head.z - vrTable.z;
+        const horizontal = Math.hypot(dx, dz);
+        if (!Number.isFinite(horizontal + dy) || horizontal + dy < 0.001) return;
+        vrTableLevel();
+        if (horizontal >= 0.001) {
+          const tilt = vrQFromAxisAngle([dz / horizontal, 0, -dx / horizontal], Math.atan2(horizontal, dy));
+          vrTable.q = vrQNormalize(vrQMul(tilt, vrTable.q));
+        }
+      }
+
       // Arm AR placement: the reticle comes back and the next tap on real
       // geometry re-anchors the diorama. (Reset View re-arms it in AR.)
       function vrArBeginPlacement() {
@@ -1974,19 +1999,22 @@
         return VR_CONTROL_BUTTONS;
       }
 
-      function vrInventoryRows() {
-        return Math.max(1, Math.ceil(state.inventory.length / 4));
-      }
-
       // Inventory pane bands in logical canvas px; the pane's WORLD height
       // derives from the same numbers, so the drawn bands and the ray-hit
       // grid can never disagree (they used to, and clicks landed a half-row
       // off). The footer is the hovered item's detail strip.
-      const VR_INV_PX = { width: 512, header: 64, cell: 112, footer: 96 };
+      const VR_INV_COLS = 4;
+      const VR_INV_ROWS = 2;
+      const VR_INV_SLOTS = VR_INV_COLS * VR_INV_ROWS;
+      const VR_INV_PREV = VR_INV_SLOTS;
+      const VR_INV_NEXT = VR_INV_SLOTS + 1;
+      const VR_INV_PX = { width: 512, header: 64, cell: 112, pager: 48, footer: 96 };
       const VR_INV_M_PER_PX = 0.115 / VR_INV_PX.cell;
+      const VR_INV_PAGER_TOP = VR_INV_PX.header + VR_INV_ROWS * VR_INV_PX.cell;
+      const VR_INV_FOOTER_TOP = VR_INV_PAGER_TOP + VR_INV_PX.pager;
 
       function vrInventoryPaneHeightPx() {
-        return VR_INV_PX.header + vrInventoryRows() * VR_INV_PX.cell + VR_INV_PX.footer;
+        return VR_INV_FOOTER_TOP + VR_INV_PX.footer;
       }
 
       const VR_PANE_DEFS = {
@@ -2006,16 +2034,14 @@
           grid: () => ({ cols: Math.max(1, state.party.length), rows: 1 })
         },
         inventory: {
-          // Hangs from a fixed top edge below the party pane, growing
-          // downward as the pack grows — never overlapping, never a
-          // scrollbar (the grid just gets taller).
+          // Hangs below the party pane. Extra items go on another page.
           auto: () => ({ x: 0.68, y: 0.16 - (vrInventoryPaneHeightPx() * VR_INV_M_PER_PX) / 2, z: 0.1 }),
           size: () => ({ width: 0.6, height: vrInventoryPaneHeightPx() * VR_INV_M_PER_PX }),
           grid: () => ({
-            cols: 4,
-            rows: vrInventoryRows(),
+            cols: VR_INV_COLS,
+            rows: VR_INV_ROWS,
             v0: VR_INV_PX.header / vrInventoryPaneHeightPx(),
-            v1: (VR_INV_PX.header + vrInventoryRows() * VR_INV_PX.cell) / vrInventoryPaneHeightPx()
+            v1: VR_INV_PAGER_TOP / vrInventoryPaneHeightPx()
           })
         }
       };
@@ -2064,7 +2090,7 @@
           if (!best || hit.t < best.t) best = { key, t: hit.t, index: hit.index };
         }
         if (best && best.key === "inventory" && best.index >= 0) {
-          const item = state.inventory[best.index];
+          const item = vrPackPage().slots[best.index]?.item;
           if (item) return { kind: "item", id: item.id, tile: item.tile };
         }
         return best ? best.key : "table";
@@ -2096,6 +2122,10 @@
         const u = du / panel.width + 0.5;
         const v = 0.5 - dv / panel.height;
         if (u < 0 || u > 1 || v < 0 || v > 1) return { u, v, index: -1, point, t };
+        if (panel.pane === "inventory" && v >= panel.gridV1 && v < VR_INV_FOOTER_TOP / vrInventoryPaneHeightPx()) {
+          const index = u < 1 / VR_INV_COLS ? VR_INV_PREV : u >= 1 - 1 / VR_INV_COLS ? VR_INV_NEXT : -1;
+          return { u, v, index, point, t };
+        }
         // Panes with header/footer bands confine the button grid to
         // [gridV0, gridV1); hits outside it are on the pane but not a button.
         let gridV = v;
@@ -2118,10 +2148,14 @@
           vrToggleArtStyle();
         } else if (btn.action === "vr:level") {
           vrTableLevel();
+        } else if (btn.action === "vr:overhead") {
+          vrTableOverhead();
         } else if (btn.action === "vr:reset") {
           vrResetTable();
         } else if (btn.action === "vr:exit") {
           exitVr();
+        } else if (btn.action === "vr:recovery") {
+          handleAction("recover");
         } else {
           handleAction(btn.action);
         }
@@ -2194,12 +2228,48 @@
         };
       }
 
-      function vrInventoryPaneModel() {
+      function vrPackSlots() {
+        const slots = [];
+        const potions = new Map();
+        for (const item of state.inventory) {
+          if (item.kind === "healing") {
+            const key = JSON.stringify(Object.keys(item).filter((field) => field !== "id").sort()
+              .map((field) => [field, item[field]]));
+            const existing = potions.get(key);
+            if (existing) {
+              existing.count++;
+            } else {
+              const slot = { item, count: 1 };
+              slots.push(slot);
+              potions.set(key, slot);
+            }
+          } else {
+            slots.push({ item, count: 1 });
+          }
+        }
+        return slots;
+      }
+
+      function vrPackPage() {
+        const slots = vrPackSlots();
+        const pages = Math.max(1, Math.ceil(slots.length / VR_INV_SLOTS));
+        vrInventoryPage = Math.min(vrInventoryPage, pages - 1);
+        const start = vrInventoryPage * VR_INV_SLOTS;
+        return { page: vrInventoryPage, pages, slots: slots.slice(start, start + VR_INV_SLOTS) };
+      }
+
+      function vrInventoryPaneModel({ page, pages, slots } = vrPackPage()) {
         return {
           selected: vrSelectedMemberIndex,
           targetName: state.party[vrSelectedMemberIndex]?.name || state.party[0]?.name || "",
-          items: state.inventory.map((item) => ({
+          total: state.inventory.length,
+          gold: state.gold,
+          load: typeof carriedWeight === "function" && typeof carryCapacity === "function" ? `${carriedWeight()}/${carryCapacity()}wt · ` : "",
+          page,
+          pages,
+          items: slots.map(({ item, count }) => ({
             id: item.id,
+            count,
             label: item.shortName || item.name,
             tile: item.tile,
             equippable: typeof equipKindSpec === "function" && !!equipKindSpec(item.kind)
@@ -2212,7 +2282,13 @@
       }
 
       function vrInventoryClick(index) {
-        const item = state.inventory[index];
+        const op = vrPackOperation(index);
+        if (op?.kind === "packPage") vrInventoryPage = op.page;
+        else if (op?.kind === "packItem") vrUsePackItem(op.id);
+      }
+
+      function vrUsePackItem(id) {
+        const item = state.inventory.find((entry) => entry.id === id);
         if (!item) return;
         if (typeof equipKindSpec === "function" && equipKindSpec(item.kind) && typeof equipItemToMember === "function") {
           equipItemToMember(vrSelectedMemberIndex, item.id);
@@ -2319,11 +2395,11 @@
       }
 
       function vrDrawInventoryPane(hoverIndex) {
-        const model = vrInventoryPaneModel();
-        const rows = vrInventoryRows();
+        const pack = vrPackPage();
+        const model = vrInventoryPaneModel(pack);
         const header = VR_INV_PX.header;
         const cell = VR_INV_PX.cell;
-        const footerTop = header + rows * cell;
+        const footerTop = VR_INV_FOOTER_TOP;
         if (!vrCanvasInit(vrInvPane, VR_INV_PX.width, vrInventoryPaneHeightPx())) return false;
         const ctx = vrInvPane.ctx;
         ctx.fillStyle = "rgba(14, 12, 10, 0.92)";
@@ -2335,19 +2411,18 @@
         ctx.textBaseline = "middle";
         ctx.fillStyle = "#f1d07a";
         ctx.font = "bold 28px system-ui, sans-serif";
-        ctx.fillText(`Pack ${model.items.length}`, 18, header / 2);
+        ctx.fillText(`Pack ${model.total}`, 18, header / 2);
         ctx.font = "18px system-ui, sans-serif";
         ctx.fillStyle = "#b3a37c";
-        const load = typeof carriedWeight === "function" && typeof carryCapacity === "function" ? `${carriedWeight()}/${carryCapacity()}wt · ` : "";
-        ctx.fillText(`${load}${state.gold}g`, 150, header / 2);
+        ctx.fillText(`${model.load}${model.gold}g`, 150, header / 2);
         ctx.textAlign = "right";
         ctx.font = "22px system-ui, sans-serif";
         ctx.fillStyle = "#b7d2df";
         ctx.fillText(`equip → ${model.targetName}`, vrInvPane.width - 18, header / 2);
-        const cw = vrInvPane.width / 4;
+        const cw = vrInvPane.width / VR_INV_COLS;
         model.items.forEach((item, index) => {
-          const x = (index % 4) * cw;
-          const y = header + Math.floor(index / 4) * cell;
+          const x = (index % VR_INV_COLS) * cw;
+          const y = header + Math.floor(index / VR_INV_COLS) * cell;
           const hovered = index === hoverIndex;
           ctx.fillStyle = hovered ? "rgba(238, 193, 101, 0.85)" : "rgba(34, 29, 22, 0.95)";
           ctx.fillRect(x + 4, y + 4, cw - 8, cell - 8);
@@ -2364,6 +2439,10 @@
           ctx.fillStyle = hovered ? "#141210" : "#e8ddc8";
           const label = item.label.length > 11 ? `${item.label.slice(0, 10)}…` : item.label;
           ctx.fillText(label, x + cw / 2, y + cell - 22);
+          if (item.count > 1) {
+            ctx.textAlign = "right";
+            ctx.fillText(`×${item.count}`, x + cw - 12, y + 18);
+          }
         });
         if (model.items.length === 0) {
           ctx.textAlign = "center";
@@ -2371,13 +2450,29 @@
           ctx.font = "24px system-ui, sans-serif";
           ctx.fillText("The pack is empty.", vrInvPane.width / 2, header + cell / 2);
         }
+        ctx.textAlign = "center";
+        ctx.font = "bold 21px system-ui, sans-serif";
+        ctx.fillStyle = "#b3a37c";
+        const pagerY = VR_INV_PAGER_TOP + VR_INV_PX.pager / 2;
+        ctx.fillText(`Page ${model.page + 1} / ${model.pages}`, vrInvPane.width / 2, pagerY);
+        for (const [index, x, label, enabled] of [
+          [VR_INV_PREV, 0, "Previous", model.page > 0],
+          [VR_INV_NEXT, vrInvPane.width - cw, "Next", model.page + 1 < model.pages]
+        ]) {
+          const hovered = enabled && index === hoverIndex;
+          ctx.fillStyle = hovered ? "#eec165" : "#221d16";
+          ctx.fillRect(x + 4, VR_INV_PAGER_TOP + 4, cw - 8, VR_INV_PX.pager - 8);
+          ctx.fillStyle = hovered ? "#141210" : enabled ? "#f1d07a" : "#8a7f6c";
+          ctx.fillText(label, x + cw / 2, pagerY);
+        }
         // Detail strip: what the pointed-at item does, instantly.
         ctx.strokeStyle = "rgba(238, 193, 101, 0.3)";
         ctx.beginPath();
         ctx.moveTo(8, footerTop + 1);
         ctx.lineTo(vrInvPane.width - 8, footerTop + 1);
         ctx.stroke();
-        const info = typeof itemInfo === "function" && hoverIndex >= 0 ? itemInfo(state.inventory[hoverIndex]) : null;
+        const hoveredItem = pack.slots[hoverIndex]?.item;
+        const info = typeof itemInfo === "function" && hoveredItem ? itemInfo(hoveredItem) : null;
         ctx.textAlign = "left";
         if (info) {
           const flags = [info.cursed ? "cursed" : "", info.blessed ? "blessed" : "", info.slot ? `equips: ${info.slot}` : ""].filter(Boolean).join(" · ");
@@ -2404,7 +2499,7 @@
       function vrInventoryPaneSignature(hoverIndex) {
         const model = vrInventoryPaneModel();
         const ready = model.items.filter((item) => imageEntry(item.tile).ready).length;
-        return JSON.stringify([model.selected, model.targetName, hoverIndex, ready, model.items.map((item) => item.id)]);
+        return JSON.stringify([hoverIndex, ready, model]);
       }
 
       function vrPartyPaneSignature(hoverIndex) {
@@ -2413,8 +2508,25 @@
         return JSON.stringify([hoverIndex, portraitsReady, model]);
       }
 
-      // Hands and lasers, drawn EVERY frame for every tracked controller: a
-      // diamond marker at the hand and its ray out to whatever it touches.
+      function vrEmitHandBones(verts, joints, head, white) {
+        for (const chain of VR_HAND_CHAINS) {
+          let start = joints.wrist;
+          for (const name of chain) {
+            const end = joints[name];
+            if (start && end) {
+              const dx = end.x - start.x, dy = end.y - start.y, dz = end.z - start.z;
+              const hx = head.x - start.x, hy = head.y - start.y, hz = head.z - start.z;
+              const x = dy * hz - dz * hy, y = dz * hx - dx * hz, z = dx * hy - dy * hx;
+              const scale = 0.004 / (Math.hypot(x, y, z) || 1);
+              const corner = (p, sign) => [p.x + x * scale * sign, p.y + y * scale * sign, p.z + z * scale * sign];
+              vrPushQuad(verts, [corner(start, 1), corner(end, 1), corner(end, -1), corner(start, -1)], white, 0.95, 0.82, 0.48, 0.95);
+            }
+            start = end;
+          }
+        }
+      }
+
+      // Tracked hands, controller markers and lasers draw each frame.
       // Laser quads turn their flat side toward the head so they read as a
       // line from any angle; hovering a button brightens and thickens the ray.
       function vrEmitPointers(head) {
@@ -2440,6 +2552,14 @@
         for (const marker of vrHandMarkers) {
           const frame = vrBillboardFrame(marker, 0.05, 0.05, head);
           verts.push(...vrEmitFrameQuadUv(frame, vrGlyphUv("◆", "#f1d07a"), 0.95));
+        }
+        for (const joints of vrTrackedHands) {
+          vrEmitHandBones(verts, joints, head, white);
+          const jointUv = vrGlyphUv("●", "#f1d07a");
+          for (const position of Object.values(joints)) {
+            const frame = vrBillboardFrame(position, 0.013, 0.013, head);
+            verts.push(...vrEmitFrameQuadUv(frame, jointUv, 0.95));
+          }
         }
         for (const ghost of vrDragGhosts) {
           const frame = vrBillboardFrame(ghost, 0.09, 0.09, head);
@@ -2570,14 +2690,56 @@
         if (best && (!dungeon || best.t <= dungeon.t)) {
           if (best.key === "hud" || best.hit.index < 0) return null;
           if (best.key === "party") return { kind: "party", index: best.hit.index };
+          if (best.key === "inventory") return vrPackOperation(best.hit.index);
           return { kind: "click", pane: best.key, index: best.hit.index };
         }
-        if (dungeon && dungeon.kind === "floor" && dungeon.walkable) return { kind: "travelTo", x: dungeon.x, y: dungeon.y };
-        return null;
+        return vrFloorOperation(dungeon);
+      }
+
+      function vrFloorOperation(tile) {
+        if (!tile) return null;
+        const { x, y } = tile;
+        const floorIndex = state.floorIndex;
+        const adjacent = Math.abs(x - state.x) + Math.abs(y - state.y) === 1;
+        if (adjacent && currentFloorState().discovered.has(keyOf(x, y))) {
+          if (tile.kind === "wall" && closedDoorAt(x, y)) return { kind: "door", x, y, floorIndex };
+          if (tile.kind === "floor") {
+            const monster = monsterAt(x, y);
+            if (monster) return { kind: "enemy", x, y, floorIndex, monsterId: monster.id };
+          }
+        }
+        if (tile.kind !== "floor" || !tile.walkable) return null;
+        if (x === state.x && y === state.y) {
+          const stair = stairsAt(x, y);
+          return stair ? { kind: "stairs", x, y, floorIndex, direction: stair.direction } : null;
+        } else {
+          return { kind: "travelTo", x, y, floorIndex };
+        }
+      }
+
+      function vrRunFloorOperation(op) {
+        if (state.floorIndex === op.floorIndex && !state.victory && !state.defeated) {
+          const dx = op.x - state.x;
+          const dy = op.y - state.y;
+          if (op.kind === "travelTo" && Math.abs(dx) + Math.abs(dy) === 1) {
+            // A single aimed step is manual movement, even with enemies nearby.
+            moveBy(dx, dy);
+          } else if (op.kind === "travelTo") {
+            travelTo(op.x, op.y);
+          } else if (op.kind === "door" && Math.abs(dx) + Math.abs(dy) === 1 && closedDoorAt(op.x, op.y)) {
+            moveBy(dx, dy);
+          } else if (op.kind === "enemy" && Math.abs(dx) + Math.abs(dy) === 1) {
+            const monster = monsterAt(op.x, op.y);
+            if (monster?.id === op.monsterId) attackTarget(monster);
+          } else if (op.kind === "stairs" && dx === 0 && dy === 0) {
+            handleAction("stairs");
+          }
+        }
       }
 
       function vrOnSelect(event) {
         if (!vrSession || !event.frame || !event.inputSource?.targetRaySpace) return;
+        if (!vrUsesSelectEvent(vrSessionMode, event.inputSource)) return;
         // Tap-to-place: while the AR diorama is unplaced, a tap that lands on
         // real-world geometry anchors the table there instead of playing the
         // game. A tap that misses (or a device without hit-test) falls
@@ -2608,6 +2770,11 @@
         vrScheduleOps();
       }
 
+      function vrUsesSelectEvent(mode, source) {
+        // Controllers and tracked hands already deliver their VR trigger through the frame loop.
+        return mode === "immersive-ar" || (!source.gamepad && !source.hand);
+      }
+
       function enterVr() {
         return enterXr("immersive-vr");
       }
@@ -2622,7 +2789,6 @@
         if (typeof navigator === "undefined" || !navigator.xr) throw new Error("WebXR unavailable");
         vrEnterPending = true;
         try {
-          const glState = vrInitGl();
           const wantedFeatures = sessionMode === "immersive-ar"
             ? ["local-floor", "hit-test", "hand-tracking"]
             : ["local-floor", "hand-tracking"];
@@ -2630,6 +2796,7 @@
           vrSession = session;
           vrSessionMode = sessionMode;
           try {
+            vrInitGl();
             // The context is created xrCompatible; this is belt-and-braces for
             // browsers that still want the explicit call, so a refusal (e.g. no
             // XR device behind a faked session) is not fatal — XRWebGLLayer
@@ -2687,11 +2854,8 @@
           vrLoadPaneLayout();
           // Sounds come from their spot on the diorama while the session runs.
           if (typeof setSoundSpatializer === "function") setSoundSpatializer(vrSpatializeTile);
-          // Handheld AR has no controllers: screen taps arrive as select
-          // events with a target ray. VR must NOT get this listener — there
-          // the trigger already acts through the gamepad path, and select
-          // would double-fire every press.
-          if (sessionMode === "immersive-ar") session.addEventListener("select", vrOnSelect);
+          // Handheld AR taps and VR sources without polled inputs use the target ray.
+          session.addEventListener("select", vrOnSelect);
           // AR starts unplaced: a reticle tracks real surfaces and the first
           // tap anchors the diorama there. Both hit-test sources are best
           // effort — without the feature the reticle never appears and taps
@@ -2829,7 +2993,7 @@
         vrPendingOps = [];
         for (const op of ops) {
           if (op.kind === "action") handleAction(op.action);
-          else if (op.kind === "travelTo") travelTo(op.x, op.y);
+          else if (op.kind === "travelTo" || op.kind === "stairs" || op.kind === "door" || op.kind === "enemy") vrRunFloorOperation(op);
           else if (op.kind === "throw") throwInventoryItem(op.id);
           else if (op.kind === "giveTo") {
             const item = state.inventory.find((entry) => entry.id === op.id);
@@ -2837,8 +3001,19 @@
             if (typeof equipKindSpec === "function" && equipKindSpec(item.kind)) equipItemToMember(op.member, op.id);
             else useItem(op.id);
           }
-          else if (op.pane === "inventory") vrInventoryClick(op.index);
+          else if (op.kind === "packItem") vrUsePackItem(op.id);
+          else if (op.kind === "packPage") vrInventoryPage = op.page;
           else vrActivateButton(op.index);
+        }
+      }
+
+      function vrPackOperation(index) {
+        const { page, pages, slots } = vrPackPage();
+        if (index === VR_INV_PREV && page > 0) return { kind: "packPage", page: page - 1 };
+        else if (index === VR_INV_NEXT && page + 1 < pages) return { kind: "packPage", page: page + 1 };
+        else {
+          const item = slots[index]?.item;
+          return item ? { kind: "packItem", id: item.id } : null;
         }
       }
 
@@ -2862,16 +3037,17 @@
         return Math.min(8, Math.max(0.15, toCenter));
       }
 
-      function vrPollControllers(frame, dt, nowMs, head) {
+      function vrPollControllers(session, frame, dt, nowMs, head) {
         vrPointerSegs = [];
         vrHandMarkers = [];
+        vrTrackedHands = [];
         vrDragGhosts = [];
-        vrAimTile = null;
+        vrAimTiles.clear();
         // While the Quest system menu is up (visible-blurred) the browser
         // zeroes gamepad state but keeps delivering frames — processing that
         // would read a held button as a release and fire a phantom action.
         // Dropping the hand states re-latches everything on return.
-        if (vrSession.visibilityState && vrSession.visibilityState !== "visible") {
+        if (session.visibilityState && session.visibilityState !== "visible") {
           vrHands.clear();
           vrHover = null;
           return;
@@ -2884,14 +3060,22 @@
         // hand keeps the rigid attach, two make the pinch gesture.
         const claimedTargets = new Set();
         const tableGrabs = [];
-        for (const source of vrSession.inputSources || []) {
+        for (const source of session.inputSources || []) {
           if (!source.gamepad && !source.hand) continue;
-          const key = source.handedness || "none";
-          present.add(key);
-          if (!vrHands.has(key)) vrHands.set(key, vrCreateHandState());
-          const hand = vrHands.get(key);
-          const input = source.gamepad ? vrReadGamepad(source.gamepad) : vrReadHand(source, frame, hand);
-          if (!input) continue; // hand joints untracked this frame; state stays latched
+          present.add(source);
+          if (!vrHands.has(source)) vrHands.set(source, vrCreateHandState());
+          const hand = vrHands.get(source);
+          const positions = source.hand ? vrReadHandJoints(source, frame, vrRefSpace) : null;
+          if (positions) vrTrackedHands.push(positions);
+          const input = positions ? vrReadHand(source, frame, hand, vrRefSpace, positions) : vrReadGamepad(source.gamepad);
+          if (!input) {
+            // Drop the grab state without running the inventory drop handler.
+            if (!hand.handNeedsNeutral) vrHands.delete(source);
+            continue;
+          } else if (input.isHand && hand.handNeedsNeutral) {
+            if (input.trigger || input.squeeze) continue;
+            hand.handNeedsNeutral = false;
+          }
           // The pointer ray aims at the palette (hover + trigger clicks) and,
           // when the grip closes, picks WHAT that hand grabs and WHERE along
           // the ray it holds it.
@@ -2906,20 +3090,14 @@
               if (o) rayQ = [o.x, o.y, o.z, o.w];
             }
           }
-          // The hand itself, visible at all times.
-          if (source.gripSpace && frame.getPose) {
-            const gripPose = frame.getPose(source.gripSpace, vrRefSpace);
-            if (gripPose) {
-              const g = gripPose.transform.position;
-              vrHandMarkers.push({ x: g.x, y: g.y, z: g.z });
-            }
-          } else if (input.wrist) {
-            vrHandMarkers.push({ x: input.wrist.x, y: input.wrist.y, z: input.wrist.z });
-          } else if (ray) {
-            vrHandMarkers.push({ ...ray.origin });
+          if (!source.hand) {
+            const grip = source.gripSpace && frame.getPose?.(source.gripSpace, vrRefSpace)?.transform.position;
+            const marker = grip || ray?.origin;
+            if (marker) vrHandMarkers.push({ x: marker.x, y: marker.y, z: marker.z });
           }
           input.pointerButton = -1;
           input.pointerPane = null;
+          input.pointerBlocked = false;
           input.aimTile = null;
           let laserEnd = null;
           let laserBright = false;
@@ -2935,7 +3113,8 @@
             const dungeon = vrRayDungeonHit(ray.origin, ray.dir);
             if (best && (!dungeon || best.hit.t <= dungeon.t)) {
               laserEnd = best.hit.point;
-              if (best.pane !== "hud") {
+              input.pointerBlocked = true;
+              if (best.pane !== "hud" && best.hit.index >= 0) {
                 input.pointerButton = best.hit.index;
                 input.pointerPane = best.pane;
                 results.hover = { pane: best.pane, index: best.hit.index };
@@ -2943,34 +3122,22 @@
               }
             } else if (dungeon) {
               laserEnd = { x: ray.origin.x + ray.dir.x * dungeon.t, y: ray.origin.y + ray.dir.y * dungeon.t, z: ray.origin.z + ray.dir.z * dungeon.t };
-              if (dungeon.kind === "floor" && dungeon.walkable) {
-                // Walk target: lit tile, A/X travels there.
-                input.aimTile = dungeon;
-                vrAimTile = { x: dungeon.x, y: dungeon.y };
+              input.pointerBlocked = true;
+              const floorOp = vrFloorOperation(dungeon);
+              if (floorOp) {
+                input.aimTile = floorOp;
+                const isDoor = floorOp.kind === "door";
+                const glyph = isDoor ? "↔" : floorOp.kind === "enemy" ? "⚔" :
+                  floorOp.kind === "stairs" ? (floorOp.direction === "down" ? "▼" : "▲") : "▣";
+                const lift = isDoor ? VR.wallHeight + 0.028 : 0.028;
+                vrAimTiles.set(keyOf(dungeon.x, dungeon.y), { x: dungeon.x, y: dungeon.y, glyph, lift });
                 laserBright = true;
               }
             }
           }
-          // A bare hand has one click — the pinch. What it means is fixed at
-          // the moment it STARTS (and held until release, so a pinch that
-          // drifts across the scene cannot fire twice): over a lit floor
-          // tile it is the travel button, anywhere else the trigger.
-          if (input.isHand) {
-            if (input.trigger && !hand.pinchRole) hand.pinchRole = input.aimTile ? "primary" : "trigger";
-            if (!input.trigger) hand.pinchRole = null;
-            if (hand.pinchRole === "primary") {
-              input.primary = input.trigger;
-              input.trigger = false;
-            }
-          }
           const step = vrControllerStep(hand, input, nowMs);
-          // A/X over a lit floor tile walks there; everywhere else it stays
-          // the interact button. A button, not the trigger, on purpose —
-          // squeezing the trigger visibly wobbles the aim.
-          for (const action of step.actions) {
-            if (action === "interact" && input.aimTile) results.ops.push({ kind: "travelTo", x: input.aimTile.x, y: input.aimTile.y });
-            else results.ops.push({ kind: "action", action });
-          }
+          if (step.floorOp) results.ops.push(step.floorOp);
+          for (const action of step.actions) results.ops.push({ kind: "action", action });
           if (step.click >= 0) results.clicks.push({ pane: step.clickPane, index: step.click });
           results.resetView = results.resetView || step.resetView;
           results.toggleDolls = results.toggleDolls || step.toggleDolls;
@@ -3043,8 +3210,8 @@
         // A controller that left the input source list (slept, disconnected)
         // must not keep stale pressed state — its next appearance starts from
         // the everything-held latch instead of firing phantom releases.
-        for (const key of [...vrHands.keys()]) {
-          if (!present.has(key)) vrHands.delete(key);
+        for (const source of vrHands.keys()) {
+          if (!present.has(source)) vrHands.delete(source);
         }
         // Resolve table grabs. ONE hand: the rigid single-controller attach,
         // exactly as before — translate with the laser tip, turn with the
@@ -3096,7 +3263,10 @@
         for (const op of results.ops) vrPendingOps.push(op);
         for (const click of results.clicks) {
           if (click.pane === "party") vrPartyClick(click.index);
-          else vrPendingOps.push({ kind: "click", pane: click.pane, index: click.index });
+          else if (click.pane === "inventory") {
+            const op = vrPackOperation(click.index);
+            if (op) vrPendingOps.push(op);
+          } else vrPendingOps.push({ kind: "click", pane: click.pane, index: click.index });
         }
         vrScheduleOps();
       }
@@ -3105,6 +3275,8 @@
         if (!vrSession) return;
         vrSession.requestAnimationFrame(vrOnFrame);
         const pose = frame.getViewerPose(vrRefSpace);
+        const padAction = context.pollStandardGamepad?.(true, !!pose && vrArPlaced &&
+          (!vrSession.visibilityState || vrSession.visibilityState === "visible"));
         if (!pose) return;
         const gl = vrGl;
         const glState = vrGlState;
@@ -3117,7 +3289,11 @@
           position: { x: head.x, y: head.y, z: head.z },
           orientation: headO ? { x: headO.x, y: headO.y, z: headO.z, w: headO.w } : { x: 0, y: 0, z: 0, w: 1 }
         };
-        vrPollControllers(frame, dt, time, head);
+        vrPollControllers(vrSession, frame, dt, time, head);
+        if (padAction) {
+          vrPendingOps.push({ kind: "action", action: padAction });
+          vrScheduleOps();
+        }
 
         // AR tap-to-place reticle: while unplaced, track the real surface the
         // viewer is looking at so the user sees where a tap would anchor.
@@ -3250,6 +3426,7 @@
         vrSupported,
         arSupported,
         vrHandleTapRay,
+        vrUsesSelectEvent,
         vrDollMode,
         vrSetDollMode,
         vrToggleDollMode,
@@ -3264,7 +3441,11 @@
         vrReadGamepad,
         vrHandGesture,
         vrReadHand,
+        vrReadHandJoints,
+        vrEmitHandBones,
         vrControllerStep,
+        vrPollControllers,
+        vrIsPresenting: () => vrSession !== null,
         vrEmitArchitecture,
         vrEmitDolls,
         vrControlButtons,
@@ -3304,12 +3485,14 @@
         vrShaderSources: () => ({ vertex: VR_VERTEX_SHADER, fragment: VR_FRAGMENT_SHADER, vertexFloats: VR_VERTEX_FLOATS }),
         vrTableState,
         vrTableLevel,
+        vrTableOverhead,
         vrQMul,
         vrQFromAxisAngle,
         vrQRotate,
         vrPointerSegments: () => vrPointerSegs,
         vrAimTileForRay,
         vrRayDungeonHit,
+        vrRunFloorOperation,
         vrEmitPartyOverlay,
         vrLoadPaneLayout,
         vrSavePaneLayout,

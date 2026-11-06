@@ -2,6 +2,154 @@
   window.CotBRuntime = window.CotBRuntime || {};
   window.CotBRuntime.installInput = function (context) {
     with (context) {
+      const gamepadActions = [[0, "interact"], [1, "wait"], [2, "attack"], [3, "pickup"],
+        [4, "signature"], [5, "ultimate"], [6, "recover"],
+        [12, "moveForward"], [13, "moveBack"], [14, "turnLeft"], [15, "turnRight"]];
+      let gamepadState = null;
+      let gamepadPack = null;
+
+      function standardStickAction(axes) {
+        const [strafe = 0, travel = 0, turn = 0] = axes;
+        if (Math.max(Math.abs(strafe), Math.abs(travel)) >= 0.55) {
+          return Math.abs(travel) >= Math.abs(strafe)
+            ? (travel < 0 ? "moveForward" : "moveBack")
+            : (strafe < 0 ? "moveLeft" : "moveRight");
+        } else {
+          return Math.abs(turn) >= 0.55 ? (turn < 0 ? "turnLeft" : "turnRight") : null;
+        }
+      }
+
+      function gamepadModal(modal, pressed) {
+        const visibleControls = () => [...modal.querySelectorAll(
+          "button:not(:disabled), a[href], select:not([multiple]):not(:disabled), input[type=checkbox]:not(:disabled)"
+        )]
+          .filter(control => control.getClientRects().length);
+        const controls = visibleControls();
+        const current = controls.indexOf(document.activeElement);
+        const focused = controls[current];
+        const horizontal = Number(Boolean(pressed(15))) - Number(Boolean(pressed(14)));
+        if (pressed(1) && modal.id !== "characterCreateModal" && modal.id !== "endModal") {
+          hideAllModals();
+        } else if (horizontal && focused?.tagName === "SELECT") {
+          const options = [...focused.options].filter(option => !option.matches(":disabled"));
+          const selected = options.findIndex(option => option.index === focused.selectedIndex);
+          const next = selected < 0 && horizontal < 0 ? options.length - 1
+            : (selected + horizontal + options.length) % options.length;
+          const option = options[next];
+          if (option && option.index !== focused.selectedIndex) {
+            focused.selectedIndex = option.index;
+            focused.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+        } else if (controls.length && (pressed(12) || horizontal < 0)) {
+          controls[current <= 0 ? controls.length - 1 : current - 1].focus();
+        } else if (controls.length && (pressed(13) || horizontal > 0)) {
+          controls[(current + 1) % controls.length].focus();
+        } else if (pressed(0) && focused?.tagName !== "SELECT") {
+          focused?.click();
+        }
+        // Changing a class or portrait can rebuild the party controls.
+        if (focused?.isConnected === false && document.querySelector(".modal:not(.hidden)") === modal) {
+          visibleControls()[current]?.focus();
+        }
+      }
+
+      function gamepadInventory(pressed) {
+        if (gamepadPack && !gamepadPack.open) gamepadPack = null;
+        const toggle = pressed(8);
+        if (!gamepadPack && !toggle) return false;
+        const back = pressed(1);
+        const use = pressed(0);
+        const previous = pressed(12) || pressed(14);
+        const next = pressed(13) || pressed(15);
+        if (!toggle && !back && !use && !previous && !next) return true;
+        const inventory = document.getElementById("inventory");
+        const panel = inventory?.closest("details");
+        if (!panel) return false;
+
+        const items = () => [...inventory.querySelectorAll("button[data-item]:not(:disabled)")];
+        const heading = panel.querySelector("summary");
+        if (!gamepadPack) {
+          gamepadPack = panel;
+          panel.open = true;
+          (items()[0] || heading).focus();
+        } else if (toggle || back) {
+          panel.open = false;
+          heading.focus();
+          gamepadPack = null;
+        } else {
+          const controls = items();
+          const current = controls.indexOf(document.activeElement);
+          if (controls.length && previous) {
+            controls[current <= 0 ? controls.length - 1 : current - 1].focus();
+          } else if (controls.length && next) {
+            controls[(current + 1) % controls.length].focus();
+          } else if (use && controls[current]) {
+            controls[current].click();
+            if (!document.querySelector(".modal:not(.hidden)")) {
+              const remaining = items();
+              (remaining[Math.min(current, remaining.length - 1)] || heading).focus();
+            }
+          }
+        }
+        return true;
+      }
+
+      function pollStandardGamepad(immersive = false, active = true) {
+        let pad = null;
+        if (active && (immersive || (!document.hidden && document.hasFocus()))) {
+          try {
+            pad = Array.from(window.navigator.getGamepads?.() || []).find(candidate => candidate?.connected && candidate.mapping === "standard");
+          } catch (error) {
+            if (error.name !== "SecurityError") throw error;
+          }
+        }
+        if (!pad) {
+          gamepadState = null;
+          return null;
+        }
+        const buttons = Array.from(pad.buttons, button => button.pressed);
+        const previous = gamepadState?.index === pad.index && gamepadState.id === pad.id && gamepadState.immersive === immersive
+          ? gamepadState : null;
+        const stickAction = standardStickAction(pad.axes);
+        const centered = pad.axes.slice(0, 3).every(value => Math.abs(value) <= 0.3);
+        const stickArmed = centered || (previous?.stickArmed && !stickAction);
+        gamepadState = { index: pad.index, id: pad.id, immersive, buttons, stickArmed };
+        if (!previous) return null;
+
+        const pressed = index => buttons[index] && !previous.buttons[index];
+        const modal = immersive ? null : document.querySelector(".modal:not(.hidden)");
+        if (modal) {
+          gamepadModal(modal, pressed);
+          return null;
+        } else if (!immersive && pressed(9)) {
+          const guide = document.getElementById("gamepadHelp");
+          if (guide) guide.open = true;
+          toggleHelpModal();
+          return null;
+        } else if (!immersive && gamepadInventory(pressed)) {
+          return null;
+        } else {
+          const buttonAction = gamepadActions.find(([index]) => pressed(index));
+          return buttonAction?.[1] || (previous.stickArmed ? stickAction : null);
+        }
+      }
+
+      function bindStandardGamepad() {
+        if (typeof window.navigator.getGamepads !== "function") return;
+        const reset = () => { gamepadState = null; };
+        window.addEventListener("gamepadconnected", reset);
+        window.addEventListener("gamepaddisconnected", reset);
+        window.addEventListener("blur", reset);
+        const tick = () => {
+          if (!context.vrIsPresenting()) {
+            const action = pollStandardGamepad();
+            if (action) handleAction(action);
+          }
+          window.requestAnimationFrame(tick);
+        };
+        window.requestAnimationFrame(tick);
+      }
+
       function dispatchUiAction(action) {
         if (action === "help") {
           toggleHelpModal();
@@ -83,6 +231,7 @@
 
       function bindInput() {
         bindSidebarAccordion();
+        bindStandardGamepad();
         document.querySelectorAll(".command-strip, .accordion-actions, .more-actions-grid, #settingsModal .modal-actions, #characterCreateModal .modal-actions").forEach((container) => {
           container.addEventListener("click", (event) => {
             const button = event.target.closest("button[data-action]");
@@ -517,6 +666,7 @@
         bindInput,
         bindSidebarAccordion,
         dispatchUiAction,
+        pollStandardGamepad,
       });
     }
   };
