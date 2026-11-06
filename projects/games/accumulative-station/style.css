@@ -1,0 +1,13 @@
+:root { color-scheme:dark; font:16px system-ui,sans-serif; color:#e9f1f3; background:#101820 }
+body { margin:0 }
+main { width:min(990px,calc(100% - 2rem)); margin:1.2rem auto }
+header p:first-child { letter-spacing:.2em; color:#90cdbf; font-size:.75rem }
+h1 { font:clamp(2rem,6vw,3.4rem) Georgia,serif; margin:.15rem 0 }
+canvas { display:block; width:100%; height:clamp(17rem,49vw,32rem); background:#14202b; border:1px solid #4d6671 }
+section { background:#1e303b; border:1px solid #4d6671; padding:1rem }
+label { display:inline-block; margin-right:.75rem }
+button,select { font:inherit; background:#344b55; border:1px solid #698d91; color:#fff; padding:.36rem .55rem }
+button { cursor:pointer }
+#ports { display:flex; flex-wrap:wrap; gap:.4rem }
+#message { margin-bottom:0; color:#f7d797 }
+:focus-visible { outline:2px solid #f7d797; outline-offset:2px }

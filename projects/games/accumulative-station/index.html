@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Accumulative Station</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main>
+    <header><p>ORBITAL CONSTRUCTION</p><h1>Accumulative Station</h1>
+      <p>Keep adding rooms and tubes. Watch the crew find routes through the structure.</p></header>
+    <canvas id="station" aria-label="Isometric station view. Click a module to select it."></canvas>
+    <section aria-label="Construction controls">
+      <label>Attach to <select id="selected"></select></label>
+      <label>New module <select id="type"></select></label>
+      <p>Choose a port. An empty port builds a room and tube. If a room already occupies that position, the port adds a tube to it.</p>
+      <div id="ports"></div>
+      <p id="stats"></p>
+      <p id="message" role="status">Start at the habitat and build in any direction.</p>
+    </section>
+  </main>
+  <script type="module" src="./main.mjs"></script>
+</body>
+</html>

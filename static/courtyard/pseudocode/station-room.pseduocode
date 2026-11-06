@@ -1,0 +1,12 @@
+createStationRoom(report)
+    Demand-load the original station simulation and construct its orbital room.
+    Keep graph, selected module, blueprint and inhabitants for this page session.
+    Start with a Habitat and select Habitat as the next blueprint.
+    Select a blueprint to change type; select a module to change the attachment.
+    Select an open port to build or connect using the original graph rules.
+    On success select the destination; on failure retain graph and selection.
+    Report counts and results through the closed menu.
+    On entry resume crew with no elapsed-away advancement.
+    On update advance each inhabitant using original connected traversal.
+    On exit pause without resetting graph or traversal phase.
+    Return shared floor, doorway, collision and crosshair-selection interfaces.

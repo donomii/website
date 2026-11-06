@@ -1,0 +1,15 @@
+stationModels(scene)
+    Return draw, animate and hit operations for the station's spatial presentation.
+    Map graph x/y to horizontal x/z and graph z to vertical y.
+    Render four module types, tubes and windows using instanced meshes.
+    Show small physical blueprint models and names on the console.
+    Highlight the selected blueprint and station module.
+    Show six construction ports; hide ports with existing tubes.
+    Show an adjacent blueprint only when the neighboring cell is empty.
+    Keep generous three-dimensional pick volumes around the controls.
+    Keep small additions anchored; fit larger graphs into the display bounds.
+    Keep connection controls between adjacent occupied modules.
+    hit(ray) returns the nearest visible module, blueprint or port order.
+    animate draws at most twenty-four suited astronauts on the connected graph.
+    Interpolate their travel, blend direction changes and animate arms and legs.
+    Keep feet outside module shells and tube surfaces.

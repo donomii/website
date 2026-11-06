@@ -1,0 +1,8 @@
+stationHangar()
+    Build a twelve by fourteen meter orbital hangar with ribs and a grid floor.
+    Provide a raised construction platform, blueprint console and luminous exit.
+    Use procedural stars and a planet; load no outside images.
+    Return scene, walkable surface, exit, spawn and movement limits.
+    Reject walking and teleport destinations outside the walls or in the platform.
+    Keep the doorway approach clear.
+    Add no instruction or status panels.

@@ -18,6 +18,9 @@ function setMenu(open) {
 }
 menuToggle.addEventListener("click", () => setMenu(!document.body.hasAttribute("data-menu-open")));
 const roomDoors = [
+    { name: "Accumulative Station", x: -6.5, z: 10.25, button: document.querySelector("#station-door"),
+        load: () => import("./station-room.js").then(module =>
+            module.createStationRoom(message => { status.textContent = message; })) },
     { name: "Art Deco salon", x: 6.8, z: -8.2, button: document.querySelector("#art-deco-door"),
         load: () => import("./art-deco.js").then(module => module.createArtDecoRoom()) },
     { name: "Riverbank", x: 0, z: 10.25, button: document.querySelector("#river-door"),
@@ -658,6 +661,7 @@ function start() {
     }
     for (const room of roomDoors) destination.add(new Option(room.name, room.button.id));
     destination.add(new Option("Asteroid Farmer · 2D", "../../projects/games/asteroid-farmer/index.html"));
+    destination.add(new Option("Accumulative Station · 2D", "../../projects/games/accumulative-station/index.html"));
     destination.add(new Option("Games Aquarium · 2D", "../../projects/games/games-aquarium/index.html"));
     destination.add(new Option("L-World · original editor", "./lworld-room.html"));
     document.querySelector("#visit").addEventListener("click", () => {

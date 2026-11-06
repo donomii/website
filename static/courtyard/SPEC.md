@@ -13,6 +13,30 @@ automatically displayed instruction placards.
 Gamepads use D-pad up/down to focus controls and left/right to change a focused
 destination picker; A/Cross visits the selected exhibit.
 
+Accumulative Station is a demand-loaded orbital construction hangar, entered
+from the menu or southwest courtyard doorway. Reuse the original station
+simulation from the separate 2D game. A raised platform holds a spatial graph
+of colored modules, tubes, lit windows and moving astronauts. The surrounding
+hangar has structural ribs, a grid floor and a star/planet view.
+
+The console's four small, labeled module models choose the next type, with
+Habitat selected by default. Select a built module and then one of its six
+glowing ports to extend it. A free neighbor shows a wireframe blueprint; an
+occupied neighbor can close a loop with a tube. Connected ports disappear.
+The selected module has a gold outline, and successful construction selects
+the destination. Keep the graph's position for small additions; fit it into
+the platform's viewing volume only when necessary. Pick volumes remain usable
+as the graph shrinks. Support 96 modules and up to 24 astronauts using the
+original graph and route rules. Crew visibly walk and climb on the structure.
+
+Desktop clicks, controller triggers and pinches select physical targets;
+Space and ordinary gamepad A/Cross select the crosshair. Walking and floor
+teleportation stay outside the platform and inside the hangar. Counts and
+results remain in the closed menu; no floating instruction panel appears.
+The pale doorway or menu Return exits. Re-entry in this tab retains the
+graph and pauses/resumes crew traversal without advancing while away.
+Reload begins a new station. The 2D game remains a separate session.
+
 Art Deco salon is available in the destination menu and through the northeast
 courtyard doorway. Load its geometry only on entry and retain the existing
 renderer, camera rig, XR session and controller/hand inputs. The room is twelve
