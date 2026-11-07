@@ -18,6 +18,8 @@
     "src/runtime/engine/classes.js",
     "src/runtime/engine/combat_math.js",
     "src/runtime/engine/core.js",
+    "src/runtime/engine/dcss_layouts.js",
+    "src/runtime/engine/expedition_layouts.js",
     "src/runtime/engine/floor_marks.js",
     "src/runtime/engine/items/elements.js",
     "src/runtime/engine/items/use.js",
@@ -91,6 +93,7 @@
     "src/runtime/systems/resonance.js",
     "src/runtime/systems/runes.js",
     "src/runtime/systems/shops.js",
+    "src/runtime/systems/short_expedition.js",
     "src/runtime/systems/siege.js",
     "src/runtime/systems/smithing.js",
     "src/runtime/systems/spirits.js",
@@ -100,9 +103,10 @@
     "src/runtime/systems/wanderers.js",
     "src/runtime/systems/weather.js",
     "src/vaults.generated.js",
-    "styles.css"
+    "styles.css",
+    "vendor/crawl/LICENSE"
   ],
-  "assetCount": 1041,
+  "assetCount": 1042,
   "assets": [
     "art/cleric_96.png",
     "art/mage_96.png",
@@ -838,6 +842,7 @@
     "vendor/crawl/crawl-ref/source/rltiles/item/misc/misc_lightning_rod.png",
     "vendor/crawl/crawl-ref/source/rltiles/item/misc/misc_phial.png",
     "vendor/crawl/crawl-ref/source/rltiles/item/misc/misc_tremorstones.png",
+    "vendor/crawl/crawl-ref/source/rltiles/item/misc/misc_voucher.png",
     "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_abyss.png",
     "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_cocytus.png",
     "vendor/crawl/crawl-ref/source/rltiles/item/misc/runes/rune_dis.png",
@@ -1145,6 +1150,5 @@
     "vendor/crawl/crawl-ref/source/rltiles/mon/undead/zombies/zombie_small.png",
     "vendor/crawl/crawl-ref/source/rltiles/mon/unique/ilsuiw.png",
     "vendor/crawl/crawl-ref/source/rltiles/mon/unique/xakkrixis.png"
-  ],
-  "runtimeSourceRevision": "2f9d0e36612d4d192652e4c30d9802347ff0d6ed"
+  ]
 }

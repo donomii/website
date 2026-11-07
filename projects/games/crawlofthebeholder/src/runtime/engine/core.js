@@ -25,6 +25,7 @@
     const LINOCUT_NORMAL_ROOT = "art/tilesets/linocut-normal-2x/";
 
     const state = {
+      expedition: "campaign",
       floorIndex: 0,
       x: resources.floors[0].start.x,
       y: resources.floors[0].start.y,
@@ -116,6 +117,7 @@
     const els = {
       viewport: document.getElementById("viewport"),
       party: document.getElementById("party"),
+      partyHealth: document.getElementById("partyHealth"),
       map: document.getElementById("map"),
       mapScroller: document.getElementById("mapScroller"),
       mapZoomIn: document.getElementById("mapZoomIn"),
@@ -164,6 +166,7 @@
       characterCreateList: document.getElementById("characterCreateList"),
       characterCreateStart: document.getElementById("characterCreateStart"),
       characterCreateRandom: document.getElementById("characterCreateRandom"),
+      characterCreateExpedition: document.getElementById("characterCreateExpedition"),
       characterCreateDifficulty: document.getElementById("characterCreateDifficulty"),
       characterCreateDeity: document.getElementById("characterCreateDeity"),
       characterCreateDaily: document.getElementById("characterCreateDaily"),
@@ -371,11 +374,14 @@
       return kind === "fog" || kind === "steam";
     }
 
+    function floorStairs(floor = currentFloor()) {
+      const stairs = floor.stairs || {};
+      const keys = ["down", "up", ...Object.keys(stairs).filter((key) => key !== "down" && key !== "up")];
+      return keys.filter((key) => stairs[key]).map((key) => ({ direction: key, ...stairs[key] }));
+    }
+
     function stairsAt(x, y) {
-      const stairs = currentFloor().stairs;
-      if (stairs.down && stairs.down.x === x && stairs.down.y === y) return { direction: "down", ...stairs.down };
-      if (stairs.up && stairs.up.x === x && stairs.up.y === y) return { direction: "up", ...stairs.up };
-      return null;
+      return floorStairs().find((stair) => stair.x === x && stair.y === y) || null;
     }
 
     function liveMember() {
@@ -618,6 +624,7 @@
       markDecorUsed,
       cloudAt,
       cloudBlocksLine,
+      floorStairs,
       stairsAt,
       liveMember,
       liveMembers,

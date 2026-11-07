@@ -89,6 +89,7 @@
   runtime.installCharms(context);
   runtime.installMobile(context);
   runtime.installVr(context);
+  runtime.installShortExpedition(context);
   runtime.installDevOptions(context);
   runtime.installInput(context);
 

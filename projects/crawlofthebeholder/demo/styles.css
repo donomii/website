@@ -337,6 +337,26 @@ h2 {
   text-align: right;
 }
 
+.accordion-panel > summary.party-heading {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 4px 12px;
+}
+
+.accordion-panel > summary.party-heading::after {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.party-health {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.4;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+
 .party-list {
   display: grid;
   gap: 3px;

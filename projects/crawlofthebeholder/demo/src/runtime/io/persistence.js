@@ -111,6 +111,11 @@
         return {
           schema: SAVE_SCHEMA,
           version: resources.version,
+          expedition: state.expedition || "campaign",
+          zotFloorIndex: state.zotFloorIndex,
+          runesInWorld: state.runesInWorld,
+          orbRun: !!state.orbRun,
+          orbRunTurns: state.orbRunTurns || 0,
           floorIndex: state.floorIndex,
           x: state.x,
           y: state.y,
@@ -126,6 +131,7 @@
           monstersDefeated: state.monstersDefeated || 0,
           victory: state.victory,
           defeated: state.defeated,
+          endRecorded: !!state.endRecorded,
           message: state.message,
           lastLoggedMessage: state.lastLoggedMessage,
           messageLog: [...state.messageLog],
@@ -136,6 +142,7 @@
           deity: state.deity || "none",
           piety: state.piety || 0,
           dailySeed: state.dailySeed || null,
+          runSeed: state.runSeed ?? null,
           identifiedKinds: state.identifiedKinds ? [...state.identifiedKinds] : [],
           satiety: state.satiety ?? 1000,
           talentPoints: state.talentPoints || 0,
@@ -162,10 +169,7 @@
             map: { name: floor.map.name, width: floor.map.width, height: floor.map.height, rows: [...floor.map.rows], source: floor.map.source },
             start: { ...floor.start },
             doors: [...(floor.doors || [])],
-            stairs: {
-              up: floor.stairs.up ? { ...floor.stairs.up } : null,
-              down: floor.stairs.down ? { ...floor.stairs.down } : null
-            },
+            stairs: JSON.parse(JSON.stringify(floor.stairs)),
             decor: (floor.decor || []).map((d) => ({ ...d }))
           }))
         };
@@ -177,6 +181,11 @@
           throw new Error(problem);
         } else {
           context.saveLoadError = null;
+        }
+        if (state.expedition === "short" || saved.expedition === "short") {
+          restoreExpeditionResources(saved.expedition ?? "campaign");
+        } else {
+          state.expedition = saved.expedition ?? "campaign";
         }
         state.floorIndex = saved.floorIndex;
         state.x = saved.x;
@@ -192,6 +201,7 @@
         state.floorTurnCount = saved.floorTurnCount || 0;
         state.monstersDefeated = saved.monstersDefeated || 0;
         state.victory = !!saved.victory;
+        state.endRecorded = !!saved.endRecorded;
         state.defeated = !!saved.defeated;
         state.message = saved.message || "";
         state.lastLoggedMessage = saved.lastLoggedMessage || "";
@@ -202,6 +212,7 @@
         state.deity = saved.deity || "none";
         state.piety = saved.piety || 0;
         state.dailySeed = saved.dailySeed || null;
+        state.runSeed = saved.runSeed ?? null;
         state.identifiedKinds = new Set(saved.identifiedKinds || []);
         state.satiety = typeof saved.satiety === "number" ? saved.satiety : 1000;
         state.talentPoints = saved.talentPoints || 0;
@@ -237,15 +248,12 @@
             const wf = saved.worldFloors[index];
             const floor = resources.floors[index];
             if (!wf || !wf.map) continue;
-            floor.map.rows = [...wf.map.rows];
+            floor.map = { ...wf.map, rows: [...wf.map.rows] };
             floor.map.width = wf.map.width;
             floor.map.height = wf.map.height;
             floor.start = { ...wf.start };
             floor.doors = [...(wf.doors || [])];
-            floor.stairs = {
-              up: wf.stairs && wf.stairs.up ? { ...wf.stairs.up } : null,
-              down: wf.stairs && wf.stairs.down ? { ...wf.stairs.down } : null
-            };
+            floor.stairs = JSON.parse(JSON.stringify(wf.stairs || { up: null, down: null }));
             floor.decor = (wf.decor || []).map((d) => ({ ...d }));
           }
         } else if (Array.isArray(saved.maps)) {
@@ -255,6 +263,7 @@
             }
           }
         }
+        restoreCampaignProgress(saved);
       }
 
       function saveGame() {
@@ -284,7 +293,7 @@
         } else if (saved.party.some((member) => !member || ((saved.characterCreated || member.classKey) && !Object.hasOwn(CLASSES, member.classKey)))) {
           return "Cannot load save: the party contains an unsupported class, including the removed healer. The saved data has been preserved.";
         } else {
-          return null;
+          return expeditionSaveProblem(saved);
         }
       }
 

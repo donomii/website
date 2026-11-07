@@ -194,7 +194,9 @@
       }
 
 
-      function changeFloor(nextFloorIndex, direction) {
+      function changeFloor(nextFloorIndex, direction, entry = null) {
+        const destination = resources.floors[nextFloorIndex];
+        const landing = entry || (direction === "down" ? destination.stairs.up || destination.start : destination.stairs.down || destination.start);
         if (typeof pulse === "function") pulse("stairs");
         const previousIndex = state.floorIndex;
         const previousFloorState = state.floors[previousIndex];
@@ -212,6 +214,7 @@
               && !m.summoned
               && !m.boss
               && !m.traits?.stationary
+              && monsterCanEnterTerrain(m, "floor")
               && distanceToPlayer(m) <= 5
             )
           : [];
@@ -220,7 +223,7 @@
           destFloorState.pendingArrivals = destFloorState.pendingArrivals || [];
           for (const m of pursuers) {
             // Clone so the original reference can be removed cleanly.
-            const queued = { ...m, energy: 0, arrivalAt: 3, pendingPursuit: true };
+            const queued = { ...m, energy: 0, arrivalAt: 3, pendingPursuit: true, pursuitEntry: { x: landing.x, y: landing.y } };
             destFloorState.pendingArrivals.push(queued);
           }
           previousFloorState.monsters = previousFloorState.monsters.filter((m) => !pursuers.includes(m));
@@ -233,28 +236,28 @@
         if (direction === "down" && typeof accrueBankInterest === "function") accrueBankInterest();
         const floor = currentFloor();
         if (typeof trackVisitedBranch === "function") trackVisitedBranch();
-        const landing = direction === "down" ? floor.stairs.up || floor.start : floor.stairs.down || floor.start;
         state.x = landing.x;
         state.y = landing.y;
         state.dir = floor.start.dir;
-        const pursuitNote = pursuers.length > 0 ? ` Footsteps echo from above…` : "";
+        const pursuitNote = pursuers.length > 0 ? ` Footsteps echo from ${direction === "down" ? "above" : "below"}…` : "";
         state.message = `The party enters ${floor.id}: ${floor.name}.${pursuitNote}`;
         reveal();
         render();
       }
 
 
-      function findPursuitLanding() {
-        // Try the party tile's neighbors, then a small spiral.
+      function findPursuitLanding(entry = state, monster = null) {
+        // Search around the entry stairs, even if the party has moved away.
         for (let radius = 1; radius <= 4; radius += 1) {
           for (let dy = -radius; dy <= radius; dy += 1) {
             for (let dx = -radius; dx <= radius; dx += 1) {
               if (Math.abs(dx) + Math.abs(dy) > radius) continue;
-              const x = state.x + dx;
-              const y = state.y + dy;
+              const x = entry.x + dx;
+              const y = entry.y + dy;
               if (x === state.x && y === state.y) continue;
               if (!mapContains(x, y)) continue;
               if (solidAt(x, y) || closedDoorAt(x, y) || monsterAt(x, y) || trapAt(x, y)) continue;
+              if (monster && !monsterCanEnterTerrain(monster, terrainAt(x, y))) continue;
               return { x, y };
             }
           }
@@ -273,7 +276,7 @@
             remaining.push(queued);
             continue;
           }
-          const landing = findPursuitLanding();
+          const landing = findPursuitLanding(queued.pursuitEntry || state, queued);
           if (!landing) {
             // Try again next turn.
             queued.arrivalAt = 1;
@@ -283,6 +286,7 @@
           const arrived = { ...queued };
           delete arrived.arrivalAt;
           delete arrived.pendingPursuit;
+          delete arrived.pursuitEntry;
           arrived.x = landing.x;
           arrived.y = landing.y;
           arrived.energy = 0;
@@ -295,9 +299,21 @@
 
 
       function useStairs() {
+        if (state.victory || state.defeated) return;
         const stairs = stairsAt(state.x, state.y);
         if (!stairs) {
           setMessage("No stairs here.");
+          return;
+        }
+        if (Object.hasOwn(stairs, "targetFloor")) {
+          const problem = linkedStairProblem(stairs, resources.floors);
+          if (problem) {
+            setMessage(`Cannot use stairs: ${problem}`);
+          } else if (runeGateBlocks(stairs.targetFloor)) {
+            setMessage(runeGateMessage());
+          } else {
+            changeFloor(stairs.targetFloor, stairs.direction, stairs.landing);
+          }
           return;
         }
         if (stairs.direction === "down") {
@@ -317,6 +333,11 @@
             state.victory = true;
             state.message = `The party escapes with the Orb of Zot Soup and ${state.gold} gold.`;
             render();
+            if (!saveGame()) {
+              setMessage(`${state.message} Victory could not be saved in browser storage. Keep this page open; reloading may resume the previous save.`);
+            } else {
+              return;
+            }
             return;
           }
           setMessage("The exit is behind you, but the prize is still below.");

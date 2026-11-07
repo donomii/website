@@ -1274,7 +1274,7 @@
           const stairQuad = pctQuad(floorDecalPoints(depth, { left: 0.24, top: 0.18, right: 0.76, bottom: 0.94 }, offset), width, height);
           const texture = environmentAsset(stairs.direction === "down" ? assets.stairsDown : assets.stairsUp);
           const rect = drawImageMappedQuad(context, texture, stairQuad, data.light, "#7f6742");
-          if (rect && offset === 0) drawFloorLabel(context, stairs.direction === "down" ? "downstairs" : "upstairs", rect, depth);
+          if (rect && offset === 0) drawFloorLabel(context, stairs.label || (stairs.direction === "down" ? "downstairs" : "upstairs"), rect, depth);
         }
 
         const trap = trapAt(cell.x, cell.y);
@@ -1433,7 +1433,7 @@
       function viewportInteractionLabel(kind, entry, enabled) {
         if (kind === "item" || kind === "gold" || kind === "prize") return viewportItemLabel(entry, enabled);
         if (kind === "trap") return enabled ? `Disarm ${entry.shortName || entry.name}` : entry.shortName || entry.name;
-        if (kind === "stairs") return enabled ? "Use stairs" : entry.direction === "down" ? "downstairs" : "upstairs";
+        if (kind === "stairs") return entry.label ? `${enabled ? "Use " : ""}${entry.label}` : enabled ? "Use stairs" : entry.direction === "down" ? "downstairs" : "upstairs";
         if (kind === "decor") return enabled ? `Use ${entry.shortName || entry.name}` : entry.shortName || entry.name;
         return viewportDoorLabel(entry.x, entry.y, enabled);
       }
@@ -1514,6 +1514,7 @@
           id: viewportTargetId(kind, entry),
           kind,
           label: viewportInteractionLabel(kind, entry, enabled),
+          ...(entry.detail ? { detail: entry.detail } : {}),
           action: enabled ? action : null,
           enabled,
           rect,

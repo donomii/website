@@ -4,13 +4,14 @@
 // served stale until CACHE_VERSION was bumped by hand, which looked like fixes
 // "breaking again". Network-first means a reload always picks up new code.)
 
-const CACHE_VERSION = "cotb-v35-side-decals";
+const CACHE_VERSION = "cotb-v38-compact-dcss-layouts";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./manifest.webmanifest",
   "./icon.svg",
+  "./vendor/crawl/LICENSE",
   "./src/main.js",
   "./src/resources.generated.js",
   "./src/vaults.generated.js",
@@ -36,6 +37,8 @@ const APP_SHELL = [
   "./src/runtime/render/ui_chrome.js",
   "./src/runtime/engine/classes.js",
   "./src/runtime/engine/mapgen.js",
+  "./src/runtime/engine/dcss_layouts.js",
+  "./src/runtime/engine/expedition_layouts.js",
   "./src/runtime/io/persistence.js",
   "./src/runtime/config/difficulty.js",
   "./src/runtime/config/deities.js",
@@ -101,6 +104,7 @@ const APP_SHELL = [
   "./src/runtime/systems/charms.js",
   "./src/runtime/render/mobile.js",
   "./src/runtime/render/vr.js",
+  "./src/runtime/systems/short_expedition.js",
   "./src/runtime/io/dev_options.js",
   "./src/runtime/io/input.js"
 ];

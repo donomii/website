@@ -20,7 +20,7 @@
         } else if (decor) {
           setMessage(`${decor.name}: ${decor.kind}${decorUsed(decor) ? " (spent)" : ""}.`);
         } else if (stairs) {
-          setMessage(`${stairs.direction === "down" ? "Downstairs" : "Upstairs"}.`);
+          setMessage(`${stairs.label || (stairs.direction === "down" ? "Downstairs" : "Upstairs")}. ${stairs.detail || ""}`.trim());
         } else {
           setMessage("Nothing of note ahead.");
         }

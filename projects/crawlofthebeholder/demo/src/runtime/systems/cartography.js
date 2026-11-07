@@ -124,7 +124,7 @@
       // Shortest-path distance estimate (Manhattan) to any floor stairs.
       function distanceToStairs() {
         const floor = currentFloor();
-        const stairCells = [floor.stairs?.down, floor.stairs?.up].filter(Boolean);
+        const stairCells = floorStairs(floor);
         if (stairCells.length === 0) return Infinity;
         return Math.min(...stairCells.map((s) => Math.abs(s.x - state.x) + Math.abs(s.y - state.y)));
       }

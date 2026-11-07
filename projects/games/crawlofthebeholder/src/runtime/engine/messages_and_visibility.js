@@ -276,7 +276,7 @@
         for (const stair of Object.values(floor.stairs).filter(Boolean)) {
           if (!floorState.discovered.has(keyOf(stair.x, stair.y))) continue;
           const direction = stairsAt(stair.x, stair.y)?.direction || "up";
-          features.push({ type: "stairs", name: direction === "down" ? "downstairs" : "upstairs", distance: distanceToPlayer(stair), bearing: relativeBearing(stair), detail: direction });
+          features.push({ type: "stairs", name: stair.label || (direction === "down" ? "downstairs" : "upstairs"), distance: distanceToPlayer(stair), bearing: relativeBearing(stair), detail: stair.detail || direction });
         }
 
         for (const decor of floor.decor || []) {

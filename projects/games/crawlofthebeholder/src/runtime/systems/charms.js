@@ -125,7 +125,7 @@
       }
 
       function nearestStairCell() {
-        const stairCells = [currentFloor().stairs?.down, currentFloor().stairs?.up].filter(Boolean);
+        const stairCells = floorStairs();
         if (stairCells.length === 0) return null;
         return stairCells.sort((a, b) => Math.abs(a.x - state.x) + Math.abs(a.y - state.y) - Math.abs(b.x - state.x) - Math.abs(b.y - state.y))[0];
       }

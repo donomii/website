@@ -11,7 +11,7 @@
   //   index.html?floor=7&pos=3,4,1         → floor + exact tile/facing
   window.CotBRuntime.installDevOptions = function installDevOptions(context) {
     with (context) {
-      const TRIGGER_KEYS = ["new", "autostart", "play", "floor", "classes", "seed", "daily", "difficulty", "deity", "pos"];
+      const TRIGGER_KEYS = ["new", "autostart", "play", "floor", "classes", "seed", "daily", "difficulty", "deity", "pos", "expedition"];
 
       function parseStartupOptions(search) {
         const raw = search != null ? search : (typeof location !== "undefined" ? location.search : "");
@@ -22,6 +22,7 @@
         if (params.has("difficulty")) opts.difficulty = params.get("difficulty");
         if (params.has("deity")) opts.deity = params.get("deity");
         if (params.has("seed")) opts.seed = params.get("seed");
+        if (params.has("expedition")) opts.expedition = params.get("expedition");
         opts.daily = params.has("daily");
         if (params.has("floor")) opts.floor = params.get("floor");
         if (params.has("pos")) opts.pos = params.get("pos");
@@ -73,11 +74,19 @@
       // that modal's Start button (no config → use the on-screen selections) and
       // the URL/CLI options.
       function beginRun(config = {}) {
+        const expedition = config.expedition ?? (els.characterCreateExpedition?.value || "campaign");
+        els.characterCreateExpedition?.setCustomValidity?.("");
         if (state.characterCreated || context.saveLoadError) {
           setMessage(context.saveLoadError || "The party's classes and actions are fixed for this run. Start a new expedition to choose another party.");
           return false;
         } else if (config.classes && (!Array.isArray(config.classes) || config.classes.length === 0 || config.classes.some((key) => !getClassDefinitions().some((definition) => definition.key === key)))) {
           setMessage(`Cannot begin expedition: unsupported classes ${JSON.stringify(config.classes)}. Choose warrior, rogue, or mage; the healer is no longer available.`);
+          return false;
+        } else if (!["campaign", "short"].includes(expedition) || (expedition === "short" && (config.daily || config.seed || state.dailySeed))) {
+          const problem = "Cannot begin expedition: choose campaign or short. The short expedition's branch graph cannot be combined with the full campaign's daily or explicit seed mode.";
+          els.characterCreateExpedition?.setCustomValidity?.(problem);
+          els.characterCreateExpedition?.reportValidity?.();
+          setMessage(problem);
           return false;
         } else {
           ensureClassAssignments();
@@ -96,12 +105,22 @@
 
         state.tutorialSeen = true;
         state.characterCreated = true;
+        state.expedition = expedition;
 
-        // Build the world: a daily/seeded run regenerates procedurally; otherwise
-        // play the curated campaign.
-        if (state.dailySeed && typeof regenerateWorld === "function") regenerateWorld();
-        else if (config.seed && typeof regenerateWorld === "function") regenerateWorld(undefined, { seed: `run:${config.seed}` });
-        else if (typeof normalizeCampaign === "function") normalizeCampaign();
+        // Build compact DCSS layouts; unseeded campaigns retain their content/order.
+        try {
+          if (expedition === "short") startShortExpedition();
+          else if (state.dailySeed && typeof regenerateWorld === "function") regenerateWorld();
+          else if (config.seed && typeof regenerateWorld === "function") regenerateWorld(undefined, { seed: `run:${config.seed}` });
+          else {
+            state.runSeed = state.runSeed || Math.floor(Math.random() * 1e9);
+            compactCampaign(`campaign:${state.runSeed}`);
+          }
+        } catch (error) {
+          state.characterCreated = false;
+          setMessage(`Cannot build expedition: ${error.message} No expedition was saved; party creation remains open.`);
+          return false;
+        }
 
         if (typeof applyClassStartingStats === "function") applyClassStartingStats();
         if (typeof applyDifficultyToFloors === "function") applyDifficultyToFloors();

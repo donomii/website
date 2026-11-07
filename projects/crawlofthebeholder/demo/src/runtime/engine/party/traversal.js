@@ -141,14 +141,7 @@
       function travelToStairsTarget() {
         const floor = currentFloor();
         const floorState = currentFloorState();
-        const stairs = [];
-        if (floor.stairs.down && floorState.discovered.has(keyOf(floor.stairs.down.x, floor.stairs.down.y))) {
-          stairs.push({ ...floor.stairs.down, direction: "down" });
-        }
-        if (floor.stairs.up && floorState.discovered.has(keyOf(floor.stairs.up.x, floor.stairs.up.y))) {
-          stairs.push({ ...floor.stairs.up, direction: "up" });
-        }
-        return stairs;
+        return floorStairs(floor).filter((stair) => floorState.discovered.has(keyOf(stair.x, stair.y)));
       }
 
 

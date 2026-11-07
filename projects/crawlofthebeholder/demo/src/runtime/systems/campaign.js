@@ -7,7 +7,7 @@
   // with the whole dungeon roused behind you.
   //
   // Two worlds flow through here. The authored campaign (the default run) is the
-  // hand-crafted DCSS dungeon: Zot:1 already holds the Orb and the branches hold
+  // curated DCSS content on compact layouts: Zot:1 holds the Orb and the branches hold
   // their runes, so normalize only has to identify the spine and clear a stray
   // decoy. A seeded/daily run regenerates generic floors instead, so normalize
   // also has to *place* the Orb and runes and seal off the bottom.
@@ -121,7 +121,17 @@
         return state.floors.reduce((sum, fs) => sum + (fs.floorItems || []).filter(isRuneItem).length, 0);
       }
 
+      function restoreCampaignProgress(saved) {
+        const generated = saved.worldFloors?.some((floor) => floor.map?.source === "procedural");
+        state.zotFloorIndex = saved.zotFloorIndex ?? (generated ? saved.floors.length - 1 : findZotIndex());
+        state.runesInWorld = saved.runesInWorld ?? (countRunesInWorld() + runesHeld());
+        state.orbRun = saved.orbRun ?? hasPrize();
+        state.orbRunTurns = saved.orbRunTurns ?? 0;
+      }
+
       // ── Authored campaign: identify the spine, clear the decoy Orb ──────────
+      context.restoreCampaignProgress = restoreCampaignProgress;
+
       function normalizeCuratedCampaign() {
         const zot = findZotIndex();
         state.zotFloorIndex = zot;

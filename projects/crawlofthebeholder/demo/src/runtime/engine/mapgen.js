@@ -4,8 +4,8 @@
   // Runtime procedural dungeon generation.
   //
   // The game previously shipped 15 fixed floors baked from single DCSS arrival
-  // vaults — identical every run. This builds fresh, larger rooms-and-corridors
-  // levels in the browser per run, then stamps a real DCSS vault into a room as
+  // vaults — identical every run. This builds compact DCSS-derived branch
+  // layouts in the browser per run, then stamps a fitting DCSS vault into a room as
   // a set-piece. It deliberately reuses DCSS *content*: tile assets and
   // monster/item/decor templates are pooled from the baked resources, so
   // generated floors render with real DCSS art and real monster stats.
@@ -13,13 +13,13 @@
   // Generation is fully seeded — a run seed reproduces the exact dungeon, which
   // powers daily-seed mode and shareable runs. Depth maps onto a DCSS-flavoured
   // biome (Lair, Swamp, Shoals, Snake, Crypt, Vaults) that picks the tile theme,
-  // sprinkles water/lava, and biases which monsters spawn.
+  // layout family and terrain, and biases which monsters spawn.
   //
   // Glyphs match the engine: "x" wall, "." floor, "+" door, "w"/"W" water,
   // "l" lava. Stairs are coordinates (stairs.up/down), not glyphs.
   window.CotBRuntime.installMapgen = function installMapgen(context) {
     with (context) {
-      const DEFAULTS = { width: 40, height: 28, rooms: 9, minRoom: 4, maxRoom: 10 };
+      const DEFAULTS = { width: 24, height: 18, rooms: 5, minRoom: 3, maxRoom: 7 };
 
       // ── Seeded RNG ──────────────────────────────────────────────────────────
       function hashStr(text) {
@@ -149,12 +149,12 @@
       // Place doors where a one-tile corridor passes through a wall gap into a
       // room (a floor cell walled on two opposite sides). Doors are openable, so
       // they don't break connectivity.
-      function placeDoors(layout, rng, chance = 0.35) {
+      function placeDoors(layout, rng, chance = 0.35, protectedKeys = new Set()) {
         const grid = layout.rows.map((row) => [...row]);
         const doors = [];
         for (let y = 1; y < layout.height - 1; y += 1) {
           for (let x = 1; x < layout.width - 1; x += 1) {
-            if (grid[y][x] !== ".") continue;
+            if (grid[y][x] !== "." || protectedKeys.has(`${x},${y}`)) continue;
             const wallLR = grid[y][x - 1] === "x" && grid[y][x + 1] === "x" && grid[y - 1][x] === "." && grid[y + 1][x] === ".";
             const wallUD = grid[y - 1][x] === "x" && grid[y + 1][x] === "x" && grid[y][x - 1] === "." && grid[y][x + 1] === ".";
             if ((wallLR || wallUD) && rng() < chance) {
@@ -188,24 +188,39 @@
         if (!vaultRows || !vaultRows.length) return false;
         const vh = vaultRows.length;
         const vw = Math.max(...vaultRows.map((r) => r.length));
-        const grid = layout.rows.map((row) => [...row]);
         const candidates = layout.rooms
           .map((room, idx) => ({ room, idx }))
           .filter(({ idx, room }) => idx !== avoidRoomIndex && room.w >= vw && room.h >= vh);
         if (!candidates.length) return false;
-        const { room } = candidates[Math.floor(rng() * candidates.length)];
-        for (let y = 0; y < vh; y += 1) {
-          for (let x = 0; x < vw; x += 1) {
-            const g = vaultRows[y][x];
-            if (g === undefined || g === " ") continue;
-            const ty = room.y + y;
-            const tx = room.x + x;
-            if (ty <= 0 || tx <= 0 || ty >= layout.height - 1 || tx >= layout.width - 1) continue;
-            grid[ty][tx] = "xX.wWlH+".includes(g) ? (g === "X" ? "x" : g) : ".";
+        const offset = Math.floor(rng() * candidates.length);
+        for (let candidate = 0; candidate < candidates.length; candidate += 1) {
+          const { room } = candidates[(offset + candidate) % candidates.length];
+          const grid = layout.rows.map((row) => [...row]);
+          for (let y = 0; y < vh; y += 1) {
+            for (let x = 0; x < vw; x += 1) {
+              const g = vaultRows[y][x];
+              if (g === undefined || g === " ") continue;
+              const ty = room.y + y;
+              const tx = room.x + x;
+              if (ty <= 0 || tx <= 0 || ty >= layout.height - 1 || tx >= layout.width - 1) continue;
+              grid[ty][tx] = "xX.wWlH+".includes(g) ? (g === "X" ? "x" : g) : ".";
+            }
+          }
+          const start = layout.rooms[avoidRoomIndex];
+          context.connectVaultEntry(grid, room, vw, vh, { x: start.cx, y: start.cy });
+          const candidateRows = grid.map((row) => row.join(""));
+          const reachable = context.layoutDistances(candidateRows, { x: start.cx, y: start.cy });
+          const disconnected = candidateRows.some((row, y) => [...row].some((cell, x) => ".+".includes(cell) && !reachable.has(`${x},${y}`)));
+          if (disconnected) {
+            continue;
+          } else {
+            layout.rows = candidateRows;
+            layout.vaultCells = new Set();
+            for (let y = room.y; y < room.y + vh; y += 1) for (let x = room.x; x < room.x + vw; x += 1) layout.vaultCells.add(`${x},${y}`);
+            return true;
           }
         }
-        layout.rows = grid.map((row) => row.join(""));
-        return true;
+        return false;
       }
 
       // ── Cave layout: cellular automata for organic DCSS branches ────────────
@@ -325,26 +340,31 @@
         const pick = (a) => a[rint(a.length)];
 
         const biome = opts.biome || biomeForDepth(index);
-        const layout = (biome && biome.cave)
-          ? generateCaveLayout({ ...opts, rng })
-          : generateLayout({ ...opts, rng });
+        const layout = context.generateDcssLayout({ ...opts, biome, rng });
         const pools = opts.pools || _pools();
         const assets = opts.assets || assetsForBiome(biome);
 
         const startRoom = layout.rooms[0];
         const endRoom = layout.rooms[layout.rooms.length - 1] || startRoom;
         const start = { x: startRoom.cx, y: startRoom.cy, dir: 1 };
-        const downCell = { x: endRoom.cx, y: endRoom.cy };
+        let downCell = { x: endRoom.cx, y: endRoom.cy };
         const upCell = index > 0 ? { x: startRoom.x, y: startRoom.y } : null;
 
         if (opts.vaults && opts.vaults.length) embedVault(layout, pick(opts.vaults), 0, rng);
+        const far = [...context.layoutDistances(layout.rows, start)].filter(([cell]) => !layout.vaultCells?.has(cell) && cell !== `${start.x},${start.y}`).sort((a, b) => b[1] - a[1])[0];
+        if (far) {
+          const [x, y] = far[0].split(",").map(Number);
+          downCell = { x, y };
+        } else {
+          throw new Error(`Cannot place separate stairs on generated floor ${index}: no reachable dry cell beyond the entrance.`);
+        }
 
-        // Keep stairs/start clear of liquids, then sprinkle biome terrain.
+        // Keep stairs/start clear of doors and content placements.
         const protectedKeys = new Set([`${start.x},${start.y}`, `${downCell.x},${downCell.y}`]);
         if (upCell) protectedKeys.add(`${upCell.x},${upCell.y}`);
-        sprinkleTerrain(layout, biome, rng, protectedKeys);
+        // Wet branches already have coherent heightmapped terrain and dry routes.
 
-        const doors = placeDoors(layout, rng);
+        const doors = placeDoors(layout, rng, layout.family === "basic" ? 0.35 : 0, new Set([...protectedKeys, ...(layout.vaultCells || [])]));
 
         const taken = new Set(protectedKeys);
         const open = _openCells(layout, taken);
@@ -359,9 +379,22 @@
         const encounters = [];
         const monsterCount = Math.min(opts.monsters ?? rrange(5, 9), Math.floor(open.length / 8));
         for (let i = 0; i < monsterCount && monsterPool.length; i += 1) {
-          const cell = draw();
-          if (!cell) break;
           const mon = _clone(pick(monsterPool));
+          const habitats = [];
+          for (let y = 1; y < layout.height - 1; y += 1) for (let x = 1; x < layout.width - 1; x += 1) {
+            const glyph = layout.rows[y][x];
+            const terrain = glyph === "W" ? "deep-water" : glyph === "w" ? "water" : glyph === "l" ? "lava" : "floor";
+            if (".wWl".includes(glyph) && !taken.has(`${x},${y}`) && Math.abs(x - start.x) + Math.abs(y - start.y) >= 4 && monsterCanEnterTerrain(mon, terrain)) {
+              habitats.push({ x, y });
+            } else {
+              continue;
+            }
+          }
+          if (!habitats.length) continue;
+          const cell = pick(habitats);
+          taken.add(`${cell.x},${cell.y}`);
+          const dryIndex = open.findIndex((p) => p.x === cell.x && p.y === cell.y);
+          if (dryIndex >= 0) open.splice(dryIndex, 1);
           mon.id = `gen-mon-${index}-${i}`;
           mon.x = cell.x; mon.y = cell.y; mon.hp = mon.maxHp; mon.energy = 0;
           encounters.push(mon);
@@ -469,9 +502,12 @@
       context.generateLayout = generateLayout;
       context.generateCaveLayout = generateCaveLayout;
       context.embedVault = embedVault;
+      context.placeLayoutDoors = placeDoors;
       context.generateFloor = generateFloor;
       context.generateDungeon = generateDungeon;
       context.regenerateWorld = regenerateWorld;
+      window.CotBRuntime.installDcssLayouts(context);
+      window.CotBRuntime.installExpeditionLayouts(context);
     }
   };
 }());

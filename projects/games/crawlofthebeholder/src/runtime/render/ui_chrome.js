@@ -3,6 +3,7 @@
   window.CotBRuntime.installUiChrome = function (context) {
     with (context) {
       function renderParty() {
+        els.partyHealth.textContent = "HP (current/max; front first): " + state.party.map((member) => `${member.name} ${member.hp}/${member.maxHp}${member.hp <= 0 ? " (fallen)" : ""}`).join(" · ");
         els.party.innerHTML = "";
         for (const [index, member] of state.party.entries()) {
           const row = document.createElement("div");
@@ -206,7 +207,7 @@
             if (stairs) {
               node.classList.add("stairs");
               node.textContent = stairs.direction === "down" ? ">" : "<";
-              labels.push(stairs.direction === "down" ? "downstairs" : "upstairs");
+              labels.push(stairs.label ? `${stairs.label}: ${stairs.detail}` : stairs.direction === "down" ? "downstairs" : "upstairs");
             }
             if (item) {
               node.classList.add(item.kind === "quest" ? "prize" : item.kind === "gold" ? "gold" : "item");
@@ -649,8 +650,9 @@
       function viewportTargetHtml(target, viewportWidth, viewportHeight) {
         const classes = `viewport-target ${target.enabled ? "enabled" : "passive"} target-${target.kind}`;
         const label = escapeHtml(target.label);
-        const attrs = `class="${classes}" style="${viewportTargetStyle(target, viewportWidth, viewportHeight)}" data-viewport-target="${escapeHtml(target.id)}" data-kind="${escapeHtml(target.kind)}" data-enabled="${target.enabled ? "true" : "false"}" title="${label}"`;
-        if (target.enabled) return `<button type="button" ${attrs} data-action="${escapeHtml(target.action)}" aria-label="${label}">${label}</button>`;
+        const description = target.detail ? `${label}: ${escapeHtml(target.detail)}` : label;
+        const attrs = `class="${classes}" style="${viewportTargetStyle(target, viewportWidth, viewportHeight)}" data-viewport-target="${escapeHtml(target.id)}" data-kind="${escapeHtml(target.kind)}" data-enabled="${target.enabled ? "true" : "false"}" title="${description}"`;
+        if (target.enabled) return `<button type="button" ${attrs} data-action="${escapeHtml(target.action)}" aria-label="${description}">${label}</button>`;
         return `<span ${attrs} aria-hidden="true">${label}</span>`;
       }
 
