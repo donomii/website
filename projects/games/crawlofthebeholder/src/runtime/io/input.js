@@ -437,7 +437,7 @@
             if (choice?.onSelect) choice.onSelect();
           });
         }
-        for (const name of ["helpModal", "legendModal", "settingsModal", "achievementsModal", "historyModal", "tutorialModal", "characterModal", "talentsModal", "markersModal", "saveSlotsModal", "shopModal", "dialogueModal", "moreActionsModal", "bestiaryModal", "questsModal", "statsModal"]) {
+        for (const name of ["helpModal", "legendModal", "settingsModal", "achievementsModal", "historyModal", "characterModal", "talentsModal", "markersModal", "saveSlotsModal", "shopModal", "dialogueModal", "moreActionsModal", "bestiaryModal", "questsModal", "statsModal"]) {
           const modal = els[name];
           if (modal?.addEventListener) {
             modal.addEventListener("click", (event) => {
@@ -535,17 +535,9 @@
         // First-launch flow: character creation supersedes the welcome screen.
         if (!state.characterCreated && els.characterCreateModal) {
           showModal("characterCreateModal");
-        } else if (els.tutorialModal && !state.tutorialSeen) {
-          els.tutorialModal.classList?.remove("hidden");
-          state.tutorialSeen = true;
-          if (typeof saveGame === "function") saveGame();
         }
 
         window.addEventListener("keydown", (event) => {
-          if (els.tutorialModal && !els.tutorialModal.classList.contains("hidden")) {
-            els.tutorialModal.classList.add("hidden");
-            // Let the keypress proceed normally afterwards.
-          }
           if (event.key === "Escape") {
             if (els.helpModal && !els.helpModal.classList.contains("hidden")) {
               event.preventDefault();

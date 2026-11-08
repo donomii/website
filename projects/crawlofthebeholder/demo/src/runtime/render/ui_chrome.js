@@ -520,7 +520,7 @@
       }
 
       function hideAllModals() {
-        const modals = ["helpModal", "legendModal", "settingsModal", "achievementsModal", "historyModal", "tutorialModal", "characterModal", "characterCreateModal", "talentsModal", "markersModal", "saveSlotsModal", "shopModal", "dialogueModal", "moreActionsModal", "bestiaryModal", "questsModal", "statsModal"];
+        const modals = ["helpModal", "legendModal", "settingsModal", "achievementsModal", "historyModal", "characterModal", "characterCreateModal", "talentsModal", "markersModal", "saveSlotsModal", "shopModal", "dialogueModal", "moreActionsModal", "bestiaryModal", "questsModal", "statsModal"];
         for (const name of modals) {
           const node = els[name];
           if (node?.classList && !node.classList.contains("hidden")) node.classList.add("hidden");
