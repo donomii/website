@@ -68,6 +68,12 @@ export async function createConverterRoom() {
     convert();
     return galleryRoom(scene, {
         actions: [["Convert sample", convert], ["Turn globe", () => { globe.rotation.y += Math.PI / 4; }]],
+        canStand: (x, z) => Math.hypot(x, z) > 1.75,
+        select(ray) {
+            if (!ray.intersectObject(earth, true).length) return false;
+            globe.rotation.y += Math.PI / 4;
+            return true;
+        },
     });
 }
 

@@ -12,6 +12,8 @@ const patrol = [
 export async function createCreatures(scene) {
     const jobs = createGLTFCreatureModelLoadJobs();
     const models = await Promise.allSettled(species.map(id => jobs.find(job => job.id === id).load()));
+    const group = new T.Group();
+    scene.add(group);
     const creatures = models.flatMap((result, index) => {
         if (result.status === "rejected") {
             console.warn("Courtyard creature unavailable", result.reason);
@@ -19,7 +21,7 @@ export async function createCreatures(scene) {
         }
         const actor = result.value.createActor();
         actor.object.position.copy(patrol[index]);
-        scene.add(actor.object);
+        group.add(actor.object);
         return [{ actor, next: 1 - index, direction: index === 0 ? 1 : -1, restUntil: 0 }];
     });
     if (creatures.length === 0) throw new Error("No creature models loaded");
@@ -66,5 +68,5 @@ export async function createCreatures(scene) {
         visitorUntil = now + 9;
     }
 
-    return { update, call };
+    return { group, positions: () => creatures.map(c => c.actor.object.position), update, call };
 }

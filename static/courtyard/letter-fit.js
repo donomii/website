@@ -86,15 +86,41 @@ function addCell(cells, index, transform) {
     return slot;
 }
 
+function plaque(text) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 112;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#392922";
+    ctx.fillRect(0, 0, 512, 112);
+    ctx.strokeStyle = "#dbba85";
+    ctx.lineWidth = 5;
+    ctx.strokeRect(8, 8, 496, 96);
+    ctx.fillStyle = "#ffedcb";
+    ctx.font = "38px Georgia";
+    ctx.textAlign = "center";
+    ctx.fillText(text, 256, 70, 460);
+    const texture = new T.CanvasTexture(canvas);
+    texture.colorSpace = T.SRGBColorSpace;
+    return new T.Mesh(new T.PlaneGeometry(1.3, 0.28), new T.MeshBasicMaterial({ map: texture }));
+}
+
 export function createLetterFit(scene) {
     const group = new T.Group();
-    group.position.set(5.6, 0.72, -4.6);
+    group.position.set(4.5, 0.72, -4.75);
     scene.add(group);
     const targetDisplay = display(group, -1.05, 0xc6a583);
     const fitDisplay = display(group, 1.05, 0xffffff);
     const base = new T.Mesh(new T.BoxGeometry(4, 0.72, 1.95), new T.MeshStandardMaterial({ color: 0x795e49 }));
     base.position.y = -0.36;
     group.add(base);
+    const fitPlaque = plaque("Fit the shape");
+    fitPlaque.position.set(-0.85, -0.36, 0.99);
+    fitPlaque.userData.fitAction = "start";
+    const switchPlaque = plaque("Switch shape");
+    switchPlaque.position.set(0.85, -0.36, 0.99);
+    switchPlaque.userData.fitAction = "toggle";
+    group.add(fitPlaque, switchPlaque);
 
     const matrix = new T.Matrix4();
     let target;
@@ -172,9 +198,21 @@ export function createLetterFit(scene) {
         running = letters.length < 24 && error > 0;
     }
 
-    setTarget("arch");
+    let currentKind = "arch";
+    setTarget(currentKind);
     return {
-        setTarget,
+        group,
+        targets: [fitPlaque, switchPlaque, base],
+        get kind() { return currentKind; },
+        setTarget(kind) {
+            currentKind = kind;
+            setTarget(kind);
+        },
+        toggleTarget() {
+            currentKind = currentKind === "arch" ? "pyramid" : "arch";
+            setTarget(currentKind);
+            return currentKind;
+        },
         start() {
             reset();
             running = true;

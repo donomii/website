@@ -157,10 +157,13 @@ export async function createSolidsRoom() {
     depth.min = "0";
     depth.max = "4";
     depth.value = source.querySelector("#depth").value;
+    turntable.position.y = 0.08;
+    object.position.y = 0.16;
     build();
     return galleryRoom(scene, {
         actions: [["Fewer generations", () => { depth.value = Math.max(0, Number(depth.value) - 1); build(); }],
             ["More generations", () => { depth.value = Math.min(4, Number(depth.value) + 1); build(); }]],
+        canStand: (x, z) => Math.hypot(x, z) > 1.6,
     });
 }
 

@@ -22,7 +22,7 @@ function plaque(label, action) {
     return mesh;
 }
 
-export function galleryRoom(scene, { select, actions = [], actionLift = 0, update, enter, leave } = {}) {
+export function galleryRoom(scene, { select, actions = [], actionLift = 0, update, enter, leave, canStand } = {}) {
     const surface = new T.Mesh(new T.PlaneGeometry(12, 14).rotateX(-Math.PI / 2),
         new T.MeshBasicMaterial({ color: 0x534238 }));
     surface.position.y = -0.02;
@@ -36,7 +36,7 @@ export function galleryRoom(scene, { select, actions = [], actionLift = 0, updat
         return target;
     });
     return {
-        scene, surface, exit, update, enter, leave, height: () => 0,
+        scene, surface, exit, update, enter, leave, canStand, height: () => 0,
         spawnZ: 3.6, limitX: 5.6, limitZ: 6.6,
         select(ray) {
             const hit = ray.intersectObjects(targets)[0];

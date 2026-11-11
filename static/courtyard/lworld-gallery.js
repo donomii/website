@@ -85,5 +85,8 @@ export async function createLWorldRoom() {
     stand.add(sculpture);
     stand.position.z = -0.9;
     scene.add(stand);
-    return galleryRoom(scene, { actions: [["Turn model", () => { stand.rotation.y += Math.PI / 4; }]] });
+    return galleryRoom(scene, {
+        actions: [["Turn model", () => { stand.rotation.y += Math.PI / 4; }]],
+        canStand: (x, z) => Math.hypot(x, z + 0.9) > 2.2,
+    });
 }

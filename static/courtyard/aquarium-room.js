@@ -140,8 +140,9 @@ export function createAquariumRoom() {
         select(ray) {
             const hit = ray.intersectObject(tank)[0];
             if (!hit) return false;
-            const x = Math.floor((hit.point.x + halfWidth) / CELL);
-            const y = Math.floor((hit.point.z - TANK_Z + halfDepth) / CELL);
+            const local = (tank.parent ?? scene).worldToLocal(hit.point.clone());
+            const x = Math.floor((local.x + halfWidth) / CELL);
+            const y = Math.floor((local.z - TANK_Z + halfDepth) / CELL);
             message = spawn(world, selected, x, y) ? "Creature placed" : "Cell occupied or tank full";
             show();
             return true;

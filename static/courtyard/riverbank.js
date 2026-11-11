@@ -12,10 +12,11 @@ export function createRiverbank() {
     function height(x, z) {
         const river = x + 8 + 1.7 * Math.sin(z * 0.15);
         const channel = 1.1 * (1 - T.MathUtils.smoothstep(Math.abs(river), 3, 4.8));
-        return 0.35 * Math.sin(x * 0.25) * Math.cos(z * 0.18) - channel;
+        const raw = 0.35 * Math.sin(x * 0.25) * Math.cos(z * 0.18) - channel;
+        return raw * T.MathUtils.smoothstep(z, -15.6, -12.4);
     }
 
-    const ground = new T.PlaneGeometry(56, 32, 112, 64).rotateX(-Math.PI / 2);
+    const ground = new T.PlaneGeometry(38, 32, 76, 64).rotateX(-Math.PI / 2);
     const points = ground.attributes.position;
     const colors = [];
     const grass = new T.Color(0x687e44);
@@ -33,7 +34,7 @@ export function createRiverbank() {
     const surface = new T.Mesh(ground, new T.MeshStandardMaterial({ vertexColors: true }));
     scene.add(surface);
 
-    const water = new T.Mesh(new T.PlaneGeometry(13, 120).rotateX(-Math.PI / 2),
+    const water = new T.Mesh(new T.PlaneGeometry(11, 32).rotateX(-Math.PI / 2),
         new T.MeshStandardMaterial({ color: 0x38797a, roughness: 0.32 }));
     water.position.set(-8, -0.43, 0);
     scene.add(water);
@@ -57,6 +58,12 @@ export function createRiverbank() {
         new T.MeshStandardMaterial({ color: 0xf4bb73, emissive: 0x7a3411 }));
     exit.position.set(0, height(0, 12) + 1.1, 12);
     scene.add(exit);
-    return { scene, surface, exit, height };
+    return {
+        scene,
+        surface,
+        exit,
+        height,
+        canStand: (x, z) => Math.abs(x) <= 18.2 && z <= 15.2 && (z >= -15.2 || Math.abs(x) <= 1.5),
+    };
 }
 

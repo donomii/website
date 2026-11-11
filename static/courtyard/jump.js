@@ -1,264 +1,205 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
-import { learnLoop, poseAt } from "./dance-loop.js";
-import { createDanceCapture, restingHands } from "./dance-capture.js";
 import { readGamepad } from "./gamepad.js";
 import { attachVrInput, vrSessionOptions } from "./xr-input.js";
 import { galleryRoom } from "./gallery-room.js";
 
 const viewport = document.querySelector("#viewport");
 const standalone = document.querySelector("#jump-status") !== null;
-const status = document.querySelector("#jump-status") ?? document.createTextNode("Move your hands or take small steps to pose the figure.");
-const recordButton = document.querySelector("#record") ?? document.createElement("button");
-const replayButton = document.querySelector("#replay") ?? document.createElement("button");
-const loopButton = document.querySelector("#loop") ?? document.createElement("button");
+const status = document.querySelector("#jump-status") ?? document.createTextNode("The original Racket figures are moving on their own.");
+const paletteButton = document.querySelector("#palette");
+const toggleButton = document.querySelector("#toggle");
 const vrButton = document.querySelector("#vr");
+
+const PALETTES = [
+    [0x1fa81f, 0x8d9e34],
+    [0xb808aa, 0xb8840e],
+    [0xb34c4e, 0x0cc218],
+    [0xd87c9e, 0x9e0cc2],
+    [0xd9d836, 0x767892],
+];
+
 const scene = new T.Scene();
 scene.background = new T.Color(0x292124);
 const camera = new T.PerspectiveCamera(56, 1, 0.05, 40);
-camera.position.set(0, 1.68, 4.6);
+camera.position.set(0, 1.62, 4.5);
 const rig = new T.Group();
 rig.add(camera);
 scene.add(rig);
-scene.add(new T.HemisphereLight(0xffe1bd, 0x826478, 2.8));
-const light = new T.DirectionalLight(0xffdabb, 2.8);
-light.position.set(-3, 5, 1);
-scene.add(light);
+scene.add(new T.HemisphereLight(0xffe8cc, 0x62505d, 2.2));
+const keyLight = new T.DirectionalLight(0xfff0d8, 2.4);
+keyLight.position.set(-2.5, 6, 3.5);
+scene.add(keyLight);
 
 const stage = new T.Group();
-stage.position.z = -2.1;
+stage.position.set(0, 0, -1.25);
 scene.add(stage);
-const dancer = new T.Group();
-stage.add(dancer);
-const material = color => new T.MeshStandardMaterial({ color, roughness: 0.86 });
-const wood = material(0x85543e);
-const trim = material(0xdab37d);
-const brass = material(0xf3bc70);
-const teal = material(0x408a8e);
-const plum = material(0x8e5075);
-const pedestal = new T.Mesh(new T.CylinderGeometry(1.48, 1.58, 0.22, 48), wood);
-pedestal.position.y = -0.12;
-stage.add(pedestal);
-const ring = new T.Mesh(new T.RingGeometry(1.29, 1.32, 64), trim);
-ring.rotation.x = -Math.PI / 2;
-stage.add(ring);
-const wall = new T.Mesh(new T.BoxGeometry(7.1, 3.9, 0.24), material(0x78434a));
-wall.position.set(0, 1.85, -1.4);
-stage.add(wall);
-const signCanvas = document.createElement("canvas");
-signCanvas.width = 768;
-signCanvas.height = 160;
-const signTexture = new T.CanvasTexture(signCanvas);
-signTexture.colorSpace = T.SRGBColorSpace;
-const sign = new T.Mesh(new T.PlaneGeometry(2.8, 0.58), new T.MeshBasicMaterial({ map: signTexture }));
-sign.position.set(0, 3.09, -1.25);
-sign.visible = false;
-stage.add(sign);
-let signText;
-function updateSign(visible) {
-    sign.visible = visible;
-    if (!sign.visible || signText === status.textContent) return;
-    signText = status.textContent;
-    const ctx = signCanvas.getContext("2d");
-    ctx.fillStyle = "#37252d";
-    ctx.fillRect(0, 0, signCanvas.width, signCanvas.height);
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#ffe4bb";
-    ctx.font = "32px system-ui";
-    ctx.fillText(signText, 384, 63, 720);
-    ctx.font = "27px system-ui";
-    ctx.fillText(standalone ? "Grip: record / stop     Trigger: loop / stop" : "Point at the controls and select", 384, 115);
-    signTexture.needsUpdate = true;
-}
-for (const x of [-2.1, 2.1]) {
-    const column = new T.Mesh(new T.CylinderGeometry(0.19, 0.24, 3.45, 16), trim);
-    column.position.set(x, 1.64, -1.04);
-    stage.add(column);
-}
 
-const up = new T.Vector3(0, 1, 0);
-const sphere = new T.SphereGeometry(1, 16, 12);
-const cylinder = new T.CylinderGeometry(1, 1, 1, 12);
-const V = (x, y, z = 0) => new T.Vector3(x, y, z);
-function piece(geometry, finish) {
-    const mesh = new T.Mesh(geometry, finish);
-    dancer.add(mesh);
+const unitCube = new T.BoxGeometry(1, 1, 1);
+const u = 0.24;
+
+function makeBoxPart(parent, sx, sy, sz, x, y, z, material) {
+    const mesh = new T.Mesh(unitCube, material);
+    mesh.scale.set(u * sx, u * sy, u * sz);
+    mesh.position.set(u * x, u * y, u * z);
+    parent.add(mesh);
     return mesh;
 }
-function limb(object, a, b, radius) {
-    const delta = b.clone().sub(a);
-    object.position.copy(a).lerp(b, 0.5);
-    object.quaternion.setFromUnitVectors(up, delta.clone().normalize());
-    object.scale.set(radius, delta.length(), radius);
-}
-function joint(object, position, radius) {
-    object.position.copy(position);
-    object.scale.setScalar(radius);
-}
-const torso = piece(cylinder, teal);
-const head = piece(sphere, brass);
-const limbs = [-1, 1].map(side => ({
-    side,
-    arm: piece(cylinder, plum), forearm: piece(cylinder, teal),
-    thigh: piece(cylinder, plum), shin: piece(cylinder, teal),
-    elbow: piece(sphere, brass), hand: piece(sphere, brass), knee: piece(sphere, brass), foot: piece(sphere, wood),
-}));
 
-function drawPose(pose) {
-    dancer.position.set(pose.shift[0], 0, pose.shift[1]);
-    const hip = V(0, pose.hip);
-    const neck = V(0, pose.hip + 0.58);
-    limb(torso, hip, neck, 0.2);
-    joint(head, V(0, pose.hip + 0.77), 0.17);
-    limbs.forEach((parts, index) => {
-        const { side } = parts;
-        const shoulder = V(side * 0.25, neck.y - 0.05);
-        const hand = V(...pose.hands[index]);
-        const elbow = shoulder.clone().lerp(hand, 0.47).add(V(side * 0.12, -0.11, -0.13));
-        const leg = V(side * 0.15, hip.y);
-        const foot = V(side * 0.24, pose.foot + 0.07, 0.1);
-        const knee = leg.clone().lerp(foot, 0.48).add(V(0, 0, pose.bend));
-        limb(parts.arm, shoulder, elbow, 0.072);
-        limb(parts.forearm, elbow, hand, 0.058);
-        limb(parts.thigh, leg, knee, 0.092);
-        limb(parts.shin, knee, foot, 0.073);
-        joint(parts.elbow, elbow, 0.078);
-        joint(parts.hand, hand, 0.085);
-        joint(parts.knee, knee, 0.092);
-        joint(parts.foot, foot, 0.11);
-        parts.foot.scale.z = 0.17;
-    });
-}
+// Articulated blocky Racket figure modeled after projects/jump/jumping.rkt.
+function createRacketFigure(color) {
+    const material = new T.MeshStandardMaterial({ color, roughness: 0.72, metalness: 0.04 });
+    const root = new T.Group();
+    const body = new T.Group();
+    root.add(body);
 
-const clamp = T.MathUtils.clamp;
-function demoPose(seconds) {
-    const wave = Math.sin(seconds * Math.PI / 1.12);
-    const lift = Math.max(0, wave) ** 2 * 0.48;
-    const dip = Math.max(0, -wave) * 0.23;
-    return { hip: 0.91 + lift - dip, foot: lift, bend: 0.14 + dip, shift: [0, 0],
-        hands: [-1, 1].map(side => [side * (0.53 + wave * 0.16), 1.35 + lift + wave * 0.47, 0.2]) };
+    makeBoxPart(body, 2.3, 2.7, 1.0, 0, 0.2, 0, material);
+    makeBoxPart(body, 2.2, 0.75, 0.96, 0, -1.52, 0, material);
+    makeBoxPart(body, 0.96, 0.96, 0.96, 0, 2.02, 0, material);
+
+    function makeArm(side) {
+        const shoulder = new T.Group();
+        shoulder.position.set(side * 1.18 * u, 1.05 * u, 0);
+        body.add(shoulder);
+        makeBoxPart(shoulder, 1.5, 0.85, 0.85, side * 0.75, 0, 0, material);
+        const elbow = new T.Group();
+        elbow.position.set(side * 1.45 * u, 0, 0);
+        shoulder.add(elbow);
+        makeBoxPart(elbow, 1.5, 0.85, 0.85, side * 0.75, 0, 0, material);
+        return { side, shoulder, elbow };
+    }
+
+    function makeLeg(side) {
+        const hip = new T.Group();
+        hip.position.set(side * 0.62 * u, -1.85 * u, 0);
+        body.add(hip);
+        makeBoxPart(hip, 0.86, 1.25, 0.86, 0, -0.625, 0, material);
+        const knee = new T.Group();
+        knee.position.set(0, -1.2 * u, 0);
+        hip.add(knee);
+        makeBoxPart(knee, 0.86, 1.25, 0.86, 0, -0.625, 0, material);
+        return { hip, knee };
+    }
+
+    const armL = makeArm(-1);
+    const armR = makeArm(1);
+    const legL = makeLeg(-1);
+    const legR = makeLeg(1);
+    stage.add(root);
+
+    return { root, body, material, armL, armR, legL, legR };
 }
 
-let mode = "demo";
-let recording = [];
-let learnedLoop = null;
-let startedAt = 0;
-let lastSample = 0;
-let desktopHand = null;
-let capture = createDanceCapture();
+const figures = [
+    { fig: createRacketFigure(PALETTES[0][0]), baseX: -0.78, baseZ: 0.05, facing: 0.22, speed: 1.0, phase: 0 },
+    { fig: createRacketFigure(PALETTES[0][1]), baseX: 0.78, baseZ: -0.15, facing: -0.22, speed: 1.08, phase: 1.7 },
+];
+
+function poseFigure(entry, t) {
+    const { fig, baseX, baseZ, facing, speed, phase } = entry;
+    const p = t * speed + phase;
+    const beat = p * 2.6;
+    const wave = Math.sin(beat);
+    const hop = Math.max(0, wave) ** 1.35 * 0.48;
+    const kick = Math.sin(beat * 0.5);
+
+    fig.body.rotation.set(Math.sin(beat * 0.5 + 0.4) * 0.14, 0, Math.cos(beat * 0.5) * 0.12);
+
+    // Expressive Racket arm swings & asymmetric elbow bends.
+    const lRaise = Math.sin(p * 2.1 + 0.5) * 0.85 + 0.15;
+    const rRaise = Math.sin(p * 2.6 - 0.6) * 0.9 + 0.25;
+    fig.armL.shoulder.rotation.set(0, Math.sin(p * 1.4) * 0.65, -lRaise);
+    fig.armL.elbow.rotation.set(0, -0.45 - Math.max(0, Math.cos(p * 2.2)) * 0.95, 0);
+
+    fig.armR.shoulder.rotation.set(0, -Math.sin(p * 1.7 + 1.0) * 0.65, rRaise);
+    fig.armR.elbow.rotation.set(0, 0.45 + Math.max(0, Math.sin(p * 2.5)) * 0.95, 0);
+
+    // Kicking legs & knee bends synced with hops.
+    const lHipX = -0.35 * Math.max(0, kick) - hop * 0.55;
+    const rHipX = -0.35 * Math.max(0, -kick) - hop * 0.45;
+    const lKneeX = Math.max(0.08, (Math.sin(beat + 0.7) * 0.5 + 0.5) * 1.05);
+    const rKneeX = Math.max(0.08, (Math.sin(beat - 2.2) * 0.5 + 0.5) * 1.05);
+    fig.legL.hip.rotation.set(lHipX, 0, -0.08 - hop * 0.25);
+    fig.legL.knee.rotation.set(lKneeX, 0, 0);
+    fig.legR.hip.rotation.set(rHipX, 0, 0.08 + hop * 0.25);
+    fig.legR.knee.rotation.set(rKneeX, 0, 0);
+
+    // Keep lowest foot clear of the floor while hopping vertically and swaying smoothly.
+    const thigh = 1.2 * u;
+    const shin = 1.25 * u;
+    const hipY = 1.85 * u;
+    const leftDrop = hipY + thigh * Math.cos(lHipX) + shin * Math.cos(lHipX + lKneeX);
+    const rightDrop = hipY + thigh * Math.cos(rHipX) + shin * Math.cos(rHipX + rKneeX);
+    const floorOffset = Math.max(leftDrop, rightDrop, 3.2 * u);
+
+    fig.root.position.set(
+        baseX + Math.sin(p * 0.95) * 0.26,
+        floorOffset + hop,
+        baseZ + Math.cos(p * 0.8) * 0.26,
+    );
+    fig.root.rotation.y = facing + Math.sin(p * 1.15) * 0.55;
+}
+
+let paletteIndex = 0;
+let paused = false;
+let elapsed = 0;
+let previous;
 let renderer;
 const vrInputs = [];
 
-function livePose(frame, xr) {
-    if (xr?.isPresenting) {
-        const space = xr.getReferenceSpace();
-        const viewer = frame?.getViewerPose(space);
-        if (!viewer) return null;
-        const hands = [null, null];
-        for (const input of frame.session.inputSources) {
-            if (input.handedness !== "left" && input.handedness !== "right") continue;
-            const wrist = input.hand?.get("wrist");
-            const pose = wrist ? frame.getJointPose(wrist, space)
-                : input.gripSpace && frame.getPose(input.gripSpace, space);
-            if (pose) {
-                hands[input.handedness === "left" ? 0 : 1] = pose.transform.position;
-            }
-        }
-        return capture(viewer.transform, hands);
-    } else {
-        const hands = restingHands();
-        if (desktopHand) hands[1] = desktopHand;
-        return { hip: 0.91, foot: 0, bend: 0.15, shift: [0, 0], hands };
-    }
+function applyPalette(index) {
+    paletteIndex = (index + PALETTES.length) % PALETTES.length;
+    const [a, b] = PALETTES[paletteIndex];
+    figures[0].fig.material.color.setHex(a);
+    figures[1].fig.material.color.setHex(b);
+    status.textContent = paused ? "Figures paused · Select Switch colors or Resume." : "Figures jumping on their own.";
 }
 
-function playDemo() {
-    if (mode === "record") stopRecording();
-    mode = "demo";
-    loopButton.textContent = "Loop the dance";
-    status.textContent = "The figure is playing its built-in jump.";
+function nextPalette() {
+    applyPalette(paletteIndex + 1);
 }
 
-function updateDancer(now, frame, xr) {
-    const elapsed = Math.max(0, now - startedAt);
-    const pose = mode === "demo" ? demoPose(now / 1000) : mode === "replay" ? poseAt(recording, elapsed) :
-        mode === "loop" ? learnedLoop.pose(elapsed) : livePose(frame, xr);
-    if (pose && mode === "record" && elapsed - lastSample >= 1000 / 30) {
-        recording.push({ time: elapsed, pose });
-        lastSample = elapsed;
-    }
-    if (mode === "record" && elapsed >= 12000) stopRecording();
-    if (mode === "replay" && elapsed >= recording[recording.length - 1].time) {
-        mode = "live";
-        status.textContent = "Replay finished.";
-    }
-    if (pose) drawPose(pose);
-    updateSign(!standalone || xr.isPresenting);
+function togglePause() {
+    paused = !paused;
+    previous = undefined;
+    if (toggleButton) toggleButton.textContent = paused ? "Resume movement" : "Pause movement";
+    status.textContent = paused ? "Figures paused." : "Figures jumping on their own.";
 }
+
+function updateFigures(now) {
+    const dt = previous === undefined ? 0 : Math.min(0.08, Math.max(0, (now - previous) / 1000));
+    previous = now;
+    if (!paused) elapsed += dt;
+    for (const entry of figures) poseFigure(entry, elapsed);
+}
+
+figures.forEach(entry => poseFigure(entry, 0));
 
 export function createJumpRoom() {
+    const meshes = [];
+    for (const { fig } of figures) {
+        fig.root.traverse(obj => { if (obj.isMesh) meshes.push(obj); });
+    }
     return galleryRoom(scene, {
-        actions: [["Record / stop", toggleRecord], ["Loop / stop", toggleLoop], ["Replay", replay], ["Built-in jump", playDemo]],
-        update: updateDancer,
+        actions: [["Switch colors", nextPalette], ["Pause / resume", togglePause]],
+        canStand: (x, z) => !(Math.abs(x) < 1.85 && z < 0.1 && z > -2.55),
+        select(ray) {
+            if (ray.intersectObjects(meshes, false).length > 0) {
+                nextPalette();
+                return true;
+            }
+            return false;
+        },
+        update(now) {
+            updateFigures(now);
+        },
         enter() {
-            capture = createDanceCapture();
-            mode = "live";
-            status.textContent = "Move your hands or take small steps to pose the figure.";
+            paused = false;
+            previous = undefined;
         },
         leave() {
-            if (mode === "record") stopRecording();
+            previous = undefined;
         },
     });
-}
-
-function stopRecording() {
-    mode = "live";
-    recordButton.textContent = "Record movement";
-    replayButton.disabled = recording.length < 2;
-    learnedLoop = learnLoop(recording);
-    loopButton.disabled = !learnedLoop;
-    status.textContent = replayButton.disabled ? "Recording was too short." : "Movement captured. Replay to see the figure imitate it.";
-}
-
-function toggleRecord() {
-    if (mode === "record") {
-        stopRecording();
-    } else {
-        recording = [];
-        learnedLoop = null;
-        startedAt = performance.now();
-        lastSample = -Infinity;
-        capture = createDanceCapture();
-        mode = "record";
-        recordButton.textContent = "Stop recording";
-        replayButton.disabled = true;
-        loopButton.disabled = true;
-        loopButton.textContent = "Loop the dance";
-        status.textContent = "Recording hands and steps for up to 12 seconds.";
-    }
-}
-
-function replay() {
-    if (mode === "record" || recording.length < 2) return;
-    mode = "replay";
-    loopButton.textContent = "Loop the dance";
-    startedAt = performance.now();
-    status.textContent = "Replaying the recorded movement.";
-}
-
-function toggleLoop() {
-    if (mode === "record" || !learnedLoop) return;
-    if (mode === "loop") {
-        mode = "live";
-        loopButton.textContent = "Loop the dance";
-        status.textContent = "Dance loop stopped.";
-    } else {
-        mode = "loop";
-        startedAt = performance.now();
-        loopButton.textContent = "Stop loop";
-        const seconds = (learnedLoop.period / 1000).toFixed(2);
-        status.textContent = learnedLoop.repeated ? `Looping a detected ${seconds}-second repeat.` :
-            `Looping the full ${seconds}-second recording.`;
-    }
 }
 
 async function setupVr() {
@@ -269,28 +210,14 @@ async function setupVr() {
         const input = attachVrInput(renderer.xr, rig, i, false);
         vrInputs.push(input);
         const controller = input.ray;
-        controller.addEventListener("squeezestart", toggleRecord);
-        controller.addEventListener("selectstart", event => {
-            if (event.data?.hand && event.data.handedness === "left") {
-                toggleRecord();
-            } else {
-                toggleLoop();
-            }
-        });
+        controller.addEventListener("squeezestart", nextPalette);
+        controller.addEventListener("selectstart", togglePause);
     }
     vrButton.hidden = false;
     vrButton.addEventListener("click", async () => {
         try {
             const session = await navigator.xr.requestSession("immersive-vr", vrSessionOptions);
             await renderer.xr.setSession(session);
-            capture = createDanceCapture();
-            mode = "live";
-            status.textContent = "Move your hands or take small steps to pose the figure.";
-            session.addEventListener("end", () => {
-                if (mode === "record") stopRecording();
-                mode = "demo";
-                loopButton.textContent = "Loop the dance";
-            });
         } catch {
             status.textContent = "The headset session could not start.";
         }
@@ -309,43 +236,39 @@ if (standalone) try {
     resize();
     window.addEventListener("resize", resize);
     const surface = renderer.domElement;
-    function move(event) {
-        const box = surface.getBoundingClientRect();
-        desktopHand = [clamp(((event.clientX - box.left) / box.width - 0.5) * 3.8, -1, 1),
-            clamp((1 - (event.clientY - box.top) / box.height) * 2.8, 0.4, 2.65), 0.15];
-    }
+    let dragging = null;
     surface.addEventListener("pointerdown", event => {
         surface.setPointerCapture(event.pointerId);
-        if (mode !== "record") mode = "live";
-        loopButton.textContent = "Loop the dance";
-        move(event);
+        dragging = { id: event.pointerId, x: event.clientX, moved: 0 };
     });
-    surface.addEventListener("pointermove", event => { if (surface.hasPointerCapture(event.pointerId)) move(event); });
-    recordButton.addEventListener("click", toggleRecord);
-    replayButton.addEventListener("click", replay);
-    loopButton.addEventListener("click", toggleLoop);
-    document.querySelector("#demo").addEventListener("click", playDemo);
-    setupVr().catch(() => { vrButton.hidden = true; });
+    surface.addEventListener("pointermove", event => {
+        if (dragging?.id !== event.pointerId) return;
+        const dx = event.clientX - dragging.x;
+        dragging.moved += Math.abs(dx);
+        dragging.x = event.clientX;
+        stage.rotation.y += dx * 0.008;
+    });
+    surface.addEventListener("pointerup", event => {
+        if (dragging?.id === event.pointerId && dragging.moved < 6) nextPalette();
+        dragging = null;
+    });
+    paletteButton?.addEventListener("click", nextPalette);
+    toggleButton?.addEventListener("click", togglePause);
+    setupVr().catch(() => { if (vrButton) vrButton.hidden = true; });
     const pollGamepad = readGamepad();
-    renderer.setAnimationLoop((now, frame) => {
+    renderer.setAnimationLoop(now => {
         for (const input of vrInputs) input.update();
         const pad = !renderer.xr.isPresenting && pollGamepad();
         if (pad) {
-            const [x, y] = pad.axes;
-            if (x || y) {
-                if (mode !== "record") mode = "live";
-                loopButton.textContent = "Loop the dance";
-                desktopHand = [x, 1.525 - y * 1.125, 0.15];
-            }
-            if (pad.pressed[0]) toggleRecord();
-            else if (pad.pressed[2]) replay();
-            else if (pad.pressed[3]) toggleLoop();
+            if (Math.abs(pad.axes[0]) > 0.1) stage.rotation.y += pad.axes[0] * 0.03;
+            if (pad.pressed[0]) togglePause();
+            else if (pad.pressed[2] || pad.pressed[3]) nextPalette();
         }
-        updateDancer(now, frame, renderer.xr);
+        updateFigures(now);
         renderer.render(scene, camera);
     });
 } catch {
     status.textContent = "WebGL is unavailable. The original Racket demo is linked below.";
-    recordButton.disabled = true;
-    document.querySelector("#demo").disabled = true;
+    if (paletteButton) paletteButton.disabled = true;
+    if (toggleButton) toggleButton.disabled = true;
 }

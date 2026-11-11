@@ -58,7 +58,8 @@ for (let i = 0; i < 550; i++) {
 }
 const stars = new T.BufferGeometry();
 stars.setAttribute("position", new T.Float32BufferAttribute(starCoords, 3));
-scene.add(new T.Points(stars, new T.PointsMaterial({ color: 0x9eb6c4, size: 0.04 })));
+const starPoints = new T.Points(stars, new T.PointsMaterial({ color: 0x9eb6c4, size: 0.04 }));
+scene.add(starPoints);
 
 const ship = new T.Group();
 const hull = new T.Mesh(new T.ConeGeometry(0.095, 0.29, 4), new T.MeshStandardMaterial({ color: 0xf2c585 }));
@@ -116,8 +117,13 @@ function advanceShip(now) {
     }
 }
 
-export function createOrbitRoom(openExhibit) {
-    const instructions = plaque("Select a planet", "Select again on arrival to enter");
+export function createOrbitRoom(report) {
+    const roomStars = [];
+    for (let i = 0; i < 320; i++) {
+        roomStars.push((i * 157 % 997 / 997 - 0.5) * 9.4, 0.35 + (i * 223 % 991 / 991) * 4.1, (i * 43 % 977 / 977 - 0.5) * 8.6);
+    }
+    stars.setAttribute("position", new T.Float32BufferAttribute(roomStars, 3));
+    const instructions = plaque("Select a planet", "Dispatch the ship in orbit");
     instructions.position.set(0, 2.8, -2.85);
     scene.add(instructions);
     return galleryRoom(scene, {
@@ -126,7 +132,7 @@ export function createOrbitRoom(openExhibit) {
             const hit = pointer.intersectObjects(targets)[0];
             if (!hit) return false;
             const index = hit.object.userData.index;
-            if (index === selected && !route) openExhibit(destinations[index].path);
+            if (index === selected && !route) report?.(`${destinations[index].name} · ${destinations[index].work} is in the Orbital Studio Hall east.`);
             else depart(index);
             return true;
         },

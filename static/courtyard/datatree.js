@@ -34,6 +34,7 @@ scene.add(new T.HemisphereLight(0xffe0b5, 0x87685a, 2.5));
 const bronze = new T.MeshStandardMaterial({ color: 0xa98255, roughness: 0.75 });
 const floor = new T.Mesh(new T.CircleGeometry(5, 48), new T.MeshStandardMaterial({ color: 0x664936 }));
 floor.rotation.x = -Math.PI / 2;
+floor.position.y = 0.012;
 scene.add(floor);
 const plaster = new T.MeshStandardMaterial({ color: 0x804b37, roughness: 0.93 });
 function stonework(width, height, depth, x, y, z, material) {
@@ -247,7 +248,10 @@ function selectTarget(pointer = ray) {
 }
 
 export function createDatatreeRoom() {
-    return galleryRoom(scene, { select: selectTarget });
+    return galleryRoom(scene, {
+        select: selectTarget,
+        canStand: (x, z) => Math.hypot(x, z) <= 4.7 && z > -1.9,
+    });
 }
 
 const vrInputs = [];

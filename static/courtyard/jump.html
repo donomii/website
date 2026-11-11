@@ -8,24 +8,21 @@
 </head>
 <body>
   <main>
-    <div id="viewport" aria-label="Articulated dancer on a stage"></div>
+    <div id="viewport" aria-label="Articulated blocky Racket figures jumping on their own"></div>
     <header>
       <a href="./index.html">← Courtyard</a>
       <h1>Might as well jump</h1>
-      <p>Move, record, and replay a short phrase on the articulated figure.</p>
-      <p id="jump-status" role="status">The figure is playing its built-in jump.</p>
+      <p>The original articulated blocky Racket figures moving and jumping on their own.</p>
+      <p id="jump-status" role="status">Figures jumping on their own.</p>
       <button id="vr" hidden>Enter VR</button>
     </header>
     <section aria-label="Jump controls">
-      <p>Drag to move one hand. In VR, stand facing the stage when you start recording, then move your hands, crouch or take small steps. Squeeze a controller grip or pinch your left hand to record or stop. Pull a trigger or pinch your right hand to start or stop the dance loop.</p>
-      <p>Gamepad · Left stick poses the hand. A or Cross records or stops, X or Square replays, and Y or Triangle toggles the dance loop.</p>
-      <button id="record">Record movement</button>
-      <button id="replay" disabled>Replay recording</button>
-      <button id="loop" disabled>Loop the dance</button>
-      <button id="demo">Play built-in jump</button>
+      <p>Drag to turn the view or click the figures to cycle the original color pairs.</p>
+      <button id="palette">Switch colors</button>
+      <button id="toggle">Pause movement</button>
       <a href="/projects/jump/index.html">Original Racket demo ↗</a>
     </section>
   </main>
-  <script type="module" src="./jump.js"></script>
+  <script type="module" src="./jump.js?v=racket-models"></script>
 </body>
 </html>

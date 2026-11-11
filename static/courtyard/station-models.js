@@ -198,7 +198,7 @@ export function stationModels(scene) {
             highlight.position.copy(selected);
             for (const view of palette) view.rim.material.color.setHex(view.type === type ? 0xffd887 : 0x354d58);
             root.updateMatrixWorld(true);
-            const origin = root.localToWorld(selected.clone());
+            const origin = root.position.clone().addScaledVector(selected, scale);
             for (const view of portViews) {
                 const neighbor = selected.clone().add(view.direction);
                 const target = positions.findIndex(position => position.equals(neighbor));
@@ -214,7 +214,7 @@ export function stationModels(scene) {
         },
         animate: drawCrew,
         hit(ray) {
-            scene.updateMatrixWorld(true);
+            (root.parent ?? scene).updateMatrixWorld(true);
             const hits = ray.intersectObjects([...Object.values(modules).filter(mesh => mesh.count), ...targetMeshes], false);
             const hit = hits.find(candidate => visible(candidate.object));
             if (!hit) return undefined;

@@ -14,9 +14,10 @@ export function createAsteroidRoom(report = () => {}) {
     const stars = new Float32Array(600);
     for (let index = 0; index < stars.length; index += 3) {
         const angle = index * 2.39996;
-        stars[index] = Math.sin(angle) * (12 + index % 17);
-        stars[index + 1] = 3 + index % 31 / 2;
-        stars[index + 2] = Math.cos(angle) * (12 + index % 17);
+        const r = 3.2 + (index % 7) * 0.35;
+        stars[index] = Math.sin(angle) * r;
+        stars[index + 1] = 0.6 + (index % 17) * 0.24;
+        stars[index + 2] = Math.cos(angle) * r - 0.5;
     }
     const sky = new T.BufferGeometry();
     sky.setAttribute("position", new T.BufferAttribute(stars, 3));

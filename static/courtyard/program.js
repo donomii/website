@@ -95,9 +95,11 @@ reset.addEventListener("click", () => {
 
 export async function createProgramRoom() {
     editor.value = (await exhibitDocument("./program.html")).querySelector("#program").value;
+    plinth.position.y = 0.16;
     buildMachine();
     return galleryRoom(scene, {
         actions: [["Step", () => step.click()], ["Run", () => run.click()], ["Reset", () => reset.click()]],
+        canStand: (x, z) => Math.hypot(x, z) > 1.85,
         update(now) { plinth.rotation.y = 0.24 + Math.sin(now / 2800) * 0.35; },
     });
 }

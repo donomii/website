@@ -115,7 +115,7 @@ export function asteroidModels(scene) {
             });
         },
         hit(ray) {
-            scene.updateMatrixWorld(true);
+            (board.object.parent ?? scene).updateMatrixWorld(true);
             return ray.intersectObjects(targets, false).find(hit => {
                 for (let object = hit.object; object; object = object.parent) {
                     if (!object.visible) return false;

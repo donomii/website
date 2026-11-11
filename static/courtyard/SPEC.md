@@ -33,8 +33,8 @@ Desktop clicks, controller triggers and pinches select physical targets;
 Space and ordinary gamepad A/Cross select the crosshair. Walking and floor
 teleportation stay outside the platform and inside the hangar. Counts and
 results remain in the closed menu; no floating instruction panel appears.
-The pale doorway or menu Return exits. Re-entry in this tab retains the
-graph and pauses/resumes crew traversal without advancing while away.
+Walk back through the East Space Hall doorway to leave. Re-entry or looking
+away pauses/resumes crew traversal without advancing while inactive.
 Reload begins a new station. The 2D game remains a separate session.
 
 Art Deco salon is available in the destination menu and through the northeast
@@ -83,7 +83,7 @@ The map conversion bench accepts newline-separated unnamed GeoJSON Point feature
 
 Pocket Bonsai Foundry interprets a subset of the Pocket Bonsai turtle vocabulary to generate a 3D solid. Edit the whitespace-separated replacement for X, choose zero to four generations, and select Build solid. F and remaining X draw a branch and advance. Brackets save or restore the position, orientation and size. Y/y, P/p and R/r rotate around local axes and s shrinks subsequent steps. The build takes the voxel union of rounded branches on a grid of up to 58 cells per axis, then displays only the exposed voxel faces. It reports branch and occupied voxel counts. Invalid rules leave the previous model visible. Drag the stage to orbit the result.
 
-The Jump stage reinterprets the original articulated Racket figure in WebGL. Play built-in jump shows a jump and knee bend. Drag on the desktop stage to pose the figure's right hand. In immersive VR, controller or wrist poses move the figure's hands. Headset height drives crouch and jump, and small physical steps move the whole figure horizontally. Recording calibrates position and horizontal heading from the first tracked headset pose. The figure follows steps along that heading, up to 0.65 meters in either direction on each axis. If a hand loses tracking, keep its last pose. While headset tracking is unavailable, hold the displayed pose and skip recording samples. Start or stop a recording with Record movement or the VR grip. Capture up to 12 seconds at no more than 30 samples per second, keep the latest phrase in memory, and interpolate poses on replay. Loop the dance or the VR trigger starts or stops continuous imitation. Resample every 50 ms and compare the first two cycles for candidate periods of at least 600 ms, including horizontal movement in the pose comparison. Use the shortest period with movement in both cycles and low pose mismatch. If no period matches, use the full phrase. Blend the last pose back to the first over up to 180 ms. The original Racket project remains linked.
+The Jump room restores a pair of the original blocky articulated Racket figures in WebGL (`jumping.rkt` box hierarchy with torso, waist, head, upper/lower arms, and hinged knee legs), moving, jumping, and kicking autonomously without a dance-studio stage or recording UI. Visitors can pause or resume motion and cycle the original figure color pairs; the original Racket project remains linked.
 
 The Datatree gallery starts with a bundled sample archive. Branches are rendered as connected 3D plaques. Select a branch to display its children and breadcrumb, select a leaf to read its value, or select Up to return to the parent. Containers show three entries per page with Previous and Next controls. Desktop visitors may click plaques or use the corresponding HTML buttons, including when WebGL is unavailable. In immersive VR, point and select a plaque with a controller.
 
@@ -93,30 +93,51 @@ Open local ZIP reads a chosen file in browser memory. No data leaves the browser
 
 The portfolio homepage links to a walkable Roman courtyard. The gallery has a tiled floor, arcades, planters, benches and a fountain. The first wall exhibits are Entirety, JavaScript Raymarcher, Stars & Ships and Creatures. They link to the existing projects. Other candidates in the portfolio inventory include L-World, Mona Lisa Overdraw, Crawl of the Beholder, Pocket Bonsai, Datatree and Jump.
 
-Drag on the scene to look around and use WASD or arrow keys to walk. Choose an exhibit in the navigation strip to jump to it. Close to an exhibit, show its summary and the link to the project. Until approached, each wall display shows a procedural mosaic. Load its existing project preview only when a visitor approaches or jumps to it. Keep project links usable when WebGL is unavailable.
+Drag on the scene to look around (grab-style pan axes) and hold the right mouse button or use WASD or arrow keys to walk. Choose an exhibit in the navigation strip to jump to it. Close to an exhibit, show its summary and the link to the project. Until approached, each wall display shows a procedural mosaic. Load its existing project preview only when a visitor approaches or jumps to it. Keep project links usable when WebGL is unavailable.
 
-On a browser that supports immersive WebXR, offer Enter VR. The headset supplies the view pose. The courtyard, Datatree, Orbit, and Jump show tracked controller models and, when the headset grants hand tracking, show the tracked joints of each hand. Select by pointing and pulling the trigger or pinching. In Jump, the wrist can pose the figure's hand, the left pinch toggles recording, and the right pinch toggles the dance loop.
+On a browser that supports immersive WebXR, offer Enter VR. The headset supplies the view pose. The courtyard, Datatree, Orbit, and Jump show tracked controller models and, when the headset grants hand tracking, show the tracked joints of each hand. Select by pointing and pulling the trigger or pinching.
 
-Enter VR once for the courtyard and its rooms. Walk into a labeled doorway or select it to load the room on demand in the same renderer and session. The camera rig, movement controls, hand tracking, and pointing inputs move into the room together. Select Return or approach the exit to return to the doorway. Datatree's sample archive, Jump's recording and playback controls, the map conversion sample, Pocket Bonsai's generation controls, Zipper's sample program, and Themelab's three themes are interactive in their rooms. In Stars & Ships, select a destination to dispatch the ship. Select it again after arrival to enter its room and use Return to come back to the chart. The L-World workshop renders the original default turtle program as spatial panels using its local textures and simplified shader materials. Its full editor remains available through its separate link. Local file selection, downloads, and full text editors remain in the standalone exhibits.
+Enter VR once for the courtyard and its connected rooms. Walk or teleport
+through open, labeled doorways to load adjacent rooms on demand in one unified
+scene with the same renderer, camera rig, hand tracking, and pointing inputs.
+When looking away from a room or courtyard exhibit (or entering another wing),
+heavy exhibit contents pause and fade out cleanly while architectural walls
+remain solid; looking back fades them in and resumes. Datatree's sample archive,
+Jump's recording and playback controls, the map conversion sample, Pocket
+Bonsai's generation controls and Zipper's sample program are interactive
+directly inside their rooms. L-World renders its spatial panels workshop
+alongside its separate full-editor link. Local file selection, downloads, and
+full text editors remain in the standalone exhibits.
 
-Movement help is available in the on-demand Controls section. No control sign appears automatically inside VR. The left thumbstick moves at up to 1.7 meters per second relative to headset direction. The right stick turns 30 degrees per push and must return toward center before turning again. With one thumbstick, use it to move. Point at the courtyard floor and select to teleport within the walking bounds, outside the fountain. Point at a wall exhibit, its floor marker, or a doorway and select to visit it. Walking and turning also work in the relief maps, riverbank, and library.
+Movement help is available in the on-demand Controls section. No control sign appears automatically inside VR. The left thumbstick moves at up to 1.7 meters per second relative to headset direction. The right stick turns 30 degrees per push and must return toward center before turning again. With one thumbstick, use it to move. Point at any open floor through a doorway and select to teleport cleanly within walkable bounds (blocked by solid walls). Point at an exhibit panel, gallery painting, or 3D control to select it.
 
-Outside immersive VR, accept gamepads that the browser maps to its standard layout. Press a button to activate a gamepad. In the courtyard, the left stick walks and strafes and the right stick looks around. In the courtyard, Datatree, and Orbit, the D-pad moves focus through visible enabled buttons and links. A or Cross activates the focused control. In Jump, the left stick poses the right hand. A or Cross starts or stops recording, X or Square replays, and Y or Triangle toggles the dance loop. Ignore small stick motion around center and handle button actions once per press.
+Outside immersive VR, accept gamepads that the browser maps to its standard layout. Press a button to activate a gamepad. In the courtyard, the left stick walks and strafes and the right stick looks around. In the courtyard, Datatree, and Orbit, the D-pad moves focus through visible enabled buttons and links. A or Cross activates the focused control. Ignore small stick motion around center and handle button actions once per press.
 
-Entirety has separate Mediterranean and Japan floor rugs made from its existing map images. Select Entirety and choose a rug to jump next to it, or approach either rug on foot. Its map image loads on approach. Walk into its center or select the named Enter map button to load its separate walkable relief. Each relief is stylized and does not encode measured elevations. Return to the same rug by walking into the bronze ring or selecting Return to courtyard. In VR, point and select a rug to enter, the relief to teleport, and the ring to return.
+Entirety's Mediterranean, Japan, Europe, and Africa maps hang as framed
+gallery pictures along the courtyard's West and East walls. Select a map
+from the gallery menu or click/point directly at its frame to stand before it.
 
-The courtyard’s south ring and **Visit the riverbank** button open a separate, demand-loaded riverbank with a walkable path beside the water. Walk into the bronze ring or select **Return to courtyard** to return to the entrance. In VR, select the south ring to enter, the terrain to teleport, or the bronze ring to return.
+The courtyard's open south archway leads directly onto the sunlit Riverbank path
+beside the water. The West Library doorway leads directly into the timbered
+reading hall. The Southwest Gallery connects to the Games Aquarium and L-World
+workshop, and the Northwest Gallery leads to Datatree and Jump. The
+East wings lead to the Art Deco salon, Asteroid Farmer, Accumulative Station,
+and Stars & Ships / Orbital Studio Hall (with Pocket Bonsai, Map conversion, and
+Zipper studio).
 
-**Visit the library** or the second south ring opens a demand-loaded reading room with bookcases and a central aisle. Walk into the bronze ring or select **Return to courtyard** to return next to the library entrance. VR uses the same ring and floor selection controls as the riverbank.
+The Games Aquarium tank pauses simulation when not looked at and preserves
+state when walking away or returning. Select **Run / pause**, **Step when
+paused**, **Reset tank**, or spawn species directly by clicking the tank.
 
-**Enter the Games Aquarium** or the third south ring opens a room with a raised 32×19 tank. Its simulation and meshes load on entry. The tank uses the same rules as the linked 2D aquarium. Round green builders raise walls, amber cubes break them, and pink cones hunt builders. A caught builder shrinks until its stun ends. The board shows the current tick, creature count, walls built and broken, and catches.
+Visiting Creatures loads the animated Khronos Fox and Quaternius Bunny, pausing
+and fading out when not viewed or when exploring other wings.
 
-Select **Run / pause** to stop or restart the tank. **Step when paused** advances one tick, and **Reset tank** restores the initial layout. Choose Builder, Breaker, or Hunter, then select an empty cell to place one. The board reports the result, including occupied cells and the 40-creature limit. Desktop clicks, controller triggers, and tracked pinches use the same tank and plaques. You can walk around the tank and teleport to the surrounding floor. Returning to the courtyard suspends updates and preserves the tank for re-entry in this tab. The 2D link remains available without WebGL.
+The Raymarcher carving pedestal has two hovering UFOs that zap and destroy
+individual outer blocks one at a time on a half-second cadence around a tight
+stone block hugging the hidden torus, pausing and fading out when looking away,
+and can be restarted by clicking the block, pedestal, **Carve stone** plaque, or
+menu button.
 
-The Themelab room and standalone depth studies page offer courtyard window, iron grate, and bookshelf alley scenes. In the room, select a scene or camera control plaque by clicking or pointing at it. The exhibit renders on a fixed display with its own viewpoint. Mouse, controller, and headset input move around the gallery as usual. **Use camera tracking** requests video and uses native face detection when available. Otherwise it loads MediaPipe's face detector on demand. Only the visible face position moves the depth viewpoint through the fixed foreground frame. The view returns to center when the face leaves the frame, camera access fails, or tracking stops. Frames stay in the tab and capture stops on room or page exit.
-
-Visiting Creatures loads the existing demo's animated Khronos Fox and Quaternius Bunny on demand. They patrol the entrance side of the courtyard and pause to face each other when they meet. Call the creatures sends them toward the visitor's side of the patrol area for a short visit. The rest of the courtyard stays available if a creature fails to load.
-
-The Raymarcher exhibit loads a stone block when approached. Select Carve the stone to start over with a fresh block. In VR, select the exhibit again after arriving to start. Rays approach from all six faces, sphere-trace the signed distance to a torus, and remove voxels before the first hit. The display shows the rays cast and the number of chips removed. The original JavaScript Raymarcher remains linked from the exhibit.
-
-Letter fitting loads a reference arch and an empty reconstruction. The Reference shape picker switches between Arch and Stepped pyramid and clears the fit. Select Fit the shape or select the VR marker again to start. The optimizer samples positions, scale, extrusion depth and a quarter turn for six voxel letters. Every 480 candidates, add the one that most reduces the number of missing and excess voxels. Stop when a batch finds no improvement, error reaches zero, or 24 letters have been placed. Show the accepted letters, initial and current error, candidates scored, longest CPU optimization step, and mean browser animation frame interval during the run. Stop scheduling more candidates for the current frame after 2 ms or 36 candidates. The CPU step excludes rendering and a single candidate may carry it past the threshold.
+Letter fitting loads an Arch / Stepped pyramid reference bench on the courtyard's
+east side, pausing and fading out when not viewed, and can be started or
+switched via the bench's 3D plaques or gallery menu.

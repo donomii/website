@@ -37,7 +37,11 @@ export function createLibrary() {
             }
         }
     }
-    for (const z of [-13, 13]) box(14, 5, 0.3, 0, 2.5, z, plaster);
+    box(14, 0.25, 26, 0, 5.1, 0, wood);
+    box(14, 5, 0.3, 0, 2.5, -13, plaster);
+    box(5.65, 5, 0.3, -4.175, 2.5, 13, plaster);
+    box(5.65, 5, 0.3, 4.175, 2.5, 13, plaster);
+    box(2.7, 1.7, 0.3, 0, 4.15, 13, plaster);
     for (const z of [-10, -6, -2, 2, 6, 10]) box(14, 0.25, 0.26, 0, 4.65, z, wood);
     for (const x of [-2.8, 2.8]) {
         box(1.5, 0.13, 4.8, x, 0.98, -5, wood);
@@ -48,6 +52,8 @@ export function createLibrary() {
         new T.MeshStandardMaterial({ color: 0xf4bb73, emissive: 0x7a3411 }));
     exit.position.set(0, 1.1, 12);
     scene.add(exit);
-    return { scene, surface, exit, height: () => 0, limitX: 6.55, limitZ: 12.65 };
+    const canStand = (x, z) => Math.abs(x) <= 5.05 && Math.abs(z) <= 12.5 &&
+        !(Math.abs(Math.abs(x) - 2.8) < 1.0 && Math.abs(z + 5) < 2.65);
+    return { scene, surface, exit, canStand, height: () => 0, limitX: 6.55, limitZ: 12.65 };
 }
 
