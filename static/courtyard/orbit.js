@@ -178,43 +178,53 @@ function buildShipGeometry() {
 }
 
 function starLabelSprite(name, owner, modelScale = 1) {
+    const width = 400;
+    const height = 160;
+    const anchorX = 16;
+    const anchorY = 144;
+    const elbowX = 104;
+    const elbowY = 56;
+    const textX = 114;
     const canvas = document.createElement("canvas");
-    canvas.width = 320;
-    canvas.height = 84;
+    canvas.width = width;
+    canvas.height = height;
     const ctx = canvas.getContext("2d");
     const hex = `#${PLAYERS[owner].color.toString(16).padStart(6, "0")}`;
-    ctx.font = "bold 32px system-ui, sans-serif";
+    ctx.font = "bold 30px system-ui, sans-serif";
     ctx.textAlign = "left";
-    const textWidth = Math.min(244, ctx.measureText(name).width);
-    const lineEnd = Math.min(312, 58 + textWidth + 8);
+    const textWidth = Math.min(270, ctx.measureText(name).width);
+    const lineEnd = Math.min(width - 8, textX + textWidth + 6);
 
     ctx.strokeStyle = "rgba(255,255,255,0.88)";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(8, 72);
-    ctx.lineTo(42, 48);
-    ctx.lineTo(lineEnd, 48);
+    ctx.moveTo(anchorX, anchorY);
+    ctx.lineTo(elbowX, elbowY);
+    ctx.lineTo(lineEnd, elbowY);
     ctx.stroke();
 
     ctx.fillStyle = hex;
     ctx.beginPath();
-    ctx.arc(42, 48, 5, 0, Math.PI * 2);
+    ctx.arc(elbowX, elbowY, 5, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = "#08101c";
-    ctx.fillText(name, 52, 38, 256);
-    ctx.fillText(name, 54, 38, 256);
-    ctx.fillText(name, 53, 37, 256);
-    ctx.fillText(name, 53, 39, 256);
+    ctx.fillText(name, textX - 1, 44, 270);
+    ctx.fillText(name, textX + 1, 44, 270);
+    ctx.fillText(name, textX, 43, 270);
+    ctx.fillText(name, textX, 45, 270);
     ctx.fillStyle = "#f2f6fa";
-    ctx.fillText(name, 53, 38, 256);
+    ctx.fillText(name, textX, 44, 270);
 
     const texture = new T.CanvasTexture(canvas);
     texture.colorSpace = T.SRGBColorSpace;
     const mat = new T.SpriteMaterial({ map: texture, transparent: true, opacity: 0.92, depthWrite: false });
     const sprite = new T.Sprite(mat);
-    sprite.scale.set(0.56 * modelScale, 0.147 * modelScale, 1);
-    sprite.position.set(0.27 * modelScale, 0.14 * modelScale, 0);
+    sprite.scale.set(0.68 * modelScale, 0.272 * modelScale, 1);
+    // Anchor bottom-left end of the stem at the exact star center (0, 0, 0)
+    // so screen-space billboarding pivots the entire callout around the star from any angle.
+    sprite.center.set(anchorX / width, (height - anchorY) / height);
+    sprite.position.set(0, 0, 0);
     return sprite;
 }
 
