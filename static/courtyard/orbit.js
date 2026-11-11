@@ -1,6 +1,6 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
-import { gamepadMenu, readGamepad } from "./gamepad.js";
-import { galleryRoom } from "./gallery-room.js";
+import { gamepadMenu, readGamepad } from "./gamepad.js?v=20261111";
+import { galleryRoom } from "./gallery-room.js?v=20261111";
 
 const viewport = document.querySelector("#viewport");
 const voyage = document.querySelector("#voyage");
@@ -253,6 +253,7 @@ function createSectorSimulation({
     minSpacing = 1.05,
     modelScale = 1,
     speedScale = 1,
+    samplePosition = null,
     navElement = null,
     onSelect = null,
 } = {}) {
@@ -293,11 +294,14 @@ function createSectorSimulation({
     let selectedShip = -1;
     let lastNow = 0;
 
-    const randomVolumePos = out => out.set(
-        (Math.random() * 2 - 1) * halfX,
-        minY + Math.random() * (maxY - minY),
-        (Math.random() * 2 - 1) * halfZ,
-    );
+    const randomVolumePos = (out, index = -1) => {
+        if (samplePosition) return samplePosition(out, index);
+        return out.set(
+            (Math.random() * 2 - 1) * halfX,
+            minY + Math.random() * (maxY - minY),
+            (Math.random() * 2 - 1) * halfZ,
+        );
+    };
 
     const chooseOtherStar = excludeIndex => {
         if (stars.length <= 1) return 0;
@@ -360,10 +364,10 @@ function createSectorSimulation({
         const candidate = new T.Vector3();
 
         for (let i = 0; i < starCount; i++) {
-            let bestPos = randomVolumePos(new T.Vector3());
+            let bestPos = randomVolumePos(new T.Vector3(), i);
             let gap = minSpacing;
             for (let attempt = 0; attempt < 60; attempt++) {
-                randomVolumePos(candidate);
+                randomVolumePos(candidate, i);
                 if (attempt > 35) gap = minSpacing * 0.7;
                 if (stars.every(other => other.group.position.distanceTo(candidate) >= gap)) {
                     bestPos.copy(candidate);
@@ -509,10 +513,8 @@ function createSectorSimulation({
         if (selectedShip >= 0) syncRouteLine();
     };
 
-    const selectRay = raycaster => {
-        const hits = raycaster.intersectObjects(targets, false);
-        if (!hits.length) return false;
-        const { starIndex, shipIndex } = hits[0].object.userData;
+    const selectHit = hit => {
+        const { starIndex, shipIndex } = hit.object.userData;
         if (typeof starIndex === "number") {
             selectStar(starIndex);
             return true;
@@ -524,41 +526,103 @@ function createSectorSimulation({
         return false;
     };
 
+    const selectRay = raycaster => {
+        const hits = raycaster.intersectObjects(targets, false);
+        return hits.length ? selectHit(hits[0]) : false;
+    };
+
     const resetClock = () => {
         lastNow = performance.now();
     };
 
     populate();
 
-    return { group, targets, stars, ships, update, selectRay, selectStar, resetClock };
+    return { group, targets, stars, ships, update, selectRay, selectHit, selectStar, resetClock };
 }
 
-export function createStarsExhibit(parentScene, x, z, report) {
-    const sector = createSectorSimulation({
+export function createStarsExhibit(parentScene, anchorX, anchorZ, report) {
+    const inRoofOctagon = (rx, rz, apothem = 12.2) =>
+        Math.max(Math.abs(rx), Math.abs(rz), (Math.abs(rx) + Math.abs(rz)) * Math.SQRT1_2) <= apothem;
+
+    const sampleRoofPos = (out, index) => {
+        if (index >= 0 && index < 4) {
+            return out.set(
+                anchorX + (Math.random() * 2 - 1) * 2.3,
+                4.0 + Math.random() * 1.1,
+                anchorZ + (Math.random() * 2 - 1) * 2.1,
+            );
+        }
+        let rx = 0;
+        let rz = 0;
+        for (let tries = 0; tries < 24; tries++) {
+            rx = (Math.random() * 2 - 1) * 12.4;
+            rz = (Math.random() * 2 - 1) * 12.4;
+            if (inRoofOctagon(rx, rz, 12.4)) break;
+        }
+        const radial = Math.min(1, Math.hypot(rx, rz) / 13.0);
+        const minDomeY = 4.5 + (1 - radial * radial) * 1.2;
+        const maxDomeY = 9.3 - radial * 1.35;
+        return out.set(rx, minDomeY + Math.random() * (maxDomeY - minDomeY), rz);
+    };
+
+    const onSectorSelect = ({ kind, star, ship, detail }) => {
+        if (kind === "star") report?.(`${detail} · Routing ${ship?.name ?? "craft"}`);
+        else report?.(detail);
+    };
+
+    // Original walk-around Stars & Ships display in the courtyard + overhead roof constellation.
+    const floorSector = createSectorSimulation({
         starCount: 20,
         shipCount: 20,
-        halfX: 1.75,
-        minY: 0.85,
-        maxY: 3.10,
-        halfZ: 1.55,
-        minSpacing: 0.62,
-        modelScale: 0.72,
-        speedScale: 0.68,
-        onSelect({ kind, star, ship, detail }) {
-            if (kind === "star") report?.(`${detail} · Routing ${ship?.name ?? "craft"}`);
-            else report?.(detail);
-        },
+        halfX: 2.35,
+        minY: 0.82,
+        maxY: 3.55,
+        halfZ: 2.15,
+        minSpacing: 0.94,
+        modelScale: 0.86,
+        speedScale: 0.85,
+        onSelect: onSectorSelect,
     });
-    sector.group.position.set(x, 0, z);
-    parentScene.add(sector.group);
+    floorSector.group.position.set(anchorX, 0, anchorZ);
+
+    const roofSector = createSectorSimulation({
+        starCount: 34,
+        shipCount: 28,
+        halfX: 12.4,
+        minY: 4.5,
+        maxY: 9.3,
+        halfZ: 12.4,
+        minSpacing: 1.55,
+        modelScale: 0.88,
+        speedScale: 0.78,
+        samplePosition: sampleRoofPos,
+        onSelect: onSectorSelect,
+    });
+
+    const exhibitGroup = new T.Group();
+    exhibitGroup.add(floorSector.group, roofSector.group);
+
+    const targetOwner = new Map();
+    const allTargets = [];
+    for (const sector of [floorSector, roofSector]) {
+        for (const target of sector.targets) {
+            targetOwner.set(target, sector);
+            allTargets.push(target);
+        }
+    }
+
+    parentScene.add(exhibitGroup);
     return {
-        group: sector.group,
-        targets: sector.targets,
+        group: exhibitGroup,
+        targets: allTargets,
         update(dt) {
-            sector.update(performance.now(), dt);
+            const now = performance.now();
+            floorSector.update(now, dt);
+            roofSector.update(now, dt);
         },
         select(ray) {
-            return sector.selectRay(ray);
+            const hits = ray.intersectObjects(allTargets, false);
+            return hits.length ? targetOwner.get(hits[0].object).selectHit(hits[0]) : false;
         },
     };
 }

@@ -1,8 +1,8 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
-import { ArchiveEntry, fileLimit, parseArchive } from "./archive.js";
-import { gamepadMenu, readGamepad } from "./gamepad.js";
-import { attachVrInput, vrSessionOptions } from "./xr-input.js";
-import { galleryRoom } from "./gallery-room.js";
+import { ArchiveEntry, fileLimit, parseArchive } from "./archive.js?v=20261111";
+import { gamepadMenu, readGamepad } from "./gamepad.js?v=20261111";
+import { attachVrInput, vrSessionOptions } from "./xr-input.js?v=20261111";
+import { galleryRoom } from "./gallery-room.js?v=20261111";
 
 const archive = {
     "maps.zip": {

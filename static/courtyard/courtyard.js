@@ -1,11 +1,14 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
-import { composeExhibitsRoom } from "./compose-room.js";
-import { gamepadMenu, readGamepad } from "./gamepad.js";
-import { attachVrInput, thumbsticks, vrSessionOptions } from "./xr-input.js";
+import { composeExhibitsRoom } from "./compose-room.js?v=20261111";
+import { gamepadMenu, readGamepad } from "./gamepad.js?v=20261111";
+import { attachVrInput, thumbsticks, vrSessionOptions } from "./xr-input.js?v=20261111";
 import {
     ADJACENT, DOOR_ENTRANCES, OCTAGON_APOTHEM, ZONES, ZONE_MAP,
     buildArchitecture, faceFrame, inDoorway, inOctagon, roomLocalToWorld, worldToRoomLocal, zoneAt,
-} from "./world-layout.js";
+} from "./world-layout.js?v=20261111";
+
+const ASSET_VERSION = "20261111";
+const mod = path => `${path}?v=${ASSET_VERSION}`;
 
 const viewport = document.querySelector("#viewport");
 const status = document.querySelector("#status");
@@ -40,7 +43,7 @@ const ROOM_SPECS = [
         menuLabel: "Riverbank",
         focalLocal: [0, 1.0, -3.0],
         hint: "Riverbank · Follow the sandy path through the sunlit trees.",
-        load: () => import("./riverbank.js").then(m => m.createRiverbank()),
+        load: () => import(mod("./riverbank.js")).then(m => m.createRiverbank()),
     },
     {
         id: "library",
@@ -48,7 +51,7 @@ const ROOM_SPECS = [
         menuLabel: "Library & Datatree",
         focalLocal: [0, 1.6, -2.5],
         hint: "Library & Datatree · Browse the reading hall or explore the Datatree archive wall.",
-        load: () => import("./library.js").then(m => m.createLibrary()),
+        load: () => import(mod("./library.js")).then(m => m.createLibrary()),
     },
     {
         id: "games",
@@ -70,7 +73,7 @@ const ROOM_SPECS = [
                     z: -1.5,
                     rotY: Math.PI / 2,
                     scale: 0.72,
-                    load: () => import("./aquarium-room.js").then(m => m.createAquariumRoom()),
+                    load: () => import(mod("./aquarium-room.js")).then(m => m.createAquariumRoom()),
                 },
                 {
                     id: "jump",
@@ -81,7 +84,7 @@ const ROOM_SPECS = [
                     z: -5.6,
                     rotY: 0,
                     scale: 0.85,
-                    load: () => import("./jump.js?v=racket-models").then(m => m.createJumpRoom()),
+                    load: () => import(mod("./jump.js")).then(m => m.createJumpRoom()),
                 },
                 {
                     id: "lworld",
@@ -92,7 +95,7 @@ const ROOM_SPECS = [
                     z: -1.4,
                     rotY: -Math.PI / 2,
                     scale: 0.64,
-                    load: () => import("./lworld-gallery.js").then(m => m.createLWorldRoom()),
+                    load: () => import(mod("./lworld-gallery.js")).then(m => m.createLWorldRoom()),
                 },
             ],
         }),
@@ -102,8 +105,8 @@ const ROOM_SPECS = [
         buttonId: "art-deco-door",
         menuLabel: "Art Deco salon",
         focalLocal: [0, 1.6, -1.6],
-        hint: "Art Deco salon · Stroll around the celestial armillary sculpture.",
-        load: () => import("./art-deco.js").then(m => m.createArtDecoRoom()),
+        hint: "Art Deco salon · Stroll past L-system brass sunbursts and craft 3D designs on the east L-system panel.",
+        load: () => import("./art-deco.js?v=20261112").then(m => m.createArtDecoRoom()),
     },
     {
         id: "workshop",
@@ -125,7 +128,7 @@ const ROOM_SPECS = [
                     z: -1.4,
                     rotY: Math.PI / 2,
                     scale: 0.78,
-                    load: () => import("./solids.js").then(m => m.createSolidsRoom()),
+                    load: () => import(mod("./solids.js")).then(m => m.createSolidsRoom()),
                 },
                 {
                     id: "program",
@@ -136,7 +139,7 @@ const ROOM_SPECS = [
                     z: -5.5,
                     rotY: 0,
                     scale: 0.9,
-                    load: () => import("./program.js").then(m => m.createProgramRoom()),
+                    load: () => import(mod("./program.js")).then(m => m.createProgramRoom()),
                 },
                 {
                     id: "converter",
@@ -147,7 +150,7 @@ const ROOM_SPECS = [
                     z: -1.5,
                     rotY: -Math.PI / 2,
                     scale: 0.68,
-                    load: () => import("./converter.js").then(m => m.createConverterRoom()),
+                    load: () => import(mod("./converter.js")).then(m => m.createConverterRoom()),
                 },
             ],
         }),
@@ -159,7 +162,7 @@ const ROOM_SPECS = [
         focalLocal: [0, 1.6, -1.4],
         projectHref: "../../projects/games/accumulative-station/index.html",
         hint: "Space Hangar · Build on Accumulative Station (left) or tend crops on Asteroid Farmer (right).",
-        load: () => import("./space-room.js").then(m => m.createSpaceRoom(msg => {
+        load: () => import(mod("./space-room.js")).then(m => m.createSpaceRoom(msg => {
             if (activeZoneId === "space") status.textContent = msg;
         })),
     },
@@ -204,17 +207,17 @@ const FIT_POS = [6.4, -3.5];
 const exhibits = [
     { x: galleryMaps[0].x, z: galleryMaps[0].z, image: null, note: "Entirety · Explore Mediterranean, Japan, Europe, and Africa gallery maps on the south-west and south-east walls." },
     { x: CARVE_POS[0], z: CARVE_POS[1], image: null, note: "Raymarcher · Orbiting UFOs zap away the stone block until they reveal a hidden torus." },
-    { x: STARS_POS[0], z: STARS_POS[1], image: null, note: "Stars & Ships · Free-standing 3D starfield with 20 autonomous ships flying between 20 stars." },
+    { x: STARS_POS[0], z: STARS_POS[1], image: null, note: "Stars & Ships · Free-standing 3D stars and ships arching into a living roof over the courtyard." },
     { x: 0, z: 4.2, image: null, note: "Creatures · Fox and Bunny explore the courtyard — call them over to meet them." },
     { x: FIT_POS[0], z: FIT_POS[1], image: null, note: "Letter fitting · Choose a reference shape on the left and reconstruct it with solid letters on the right." },
 ];
 
 const scene = new T.Scene();
-const skyColor = new T.Color(0x9cc5d7);
+const skyColor = new T.Color(0x03050a);
 const riverColor = new T.Color(0xe8c5a5);
 const indoorColor = new T.Color(0x161210);
 const spaceColor = new T.Color(0x060c18);
-const outdoorFog = new T.Fog(0x9cc5d7, 38, 86);
+const outdoorFog = new T.Fog(0x03050a, 54, 112);
 const riverFog = new T.Fog(0xe8c5a5, 36, 80);
 scene.background = skyColor.clone();
 scene.fog = outdoorFog;
@@ -343,9 +346,8 @@ function buildCourtyard() {
     });
     scene.add(tiles);
 
-    // Octagonal Roman peristyle colonnade framing doorways & SW/SE map gallery walls.
+    // Octagonal Roman peristyle columns framing doorways & SW/SE map gallery walls (no crossbars so overhead plaques stay clear).
     const colApothem = 12.6;
-    const colHalf = colApothem * Math.tan(Math.PI / 8);
     const colCornerR = colApothem / Math.cos(Math.PI / 8);
     const doorFaces = new Set(ZONES.filter(z => z.faceIndex !== undefined).map(z => z.faceIndex));
 
@@ -354,17 +356,8 @@ function buildCourtyard() {
         const vx = Math.sin(cornerAngle) * colCornerR;
         const vz = Math.cos(cornerAngle) * colCornerR;
         column(vx, vz);
-        const cap = new T.Mesh(new T.BoxGeometry(0.84, 0.28, 0.84), stone);
-        cap.position.set(vx, 3.54, vz);
-        cap.rotation.y = cornerAngle;
-        scene.add(cap);
 
-        const { nx, nz, tx, tz, theta } = faceFrame(k);
-        const beam = new T.Mesh(new T.BoxGeometry(colHalf * 2 - 0.84, 0.28, 0.9), stone);
-        beam.position.set(nx * colApothem, 3.54, nz * colApothem);
-        beam.rotation.y = theta;
-        scene.add(beam);
-
+        const { nx, nz, tx, tz } = faceFrame(k);
         const colOffsets = doorFaces.has(k) ? [-3.0, 3.0] : [0];
         for (const u of colOffsets) {
             column(nx * colApothem + tx * u, nz * colApothem + tz * u);
@@ -428,6 +421,7 @@ function collectMaterials(root) {
         if (!obj.material) return;
         const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
         for (const mat of mats) {
+            if (mat.userData?.dynamicFade) continue;
             if (!map.has(mat)) map.set(mat, { mat, origTransparent: mat.transparent, origOpacity: mat.opacity ?? 1 });
         }
     });
@@ -551,7 +545,7 @@ function createExhibitFadeState(group, api, focalPos) {
 
 function loadCarving() {
     if (!carvingRequest) {
-        carvingRequest = import("./carving.js").then(async m => {
+        carvingRequest = import(mod("./carving.js")).then(async m => {
             const api = await m.createCarving(scene, CARVE_POS[0], CARVE_POS[1]);
             carvingState = createExhibitFadeState(api.group, api, new T.Vector3(CARVE_POS[0], 1.3, CARVE_POS[1]));
             return carvingState;
@@ -566,7 +560,7 @@ function loadCarving() {
 
 function loadLetterFit() {
     if (!fitRequest) {
-        fitRequest = import("./letter-fit.js").then(m => {
+        fitRequest = import(mod("./letter-fit.js")).then(m => {
             const api = m.createLetterFit(scene, FIT_POS[0], FIT_POS[1]);
             fitState = createExhibitFadeState(api.group, api, new T.Vector3(FIT_POS[0], 1.1, FIT_POS[1]));
             return fitState;
@@ -581,7 +575,7 @@ function loadLetterFit() {
 
 function loadCreatures() {
     if (!creatureRequest) {
-        creatureRequest = import("./creatures.js").then(m => m.createCreatures(scene)).then(api => {
+        creatureRequest = import(mod("./creatures.js")).then(m => m.createCreatures(scene)).then(api => {
             creaturesState = createExhibitFadeState(api.group, api, new T.Vector3(0, 0.5, 4.2));
             return creaturesState;
         }).catch(err => {
@@ -595,10 +589,10 @@ function loadCreatures() {
 
 function loadStarsExhibit() {
     if (!starsRequest) {
-        starsRequest = import("./orbit.js").then(m => m.createStarsExhibit(scene, STARS_POS[0], STARS_POS[1], msg => {
+        starsRequest = import("./orbit.js?v=20261112b").then(m => m.createStarsExhibit(scene, STARS_POS[0], STARS_POS[1], msg => {
             status.textContent = msg;
         })).then(api => {
-            starsState = createExhibitFadeState(api.group, api, new T.Vector3(STARS_POS[0], 1.9, STARS_POS[1]));
+            starsState = createExhibitFadeState(api.group, api, new T.Vector3(0, 5.2, 0));
             return starsState;
         }).catch(err => {
             console.warn("Could not load 3D Stars & Ships exhibit", err);
@@ -791,7 +785,7 @@ function visitExhibit(index) {
         rig.position.set(CARVE_POS[0], 0, CARVE_POS[1] + 3.2);
         loadCarving().then(st => { if (st && !st.api.started) st.api.start(); });
     } else if (index === 2) {
-        rig.position.set(STARS_POS[0], 0, STARS_POS[1] + 3.4);
+        rig.position.set(STARS_POS[0], 0, STARS_POS[1] + 4.4);
         loadStarsExhibit();
     } else if (index === 3) {
         rig.position.set(3.0, 0, 7.6);
@@ -801,9 +795,9 @@ function visitExhibit(index) {
         loadLetterFit();
     }
     yaw = 0;
-    pitch = 0;
+    pitch = index === 2 ? 0.14 : 0;
     pendingVrYaw = 0;
-    camera.rotation.set(0, 0, 0, "YXZ");
+    camera.rotation.set(pitch, yaw, 0, "YXZ");
 }
 
 async function restoreSavedPose(pose) {
@@ -917,8 +911,8 @@ function updateContextUI(zone) {
         isLookedAt(ctxPoint.set(m.x, 2.0, m.z), 0.15, 2.2, 6.0));
     const nearCarve = Math.hypot(CARVE_POS[0] - rig.position.x, CARVE_POS[1] - rig.position.z) < 4.2 &&
         isLookedAt(ctxPoint.set(CARVE_POS[0], 1.3, CARVE_POS[1]), 0.12, 2.2, 5.5);
-    const nearStars = Math.hypot(STARS_POS[0] - rig.position.x, STARS_POS[1] - rig.position.z) < 4.8 &&
-        isLookedAt(ctxPoint.set(STARS_POS[0], 1.9, STARS_POS[1]), 0.12, 2.5, 6.0);
+    const nearStars = viewDir.y > 0.36 || (Math.hypot(STARS_POS[0] - rig.position.x, STARS_POS[1] - rig.position.z) < 5.5 &&
+        isLookedAt(ctxPoint.set(STARS_POS[0], 2.2, STARS_POS[1]), 0.12, 2.5, 6.5));
     const nearFit = Math.hypot(FIT_POS[0] - rig.position.x, FIT_POS[1] - rig.position.z) < 4.0 &&
         isLookedAt(ctxPoint.set(FIT_POS[0], 1.1, FIT_POS[1]), 0.12, 2.2, 5.5);
     const nearCreatures = rig.position.z > 1.5 && Math.hypot(rig.position.x, rig.position.z - 4.4) < 5.0;
@@ -1029,8 +1023,7 @@ function updateRoomsAndExhibits(now, frame, dt, frameMs, renderer) {
     }
 
     if (starsState) {
-        const looking = isLookedAt(starsState.focalWorld, 0.20, 4.5, 30);
-        const active = nearCourtyard && (currentId === "courtyard" ? looking : courtyardDoorLook);
+        const active = nearCourtyard && (currentId === "courtyard" || courtyardDoorLook);
         const nextFade = active ? Math.min(1, starsState.fade + fadeStep) : Math.max(0, starsState.fade - fadeStep);
         applyFade(starsState, nextFade);
         if (active && nextFade > 0.05) starsState.api.update(dt);

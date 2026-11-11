@@ -1,6 +1,6 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
-import { convertPoints } from "./entirety-points.js";
-import { exhibitDocument, galleryRoom } from "./gallery-room.js";
+import { convertPoints } from "./entirety-points.js?v=20261111";
+import { exhibitDocument, galleryRoom } from "./gallery-room.js?v=20261111";
 
 const viewport = document.querySelector("#viewport");
 const standalone = document.querySelector("#points-input") !== null;

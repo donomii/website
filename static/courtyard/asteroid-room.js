@@ -1,8 +1,8 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { act, advance } from "../../projects/games/asteroid-farmer/game.mjs";
 import { loadGame, saveGame } from "../../projects/games/asteroid-farmer/state.mjs";
-import { galleryRoom } from "./gallery-room.js";
-import { asteroidModels, outposts } from "./asteroid-models.js";
+import { galleryRoom } from "./gallery-room.js?v=20261111";
+import { asteroidModels, outposts } from "./asteroid-models.js?v=20261111";
 
 export function createAsteroidRoom(report = () => {}) {
     const scene = new T.Scene();

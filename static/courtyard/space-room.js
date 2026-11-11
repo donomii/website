@@ -2,9 +2,9 @@ import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { connect, createInhabitant, createStation, walk } from "../../projects/games/accumulative-station/station.mjs";
 import { act, advance } from "../../projects/games/asteroid-farmer/game.mjs";
 import { loadGame, saveGame } from "../../projects/games/asteroid-farmer/state.mjs";
-import { asteroidModels, outposts } from "./asteroid-models.js";
-import { stationHangar } from "./station-hangar.js";
-import { stationModels } from "./station-models.js";
+import { asteroidModels, outposts } from "./asteroid-models.js?v=20261111";
+import { stationHangar } from "./station-hangar.js?v=20261111";
+import { stationModels } from "./station-models.js?v=20261111";
 
 /**
  * Shared Space Hangar housing Accumulative Station on the left bay and

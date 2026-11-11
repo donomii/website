@@ -1,6 +1,6 @@
 import { connect, createInhabitant, createStation, walk } from "../../projects/games/accumulative-station/station.mjs";
-import { stationHangar } from "./station-hangar.js";
-import { stationModels } from "./station-models.js";
+import { stationHangar } from "./station-hangar.js?v=20261111";
+import { stationModels } from "./station-models.js?v=20261111";
 
 export function createStationRoom(report = () => {}) {
     const room = stationHangar();

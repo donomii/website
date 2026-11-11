@@ -1,5 +1,5 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
-import { createDecoArchitecture } from "./art-deco-architecture.js";
+import { createDecoArchitecture } from "./art-deco-architecture.js?v=20261112";
 
 export function createArtDecoRoom() {
     const scene = new T.Scene();
@@ -13,8 +13,22 @@ export function createArtDecoRoom() {
     scene.add(warm, fill);
     const room = createDecoArchitecture(scene);
     return {
-        scene, surface: room.surface, exit: room.exit, canStand: room.canStand,
-        height: () => 0, spawnZ: 5.1, limitX: 5.35, limitZ: 7.5,
+        scene,
+        surface: room.surface,
+        exit: room.exit,
+        canStand: room.canStand,
+        aimSelect: true,
+        height: () => 0,
+        spawnZ: 5.1,
+        limitX: 5.35,
+        limitZ: 7.5,
+        select: room.select,
+        contextAt(lx, lz) {
+            if (lx > 1.2 && Math.abs(lz) < 2.8) {
+                return { key: "deco-panel", hint: room.panelSummary(), projectHref: null };
+            }
+            return null;
+        },
         update(now) { room.sculpture.rotation.y = now / 18000; },
     };
 }

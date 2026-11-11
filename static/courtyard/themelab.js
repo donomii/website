@@ -1,5 +1,5 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
-import { galleryRoom } from "./gallery-room.js";
+import { galleryRoom } from "./gallery-room.js?v=20261111";
 
 const viewport = document.querySelector("#scene");
 const select = document.querySelector("#theme");

@@ -1,5 +1,5 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
-import { createDatatreeRoom } from "./datatree.js";
+import { createDatatreeRoom } from "./datatree.js?v=20261111";
 
 export function createLibrary() {
     const scene = new T.Scene();

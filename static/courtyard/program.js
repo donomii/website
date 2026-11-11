@@ -1,6 +1,6 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { Zipper } from "../../projects/languages/zipper/zipper.js";
-import { exhibitDocument, galleryRoom } from "./gallery-room.js";
+import { exhibitDocument, galleryRoom } from "./gallery-room.js?v=20261111";
 
 const viewport = document.querySelector("#viewport");
 const standalone = document.querySelector("#program-status") !== null;

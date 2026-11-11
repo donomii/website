@@ -75,7 +75,7 @@ The 2D game link works without entering the room. Use one game view at a time.
 
 Open the L-World editor loads the existing WebGL editor in an interactive same-origin frame. The frame retains its command list, texture and shader controls, editable L-system line and original camera interaction. The editor page's Scene commands field starts with the original editor value. Apply to world checks balanced brackets, then forwards the whitespace-separated commands to the original renderer's input. The editor page links back to the courtyard and to the original standalone page.
 
-The Stars & Ships orbital gallery reinterprets the original space chart in 3D and uses planet names from its existing dataset. Click a planet or moon or choose it from the destination list to dispatch a ship. Selecting another destination reroutes the ship from its current position. After arrival, open the attached map conversion, solid modelling, or Zipper exhibit. The standalone chart links directly to the orbital gallery in the courtyard for VR. The original Processing game remains linked.
+The Stars & Ships sector reinterprets the original 2D Processing star chart (`stars.pde` and `datasets.js`) as a free-standing 3D volume of 20 spiked 3D stars and 20 delta-winged 3D ships colored for Neutral, Bob, Tom, and Harry. Ships autonomously turn and fly between randomly chosen stars throughout the 3D space. Visitors can walk through the volume in VR, orbit on the standalone page, or click a star or ship to inspect and reroute it. The original Processing game remains linked.
 
 Programmable sculpture runs the existing Zipper interpreter. The default program defines a pillar and builds a bridge. Step performs one rewrite, Run continues to completion, and Reset sculpture clears the blocks and rewinds the current program. Executing an edited program starts from an empty plinth. The only host action is block(x, y, z, colour), which places or recolours a cell using integer x/z from −3 to 3, y from 0 to 5, and bronze, gold or teal. The host accepts typed literal arguments only. Each run is bounded by 240 rewrites and 6,000 source characters. The status reports rewrites, blocks and interpreter errors.
 
@@ -117,13 +117,28 @@ Entirety's Mediterranean, Japan, Europe, and Africa maps hang as framed
 gallery pictures along the courtyard's West and East walls. Select a map
 from the gallery menu or click/point directly at its frame to stand before it.
 
-The courtyard's open south archway leads directly onto the sunlit Riverbank path
-beside the water. The West Library doorway leads directly into the timbered
-reading hall. The Southwest Gallery connects to the Games Aquarium and L-World
-workshop, and the Northwest Gallery leads to Datatree and Jump. The
-East wings lead to the Art Deco salon, Asteroid Farmer, Accumulative Station,
-and Stars & Ships / Orbital Studio Hall (with Pocket Bonsai, Map conversion, and
-Zipper studio).
+The courtyard is an open-air Roman octagon under a pure black night sky,
+with direct doorways on its cardinal and diagonal faces, freestanding perimeter columns (no overhead crossbars obscuring doorway signs), and no long corridors.
+Framed Entirety maps (Mediterranean, Japan, Europe, and Africa) hang on the
+south-west and south-east gallery walls. Inside the courtyard plaza sit the Fox
+and Bunny Creatures, the Raymarcher UFO carving pedestal, the Letter fitting bench, and both the original walk-around 3D
+Stars & Ships showcase and an arching overhead roof of stars and autonomous ships above the courtyard.
+
+Surrounding direct-entry wings hold multiple related works per room:
+- South archway: open sunlit **Riverbank** path and water.
+- West doorway: **Library & Datatree** reading hall with shelves, tables, and the
+  interactive Datatree archive wall at the back.
+- North-west doorway: **Games & Worlds** combining the **Games Aquarium** tank,
+  autonomous blocky **Jump** Racket figures, and the **L-World** sculpture.
+- North doorway: **Art Deco salon** with emerald walls, fluted pilasters, lounges,
+  palms, classic **L-system brass sunburst panels**, rotating brass armillary sphere,
+  and one interactive **3D L-system design panel** on the east wall where visitors
+  can cycle motifs, generation depth, turn angle, 3D relief extrusion, symmetry layout,
+  or invent new symmetric L-system rules.
+- North-east doorway: **Sculpture & Code Studio** combining the **Pocket Bonsai**
+  turntable, **Zipper studio** plinth, and **Map conversion** globe.
+- East doorway: **Space Hangar** combining **Accumulative Station** and
+  **Asteroid Farmer** overlooking the deep-space planet and starfield.
 
 The Games Aquarium tank pauses simulation when not looked at and preserves
 state when walking away or returning. Select **Run / pause**, **Step when
@@ -132,12 +147,18 @@ paused**, **Reset tank**, or spawn species directly by clicking the tank.
 Visiting Creatures loads the animated Khronos Fox and Quaternius Bunny, pausing
 and fading out when not viewed or when exploring other wings.
 
-The Raymarcher carving pedestal has two hovering UFOs that zap and destroy
-individual outer blocks one at a time on a half-second cadence around a tight
-stone block hugging the hidden torus, pausing and fading out when looking away,
-and can be restarted by clicking the block, pedestal, **Carve stone** plaque, or
-menu button.
+The Raymarcher carving pedestal starts from a solid monolithic column of
+stone blocks and has two hovering UFOs that gently pulse and zap individual
+outer blocks one at a time on a relaxed ~1.35s cadence, making each hit block
+shimmer and fade out until the hidden torus is revealed. It pauses and fades out
+when looking away, and can be restarted by clicking the block, pedestal, **Carve
+stone** plaque, or menu button.
 
 Letter fitting loads an Arch / Stepped pyramid reference bench on the courtyard's
 east side, pausing and fading out when not viewed, and can be started or
 switched via the bench's 3D plaques or gallery menu.
+
+The courtyard persists the visitor's last valid position and view orientation in
+`localStorage` (`courtyard.pose.v1`) so reloading restores them in place across
+courtyard plazas and connected wings unless a specific `?room=` query parameter is
+provided.

@@ -1,6 +1,6 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { createWorld, height, spawn, species, stepWorld, width } from "../../projects/games/games-aquarium/aquarium.mjs";
-import { galleryRoom } from "./gallery-room.js";
+import { galleryRoom } from "./gallery-room.js?v=20261111";
 
 const CELL = 0.13;
 const TANK_Y = 0.88;

@@ -7,7 +7,7 @@ const size = side / cells;
 const half = side / 2;
 const radius = 0.42;
 const tube = 0.19;
-const UFO_URL = new URL("./assets/ufo.glb", import.meta.url).href;
+const UFO_URL = new URL("./assets/ufo.glb?v=20261111", import.meta.url).href;
 
 function torusDistance(x, y, z) {
     return Math.hypot(Math.hypot(x, y) - radius, z) - tube;
@@ -108,30 +108,66 @@ export async function createCarving(scene, x, z) {
 
     const ufoPrototype = await loadUfoPrototype();
     const ufoConfigs = [
-        { baseAngle: 0.52, orbitSpeed: 0.44, radius: 1.18, height: 0.98, interval: 0.50, startTimer: 0.44, beamHex: 0x6dff9c, sparkHex: 0xd6ffe3 },
-        { baseAngle: 2.52, orbitSpeed: 0.38, radius: 1.22, height: 0.82, interval: 0.50, startTimer: 0.19, beamHex: 0x4ee6ff, sparkHex: 0xdcf9ff },
+        { baseAngle: 0.52, orbitSpeed: 0.42, radius: 1.22, height: 1.02, interval: 1.85, startTimer: 1.4, beamHex: 0x6dff9c, sparkHex: 0xd6ffe3 },
+        { baseAngle: 2.52, orbitSpeed: 0.36, radius: 1.26, height: 0.86, interval: 2.15, startTimer: 0.65, beamHex: 0x4ee6ff, sparkHex: 0xdcf9ff },
     ];
     const upAxis = new T.Vector3(0, 1, 0);
-    const beamUnitGeom = new T.CylinderGeometry(0.022, 0.014, 1, 8);
-    const sparkGeom = new T.SphereGeometry(0.1, 10, 8);
+    const beamUnitGeom = new T.CylinderGeometry(0.015, 0.01, 1, 8);
+    const sparkGeom = new T.SphereGeometry(0.045, 10, 8);
     const ufos = ufoConfigs.map((cfg, idx) => {
         const craft = ufoPrototype.clone(true);
+        const lightMats = [];
         craft.traverse(obj => {
             if (obj.isMesh && obj.material) {
                 obj.material = obj.material.clone();
                 if (/light/i.test(obj.material.name || "")) {
                     obj.material.color.setHex(cfg.beamHex);
                     obj.material.emissive.setHex(cfg.beamHex);
+                    obj.material.emissiveIntensity = 0.75;
+                    lightMats.push(obj.material);
                 }
             }
         });
         craft.name = `Carving UFO ${idx + 1}`;
-        const beam = new T.Mesh(beamUnitGeom, new T.MeshBasicMaterial({ color: cfg.beamHex }));
+        const beamMat = new T.MeshBasicMaterial({
+            color: cfg.beamHex,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+            blending: T.AdditiveBlending,
+        });
+        beamMat.userData.dynamicFade = true;
+        const beam = new T.Mesh(beamUnitGeom, beamMat);
         beam.visible = false;
-        const spark = new T.Mesh(sparkGeom, new T.MeshBasicMaterial({ color: cfg.sparkHex }));
+        const sparkMat = new T.MeshBasicMaterial({
+            color: cfg.sparkHex,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+            blending: T.AdditiveBlending,
+        });
+        sparkMat.userData.dynamicFade = true;
+        const spark = new T.Mesh(sparkGeom, sparkMat);
         spark.visible = false;
         exhibit.add(craft, beam, spark);
-        return { ...cfg, phaseOffset: idx * 2.1, craft, beam, spark, timer: cfg.startTimer, pulse: 0 };
+        return { ...cfg, phaseOffset: idx * 2.1, craft, lightMats, beam, beamMat, spark, sparkMat, timer: cfg.startTimer, pulse: 0 };
+    });
+
+    // Pooled translucent voxel meshes so zapped blocks shimmer and fade smoothly instead of popping out.
+    const voxelGeom = new T.BoxGeometry(size * 0.99, size * 0.99, size * 0.99);
+    const FADE_DUR = 1.05;
+    const fadePool = Array.from({ length: 12 }, () => {
+        const mat = new T.MeshStandardMaterial({
+            roughness: 0.68,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+        });
+        mat.userData.dynamicFade = true;
+        const mesh = new T.Mesh(voxelGeom, mat);
+        mesh.visible = false;
+        exhibit.add(mesh);
+        return { mesh, mat, active: false, age: 0, basePos: new T.Vector3(), baseColor: new T.Color(), glowColor: new T.Color() };
     });
 
     const colors = new T.Color();
@@ -141,11 +177,12 @@ export async function createCarving(scene, x, z) {
     const coord = i => (i + 0.5) * size - half;
     const dirs = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]];
 
-    // Precompute hidden torus core and a tight enveloping boulder shell around it.
+    // Precompute hidden torus core and start from a solid vertical stone column enclosing it.
     const totalVoxels = cells ** 3;
     const coreMask = new Uint8Array(totalVoxels);
     const startMask = new Uint8Array(totalVoxels);
     const voxelPos = new Array(totalVoxels);
+    const voxelColors = new Array(totalVoxels);
     for (let vz = 0; vz < cells; vz++) {
         for (let vy = 0; vy < cells; vy++) {
             for (let vx = 0; vx < cells; vx++) {
@@ -154,34 +191,13 @@ export async function createCarving(scene, x, z) {
                 const py = coord(vy);
                 const pz = coord(vz);
                 voxelPos[idx] = new T.Vector3(px, py, pz);
+                voxelColors[idx] = new T.Color(0xd2a276).multiplyScalar(0.83 + (idx % 11) * 0.025);
                 if (torusDistance(px, py, pz) <= 0) {
                     coreMask[idx] = 1;
+                }
+                if (vx >= 1 && vx <= 8 && vz >= 3 && vz <= 6) {
                     startMask[idx] = 1;
                 }
-            }
-        }
-    }
-    for (let vz = 0; vz < cells; vz++) {
-        for (let vy = 0; vy < cells; vy++) {
-            for (let vx = 0; vx < cells; vx++) {
-                const idx = indexOf(vx, vy, vz);
-                if (!coreMask[idx]) continue;
-                for (const [dx, dy, dz] of dirs) {
-                    const nx = vx + dx;
-                    const ny = vy + dy;
-                    const nz = vz + dz;
-                    if (nx >= 0 && nx < cells && ny >= 0 && ny < cells && nz >= 0 && nz < cells) {
-                        startMask[indexOf(nx, ny, nz)] = 1;
-                    }
-                }
-            }
-        }
-    }
-    // Plug the center aperture across the stone slab thickness so the hole starts hidden too.
-    for (let vz = 3; vz <= 6; vz++) {
-        for (let vy = 4; vy <= 5; vy++) {
-            for (let vx = 4; vx <= 5; vx++) {
-                startMask[indexOf(vx, vy, vz)] = 1;
             }
         }
     }
@@ -208,18 +224,21 @@ export async function createCarving(scene, x, z) {
     const beamDelta = new T.Vector3();
     const emitterPos = new T.Vector3();
     const beamQuat = new T.Quaternion();
-    const PULSE_DUR = 0.26;
+    const PULSE_DUR = 0.44;
 
     function positionUfos(t) {
         for (const u of ufos) {
             const angle = u.baseAngle + t * u.orbitSpeed;
-            const bob = Math.sin(t * 2.4 + u.phaseOffset) * 0.08;
+            const bob = Math.sin(t * 2.0 + u.phaseOffset) * 0.07;
             const ux = Math.cos(angle) * u.radius;
             const uz = Math.sin(angle) * u.radius;
             u.craft.position.set(ux, u.height + bob, uz);
             u.craft.lookAt(0, u.height * 0.45, 0);
-            u.craft.rotateZ(Math.sin(t * 1.9 + u.phaseOffset) * 0.1);
+            u.craft.rotateZ(Math.sin(t * 1.6 + u.phaseOffset) * 0.08);
             u.craft.rotateX(0.14);
+            const k = u.pulse > 0 ? Math.sin((u.pulse / PULSE_DUR) * Math.PI) : 0;
+            const glow = 0.65 + 0.2 * Math.sin(t * 2.2 + u.phaseOffset) + 0.55 * k;
+            for (const mat of u.lightMats) mat.emissiveIntensity = glow;
         }
     }
 
@@ -232,18 +251,38 @@ export async function createCarving(scene, x, z) {
             } else {
                 block.setMatrixAt(idx, hidden);
             }
-            block.setColorAt(idx, colors.setHex(0xd2a276).multiplyScalar(0.83 + (idx % 11) * 0.025));
+            block.setColorAt(idx, colors.copy(voxelColors[idx]));
         }
         block.instanceMatrix.needsUpdate = true;
         block.instanceColor.needsUpdate = true;
         remaining = carveTargets.slice();
         removed = 0;
+        for (const slot of fadePool) {
+            slot.active = false;
+            slot.mesh.visible = false;
+        }
         for (const u of ufos) {
             u.timer = u.startTimer;
             u.pulse = 0;
             u.beam.visible = false;
             u.spark.visible = false;
         }
+    }
+
+    function spawnDissolveBlock(target, beamHex) {
+        const slot = fadePool.find(item => !item.active) || fadePool[0];
+        slot.active = true;
+        slot.age = 0;
+        slot.basePos.copy(target.pos);
+        slot.baseColor.copy(voxelColors[target.idx]);
+        slot.glowColor.setHex(beamHex);
+        slot.mat.color.copy(slot.baseColor);
+        slot.mat.emissive.copy(slot.glowColor);
+        slot.mat.emissiveIntensity = 0.6;
+        slot.mat.opacity = 0.96;
+        slot.mesh.position.copy(target.pos);
+        slot.mesh.scale.setScalar(1.02);
+        slot.mesh.visible = true;
     }
 
     function isExposed(entry) {
@@ -288,6 +327,7 @@ export async function createCarving(scene, x, z) {
         block.setMatrixAt(target.idx, hidden);
         block.instanceMatrix.needsUpdate = true;
         removed++;
+        spawnDissolveBlock(target, ufo.beamHex);
 
         emitterPos.copy(ufo.craft.position);
         emitterPos.y -= 0.07;
@@ -295,10 +335,12 @@ export async function createCarving(scene, x, z) {
         const len = Math.max(beamDelta.length(), 0.05);
         ufo.beam.position.copy(emitterPos).addScaledVector(beamDelta, 0.5);
         ufo.beam.quaternion.copy(beamQuat.setFromUnitVectors(upAxis, beamDelta.normalize()));
-        ufo.beam.scale.set(1, len, 1);
+        ufo.beam.scale.set(0.4, len, 0.4);
+        ufo.beamMat.opacity = 0;
         ufo.beam.visible = true;
         ufo.spark.position.copy(target.pos);
-        ufo.spark.scale.setScalar(1);
+        ufo.spark.scale.setScalar(0.4);
+        ufo.sparkMat.opacity = 0;
         ufo.spark.visible = true;
         ufo.pulse = PULSE_DUR;
     }
@@ -329,14 +371,34 @@ export async function createCarving(scene, x, z) {
                 if (u.pulse > 0) {
                     u.pulse = Math.max(0, u.pulse - step);
                     const k = u.pulse / PULSE_DUR;
-                    u.beam.scale.x = 0.6 + 0.8 * k;
-                    u.beam.scale.z = 0.6 + 0.8 * k;
-                    u.spark.scale.setScalar(0.35 + 0.9 * k);
+                    const env = Math.pow(Math.sin(k * Math.PI), 1.4);
+                    const width = 0.3 + 0.65 * env;
+                    u.beam.scale.x = width;
+                    u.beam.scale.z = width;
+                    u.beamMat.opacity = 0.56 * env;
+                    u.spark.scale.setScalar(0.35 + 0.65 * env);
+                    u.sparkMat.opacity = 0.58 * env;
                     if (u.pulse === 0) {
                         u.beam.visible = false;
                         u.spark.visible = false;
                     }
                 }
+            }
+            for (const slot of fadePool) {
+                if (!slot.active) continue;
+                slot.age += step;
+                if (slot.age >= FADE_DUR) {
+                    slot.active = false;
+                    slot.mesh.visible = false;
+                    continue;
+                }
+                const u = slot.age / FADE_DUR;
+                const shimmer = 0.5 + 0.5 * Math.sin(u * Math.PI * 12);
+                slot.mat.opacity = 0.96 * Math.pow(1 - u, 1.25);
+                slot.mat.emissiveIntensity = (0.45 + 0.95 * shimmer) * (1 - u * 0.45);
+                slot.mat.color.copy(slot.baseColor).lerp(slot.glowColor, 0.42 * shimmer);
+                slot.mesh.position.set(slot.basePos.x, slot.basePos.y + 0.05 * u, slot.basePos.z);
+                slot.mesh.scale.setScalar(1 + 0.06 * shimmer - 0.35 * u * u);
             }
             active = remaining.length > 0;
             return { active, nextRay: removed, rayCount, removed };
