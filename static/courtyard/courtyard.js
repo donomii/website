@@ -159,7 +159,9 @@ const ROOM_SPECS = [
         focalLocal: [0, 1.6, -1.4],
         projectHref: "../../projects/games/accumulative-station/index.html",
         hint: "Space Hangar · Build on Accumulative Station (left) or tend crops on Asteroid Farmer (right).",
-        load: () => import("./space-room.js").then(m => m.createSpaceRoom(msg => { status.textContent = msg; })),
+        load: () => import("./space-room.js").then(m => m.createSpaceRoom(msg => {
+            if (activeZoneId === "space") status.textContent = msg;
+        })),
     },
 ];
 
@@ -617,6 +619,63 @@ let lastSubHint = "";
 let visibleMapName = null;
 let rightMove = false;
 const keys = new Set();
+const POSE_STORAGE_KEY = "courtyard.pose.v1";
+let pendingVrYaw = 0;
+let lastSavedPose = "";
+let lastSaveAt = -Infinity;
+
+function readSavedPose() {
+    try {
+        const raw = localStorage.getItem(POSE_STORAGE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return null;
+        const { x, y = 0, z, yaw: savedYaw = 0, pitch: savedPitch = 0, vrYaw = 0 } = parsed;
+        if (![x, y, z, savedYaw, savedPitch, vrYaw].every(Number.isFinite)) return null;
+        if (!inDoorway(x, z)) {
+            const zone = zoneAt(x, z, 0);
+            if (!zone || !zoneCanStand(zone, x, z, false)) return null;
+        }
+        return {
+            x,
+            y,
+            z,
+            yaw: savedYaw,
+            pitch: T.MathUtils.clamp(savedPitch, -1.25, 1.25),
+            vrYaw,
+        };
+    } catch {
+        return null;
+    }
+}
+
+function capturePose(renderer) {
+    const inXr = Boolean(renderer?.xr?.isPresenting);
+    const hasView = viewDir.lengthSq() > 0.01;
+    const savedYaw = inXr && hasView ? Math.atan2(-viewDir.x, -viewDir.z) : yaw;
+    const savedPitch = inXr && hasView ? T.MathUtils.clamp(Math.asin(T.MathUtils.clamp(viewDir.y, -1, 1)), -1.25, 1.25) : pitch;
+    return {
+        x: Math.round(rig.position.x * 1000) / 1000,
+        y: Math.round(rig.position.y * 1000) / 1000,
+        z: Math.round(rig.position.z * 1000) / 1000,
+        yaw: Math.round(savedYaw * 1000) / 1000,
+        pitch: Math.round(savedPitch * 1000) / 1000,
+        vrYaw: Math.round((inXr ? rig.rotation.y : pendingVrYaw) * 1000) / 1000,
+    };
+}
+
+function persistPose(renderer, now = Infinity) {
+    if (now !== Infinity && now - lastSaveAt < 300) return;
+    const serialized = JSON.stringify(capturePose(renderer));
+    if (serialized === lastSavedPose) return;
+    lastSavedPose = serialized;
+    lastSaveAt = now === Infinity ? performance.now() : now;
+    try {
+        localStorage.setItem(POSE_STORAGE_KEY, serialized);
+    } catch {
+        // Ignore storage errors in restricted browsing modes.
+    }
+}
 
 function zoneCanStand(zone, x, z, allowLoadedOnly = true) {
     if (!zone) return false;
@@ -688,6 +747,7 @@ async function goToZone(zoneId) {
     const [wx, wz] = roomLocalToWorld(zone, ...zone.spawnLocal);
     yaw = zone.spawnYaw ?? 0;
     pitch = -0.06;
+    pendingVrYaw = 0;
     rig.position.set(wx, heightAt(wx, wz), wz);
     camera.rotation.set(pitch, yaw, 0, "YXZ");
     const st = roomStates.get(zoneId);
@@ -712,6 +772,7 @@ function visitMap(entry) {
     rig.position.set(wx, 0, wz);
     yaw = entry.rotY;
     pitch = 0.04;
+    pendingVrYaw = 0;
     camera.rotation.set(pitch, yaw, 0, "YXZ");
     loadMap(entry).catch(() => {});
     activeExhibit = 0;
@@ -741,7 +802,37 @@ function visitExhibit(index) {
     }
     yaw = 0;
     pitch = 0;
+    pendingVrYaw = 0;
     camera.rotation.set(0, 0, 0, "YXZ");
+}
+
+async function restoreSavedPose(pose) {
+    rig.position.set(pose.x, pose.y, pose.z);
+    yaw = pose.yaw;
+    pitch = pose.pitch;
+    pendingVrYaw = pose.vrYaw;
+    camera.rotation.set(pitch, yaw, 0, "YXZ");
+    loadCarving();
+    loadCreatures();
+    loadLetterFit();
+    loadStarsExhibit();
+    const restoreZone = zoneAt(pose.x, pose.z, 0) || zoneAt(pose.x, pose.z, 0.75);
+    if (!restoreZone || restoreZone.id === "courtyard") return;
+    const st = await loadZone(restoreZone.id);
+    if (st?.room && st.group && zoneAt(rig.position.x, rig.position.z, 0.75)?.id === restoreZone.id) {
+        if (Math.hypot(rig.position.x - pose.x, rig.position.z - pose.z) < 0.05) {
+            if (!canStandWorld(pose.x, pose.z)) {
+                await goToZone(restoreZone.id);
+                return;
+            }
+            rig.position.y = heightAt(rig.position.x, rig.position.z);
+        }
+        applyFade(st, 1);
+        if (!st.active) {
+            st.active = true;
+            st.room.enter?.();
+        }
+    }
 }
 
 // Look vectors and visibility/pausing computation.
@@ -1017,6 +1108,7 @@ function bindDesktop(renderer) {
         pointer.distance += Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y);
         yaw += (rightMove ? -1 : 1) * (event.clientX - pointer.x) * 0.004;
         pitch = T.MathUtils.clamp(pitch + (event.clientY - pointer.y) * 0.004, -1.25, 1.25);
+        pendingVrYaw = 0;
         pointer.x = event.clientX;
         pointer.y = event.clientY;
     });
@@ -1069,6 +1161,7 @@ function walk(dt, [strafe = 0, travel = 0, lookX = 0, lookY = 0] = []) {
     pitch = T.MathUtils.clamp(pitch - lookY * dt * 2, -1.25, 1.25);
     const forward = Number(rightMove || keys.has("w") || keys.has("arrowup")) - Number(keys.has("s") || keys.has("arrowdown")) - travel;
     const right = Number(keys.has("d") || keys.has("arrowright")) - Number(keys.has("a") || keys.has("arrowleft")) + strafe;
+    if (forward || right || lookX || lookY) pendingVrYaw = 0;
     moveRig(dt * 3.4, forward, right, yaw);
     camera.rotation.set(pitch, yaw, 0, "YXZ");
 }
@@ -1124,7 +1217,11 @@ async function bindVR(renderer, inputs) {
         try {
             const session = await navigator.xr.requestSession("immersive-vr", vrSessionOptions);
             turnReady = true;
-            session.addEventListener("end", () => { rig.rotation.y = 0; }, { once: true });
+            rig.rotation.y = pendingVrYaw;
+            session.addEventListener("end", () => {
+                rig.rotation.y = 0;
+                pendingVrYaw = 0;
+            }, { once: true });
             await renderer.xr.setSession(session);
         } catch (error) {
             status.textContent = `VR could not start: ${error.message}`;
@@ -1170,6 +1267,7 @@ function start() {
 
     const requestedRoom = new URLSearchParams(location.search).get("room");
     const resolvedRoom = ROOM_ALIASES[requestedRoom] ?? requestedRoom;
+    const savedPose = !requestedRoom ? readSavedPose() : null;
     if (requestedRoom === "orbit") {
         visitExhibit(2);
         loadCarving();
@@ -1177,6 +1275,8 @@ function start() {
         loadLetterFit();
     } else if (resolvedRoom && roomStates.has(resolvedRoom)) {
         goToZone(resolvedRoom);
+    } else if (savedPose) {
+        restoreSavedPose(savedPose);
     } else {
         loadCarving();
         loadCreatures();
@@ -1210,6 +1310,12 @@ function start() {
     const pollGamepad = readGamepad();
     const useMenu = gamepadMenu("#menu-toggle, main button, main a[href], #destination");
 
+    window.addEventListener("pagehide", () => persistPose(renderer));
+    window.addEventListener("beforeunload", () => persistPose(renderer));
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") persistPose(renderer);
+    });
+
     let previous = performance.now();
     renderer.setAnimationLoop((now, frame) => {
         const frameMs = Math.max(0, now - previous);
@@ -1236,6 +1342,7 @@ function start() {
 
         updateViewVectors(renderer, frame);
         updateRoomsAndExhibits(now, frame, dt, frameMs, renderer);
+        persistPose(renderer, now);
         renderer.render(scene, camera);
     });
 }
