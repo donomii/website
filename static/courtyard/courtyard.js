@@ -374,20 +374,6 @@ function buildCourtyard() {
         }
     }
 
-    // Central limestone fountain.
-    addMesh(new T.CylinderGeometry(1.25, 1.4, 0.35, 16), stone, 0, 0.175, 0);
-    addMesh(new T.CylinderGeometry(1.1, 1.1, 0.04, 32), matCache(0x539496), 0, 0.36, 0);
-    addMesh(new T.CylinderGeometry(0.16, 0.24, 0.65, 12), stone, 0, 0.63, 0);
-    addMesh(new T.SphereGeometry(0.22, 14, 10), bronze, 0, 1.02, 0);
-    obstacles.push({ kind: "circle", x: 0, z: 0, r: 1.6 });
-
-    // Flanking garden benches.
-    for (const x of [-3.7, 3.7]) {
-        addBox(2.1, 0.2, 0.7, x, 0.66, 0, stone);
-        for (const dx of [-0.78, 0.78]) addBox(0.22, 0.55, 0.54, x + dx, 0.275, 0, stone);
-        obstacles.push({ kind: "box", x, z: 0, hx: 1.28, hz: 0.62 });
-    }
-
     // Obstacle reservations for main-courtyard carving & letter-fit pedestals.
     obstacles.push({ kind: "circle", x: CARVE_POS[0], z: CARVE_POS[1], r: 1.05 });
     obstacles.push({ kind: "box", x: FIT_POS[0], z: FIT_POS[1], hx: 2.25, hz: 1.25 });
@@ -862,7 +848,7 @@ function updateContextUI(zone) {
     if (index >= 0) project.href = links[index].href;
     status.textContent = index === 0 ? `Entirety Gallery · Viewing the ${nearbyMap?.name ?? "Mediterranean"} map.` :
         index === 1 ? "Raymarcher · Orbiting UFOs zap away the stone block until they reveal a hidden torus." :
-        index === 3 ? "Creatures roam between the entrance and the fountain. Call them over to meet them." :
+        index === 3 ? "Creatures roam the center of the courtyard. Call them over to meet them." :
         index < 0 ? "Walk or teleport through open doorways around the octagon courtyard to explore every wing." :
         exhibits[index].note;
 }
