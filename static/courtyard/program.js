@@ -97,6 +97,7 @@ export async function createProgramRoom() {
     editor.value = (await exhibitDocument("./program.html")).querySelector("#program").value;
     plinth.position.y = 0.16;
     buildMachine();
+    execute(true);
     return galleryRoom(scene, {
         actions: [["Step", () => step.click()], ["Run", () => run.click()], ["Reset", () => reset.click()]],
         canStand: (x, z) => Math.hypot(x, z) > 1.85,

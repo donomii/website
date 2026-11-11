@@ -1,9 +1,10 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
+import { composeExhibitsRoom } from "./compose-room.js";
 import { gamepadMenu, readGamepad } from "./gamepad.js";
 import { attachVrInput, thumbsticks, vrSessionOptions } from "./xr-input.js";
 import {
-    ADJACENT, DOOR_ENTRANCES, ZONES, ZONE_MAP,
-    buildArchitecture, inDoorway, roomLocalToWorld, worldToRoomLocal, zoneAt,
+    ADJACENT, DOOR_ENTRANCES, OCTAGON_APOTHEM, ZONES, ZONE_MAP,
+    buildArchitecture, faceFrame, inDoorway, inOctagon, roomLocalToWorld, worldToRoomLocal, zoneAt,
 } from "./world-layout.js";
 
 const viewport = document.querySelector("#viewport");
@@ -34,23 +35,9 @@ menuToggle.addEventListener("click", () => setMenu(!document.body.hasAttribute("
 
 const ROOM_SPECS = [
     {
-        id: "station",
-        buttonId: "station-door",
-        focalLocal: [0, 1.3, -1.3],
-        projectHref: "../../projects/games/accumulative-station/index.html",
-        hint: "Choose a module blueprint on the console, select a room, then a glowing port to extend it.",
-        load: () => import("./station-room.js").then(m => m.createStationRoom(msg => { status.textContent = msg; })),
-    },
-    {
-        id: "art-deco",
-        buttonId: "art-deco-door",
-        focalLocal: [0, 1.6, -1.6],
-        hint: "Art Deco salon · Stroll around the celestial armillary sculpture.",
-        load: () => import("./art-deco.js").then(m => m.createArtDecoRoom()),
-    },
-    {
         id: "river",
         buttonId: "river-door",
+        menuLabel: "Riverbank",
         focalLocal: [0, 1.0, -3.0],
         hint: "Riverbank · Follow the sandy path through the sunlit trees.",
         load: () => import("./riverbank.js").then(m => m.createRiverbank()),
@@ -58,92 +45,166 @@ const ROOM_SPECS = [
     {
         id: "library",
         buttonId: "library-door",
-        focalLocal: [0, 1.6, -2.0],
-        hint: "Library · Browse the reading hall tables and high timbered shelves.",
+        menuLabel: "Library & Datatree",
+        focalLocal: [0, 1.6, -2.5],
+        hint: "Library & Datatree · Browse the reading hall or explore the Datatree archive wall.",
         load: () => import("./library.js").then(m => m.createLibrary()),
     },
     {
-        id: "aquarium",
-        buttonId: "aquarium-door",
-        focalLocal: [0, 1.2, -1.0],
-        projectHref: "../../projects/games/games-aquarium/index.html",
-        hint: "Games Aquarium · Select a creature species then tap the tank floor to spawn it.",
-        load: () => import("./aquarium-room.js").then(m => m.createAquariumRoom()),
+        id: "games",
+        buttonId: "games-door",
+        menuLabel: "Games & Worlds (Aquarium · Jump · L-World)",
+        focalLocal: [0, 1.5, -1.5],
+        hint: "Games & Worlds · Games Aquarium (left), Jump Racket figures (center), and L-World sculpture (right).",
+        load: () => composeExhibitsRoom({
+            floorColor: 0x4c3c34,
+            bgColor: 0x1d191a,
+            defaultHint: "Games & Worlds · Games Aquarium (left), Jump Racket figures (center), and L-World sculpture (right).",
+            bays: [
+                {
+                    id: "aquarium",
+                    title: "Games Aquarium",
+                    hint: "Games Aquarium · Select a creature species then tap the tank floor to spawn it.",
+                    projectHref: "../../projects/games/games-aquarium/index.html",
+                    x: -3.7,
+                    z: -1.5,
+                    rotY: Math.PI / 2,
+                    scale: 0.72,
+                    load: () => import("./aquarium-room.js").then(m => m.createAquariumRoom()),
+                },
+                {
+                    id: "jump",
+                    title: "Jump",
+                    hint: "Jump · Original blocky Racket figures jumping and moving on their own.",
+                    projectHref: "/projects/jump/index.html",
+                    x: 0,
+                    z: -5.6,
+                    rotY: 0,
+                    scale: 0.85,
+                    load: () => import("./jump.js?v=racket-models").then(m => m.createJumpRoom()),
+                },
+                {
+                    id: "lworld",
+                    title: "L-World",
+                    hint: "L-World · Turn the turtle sculpture or open the full editor.",
+                    projectHref: "./lworld-room.html",
+                    x: 3.4,
+                    z: -1.4,
+                    rotY: -Math.PI / 2,
+                    scale: 0.64,
+                    load: () => import("./lworld-gallery.js").then(m => m.createLWorldRoom()),
+                },
+            ],
+        }),
     },
     {
-        id: "asteroid",
-        buttonId: "asteroid-door",
-        focalLocal: [0, 1.2, -0.8],
-        projectHref: "../../projects/games/asteroid-farmer/index.html",
-        hint: "Asteroid Farmer · Select soil to plant or harvest and structures to build.",
-        load: () => import("./asteroid-room.js").then(m => m.createAsteroidRoom(msg => { status.textContent = msg; })),
+        id: "art-deco",
+        buttonId: "art-deco-door",
+        menuLabel: "Art Deco salon",
+        focalLocal: [0, 1.6, -1.6],
+        hint: "Art Deco salon · Stroll around the celestial armillary sculpture.",
+        load: () => import("./art-deco.js").then(m => m.createArtDecoRoom()),
     },
     {
-        id: "datatree",
-        buttonId: "datatree-door",
-        focalLocal: [0, 1.5, -2.4],
-        hint: "Datatree · Select interactive branches and archive nodes on the stone wall.",
-        load: () => import("./datatree.js").then(m => m.createDatatreeRoom()),
+        id: "workshop",
+        buttonId: "workshop-door",
+        menuLabel: "Sculpture & Code Studio (Bonsai · Zipper · Map)",
+        focalLocal: [0, 1.4, -1.5],
+        hint: "Sculpture & Code Studio · Pocket Bonsai (left), Zipper studio (center), and Map conversion (right).",
+        load: () => composeExhibitsRoom({
+            floorColor: 0x524238,
+            bgColor: 0x201d20,
+            defaultHint: "Sculpture & Code Studio · Pocket Bonsai (left), Zipper studio (center), and Map conversion (right).",
+            bays: [
+                {
+                    id: "solids",
+                    title: "Pocket Bonsai",
+                    hint: "Pocket Bonsai · Select generation plaques to reshape the voxel solid.",
+                    projectHref: "./solids.html",
+                    x: -3.75,
+                    z: -1.4,
+                    rotY: Math.PI / 2,
+                    scale: 0.78,
+                    load: () => import("./solids.js").then(m => m.createSolidsRoom()),
+                },
+                {
+                    id: "program",
+                    title: "Zipper studio",
+                    hint: "Zipper studio · Step, run, or reset the spatial instruction machine.",
+                    projectHref: "./program.html",
+                    x: 0,
+                    z: -5.5,
+                    rotY: 0,
+                    scale: 0.9,
+                    load: () => import("./program.js").then(m => m.createProgramRoom()),
+                },
+                {
+                    id: "converter",
+                    title: "Map conversion",
+                    hint: "Map conversion · Select the globe or plaques to turn and convert points.",
+                    projectHref: "./converter.html",
+                    x: 3.75,
+                    z: -1.5,
+                    rotY: -Math.PI / 2,
+                    scale: 0.68,
+                    load: () => import("./converter.js").then(m => m.createConverterRoom()),
+                },
+            ],
+        }),
     },
     {
-        id: "jump",
-        buttonId: "jump-door",
-        focalLocal: [0, 1.3, -1.8],
-        hint: "Jump · Original blocky Racket figures jumping and dancing on their own.",
-        load: () => import("./jump.js?v=racket-models").then(m => m.createJumpRoom()),
-    },
-    {
-        id: "orbit",
-        buttonId: "orbit-door",
-        focalLocal: [0, 1.4, -0.8],
-        projectHref: "/projects/starsandships/webview.html",
-        hint: "Stars & Ships · Select a destination planet to launch an orbital route.",
-        load: () => import("./orbit.js").then(m => m.createOrbitRoom(msg => { status.textContent = msg; })),
-    },
-    {
-        id: "converter",
-        buttonId: "converter-door",
-        focalLocal: [0, 1.55, 0],
-        hint: "Map conversion · Select the globe or plaques to turn and convert points.",
-        load: () => import("./converter.js").then(m => m.createConverterRoom()),
-    },
-    {
-        id: "solids",
-        buttonId: "solids-door",
-        focalLocal: [0, 1.2, 0],
-        hint: "Pocket Bonsai · Select generation plaques to reshape the voxel solid.",
-        load: () => import("./solids.js").then(m => m.createSolidsRoom()),
-    },
-    {
-        id: "program",
-        buttonId: "program-door",
-        focalLocal: [0, 1.2, 0],
-        hint: "Zipper studio · Step, run, or reset the spatial instruction machine.",
-        load: () => import("./program.js").then(m => m.createProgramRoom()),
-    },
-    {
-        id: "lworld",
-        buttonId: "lworld-door",
-        focalLocal: [0, 1.3, -0.9],
-        hint: "L-World · Turn the turtle sculpture or open the full editor from the menu.",
-        load: () => import("./lworld-gallery.js").then(m => m.createLWorldRoom()),
+        id: "space",
+        buttonId: "space-door",
+        menuLabel: "Space Hangar (Station · Asteroid)",
+        focalLocal: [0, 1.6, -1.4],
+        projectHref: "../../projects/games/accumulative-station/index.html",
+        hint: "Space Hangar · Build on Accumulative Station (left) or tend crops on Asteroid Farmer (right).",
+        load: () => import("./space-room.js").then(m => m.createSpaceRoom(msg => { status.textContent = msg; })),
     },
 ];
 
-// Framed Entirety map pictures mounted on West & East courtyard gallery walls (no floor rugs).
+const ROOM_ALIASES = {
+    aquarium: "games",
+    jump: "games",
+    lworld: "games",
+    solids: "workshop",
+    program: "workshop",
+    converter: "workshop",
+    datatree: "library",
+    station: "space",
+    asteroid: "space",
+};
+
+function wallMapSpec(name, faceIndex, offset, image) {
+    const { nx, nz, tx, tz, theta } = faceFrame(faceIndex);
+    const radial = OCTAGON_APOTHEM - 0.08;
+    return {
+        name,
+        x: nx * radial + tx * offset,
+        z: nz * radial + tz * offset,
+        rotY: theta + Math.PI,
+        image,
+    };
+}
+
+// Framed Entirety map pictures mounted on the SW and SE octagon gallery walls.
 const galleryMaps = [
-    { name: "Mediterranean", x: -9.85, z: -5.2, rotY: Math.PI / 2, image: "/projects/entirety/mediterrainean.png" },
-    { name: "Japan", x: -9.85, z: 4.75, rotY: Math.PI / 2, image: "/projects/entirety/japan_with_cells_1.png" },
-    { name: "Europe", x: 9.85, z: -5.2, rotY: -Math.PI / 2, image: "/projects/entirety/europe_colour.png" },
-    { name: "Africa", x: 9.85, z: 4.75, rotY: -Math.PI / 2, image: "/projects/entirety/africafire.png" },
+    wallMapSpec("Mediterranean", 7, -2.9, "/projects/entirety/mediterrainean.png"),
+    wallMapSpec("Japan", 7, 2.9, "/projects/entirety/japan_with_cells_1.png"),
+    wallMapSpec("Europe", 1, -2.9, "/projects/entirety/europe_colour.png"),
+    wallMapSpec("Africa", 1, 2.9, "/projects/entirety/africafire.png"),
 ];
+
+const CARVE_POS = [-4.2, -7.2];
+const STARS_POS = [3.4, -7.2];
+const FIT_POS = [6.4, -3.5];
 
 const exhibits = [
-    { x: -6, z: -13.72, image: "/projects/entirety/world_thumbnail256.png", note: "Entirety · Explore Mediterranean, Japan, Europe, and Africa gallery maps on the side walls." },
-    { x: -2, z: -13.72, image: "/projects/javascriptraymarcher/mandelbulb3_256.png", note: "Raymarcher · Watch golden rays chip away stone to reveal the hidden torus." },
-    { x: 2, z: -13.72, image: "/projects/starsandships/stars_screenshot.png", note: "Stars & Ships · Walk through the East Space Hall doorway to dispatch the orbital craft." },
-    { x: 6, z: -13.72, image: "/projects/creatures/creature.png", note: "Creatures · Fox and Bunny explore the courtyard — call them over to meet them." },
-    { x: 4.5, z: -4.75, image: null, note: "Letter fitting · Choose a reference shape on the left and reconstruct it with solid letters on the right." },
+    { x: galleryMaps[0].x, z: galleryMaps[0].z, image: null, note: "Entirety · Explore Mediterranean, Japan, Europe, and Africa gallery maps on the south-west and south-east walls." },
+    { x: CARVE_POS[0], z: CARVE_POS[1], image: null, note: "Raymarcher · Orbiting UFOs zap away the stone block until they reveal a hidden torus." },
+    { x: STARS_POS[0], z: STARS_POS[1], image: null, note: "Stars & Ships · Free-standing 3D starfield with 20 autonomous ships flying between 20 stars." },
+    { x: 0, z: 4.2, image: null, note: "Creatures · Fox and Bunny explore the courtyard — call them over to meet them." },
+    { x: FIT_POS[0], z: FIT_POS[1], image: null, note: "Letter fitting · Choose a reference shape on the left and reconstruct it with solid letters on the right." },
 ];
 
 const scene = new T.Scene();
@@ -158,7 +219,7 @@ scene.fog = outdoorFog;
 
 const rig = new T.Group();
 const camera = new T.PerspectiveCamera(66, 1, 0.06, 115);
-rig.position.set(0, 0, 8.5);
+rig.position.set(0, 0, 10.2);
 camera.position.y = 1.68;
 scene.add(rig);
 rig.add(camera);
@@ -197,11 +258,6 @@ function column(x, z) {
     addMesh(new T.CylinderGeometry(0.21, 0.28, 3, 12), stone, x, 1.66, z);
     addBox(0.68, 0.22, 0.68, x, 3.28, z, stone);
     obstacles.push({ kind: "circle", x, z, r: 0.65 });
-}
-
-function archSpan(x, z) {
-    const arc = addMesh(new T.TorusGeometry(1.56, 0.18, 6, 20, Math.PI), stone, x, 3.29, z);
-    arc.scale.z = 1.5;
 }
 
 function planter(x, z) {
@@ -262,55 +318,81 @@ function buildCourtyard() {
     sun.position.set(-9, 13, 6);
     scene.add(sun);
 
-    const subfloor = new T.Mesh(new T.PlaneGeometry(20, 28).rotateX(-Math.PI / 2), matCache(0x8d7258));
+    const octRadius = (OCTAGON_APOTHEM + 0.15) / Math.cos(Math.PI / 8);
+    const subfloor = new T.Mesh(
+        new T.CircleGeometry(octRadius, 8).rotateX(-Math.PI / 2).rotateY(Math.PI / 8),
+        matCache(0x8d7258),
+    );
     subfloor.position.y = -0.025;
     scene.add(subfloor);
     floorMeshes.push(subfloor);
 
-    const tiles = new T.InstancedMesh(new T.BoxGeometry(0.986, 0.14, 0.986), matCache(0xffffff), 21 * 29);
-    const placement = new T.Matrix4();
-    let idx = 0;
-    for (let x = -10; x <= 10; x++) {
-        for (let z = -14; z <= 14; z++) {
-            tiles.setMatrixAt(idx, placement.makeTranslation(x, -0.085, z));
-            tiles.setColorAt(idx, floorTilesPalette[Math.abs(x * 13 + z * 7) % 4].color);
-            idx++;
+    const tileCoords = [];
+    for (let x = -16; x <= 16; x++) {
+        for (let z = -16; z <= 16; z++) {
+            if (inOctagon(x, z, OCTAGON_APOTHEM + 0.25)) tileCoords.push([x, z]);
         }
     }
+    const tiles = new T.InstancedMesh(new T.BoxGeometry(0.986, 0.14, 0.986), matCache(0xffffff), tileCoords.length);
+    const placement = new T.Matrix4();
+    tileCoords.forEach(([x, z], idx) => {
+        tiles.setMatrixAt(idx, placement.makeTranslation(x, -0.085, z));
+        tiles.setColorAt(idx, floorTilesPalette[Math.abs(x * 13 + z * 7) % 4].color);
+    });
     scene.add(tiles);
 
-    // North arcade colonnade framing the 4 showcase panels.
-    for (const x of [-8, -4, 0, 4, 8]) column(x, -12.4);
-    for (const x of [-6, -2, 2, 6]) archSpan(x, -12.4);
+    // Octagonal Roman peristyle colonnade framing doorways & SW/SE map gallery walls.
+    const colApothem = 12.6;
+    const colHalf = colApothem * Math.tan(Math.PI / 8);
+    const colCornerR = colApothem / Math.cos(Math.PI / 8);
+    const doorFaces = new Set(ZONES.filter(z => z.faceIndex !== undefined).map(z => z.faceIndex));
 
-    // West & East colonnades aligned so every doorway & gallery map bay remains wide open.
-    for (const x of [-7.8, 7.8]) {
-        addBox(1.1, 0.32, 25.8, x, 3.54, 0, stone);
-        for (const z of [-12.4, -8.0, -2.4, 2.4, 7.1, 12.6]) column(x, z);
-    }
-    for (const x of [-8.7, 8.7]) {
-        for (const z of [-8.3, -2.1, 2.1, 6.7]) planter(x, z);
+    for (let k = 0; k < 8; k++) {
+        const cornerAngle = (k + 0.5) * Math.PI / 4;
+        const vx = Math.sin(cornerAngle) * colCornerR;
+        const vz = Math.cos(cornerAngle) * colCornerR;
+        column(vx, vz);
+        const cap = new T.Mesh(new T.BoxGeometry(0.84, 0.28, 0.84), stone);
+        cap.position.set(vx, 3.54, vz);
+        cap.rotation.y = cornerAngle;
+        scene.add(cap);
+
+        const { nx, nz, tx, tz, theta } = faceFrame(k);
+        const beam = new T.Mesh(new T.BoxGeometry(colHalf * 2 - 0.84, 0.28, 0.9), stone);
+        beam.position.set(nx * colApothem, 3.54, nz * colApothem);
+        beam.rotation.y = theta;
+        scene.add(beam);
+
+        const colOffsets = doorFaces.has(k) ? [-3.0, 3.0] : [0];
+        for (const u of colOffsets) {
+            column(nx * colApothem + tx * u, nz * colApothem + tz * u);
+        }
+        if (doorFaces.has(k) && k !== 0) {
+            for (const u of [-4.6, 4.6]) {
+                planter(nx * 13.7 + tx * u, nz * 13.7 + tz * u);
+            }
+        }
     }
 
     // Central limestone fountain.
-    addMesh(new T.CylinderGeometry(1.25, 1.4, 0.35, 12), stone, 0, 0.175, -1);
-    addMesh(new T.CylinderGeometry(1.1, 1.1, 0.04, 32), matCache(0x539496), 0, 0.36, -1);
-    addMesh(new T.CylinderGeometry(0.16, 0.24, 0.65, 12), stone, 0, 0.63, -1);
-    addMesh(new T.SphereGeometry(0.22, 14, 10), bronze, 0, 1.02, -1);
-    obstacles.push({ kind: "circle", x: 0, z: -1, r: 1.6 });
+    addMesh(new T.CylinderGeometry(1.25, 1.4, 0.35, 16), stone, 0, 0.175, 0);
+    addMesh(new T.CylinderGeometry(1.1, 1.1, 0.04, 32), matCache(0x539496), 0, 0.36, 0);
+    addMesh(new T.CylinderGeometry(0.16, 0.24, 0.65, 12), stone, 0, 0.63, 0);
+    addMesh(new T.SphereGeometry(0.22, 14, 10), bronze, 0, 1.02, 0);
+    obstacles.push({ kind: "circle", x: 0, z: 0, r: 1.6 });
 
     // Flanking garden benches.
     for (const x of [-3.7, 3.7]) {
-        addBox(2.1, 0.2, 0.7, x, 0.66, -1, stone);
-        for (const dx of [-0.78, 0.78]) addBox(0.22, 0.55, 0.54, x + dx, 0.275, -1, stone);
-        obstacles.push({ kind: "box", x, z: -1, hx: 1.28, hz: 0.62 });
+        addBox(2.1, 0.2, 0.7, x, 0.66, 0, stone);
+        for (const dx of [-0.78, 0.78]) addBox(0.22, 0.55, 0.54, x + dx, 0.275, 0, stone);
+        obstacles.push({ kind: "box", x, z: 0, hx: 1.28, hz: 0.62 });
     }
 
-    // Obstacle reservations for main-room carving & letter-fit pedestals.
-    obstacles.push({ kind: "circle", x: -2, z: -10.6, r: 0.92 });
-    obstacles.push({ kind: "box", x: 4.5, z: -4.75, hx: 1.35, hz: 0.78 });
+    // Obstacle reservations for main-courtyard carving & letter-fit pedestals.
+    obstacles.push({ kind: "circle", x: CARVE_POS[0], z: CARVE_POS[1], r: 1.05 });
+    obstacles.push({ kind: "box", x: FIT_POS[0], z: FIT_POS[1], hx: 2.25, hz: 1.25 });
 
-    // Mount framed Entirety Map Gallery pictures along the West & East courtyard walls.
+    // Mount framed Entirety Map Gallery pictures along the SW & SE courtyard gallery walls.
     for (const [index, entry] of galleryMaps.entries()) {
         const holder = new T.Group();
         holder.position.set(entry.x, 0, entry.z);
@@ -330,33 +412,6 @@ function buildCourtyard() {
         holder.add(frame, matte, entry.panel, entry.mosaic, label);
         scene.add(holder);
     }
-
-    // Mount North Wall showcase frames & plaques.
-    exhibits.forEach((entry, index) => {
-        if (index === 4) return;
-        addBox(2.7, 2.1, 0.19, entry.x, 2.12, entry.z, stone);
-        entry.panel = addMesh(new T.PlaneGeometry(2.36, 1.68), new T.MeshBasicMaterial({ color: 0x725c4e }),
-            entry.x, 2.17, entry.z + 0.11);
-        entry.mosaic = mosaicMesh(index);
-        entry.mosaic.position.set(entry.x, 2.17, entry.z + 0.12);
-        scene.add(entry.mosaic);
-        addMesh(new T.PlaneGeometry(2.43, 0.5), plaqueMaterial(links[index].textContent),
-            entry.x, 0.78, entry.z + 0.12);
-    });
-}
-
-function loadExhibit(entry) {
-    if (entry.requested || !entry.image) return;
-    entry.requested = true;
-    new T.TextureLoader().load(entry.image, texture => {
-        texture.colorSpace = T.SRGBColorSpace;
-        const ratio = texture.image.width / texture.image.height;
-        entry.panel.scale.set(Math.min(1, ratio * 1.68 / 2.36), Math.min(1, 2.36 / (ratio * 1.68)), 1);
-        entry.panel.material.color.setHex(0xffffff);
-        entry.panel.material.map = texture;
-        entry.panel.material.needsUpdate = true;
-        entry.mosaic.visible = false;
-    }, undefined, () => { entry.requested = false; });
 }
 
 function loadMap(entry) {
@@ -414,7 +469,7 @@ function applyFade(state, nextFade) {
     state.appliedFade = clamped;
 }
 
-// Room management in one continuous world.
+// Room management in one continuous octagon-hub world.
 const roomStates = new Map();
 for (const spec of ROOM_SPECS) {
     const zone = ZONE_MAP.get(spec.id);
@@ -450,7 +505,7 @@ function mountRoom(state, room) {
     }
 
     if (zone.ownWalls && room.surface) floorMeshes.push(room.surface);
-    if (["art-deco", "library", "station"].includes(zone.id)) {
+    if (["art-deco", "library", "space"].includes(zone.id)) {
         group.updateMatrixWorld(true);
         const box = new T.Box3();
         group.traverse(obj => {
@@ -487,9 +542,11 @@ function loadZone(id) {
 let carvingState = null;
 let fitState = null;
 let creaturesState = null;
+let starsState = null;
 let carvingRequest = null;
 let fitRequest = null;
 let creatureRequest = null;
+let starsRequest = null;
 
 function createExhibitFadeState(group, api, focalPos) {
     const state = {
@@ -507,8 +564,8 @@ function createExhibitFadeState(group, api, focalPos) {
 function loadCarving() {
     if (!carvingRequest) {
         carvingRequest = import("./carving.js").then(async m => {
-            const api = await m.createCarving(scene, exhibits[1].x, -10.6);
-            carvingState = createExhibitFadeState(api.group, api, new T.Vector3(exhibits[1].x, 1.3, -10.6));
+            const api = await m.createCarving(scene, CARVE_POS[0], CARVE_POS[1]);
+            carvingState = createExhibitFadeState(api.group, api, new T.Vector3(CARVE_POS[0], 1.3, CARVE_POS[1]));
             return carvingState;
         }).catch(err => {
             console.warn("Could not load carving exhibit", err);
@@ -522,8 +579,8 @@ function loadCarving() {
 function loadLetterFit() {
     if (!fitRequest) {
         fitRequest = import("./letter-fit.js").then(m => {
-            const api = m.createLetterFit(scene);
-            fitState = createExhibitFadeState(api.group, api, new T.Vector3(4.5, 1.1, -4.75));
+            const api = m.createLetterFit(scene, FIT_POS[0], FIT_POS[1]);
+            fitState = createExhibitFadeState(api.group, api, new T.Vector3(FIT_POS[0], 1.1, FIT_POS[1]));
             return fitState;
         }).catch(err => {
             console.warn("Could not load letter fitting", err);
@@ -548,11 +605,29 @@ function loadCreatures() {
     return creatureRequest;
 }
 
+function loadStarsExhibit() {
+    if (!starsRequest) {
+        starsRequest = import("./orbit.js").then(m => m.createStarsExhibit(scene, STARS_POS[0], STARS_POS[1], msg => {
+            status.textContent = msg;
+        })).then(api => {
+            starsState = createExhibitFadeState(api.group, api, new T.Vector3(STARS_POS[0], 1.9, STARS_POS[1]));
+            return starsState;
+        }).catch(err => {
+            console.warn("Could not load 3D Stars & Ships exhibit", err);
+            starsRequest = null;
+            return null;
+        });
+    }
+    return starsRequest;
+}
+
 // Navigation & smooth sliding collision across the continuous world.
 let yaw = 0;
 let pitch = 0;
 let activeExhibit = -1;
 let activeZoneId = "courtyard";
+let activeSubKey = "";
+let lastSubHint = "";
 let visibleMapName = null;
 let rightMove = false;
 const keys = new Set();
@@ -560,20 +635,20 @@ const keys = new Set();
 function zoneCanStand(zone, x, z, allowLoadedOnly = true) {
     if (!zone) return false;
     if (zone.id === "courtyard") {
-        if (Math.abs(x) > 9.4 || Math.abs(z) > 13.4) return false;
+        if (!inOctagon(x, z, OCTAGON_APOTHEM - 0.6)) return false;
         for (const ob of obstacles) {
             if (ob.kind === "circle" && Math.hypot(x - ob.x, z - ob.z) < ob.r) return false;
             if (ob.kind === "box" && Math.abs(x - ob.x) < ob.hx && Math.abs(z - ob.z) < ob.hz) return false;
         }
         return true;
     }
+    const [lx, lz] = worldToRoomLocal(zone, x, z);
     const margin = zone.outdoor ? 0.45 : 0.52;
-    if (x < zone.xMin + margin || x > zone.xMax - margin || z < zone.zMin + margin || z > zone.zMax - margin) {
+    if (Math.abs(lx) > zone.halfW - margin || Math.abs(lz) > zone.halfD - margin) {
         return false;
     }
     const st = roomStates.get(zone.id);
     if (st?.room?.canStand) {
-        const [lx, lz] = worldToRoomLocal(zone, x, z);
         if (st.room.canStand(lx, lz) === false) return false;
     } else if (!allowLoadedOnly && st) {
         return true;
@@ -583,22 +658,17 @@ function zoneCanStand(zone, x, z, allowLoadedOnly = true) {
 
 function canStandWorld(x, z) {
     if (inDoorway(x, z)) return true;
-    for (const zone of ZONES) {
-        if (x >= zone.xMin && x <= zone.xMax && z >= zone.zMin && z <= zone.zMax) {
-            return zoneCanStand(zone, x, z);
-        }
-    }
-    return false;
+    const zone = zoneAt(x, z, 0);
+    return zone ? zoneCanStand(zone, x, z) : false;
 }
 
 function heightAt(x, z) {
     const riverZone = ZONE_MAP.get("river");
-    if (x >= riverZone.xMin && x <= riverZone.xMax && z >= riverZone.zMin && z <= riverZone.zMax) {
+    if (!riverZone) return 0;
+    const [lx, lz] = worldToRoomLocal(riverZone, x, z);
+    if (Math.abs(lx) <= riverZone.halfW && Math.abs(lz) <= riverZone.halfD) {
         const riverRoom = roomStates.get("river")?.room;
-        if (riverRoom) {
-            const [lx, lz] = worldToRoomLocal(riverZone, x, z);
-            return riverRoom.height(lx, lz);
-        }
+        if (riverRoom) return riverRoom.height(lx, lz);
     }
     return 0;
 }
@@ -666,27 +736,26 @@ function visitMap(entry) {
 
 function visitExhibit(index) {
     setMenu(false);
-    const entry = exhibits[index];
     if (index === 0) {
         visitMap(galleryMaps[0]);
         return;
     }
     if (index === 1) {
-        rig.position.set(entry.x, 0, -7.2);
+        rig.position.set(CARVE_POS[0], 0, CARVE_POS[1] + 3.2);
         loadCarving().then(st => { if (st && !st.api.started) st.api.start(); });
     } else if (index === 2) {
-        rig.position.set(entry.x, 0, -10.5);
+        rig.position.set(STARS_POS[0], 0, STARS_POS[1] + 3.4);
+        loadStarsExhibit();
     } else if (index === 3) {
-        rig.position.set(3.4, 0, 7.4);
+        rig.position.set(3.0, 0, 7.6);
         loadCreatures();
     } else if (index === 4) {
-        rig.position.set(entry.x, 0, -1.6);
+        rig.position.set(FIT_POS[0], 0, FIT_POS[1] + 2.7);
         loadLetterFit();
     }
     yaw = 0;
     pitch = 0;
     camera.rotation.set(0, 0, 0, "YXZ");
-    loadExhibit(entry);
 }
 
 // Look vectors and visibility/pausing computation.
@@ -720,8 +789,7 @@ function isLookedAt(point, minDot = 0.22, nearDist = 2.8, maxDist = 28) {
 
 function updateEnvironment(zone, dt) {
     const id = zone?.id ?? "courtyard";
-    const isSpace = ["station", "asteroid", "orbit", "e_hall", "se_hall"].includes(id);
-    const targetBg = id === "courtyard" ? skyColor : id === "river" ? riverColor : isSpace ? spaceColor : indoorColor;
+    const targetBg = id === "courtyard" ? skyColor : id === "river" ? riverColor : id === "space" ? spaceColor : indoorColor;
     scene.background.lerp(targetBg, Math.min(1, dt * 6));
     scene.fog = id === "courtyard" ? outdoorFog : id === "river" ? riverFog : null;
 
@@ -744,35 +812,40 @@ function updateContextUI(zone) {
         mapChoices.hidden = true;
         activeExhibit = -1;
         visibleMapName = null;
-        if (zone.id !== activeZoneId) {
+        const [lx, lz] = worldToRoomLocal(zone, rig.position.x, rig.position.z);
+        const ctx = st?.room?.contextAt?.(lx, lz);
+        const subKey = ctx?.key ?? "";
+        const subHint = ctx?.hint ?? st?.spec.hint ?? zone.name;
+        if (zone.id !== activeZoneId || subKey !== activeSubKey || subHint !== lastSubHint) {
             activeZoneId = zone.id;
+            activeSubKey = subKey;
+            lastSubHint = subHint;
             links.forEach(link => link.setAttribute("aria-current", "false"));
-            if (st) {
-                if (st.spec.projectHref) {
-                    project.href = st.spec.projectHref;
-                    project.hidden = false;
-                } else {
-                    project.hidden = true;
-                }
-                status.textContent = st.spec.hint;
+            const href = ctx ? ctx.projectHref : st?.spec.projectHref;
+            if (href) {
+                project.href = href;
+                project.hidden = false;
             } else {
                 project.hidden = true;
-                status.textContent = `${zone.name} · Follow the corridor into the surrounding rooms.`;
             }
+            status.textContent = subHint;
         }
         return;
     }
 
     activeZoneId = "courtyard";
+    activeSubKey = "";
+    lastSubHint = "";
     const nearbyMap = galleryMaps.find(m => Math.hypot(m.x - rig.position.x, m.z - rig.position.z) < 4.8 &&
         isLookedAt(ctxPoint.set(m.x, 2.0, m.z), 0.15, 2.2, 6.0));
-    const nearCarve = Math.hypot(-2 - rig.position.x, -10.6 - rig.position.z) < 3.6 &&
-        isLookedAt(ctxPoint.set(-2, 1.3, -10.6), 0.12, 2.2, 5.0);
-    const nearFit = Math.hypot(4.5 - rig.position.x, -4.75 - rig.position.z) < 3.8 &&
-        isLookedAt(ctxPoint.set(4.5, 1.1, -4.75), 0.12, 2.2, 5.0);
-    const nearCreatures = rig.position.z > 0.5 && Math.hypot(rig.position.x, rig.position.z - 4.2) < 5.0;
-    const northHit = exhibits.findIndex((e, i) => i < 4 && Math.hypot(e.x - rig.position.x, e.z - rig.position.z) < 4.2);
-    const index = nearbyMap ? 0 : nearCarve ? 1 : nearFit ? 4 : northHit >= 0 ? northHit : nearCreatures ? 3 : -1;
+    const nearCarve = Math.hypot(CARVE_POS[0] - rig.position.x, CARVE_POS[1] - rig.position.z) < 4.2 &&
+        isLookedAt(ctxPoint.set(CARVE_POS[0], 1.3, CARVE_POS[1]), 0.12, 2.2, 5.5);
+    const nearStars = Math.hypot(STARS_POS[0] - rig.position.x, STARS_POS[1] - rig.position.z) < 4.8 &&
+        isLookedAt(ctxPoint.set(STARS_POS[0], 1.9, STARS_POS[1]), 0.12, 2.5, 6.0);
+    const nearFit = Math.hypot(FIT_POS[0] - rig.position.x, FIT_POS[1] - rig.position.z) < 4.0 &&
+        isLookedAt(ctxPoint.set(FIT_POS[0], 1.1, FIT_POS[1]), 0.12, 2.2, 5.5);
+    const nearCreatures = rig.position.z > 1.5 && Math.hypot(rig.position.x, rig.position.z - 4.4) < 5.0;
+    const index = nearbyMap ? 0 : nearCarve ? 1 : nearStars ? 2 : nearFit ? 4 : nearCreatures ? 3 : -1;
 
     callCreatures.hidden = index !== 3;
     carveButton.hidden = index !== 1;
@@ -786,14 +859,11 @@ function updateContextUI(zone) {
     visibleMapName = nearbyName;
     links.forEach((link, i) => link.setAttribute("aria-current", String(i === index)));
     project.hidden = index < 0;
-    if (index >= 0) {
-        project.href = links[index].href;
-        loadExhibit(exhibits[index]);
-    }
+    if (index >= 0) project.href = links[index].href;
     status.textContent = index === 0 ? `Entirety Gallery · Viewing the ${nearbyMap?.name ?? "Mediterranean"} map.` :
         index === 1 ? "Raymarcher · Orbiting UFOs zap away the stone block until they reveal a hidden torus." :
         index === 3 ? "Creatures roam between the entrance and the fountain. Call them over to meet them." :
-        index < 0 ? "Walk or teleport through open doorways to explore every room, or inspect the courtyard exhibits." :
+        index < 0 ? "Walk or teleport through open doorways around the octagon courtyard to explore every wing." :
         exhibits[index].note;
 }
 
@@ -811,7 +881,7 @@ function updateRoomsAndExhibits(now, frame, dt, frameMs, renderer) {
     if (roomStates.has(currentId)) loadZone(currentId);
     for (const neighborId of adj) {
         if (!roomStates.has(neighborId)) continue;
-        if (doorsHere.some(d => d.to === neighborId && isLookedAt(d.pos, 0.14, 4.0, 24))) {
+        if (doorsHere.some(d => d.to === neighborId && isLookedAt(d.pos, 0.14, 4.0, 26))) {
             loadZone(neighborId);
         }
     }
@@ -820,10 +890,9 @@ function updateRoomsAndExhibits(now, frame, dt, frameMs, renderer) {
     for (const st of roomStates.values()) {
         if (!st.room || !st.group) continue;
         const inThis = currentId === st.zone.id;
-        const seeDoor = adj.has(st.zone.id) && doorsHere.some(d => d.to === st.zone.id && isLookedAt(d.pos, 0.10, 4.0, 24));
-        const focalLook = inThis ? isLookedAt(st.focalWorld, 0.22, 3.2, 42) : seeDoor;
+        const seeDoor = adj.has(st.zone.id) && doorsHere.some(d => d.to === st.zone.id && isLookedAt(d.pos, 0.10, 4.0, 26));
+        const focalLook = inThis ? isLookedAt(st.focalWorld, 0.22, st.spec.nearDist ?? 3.2, 42) : seeDoor;
 
-        // Keep structural shell intact while standing inside ownWalls rooms; otherwise fade out when looking away.
         const targetFade = st.zone.ownWalls ? (inThis || seeDoor ? 1 : 0) : (focalLook ? 1 : 0);
         const nextFade = st.fade < targetFade ? Math.min(targetFade, st.fade + fadeStep) :
             Math.max(targetFade, st.fade - fadeStep);
@@ -846,7 +915,7 @@ function updateRoomsAndExhibits(now, frame, dt, frameMs, renderer) {
         doorsHere.some(d => d.to === "courtyard" && isLookedAt(d.pos, 0.12, 4.0, 22));
 
     if (carvingState) {
-        const active = nearCourtyard && (currentId === "courtyard" ? isLookedAt(carvingState.focalWorld, 0.22, 3.2, 28) : courtyardDoorLook);
+        const active = nearCourtyard && (currentId === "courtyard" ? isLookedAt(carvingState.focalWorld, 0.22, 3.2, 30) : courtyardDoorLook);
         const nextFade = active ? Math.min(1, carvingState.fade + fadeStep) : Math.max(0, carvingState.fade - fadeStep);
         applyFade(carvingState, nextFade);
         if (active && nextFade > 0.05) {
@@ -859,7 +928,7 @@ function updateRoomsAndExhibits(now, frame, dt, frameMs, renderer) {
     }
 
     if (fitState) {
-        const active = nearCourtyard && (currentId === "courtyard" ? isLookedAt(fitState.focalWorld, 0.22, 3.2, 26) : courtyardDoorLook);
+        const active = nearCourtyard && (currentId === "courtyard" ? isLookedAt(fitState.focalWorld, 0.22, 3.2, 28) : courtyardDoorLook);
         const nextFade = active ? Math.min(1, fitState.fade + fadeStep) : Math.max(0, fitState.fade - fadeStep);
         applyFade(fitState, nextFade);
         if (active && nextFade > 0.05) {
@@ -875,11 +944,19 @@ function updateRoomsAndExhibits(now, frame, dt, frameMs, renderer) {
         const positions = creaturesState.api.positions?.() ?? [];
         const lookingAtCreature = positions.length
             ? positions.some(pos => isLookedAt(pos, 0.20, 3.8, 28))
-            : isLookedAt(creaturesState.focalWorld, 0.20, 4.0, 26);
+            : isLookedAt(creaturesState.focalWorld, 0.20, 4.0, 28);
         const active = nearCourtyard && (currentId === "courtyard" ? lookingAtCreature : courtyardDoorLook);
         const nextFade = active ? Math.min(1, creaturesState.fade + fadeStep) : Math.max(0, creaturesState.fade - fadeStep);
         applyFade(creaturesState, nextFade);
         if (active && nextFade > 0.05) creaturesState.api.update(now / 1000, dt);
+    }
+
+    if (starsState) {
+        const looking = isLookedAt(starsState.focalWorld, 0.20, 4.5, 30);
+        const active = nearCourtyard && (currentId === "courtyard" ? looking : courtyardDoorLook);
+        const nextFade = active ? Math.min(1, starsState.fade + fadeStep) : Math.max(0, starsState.fade - fadeStep);
+        applyFade(starsState, nextFade);
+        if (active && nextFade > 0.05) starsState.api.update(dt);
     }
 }
 
@@ -917,22 +994,14 @@ function interactAlongRay(ray) {
         }
     }
 
+    if (starsState?.fade > 0.1 && starsState.api.select(ray)) return true;
+
     const mapPanels = galleryMaps.map(m => m.panel).filter(Boolean);
     const mapHit = ray.intersectObjects(mapPanels, false)[0];
     if (mapHit && mapHit.distance < wallDist) {
         const entry = mapHit.object.userData.galleryMap;
         visitMap(entry);
         return true;
-    }
-
-    const exhibitPanels = exhibits.map(e => e.panel).filter(Boolean);
-    const exhibitHit = ray.intersectObjects(exhibitPanels, false)[0];
-    if (exhibitHit && exhibitHit.distance < wallDist) {
-        const idx = exhibits.findIndex(e => e.panel === exhibitHit.object);
-        if (idx >= 0) {
-            visitExhibit(idx);
-            return true;
-        }
     }
 
     return false;
@@ -1090,16 +1159,16 @@ function start() {
     window.addEventListener("resize", resize);
 
     buildCourtyard();
-    exhibits.forEach(loadExhibit);
     galleryMaps.forEach(entry => loadMap(entry).catch(() => {}));
 
     for (const [index, link] of links.entries()) {
         destination.add(new Option(link.textContent, "exhibit:" + index));
     }
     for (const st of roomStates.values()) {
-        destination.add(new Option(st.zone.name, st.spec.buttonId));
+        destination.add(new Option(st.spec.menuLabel ?? st.zone.name, st.spec.buttonId));
         st.button?.addEventListener("click", () => goToZone(st.zone.id));
     }
+    destination.add(new Option("Stars & Ships · 3D Orbit", "./orbit.html"));
     destination.add(new Option("Asteroid Farmer · 2D", "../../projects/games/asteroid-farmer/index.html"));
     destination.add(new Option("Accumulative Station · 2D", "../../projects/games/accumulative-station/index.html"));
     destination.add(new Option("Games Aquarium · 2D", "../../projects/games/games-aquarium/index.html"));
@@ -1114,12 +1183,19 @@ function start() {
     });
 
     const requestedRoom = new URLSearchParams(location.search).get("room");
-    if (requestedRoom && roomStates.has(requestedRoom)) {
-        goToZone(requestedRoom);
+    const resolvedRoom = ROOM_ALIASES[requestedRoom] ?? requestedRoom;
+    if (requestedRoom === "orbit") {
+        visitExhibit(2);
+        loadCarving();
+        loadCreatures();
+        loadLetterFit();
+    } else if (resolvedRoom && roomStates.has(resolvedRoom)) {
+        goToZone(resolvedRoom);
     } else {
         loadCarving();
         loadCreatures();
         loadLetterFit();
+        loadStarsExhibit();
     }
 
     mapChoices.querySelectorAll("button").forEach(button =>

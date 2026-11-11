@@ -35,7 +35,7 @@ function label(parent, width, x, y, z) {
     } };
 }
 
-export function asteroidModels(scene) {
+export function asteroidModels(scene, { boardPos = [-3.5, 2.7, 0], boardRotY = Math.PI / 3 } = {}) {
     const targets = [];
     const farms = outposts.map(([x, z], index) => {
         const group = new T.Group();
@@ -75,9 +75,9 @@ export function asteroidModels(scene) {
     });
     const fleet = Array.from({ length: 12 }, () => mesh(scene,
         new T.ConeGeometry(0.09, 0.3, 4).rotateX(Math.PI / 2), 0xa6d9ec, 0, 0, 0));
-    const board = label(scene, 3.4, -3.5, 2.7, 0);
-    const result = label(scene, 3.4, -3.5, 2.15, 0);
-    for (const sign of [board, result]) sign.object.rotation.y = Math.PI / 3;
+    const board = label(scene, 3.4, boardPos[0], boardPos[1], boardPos[2]);
+    const result = label(scene, 3.4, boardPos[0], boardPos[1] - 0.55, boardPos[2]);
+    for (const sign of [board, result]) sign.object.rotation.y = boardRotY;
     return {
         targets,
         draw(game) {

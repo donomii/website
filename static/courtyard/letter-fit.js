@@ -105,9 +105,9 @@ function plaque(text) {
     return new T.Mesh(new T.PlaneGeometry(1.3, 0.28), new T.MeshBasicMaterial({ map: texture }));
 }
 
-export function createLetterFit(scene) {
+export function createLetterFit(scene, x = 4.5, z = -4.75) {
     const group = new T.Group();
-    group.position.set(4.5, 0.72, -4.75);
+    group.position.set(x, 0.72, z);
     scene.add(group);
     const targetDisplay = display(group, -1.05, 0xc6a583);
     const fitDisplay = display(group, 1.05, 0xffffff);

@@ -35,6 +35,7 @@ const bronze = new T.MeshStandardMaterial({ color: 0xa98255, roughness: 0.75 });
 const floor = new T.Mesh(new T.CircleGeometry(5, 48), new T.MeshStandardMaterial({ color: 0x664936 }));
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0.012;
+floor.userData.baySkip = true;
 scene.add(floor);
 const plaster = new T.MeshStandardMaterial({ color: 0x804b37, roughness: 0.93 });
 function stonework(width, height, depth, x, y, z, material) {

@@ -1,4 +1,5 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
+import { createDatatreeRoom } from "./datatree.js";
 
 export function createLibrary() {
     const scene = new T.Scene();
@@ -20,13 +21,14 @@ export function createLibrary() {
         scene.add(object);
         return object;
     }
-    const surface = box(14, 0.2, 26, 0, -0.1, 0, stone);
-    box(2.8, 0.015, 23, 0, 0, 0, carpet);
-    for (const x of [-7, 7]) {
-        box(0.3, 5, 26, x, 2.5, 0, plaster);
-        const shelfX = x * 0.84;
-        for (const z of [-9, -5, -1, 3, 7]) {
-            box(0.2, 3, 3.2, x * 0.9, 1.5, z, wood);
+
+    const surface = box(11.6, 0.2, 18, 0, -0.1, 0, stone);
+    box(2.5, 0.015, 14.5, 0, 0, 1.2, carpet);
+    for (const x of [-5.8, 5.8]) {
+        box(0.3, 5, 18, x, 2.5, 0, plaster);
+        const shelfX = x - Math.sign(x) * 0.72;
+        for (const z of [-2.0, 2.0, 5.8]) {
+            box(0.2, 3, 3.2, x - Math.sign(x) * 0.22, 1.5, z, wood);
             for (const y of [0.45, 1.15, 1.85, 2.55]) {
                 box(0.95, 0.09, 3.2, shelfX, y, z, wood);
                 for (let book = 0; book < 9; book++) {
@@ -37,23 +39,59 @@ export function createLibrary() {
             }
         }
     }
-    box(14, 0.25, 26, 0, 5.1, 0, wood);
-    box(14, 5, 0.3, 0, 2.5, -13, plaster);
-    box(5.65, 5, 0.3, -4.175, 2.5, 13, plaster);
-    box(5.65, 5, 0.3, 4.175, 2.5, 13, plaster);
-    box(2.7, 1.7, 0.3, 0, 4.15, 13, plaster);
-    for (const z of [-10, -6, -2, 2, 6, 10]) box(14, 0.25, 0.26, 0, 4.65, z, wood);
-    for (const x of [-2.8, 2.8]) {
-        box(1.5, 0.13, 4.8, x, 0.98, -5, wood);
-        for (const z of [-6.8, -3.2]) box(0.85, 0.91, 0.24, x, 0.455, z, wood);
+    box(11.6, 0.25, 18, 0, 5.1, 0, wood);
+    box(11.6, 5, 0.3, 0, 2.5, -9, plaster);
+    box(4.5, 5, 0.3, -3.55, 2.5, 9, plaster);
+    box(4.5, 5, 0.3, 3.55, 2.5, 9, plaster);
+    box(2.6, 1.7, 0.3, 0, 4.15, 9, plaster);
+    for (const z of [-6, -2, 2, 6]) box(11.6, 0.25, 0.26, 0, 4.65, z, wood);
+    for (const x of [-2.0, 2.0]) {
+        box(1.35, 0.13, 3.8, x, 0.98, 1.2, wood);
+        for (const z of [-0.2, 2.6]) box(0.78, 0.91, 0.24, x, 0.455, z, wood);
+    }
+
+    // Mount Datatree interactive archive at the north reading wall alcove.
+    const datatree = createDatatreeRoom();
+    const archiveBay = new T.Group();
+    archiveBay.position.set(0, 0, -5.2);
+    scene.add(archiveBay);
+    for (const child of [...datatree.scene.children]) {
+        if (child.isLight || child === datatree.exit || child === datatree.surface || child.userData?.baySkip) continue;
+        archiveBay.add(child);
     }
 
     const exit = new T.Mesh(new T.TorusGeometry(1, 0.12, 10, 40),
         new T.MeshStandardMaterial({ color: 0xf4bb73, emissive: 0x7a3411 }));
-    exit.position.set(0, 1.1, 12);
+    exit.position.set(0, 1.1, 8.2);
     scene.add(exit);
-    const canStand = (x, z) => Math.abs(x) <= 5.05 && Math.abs(z) <= 12.5 &&
-        !(Math.abs(Math.abs(x) - 2.8) < 1.0 && Math.abs(z + 5) < 2.65);
-    return { scene, surface, exit, canStand, height: () => 0, limitX: 6.55, limitZ: 12.65 };
-}
 
+    const canStand = (x, z) => Math.abs(x) <= 4.15 && Math.abs(z) <= 8.5 && z >= -6.6 &&
+        !(Math.abs(Math.abs(x) - 2.0) < 0.95 && Math.abs(z - 1.2) < 2.15);
+
+    return {
+        scene,
+        surface,
+        exit,
+        canStand,
+        height: () => 0,
+        limitX: 5.35,
+        limitZ: 8.6,
+        select(ray) {
+            return datatree.select?.(ray) ?? false;
+        },
+        contextAt(_lx, lz) {
+            if (lz < -1.6) {
+                return {
+                    key: "datatree",
+                    hint: "Library & Archive · Select Datatree branches and leaves on the reading hall wall.",
+                    projectHref: "/projects/datatree/index.html",
+                };
+            }
+            return {
+                key: "library",
+                hint: "Library · Browse the reading hall shelves or explore the Datatree archive ahead.",
+                projectHref: null,
+            };
+        },
+    };
+}
