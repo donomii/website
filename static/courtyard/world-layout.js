@@ -139,7 +139,7 @@ export const ZONES = [
         signInner: OCTAGON_APOTHEM + DOOR_GAP + 0.04,
         spawnLocal: [0, 5.2],
     }),
-    // Face 5 (Northwest): Games & Worlds Hall (Games Aquarium + Jump + L-World)
+    // Face 5 (Northwest): Games & Worlds Hall (Games Aquarium + Jump + Ball Pit)
     makeFaceZone({
         id: "games",
         name: "Games & Worlds",

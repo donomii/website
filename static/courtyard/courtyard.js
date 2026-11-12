@@ -56,13 +56,13 @@ const ROOM_SPECS = [
     {
         id: "games",
         buttonId: "games-door",
-        menuLabel: "Games & Worlds (Aquarium · Jump · L-World)",
+        menuLabel: "Games & Worlds (Aquarium · Jump · Ball Pit)",
         focalLocal: [0, 1.5, -1.5],
-        hint: "Games & Worlds · Games Aquarium (left), Jump Racket figures (center), and L-World sculpture (right).",
+        hint: "Games & Worlds · Games Aquarium (left), Jump Racket figures (center), and the Ball Pit (right).",
         load: () => composeExhibitsRoom({
             floorColor: 0x4c3c34,
             bgColor: 0x1d191a,
-            defaultHint: "Games & Worlds · Games Aquarium (left), Jump Racket figures (center), and L-World sculpture (right).",
+            defaultHint: "Games & Worlds · Games Aquarium (left), Jump Racket figures (center), and the Ball Pit (right).",
             bays: [
                 {
                     id: "aquarium",
@@ -87,15 +87,14 @@ const ROOM_SPECS = [
                     load: () => import(mod("./jump.js")).then(m => m.createJumpRoom()),
                 },
                 {
-                    id: "lworld",
-                    title: "L-World",
-                    hint: "L-World · Turn the turtle sculpture or open the full editor.",
-                    projectHref: "./lworld-room.html",
-                    x: 3.4,
+                    id: "ball-pit",
+                    title: "Ball Pit",
+                    hint: "Ball Pit · Please enjoy an extra hour in the ball pit. Click the pool to splash.",
+                    x: 3.5,
                     z: -1.4,
                     rotY: -Math.PI / 2,
-                    scale: 0.64,
-                    load: () => import(mod("./lworld-gallery.js")).then(m => m.createLWorldRoom()),
+                    scale: 0.9,
+                    load: () => import("./ball-pit.js?v=20261112c").then(m => m.createBallPitRoom()),
                 },
             ],
         }),
@@ -171,6 +170,8 @@ const ROOM_SPECS = [
 const ROOM_ALIASES = {
     aquarium: "games",
     jump: "games",
+    ballpit: "games",
+    "ball-pit": "games",
     lworld: "games",
     solids: "workshop",
     program: "workshop",

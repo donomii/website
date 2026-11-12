@@ -129,7 +129,7 @@ Surrounding direct-entry wings hold multiple related works per room:
 - West doorway: **Library & Datatree** reading hall with shelves, tables, and the
   interactive Datatree archive wall at the back.
 - North-west doorway: **Games & Worlds** combining the **Games Aquarium** tank,
-  autonomous blocky **Jump** Racket figures, and the **L-World** sculpture.
+  autonomous blocky **Jump** Racket figures, and the **Ball Pit** display.
 - North doorway: **Art Deco salon** with emerald walls, fluted pilasters, lounges,
   palms, classic **L-system brass sunburst panels**, rotating brass armillary sphere,
   and one interactive **3D L-system design panel** on the east wall where visitors
