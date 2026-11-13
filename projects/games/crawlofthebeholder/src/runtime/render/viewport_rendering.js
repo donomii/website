@@ -756,6 +756,17 @@
       }
 
       function drawViewportHaze(context, width, height) {
+        const noir = typeof isNoirLighting === "function" && isNoirLighting();
+        if (noir) {
+          const pulse = ((state.turnCount || 0) % 2) * 0.03;
+          const noirGrad = context.createRadialGradient(width * 0.5, height * 0.54, width * 0.06, width * 0.5, height * 0.54, width * 0.52);
+          noirGrad.addColorStop(0, `rgba(255, 168, 72, ${0.18 + pulse})`);
+          noirGrad.addColorStop(0.42, "rgba(18, 10, 6, 0.34)");
+          noirGrad.addColorStop(1, "rgba(3, 2, 3, 0.94)");
+          context.fillStyle = noirGrad;
+          context.fillRect(0, 0, width, height);
+          return;
+        }
         const radial = context.createRadialGradient(width * 0.5, height * 0.55, width * 0.08, width * 0.5, height * 0.55, width * 0.72);
         radial.addColorStop(0, "rgba(0, 0, 0, 0)");
         radial.addColorStop(0.56, "rgba(0, 0, 0, 0.18)");

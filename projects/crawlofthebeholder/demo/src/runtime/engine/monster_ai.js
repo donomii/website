@@ -916,6 +916,10 @@
           if (typeof saveGame === "function") saveGame();
           return;
         }
+        if (typeof shouldDeferEnemyTurnForAp === "function" && shouldDeferEnemyTurnForAp()) {
+          if (typeof saveGame === "function") saveGame();
+          return;
+        }
         state.turnCount += 1;
         state.floorTurnCount = (state.floorTurnCount || 0) + 1;
         if (typeof tickClassCooldowns === "function") tickClassCooldowns();

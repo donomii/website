@@ -565,6 +565,60 @@ h2 {
   border: 1px solid #269a4c;
   text-shadow: 0 0 8px rgba(72, 255, 132, 0.45);
 }
+
+.card-hand-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  background: rgba(16, 12, 9, 0.92);
+  border-top: 1px solid rgba(235, 180, 90, 0.28);
+}
+
+.card-ap-badge {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffd37a;
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 200, 98, 0.4);
+  border-radius: 6px;
+  background: rgba(54, 34, 14, 0.72);
+}
+
+.tactical-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 6px 10px;
+  border: 1px solid rgba(241, 204, 98, 0.48);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(42, 30, 18, 0.95), rgba(22, 16, 11, 0.95));
+  color: #f6ead2;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.tactical-card strong {
+  color: #ffd982;
+}
+
+.tactical-card span {
+  font-size: 0.72rem;
+  color: #cabca4;
+}
+
+.card-end-round {
+  margin-left: auto;
+  padding: 6px 10px;
+  border: 1px solid rgba(205, 145, 92, 0.5);
+  border-radius: 6px;
+  background: rgba(48, 28, 16, 0.9);
+  color: #f6d5a2;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
 }
 
 .map-cell.decor {

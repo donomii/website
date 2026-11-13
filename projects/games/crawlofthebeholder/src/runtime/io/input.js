@@ -555,6 +555,17 @@
             });
           }
         }
+        if (els.cardHandBar) {
+          els.cardHandBar.addEventListener("click", (event) => {
+            const cardBtn = event.target?.closest?.("button[data-card-index]");
+            if (cardBtn && typeof playCardIndex === "function") {
+              playCardIndex(Number(cardBtn.dataset.cardIndex));
+              return;
+            }
+            const endBtn = event.target?.closest?.("button[data-card-end]");
+            if (endBtn && typeof handleAction === "function") handleAction("wait");
+          });
+        }
         // First-launch flow: character creation supersedes the welcome screen.
         if (!state.characterCreated && els.characterCreateModal) {
           showModal("characterCreateModal");

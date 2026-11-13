@@ -479,6 +479,20 @@
             alpha: beat.onBeat ? 0.94 : 0.56
           });
         }
+        // Mode 5 (Card & AP Crawl): project a flickering amber Noir Torchlight halo on the party tile.
+        if (typeof isNoirLighting === "function" && isNoirLighting()) {
+          const ember = ((state.turnCount || 0) % 2) === 0 ? "#ffb44d" : "#ff9438";
+          surfaces.push({
+            kind: "decal",
+            x: state.x,
+            y: state.y,
+            glyph: "☀",
+            color: ember,
+            inset: 0.04,
+            lift: 0.018,
+            alpha: 0.55
+          });
+        }
         // Each active ray lights its own target on the floor or door cap.
         for (const { x, y, glyph, lift } of vrAimTiles.values()) {
           surfaces.push({ kind: "decal", x, y, glyph, color: "#f1d07a", inset: 0.08, lift, alpha: 0.85 });
@@ -2385,6 +2399,20 @@
 
       function vrPackSlots() {
         const slots = [];
+        if (typeof isGameMode === "function" && isGameMode("cardcrawl")) {
+          (state.cardHand || []).forEach((card, index) => {
+            slots.push({
+              item: {
+                id: `card:${index}`,
+                shortName: `♠ ${card.name}`,
+                name: `${card.name} (${card.cost} AP): ${card.desc}`,
+                tile: card.tile,
+                kind: "card"
+              },
+              count: 1
+            });
+          });
+        }
         const potions = new Map();
         for (const item of state.inventory) {
           if (item.kind === "healing") {
@@ -2443,6 +2471,10 @@
       }
 
       function vrUsePackItem(id) {
+        if (typeof id === "string" && id.startsWith("card:")) {
+          if (typeof playCardIndex === "function") playCardIndex(Number(id.slice(5)));
+          return;
+        }
         const item = state.inventory.find((entry) => entry.id === id);
         if (!item) return;
         if (typeof equipKindSpec === "function" && equipKindSpec(item.kind) && typeof equipItemToMember === "function") {

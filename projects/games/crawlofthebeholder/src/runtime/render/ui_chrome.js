@@ -779,11 +779,37 @@
         els.endModal.classList.remove("hidden");
       }
 
+      function renderCardHand() {
+        if (!els.cardHandBar) return;
+        const active = typeof isGameMode === "function" && isGameMode("cardcrawl");
+        els.cardHandBar.classList?.toggle?.("hidden", !active);
+        if (!active) {
+          els.cardHandBar.innerHTML = "";
+          return;
+        }
+        const ap = state.cardAp ?? 2;
+        const maxAp = state.cardMaxAp ?? 2;
+        const round = state.cardRound || 1;
+        const dots = "●".repeat(Math.max(0, ap)) + "○".repeat(Math.max(0, maxAp - ap));
+        const cards = (state.cardHand || []).map((card, index) => `
+          <button type="button" class="tactical-card" data-card-index="${index}">
+            <strong>${escapeHtml(card.name)} · ${card.cost} AP</strong>
+            <span>${escapeHtml(card.desc)}</span>
+          </button>
+        `).join("");
+        els.cardHandBar.innerHTML = `
+          <span class="card-ap-badge">R${round} · AP ${dots} (${ap}/${maxAp})</span>
+          ${cards}
+          <button type="button" class="card-end-round" data-card-end="1">End Round</button>
+        `;
+      }
+
       function render() {
         if (typeof scanDiscoveredMonsters === "function") scanDiscoveredMonsters();
         renderViewport();
         renderMap();
         renderChrome();
+        renderCardHand();
         renderEndModal();
         renderCompass();
         updateLowHpBorder();
@@ -796,6 +822,7 @@
         renderInventory,
         renderLog,
         renderChrome,
+        renderCardHand,
         inventoryShortcut,
         inventoryIndexForKey,
         clearEffectsSoon,

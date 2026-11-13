@@ -117,6 +117,10 @@
           sprintSealed: !!state.sprintSealed,
           tempoStreak: state.tempoStreak || 0,
           tempoGroove: state.tempoGroove || 1,
+          cardAp: state.cardAp ?? 2,
+          cardMaxAp: state.cardMaxAp ?? 2,
+          cardRound: state.cardRound ?? 1,
+          cardHand: Array.isArray(state.cardHand) ? state.cardHand.map((c) => ({ ...c })) : [],
           zotFloorIndex: state.zotFloorIndex,
           runesInWorld: state.runesInWorld,
           orbRun: !!state.orbRun,
@@ -203,6 +207,10 @@
         state.tempoAnchorMs = 0;
         state.tempoLastBeatIndex = 0;
         state.tempoActedBeat = -1;
+        state.cardAp = Number.isFinite(saved.cardAp) ? saved.cardAp : 2;
+        state.cardMaxAp = Number.isFinite(saved.cardMaxAp) ? saved.cardMaxAp : 2;
+        state.cardRound = Number.isFinite(saved.cardRound) ? saved.cardRound : 1;
+        state.cardHand = Array.isArray(saved.cardHand) ? saved.cardHand.map((c) => ({ ...c })) : [];
         state.floorIndex = saved.floorIndex;
         state.x = saved.x;
         state.y = saved.y;

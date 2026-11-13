@@ -39,6 +39,12 @@
           name: "Necro-Beat Tempo",
           shortName: "Tempo",
           summary: "Crypt of the NecroDancer rhythm crawl: act on the 110 BPM beat in 2D & VR to build 1x-4x Groove damage & gold; skipping a beat lets monsters advance."
+        },
+        cardcrawl: {
+          key: "cardcrawl",
+          name: "Card & AP Crawl",
+          shortName: "Cards+AP",
+          summary: "Demeo & Gloomhaven tabletop crawl in Noir Torchlight: 2 Action Points per round, a 4-card Tactical Hand usable in 2D & VR, and flickering amber shadows."
         }
       };
 
@@ -93,6 +99,10 @@
         return isGameMode("oldschool");
       }
 
+      function isNoirLighting() {
+        return isGameMode("cardcrawl");
+      }
+
       function modeStatusLabel() {
         const mode = currentGameMode();
         if (mode.key === "standard") return "";
@@ -113,6 +123,11 @@
           const groove = Math.max(1, state.tempoGroove || 1);
           const status = tempoStatus();
           return `[Tempo · x${groove} ${status.onBeat ? "♪" : "·"}]`;
+        }
+        if (mode.key === "cardcrawl") {
+          const ap = state.cardAp ?? 2;
+          const maxAp = state.cardMaxAp ?? 2;
+          return `[Cards+AP · R${state.cardRound || 1} · ${ap}/${maxAp} AP]`;
         }
         return `[${mode.shortName}]`;
       }
@@ -389,6 +404,10 @@
         state.tempoAnchorMs = 0;
         state.tempoLastBeatIndex = 0;
         state.tempoActedBeat = -1;
+        state.cardAp = 2;
+        state.cardMaxAp = 2;
+        state.cardRound = 1;
+        state.cardHand = [];
         state.talentPoints = 0;
         state.talents = {};
         state.mapMarkers = [];
@@ -828,6 +847,177 @@
         tempoTimer?.unref?.();
       }
 
+      // ── Mode 5: Card & AP Crawl / Noir Torch (2 AP/round + 4-card hand) ──
+      const CARD_CATALOG = [
+        {
+          id: "firebolt",
+          name: "Firebolt",
+          cost: 1,
+          tile: resources.assets?.effectFlame || "vendor/crawl/crawl-ref/source/rltiles/effect/flame0.png",
+          desc: "12 fire damage ahead"
+        },
+        {
+          id: "whirlwind",
+          name: "Whirlwind",
+          cost: 1,
+          tile: resources.assets?.effectImpact || "vendor/crawl/crawl-ref/source/rltiles/effect/hit.png",
+          desc: "10 damage to adjacent foes"
+        },
+        {
+          id: "iron_ward",
+          name: "Iron Ward",
+          cost: 1,
+          tile: resources.assets?.potionHeal || "vendor/crawl/crawl-ref/source/rltiles/item/potion/ruby.png",
+          desc: "Heal +6 HP & +2 Resist"
+        },
+        {
+          id: "flash_bang",
+          name: "Flash Bang",
+          cost: 1,
+          tile: resources.assets?.effectSmite || "vendor/crawl/crawl-ref/source/rltiles/effect/bolt_lightning0.png",
+          desc: "Stun nearby foes 1t"
+        },
+        {
+          id: "blink_step",
+          name: "Blink Step",
+          cost: 1,
+          tile: resources.assets?.effectBlink || "vendor/crawl/crawl-ref/source/rltiles/effect/blink.png",
+          desc: "Leap up to 2 open tiles"
+        },
+        {
+          id: "battle_rush",
+          name: "Battle Rush",
+          cost: 1,
+          tile: resources.assets?.potionMight || "vendor/crawl/crawl-ref/source/rltiles/item/potion/brilliant_blue.png",
+          desc: "+3 Might & step forward"
+        }
+      ];
+
+      function refillCardHand() {
+        if (!Array.isArray(state.cardHand)) state.cardHand = [];
+        let cursor = (state.cardRound || 1) + (state.turnCount || 0) + state.cardHand.length;
+        while (state.cardHand.length < 4) {
+          const template = CARD_CATALOG[cursor % CARD_CATALOG.length];
+          state.cardHand.push({ ...template });
+          cursor += 1;
+        }
+        return state.cardHand;
+      }
+
+      function startCardCrawlMode() {
+        state.cardAp = 2;
+        state.cardMaxAp = 2;
+        state.cardRound = 1;
+        state.cardHand = [];
+        refillCardHand();
+      }
+
+      function shouldDeferEnemyTurnForAp() {
+        if (!isGameMode("cardcrawl")) return false;
+        if (context.forceEndCardRound || (state.cardAp ?? 2) <= 1) {
+          state.cardAp = state.cardMaxAp || 2;
+          state.cardRound = (state.cardRound || 1) + 1;
+          refillCardHand();
+          return false;
+        }
+        state.cardAp -= 1;
+        state.turnCount += 1;
+        state.floorTurnCount = (state.floorTurnCount || 0) + 1;
+        if (state.message && !state.message.includes("AP left")) {
+          state.message = `${state.message} (${state.cardAp} AP left)`;
+        }
+        return true;
+      }
+
+      function playCardIndex(index) {
+        if (!isGameMode("cardcrawl") || state.victory || state.defeated) return false;
+        if (!Array.isArray(state.cardHand) || index < 0 || index >= state.cardHand.length) return false;
+        const card = state.cardHand[index];
+        const floorState = currentFloorState();
+        const forward = dirAt(0);
+        if (card.id === "firebolt") {
+          const lineHit = typeof firstTargetInLine === "function" ? firstTargetInLine(5) : null;
+          const target = lineHit?.target || (floorState.monsters || []).find((m) => m.hp > 0 && distanceToPlayer(m) <= 5 && clearSightBetween(state, m));
+          if (target) {
+            const dmg = 12;
+            target.hp = Math.max(0, target.hp - dmg);
+            target.alerted = true;
+            if (typeof addDamageMark === "function") addDamageMark(target, "fire", dmg);
+            if (typeof addEffect === "function") addEffect("flame", typeof lineCells === "function" ? lineCells(state, target) : [{ x: target.x, y: target.y }]);
+            state.message = `Card [Firebolt] scorches ${target.name} for ${dmg}!${target.hp === 0 && typeof killMonster === "function" ? ` ${killMonster(target)}` : ""}`;
+          } else {
+            const tx = state.x + forward.x;
+            const ty = state.y + forward.y;
+            if (typeof addEffect === "function" && mapContains(tx, ty)) addEffect("flame", [{ x: tx, y: ty }]);
+            state.message = "Card [Firebolt] flares into darkness.";
+          }
+        } else if (card.id === "whirlwind") {
+          const adjacent = (floorState.monsters || []).filter((m) => m.hp > 0 && distanceToPlayer(m) <= 1);
+          const kills = [];
+          for (const m of adjacent) {
+            m.hp = Math.max(0, m.hp - 10);
+            m.alerted = true;
+            if (typeof addDamageMark === "function") addDamageMark(m, null, 10);
+            if (m.hp === 0 && typeof killMonster === "function") kills.push(killMonster(m));
+          }
+          if (typeof addEffect === "function") addEffect("impact", adjacent.map((m) => ({ x: m.x, y: m.y })));
+          state.message = adjacent.length > 0
+            ? `Card [Whirlwind] slashes ${adjacent.length} foe(s) for 10!${kills.length ? ` ${kills.join(" ")}` : ""}`
+            : "Card [Whirlwind] slices empty air.";
+        } else if (card.id === "iron_ward") {
+          const injured = state.party.filter((m) => m.hp > 0 && m.hp < m.maxHp).sort((a, b) => a.hp / a.maxHp - b.hp / b.maxHp)[0] || liveMember();
+          if (injured) injured.hp = Math.min(injured.maxHp, injured.hp + 6);
+          state.resistanceTurns = Math.max(state.resistanceTurns || 0, 2);
+          state.message = injured ? `Card [Iron Ward] restores ${injured.name} +6 HP & grants Resistance.` : "Card [Iron Ward] fortifies the party.";
+        } else if (card.id === "flash_bang") {
+          const nearby = (floorState.monsters || []).filter((m) => m.hp > 0 && distanceToPlayer(m) <= 4);
+          for (const m of nearby) m.stunnedTurns = Math.max(m.stunnedTurns || 0, 1);
+          if (typeof addEffect === "function") addEffect("smite", nearby.map((m) => ({ x: m.x, y: m.y })));
+          state.message = `Card [Flash Bang] stuns ${nearby.length} nearby foe(s)!`;
+        } else if (card.id === "blink_step") {
+          let dest = null;
+          for (const dist of [2, 1]) {
+            const tx = state.x + forward.x * dist;
+            const ty = state.y + forward.y * dist;
+            if (mapContains(tx, ty) && !solidAt(tx, ty) && !monsterAt(tx, ty)) {
+              dest = { x: tx, y: ty };
+              break;
+            }
+          }
+          if (dest) {
+            if (typeof addEffect === "function") addEffect("blink", [{ x: state.x, y: state.y }, dest]);
+            state.x = dest.x;
+            state.y = dest.y;
+            if (typeof reveal === "function") reveal();
+            state.message = "Card [Blink Step] shifts the party through the gloom.";
+          } else {
+            state.message = "Card [Blink Step] fizzles against solid stone.";
+          }
+        } else if (card.id === "battle_rush") {
+          state.mightTurns = Math.max(state.mightTurns || 0, 3);
+          const tx = state.x + forward.x;
+          const ty = state.y + forward.y;
+          const blocking = monsterAt(tx, ty);
+          if (blocking && typeof attackTarget === "function") {
+            state.cardHand.splice(index, 1);
+            if (typeof playSound === "function") playSound("spell");
+            attackTarget(blocking);
+            return true;
+          }
+          if (mapContains(tx, ty) && !solidAt(tx, ty) && !blocking) {
+            state.x = tx;
+            state.y = ty;
+            if (typeof reveal === "function") reveal();
+          }
+          state.message = "Card [Battle Rush] grants Might and drives forward!";
+        }
+        state.cardHand.splice(index, 1);
+        if (typeof playSound === "function") playSound("spell");
+        if (typeof advanceTurn === "function") advanceTurn();
+        if (typeof render === "function") render();
+        return true;
+      }
+
       function onModeAction(action, nowMs) {
         if (isGameMode("tempo")) return tempoEvaluateAction(action, nowMs);
         return null;
@@ -837,6 +1027,7 @@
         stopTempoTicker();
         if (isGameMode("foresight")) planAllForesightIntents();
         if (isGameMode("tempo")) startTempoTicker();
+        if (isGameMode("cardcrawl")) startCardCrawlMode();
       }
 
       function onModeTurnEnd() {
@@ -860,6 +1051,7 @@
         modeDamageScale,
         isWireframeStyle,
         isAutomapDisabled,
+        isNoirLighting,
         modeStatusLabel,
         makeSprintFloor,
         startSprintMode,
@@ -880,6 +1072,11 @@
         tempoTickAt,
         startTempoTicker,
         stopTempoTicker,
+        CARD_CATALOG,
+        refillCardHand,
+        startCardCrawlMode,
+        shouldDeferEnemyTurnForAp,
+        playCardIndex,
         onModeAction,
         onModeRunStarted,
         onModeTurnEnd,

@@ -60,7 +60,12 @@
         } else {
           state.message = "The party waits. Waiting does not restore health; use recovery supplies.";
         }
-        advanceTurn();
+        context.forceEndCardRound = true;
+        try {
+          advanceTurn();
+        } finally {
+          context.forceEndCardRound = false;
+        }
         render();
       }
 
