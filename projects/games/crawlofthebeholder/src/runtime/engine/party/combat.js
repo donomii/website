@@ -312,9 +312,11 @@
         } else if (target.hp === 0) {
           state.message = `${lead} ${drops} the ${target.name} for ${damage}. ${killMonster(target)}`.trim();
         } else if (critRolled) {
-          state.message = `Critical! ${lead} ${hits} the ${target.name} for ${damage}.${applyWeaponProc(target, damage)}${reactiveElectricDischarge(target, damage)}`;
+          const shoveNote = typeof foresightShoveMonster === "function" ? foresightShoveMonster(target) : "";
+          state.message = `Critical! ${lead} ${hits} the ${target.name} for ${damage}.${applyWeaponProc(target, damage)}${shoveNote}${reactiveElectricDischarge(target, damage)}`;
         } else {
-          state.message = `${lead} ${hits} the ${target.name} for ${damage}.${applyWeaponProc(target, damage)}${reactiveElectricDischarge(target, damage)}`;
+          const shoveNote = typeof foresightShoveMonster === "function" ? foresightShoveMonster(target) : "";
+          state.message = `${lead} ${hits} the ${target.name} for ${damage}.${applyWeaponProc(target, damage)}${shoveNote}${reactiveElectricDischarge(target, damage)}`;
         }
         if (state.defeated) { render(); return; }
         if (!options.skipTurnAdvance) {

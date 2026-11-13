@@ -21,6 +21,12 @@
           name: "Dungeon Sprint",
           shortName: "Sprint",
           summary: "DCSS Dungeon Sprint: single-floor 21x15 gauntlet arena, 2x XP & gold, combo Might rush, reinforcement waves, and a 3-rune Sanctum vault."
+        },
+        foresight: {
+          key: "foresight",
+          name: "Foresight Tactics",
+          shortName: "Foresight",
+          summary: "Into the Breach tactical combat: every enemy telegraphs its next strike or step in 2D & VR, and every melee hit shoves foes into walls, hazards, traps, or friendly fire."
         }
       };
 
@@ -65,6 +71,11 @@
           const held = typeof runesHeld === "function" ? runesHeld() : 0;
           const seal = isSprintVaultSealed() ? `Seal ${held}/3` : "Vault Open";
           return `[Sprint · ${seal}]`;
+        }
+        if (mode.key === "foresight") {
+          const floorState = typeof currentFloorState === "function" ? currentFloorState() : null;
+          const threats = (floorState?.monsters || []).filter((m) => m.hp > 0 && m.foresight && ["melee", "reach", "ranged"].includes(m.foresight.kind)).length;
+          return `[Foresight · ${threats} Telegraphs]`;
         }
         return `[${mode.shortName}]`;
       }
@@ -388,6 +399,290 @@
         return nextMode.key;
       }
 
+      // ── Mode 2: Foresight Tactics (Into the Breach intents + push) ────────
+      function planForesightIntent(monster) {
+        if (!monster || monster.hp <= 0) return null;
+        if ((monster.stunnedTurns || 0) > 0 || (monster.frozenTurns || 0) > 0 || (monster.sleepingTurns || 0) > 0 || (monster.rootedTurns || 0) > 0) {
+          monster.foresight = { kind: "canceled", label: "STUNNED" };
+          return monster.foresight;
+        }
+        const distance = distanceToPlayer(monster);
+        const vision = typeof monsterVisionRange === "function" ? monsterVisionRange() : 7;
+        const canSee = typeof clearSightBetween === "function" ? clearSightBetween(monster, state) : distance <= vision;
+        if (!monster.alerted && (distance > vision || !canSee)) {
+          monster.foresight = { kind: "idle", label: "IDLE" };
+          return monster.foresight;
+        }
+        if (distance <= vision && canSee) monster.alerted = true;
+        if (distance === 1) {
+          monster.foresight = {
+            kind: "melee",
+            dx: state.x - monster.x,
+            dy: state.y - monster.y,
+            dmg: monster.attack || 4,
+            label: `HIT ${monster.attack || 4}`
+          };
+          return monster.foresight;
+        }
+        if (distance === 2 && monster.traits?.reachDamage && typeof clearLineToPlayer === "function" && clearLineToPlayer(monster)) {
+          monster.foresight = {
+            kind: "reach",
+            dx: state.x - monster.x,
+            dy: state.y - monster.y,
+            dmg: monster.traits.reachDamage,
+            label: `REACH ${monster.traits.reachDamage}`
+          };
+          return monster.foresight;
+        }
+        if (monster.ranged && (monster.silencedTurns || 0) <= 0 && typeof rangedCanTargetPlayer === "function" && rangedCanTargetPlayer(monster)) {
+          const power = (monster.ranged.power || 5) + ((monster.mightTurns || 0) > 0 ? 2 : 0);
+          monster.foresight = {
+            kind: "ranged",
+            dx: state.x - monster.x,
+            dy: state.y - monster.y,
+            dmg: power,
+            spellName: monster.ranged.name || "bolt",
+            label: `${String(monster.ranged.name || "BOLT").slice(0, 10)} ${power}`
+          };
+          return monster.foresight;
+        }
+        if (distance <= 8 && typeof monsterPathStep === "function") {
+          const step = monsterPathStep(monster);
+          if (step && (step.x !== state.x || step.y !== state.y)) {
+            monster.foresight = { kind: "step", x: step.x, y: step.y, label: "STEP" };
+            return monster.foresight;
+          }
+        }
+        monster.foresight = { kind: "idle", label: "HOLD" };
+        return monster.foresight;
+      }
+
+      function planAllForesightIntents() {
+        if (!isGameMode("foresight")) return;
+        const floorState = typeof currentFloorState === "function" ? currentFloorState() : null;
+        if (!floorState) return;
+        for (const monster of floorState.monsters || []) {
+          if (monster.hp > 0) planForesightIntent(monster);
+          else monster.foresight = null;
+        }
+      }
+
+      function foresightResolvedTargets(monster) {
+        const intent = monster?.foresight;
+        if (!intent || monster.hp <= 0) return { kind: "idle", cells: [], impact: null };
+        if (intent.kind === "canceled" || intent.kind === "idle") return { kind: intent.kind, cells: [], impact: null };
+        if (intent.kind === "step") {
+          return { kind: "step", cells: [{ x: intent.x, y: intent.y }], impact: { x: intent.x, y: intent.y } };
+        }
+        if (intent.kind === "melee") {
+          const tx = monster.x + intent.dx;
+          const ty = monster.y + intent.dy;
+          const cells = typeof mapContains === "function" && mapContains(tx, ty) ? [{ x: tx, y: ty }] : [];
+          return { kind: "melee", cells, impact: cells[0] || null };
+        }
+        if (intent.kind === "reach" || intent.kind === "ranged") {
+          const endX = monster.x + intent.dx;
+          const endY = monster.y + intent.dy;
+          const raw = typeof lineCells === "function" ? lineCells(monster, { x: endX, y: endY }) : [{ x: endX, y: endY }];
+          const cells = [];
+          let impact = null;
+          for (const pt of raw) {
+            if (pt.x === monster.x && pt.y === monster.y) continue;
+            if (typeof mapContains === "function" && !mapContains(pt.x, pt.y)) break;
+            cells.push(pt);
+            impact = pt;
+            if (solidAt(pt.x, pt.y)) break;
+            if ((pt.x === state.x && pt.y === state.y) || monsterAt(pt.x, pt.y)) break;
+          }
+          return { kind: intent.kind, cells, impact };
+        }
+        return { kind: "idle", cells: [], impact: null };
+      }
+
+      function foresightThreatCells() {
+        const attacks = new Map();
+        const steps = new Map();
+        if (!isGameMode("foresight")) return { attacks, steps };
+        const floorState = typeof currentFloorState === "function" ? currentFloorState() : null;
+        if (!floorState) return { attacks, steps };
+        for (const monster of floorState.monsters || []) {
+          if (monster.hp <= 0 || !monster.foresight) continue;
+          const resolved = foresightResolvedTargets(monster);
+          if (["melee", "reach", "ranged"].includes(resolved.kind)) {
+            for (const cell of resolved.cells) {
+              const k = keyOf(cell.x, cell.y);
+              if (!attacks.has(k)) attacks.set(k, []);
+              attacks.get(k).push({
+                monster,
+                kind: resolved.kind,
+                dmg: monster.foresight.dmg || 4,
+                label: monster.foresight.label,
+                isImpact: resolved.impact && cell.x === resolved.impact.x && cell.y === resolved.impact.y
+              });
+            }
+          } else if (resolved.kind === "step") {
+            for (const cell of resolved.cells) {
+              const k = keyOf(cell.x, cell.y);
+              if (!steps.has(k)) steps.set(k, []);
+              steps.get(k).push({ monster, label: monster.foresight.label });
+            }
+          }
+        }
+        return { attacks, steps };
+      }
+
+      function foresightShoveMonster(target, fromX = state.x, fromY = state.y) {
+        if (!isGameMode("foresight") || !target || target.hp <= 0 || target.traits?.stationary) return "";
+        const dx = Math.sign(target.x - fromX);
+        const dy = Math.sign(target.y - fromY);
+        if (dx === 0 && dy === 0) return "";
+        const bx = target.x + dx;
+        const by = target.y + dy;
+        const slam = Math.max(3, Math.ceil((target.maxHp || 10) / 8));
+        if (!mapContains(bx, by) || solidAt(bx, by)) {
+          target.hp = Math.max(0, target.hp - slam);
+          target.stunnedTurns = Math.max(target.stunnedTurns || 0, 1);
+          target.foresight = { kind: "canceled", label: "STUNNED" };
+          if (typeof addDamageMark === "function") addDamageMark(target, null, slam);
+          if (typeof addEffect === "function") addEffect("impact", [{ x: target.x, y: target.y }]);
+          const note = ` ${target.name} slams into stone for ${slam} and is stunned!`;
+          if (target.hp === 0 && typeof killMonster === "function") return `${note} ${killMonster(target)}`.trimEnd();
+          return note;
+        }
+        const other = monsterAt(bx, by);
+        if (other) {
+          target.hp = Math.max(0, target.hp - slam);
+          other.hp = Math.max(0, other.hp - slam);
+          other.alerted = true;
+          if (typeof addDamageMark === "function") {
+            addDamageMark(target, null, slam);
+            addDamageMark(other, null, slam);
+          }
+          if (typeof addEffect === "function") addEffect("impact", [{ x: target.x, y: target.y }, { x: other.x, y: other.y }]);
+          const notes = [` ${target.name} crashes into ${other.name} for ${slam} each!`];
+          if (target.hp === 0 && typeof killMonster === "function") notes.push(killMonster(target));
+          if (other.hp === 0 && typeof killMonster === "function") notes.push(killMonster(other));
+          return notes.join(" ");
+        }
+        if (bx === state.x && by === state.y) return "";
+        target.x = bx;
+        target.y = by;
+        const terrain = terrainAt(bx, by);
+        if (terrain === "lava" || terrain === "deep-water") {
+          const drop = Math.max(6, Math.ceil((target.maxHp || 12) / 2));
+          target.hp = Math.max(0, target.hp - drop);
+          if (typeof addDamageMark === "function") addDamageMark(target, terrain === "lava" ? "fire" : "cold", drop);
+          const note = ` ${target.name} is shoved into ${terrain === "lava" ? "lava" : "deep water"} for ${drop}!`;
+          if (target.hp === 0 && typeof killMonster === "function") return `${note} ${killMonster(target)}`.trimEnd();
+          return note;
+        }
+        const trap = currentFloorState().traps?.find((t) => t.armed && t.x === bx && t.y === by);
+        if (trap) {
+          trap.armed = false;
+          const trapDmg = Math.max(4, trap.power || 8);
+          target.hp = Math.max(0, target.hp - trapDmg);
+          target.foresight = { kind: "canceled", label: "TRAPPED" };
+          if (typeof addDamageMark === "function") addDamageMark(target, null, trapDmg);
+          if (typeof addEffect === "function") addEffect("impact", [{ x: bx, y: by }]);
+          const note = ` ${target.name} is shoved onto ${trap.name} for ${trapDmg}!`;
+          if (target.hp === 0 && typeof killMonster === "function") return `${note} ${killMonster(target)}`.trimEnd();
+          return note;
+        }
+        return ` ${target.name} is shoved!`;
+      }
+
+      function executeForesightMonsterAction(monster, floorState, messages) {
+        if (!isGameMode("foresight") || !monster.foresight) return null;
+        const intent = monster.foresight;
+        const discovered = floorState.discovered.has(keyOf(monster.x, monster.y));
+        if (intent.kind === "canceled") {
+          if (discovered) messages.push(`${monster.name}'s action was canceled.`);
+          return false;
+        }
+        if (intent.kind === "idle") return false;
+        if (intent.kind === "melee" || intent.kind === "reach") {
+          const tx = monster.x + intent.dx;
+          const ty = monster.y + intent.dy;
+          if (tx === state.x && ty === state.y) {
+            return monsterMelee(monster, messages);
+          }
+          const victim = monsterAt(tx, ty);
+          if (victim && victim !== monster) {
+            const dmg = Math.max(2, intent.dmg || monster.attack || 4);
+            victim.hp = Math.max(0, victim.hp - dmg);
+            if (typeof addDamageMark === "function") addDamageMark(victim, null, dmg);
+            if (typeof addEffect === "function") addEffect("impact", [{ x: tx, y: ty }]);
+            if (discovered || floorState.discovered.has(keyOf(tx, ty))) {
+              messages.push(`${monster.name}'s telegraphed strike hits ${victim.name} for ${dmg}!`);
+            }
+            if (victim.hp === 0 && typeof killMonster === "function") messages.push(killMonster(victim));
+            return false;
+          }
+          if (typeof addEffect === "function" && mapContains(tx, ty)) addEffect("impact", [{ x: tx, y: ty }]);
+          if (discovered) messages.push(`${monster.name}'s telegraphed strike misses empty air!`);
+          return false;
+        }
+        if (intent.kind === "ranged") {
+          const resolved = foresightResolvedTargets(monster);
+          const impact = resolved.impact;
+          const effectKind = typeof spellEffectKind === "function" ? spellEffectKind(monster.ranged || {}) : "magic";
+          if (resolved.cells.length > 0 && typeof addEffect === "function") addEffect(effectKind, resolved.cells);
+          if (!impact || solidAt(impact.x, impact.y)) {
+            if (discovered) messages.push(`${monster.name}'s ${intent.spellName} hits the wall!`);
+            return false;
+          }
+          const victim = monsterAt(impact.x, impact.y);
+          if (victim && victim !== monster) {
+            const dmg = Math.max(2, intent.dmg || 5);
+            victim.hp = Math.max(0, victim.hp - dmg);
+            if (typeof addDamageMark === "function") addDamageMark(victim, monster.ranged?.element || null, dmg);
+            if (discovered || floorState.discovered.has(keyOf(impact.x, impact.y))) {
+              messages.push(`${monster.name}'s ${intent.spellName} blasts ${victim.name} for ${dmg}!`);
+            }
+            if (victim.hp === 0 && typeof killMonster === "function") messages.push(killMonster(victim));
+            return false;
+          }
+          if (impact.x === state.x && impact.y === state.y) {
+            const defender = liveMember();
+            const rangedPower = Math.max(1, intent.dmg || 5);
+            const hit = typeof hurtLiveMember === "function" ? hurtLiveMember(rangedPower, 2, monster.ranged?.element, monster) : { defender, damage: 0 };
+            if (!hit) return true;
+            if (monster.ranged?.cloud && typeof spreadCloud === "function") spreadCloud(monster.ranged.cloud, 4, cellsNear(state, 1));
+            messages.push(`${monster.name}'s ${intent.spellName} hits ${hit.defender.name} for ${hit.damage}.`);
+            if (!liveMember()) {
+              state.defeated = true;
+              state.message = `${hit.defender.name} falls. The dungeon takes the party.`;
+              return true;
+            }
+            return false;
+          }
+          if (discovered) messages.push(`${monster.name}'s ${intent.spellName} streaks wide!`);
+          return false;
+        }
+        if (intent.kind === "step") {
+          if (typeof monsterCanMoveTo === "function" && monsterCanMoveTo(monster, intent.x, intent.y)) {
+            monster.x = intent.x;
+            monster.y = intent.y;
+            if (typeof triggerPlayerTrap === "function") triggerPlayerTrap(monster, messages);
+            return false;
+          }
+          return null;
+        }
+        return null;
+      }
+
+      function onModeRunStarted() {
+        if (isGameMode("foresight")) planAllForesightIntents();
+      }
+
+      function onModeTurnEnd() {
+        if (isGameMode("foresight")) planAllForesightIntents();
+      }
+
+      function onModeFloorEntered() {
+        if (isGameMode("foresight")) planAllForesightIntents();
+      }
+
       Object.assign(context, {
         GAME_MODES,
         getGameModeDefinitions,
@@ -406,7 +701,16 @@
         onModeItemCollected,
         onModeMonsterKilled,
         restartInGameMode,
-        cycleGameMode
+        cycleGameMode,
+        planForesightIntent,
+        planAllForesightIntents,
+        foresightResolvedTargets,
+        foresightThreatCells,
+        foresightShoveMonster,
+        executeForesightMonsterAction,
+        onModeRunStarted,
+        onModeTurnEnd,
+        onModeFloorEntered
       });
     }
   };

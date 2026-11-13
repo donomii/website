@@ -421,6 +421,40 @@
             if (seen(cell.x, cell.y)) surfaces.push({ kind: "decal", x: cell.x, y: cell.y, texture: effectTexture(effect.kind), inset: 0.16, lift: 0.38, alpha: 0.78, tint: vrEffectTint(effect.kind) });
           }
         }
+        // Mode 2 (Foresight): project enemy attack threats and intended steps onto the VR tabletop tiles.
+        if (typeof isGameMode === "function" && isGameMode("foresight") && typeof foresightThreatCells === "function") {
+          const { attacks, steps } = foresightThreatCells();
+          for (const [k, entries] of attacks.entries()) {
+            const [tx, ty] = k.split(",").map(Number);
+            if (!seen(tx, ty)) continue;
+            const impact = entries.some((entry) => entry.isImpact);
+            surfaces.push({
+              kind: "decal",
+              x: tx,
+              y: ty,
+              glyph: impact ? "✕" : "•",
+              color: impact ? "#ff4a3d" : "#f59f3b",
+              inset: 0.08,
+              lift: 0.026,
+              alpha: impact ? 0.92 : 0.72
+            });
+          }
+          for (const [k] of steps.entries()) {
+            if (attacks.has(k)) continue;
+            const [sx, sy] = k.split(",").map(Number);
+            if (!seen(sx, sy)) continue;
+            surfaces.push({
+              kind: "decal",
+              x: sx,
+              y: sy,
+              glyph: "→",
+              color: "#4dd0e1",
+              inset: 0.16,
+              lift: 0.024,
+              alpha: 0.78
+            });
+          }
+        }
         // Each active ray lights its own target on the floor or door cap.
         for (const { x, y, glyph, lift } of vrAimTiles.values()) {
           surfaces.push({ kind: "decal", x, y, glyph, color: "#f1d07a", inset: 0.08, lift, alpha: 0.85 });

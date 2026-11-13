@@ -174,6 +174,9 @@
         const floorState = currentFloorState();
         const width = floor.map.width;
         const height = floor.map.height;
+        const foresight = typeof isGameMode === "function" && isGameMode("foresight") && typeof foresightThreatCells === "function"
+          ? foresightThreatCells()
+          : null;
         els.map.innerHTML = "";
         const zoom = Math.max(0.5, Math.min(3, state.mapZoom || 1));
         const cellSize = Math.round(9 * zoom);
@@ -269,6 +272,20 @@
               node.classList.add("hero");
               node.textContent = "@";
               labels.unshift("party");
+            }
+            if (foresight && seen) {
+              const fk = keyOf(x, y);
+              const threats = foresight.attacks.get(fk);
+              const stepTargets = foresight.steps.get(fk);
+              if (threats && threats.length) {
+                node.classList.add("foresight-threat");
+                if (!monster && !(state.x === x && state.y === y) && !item && !stairs) node.textContent = "!";
+                labels.push(...threats.map((t) => `Threat: ${t.monster.name} (${t.label})`));
+              } else if (stepTargets && stepTargets.length) {
+                node.classList.add("foresight-step");
+                if (!monster && !(state.x === x && state.y === y) && !item && !stairs && !node.textContent) node.textContent = "→";
+                labels.push(...stepTargets.map((s) => `${s.monster.name} stepping here`));
+              }
             }
             if (labels.length > 0) node.title = labels.join(", ");
             els.map.appendChild(node);

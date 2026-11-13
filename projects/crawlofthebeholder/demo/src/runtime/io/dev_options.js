@@ -138,6 +138,7 @@
         }
         if (els.characterCreateModal && els.characterCreateModal.classList) els.characterCreateModal.classList.add("hidden");
         if (typeof reveal === "function") reveal();
+        if (typeof onModeRunStarted === "function") onModeRunStarted();
         if (typeof saveGame === "function") saveGame();
       }
 

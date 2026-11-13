@@ -244,6 +244,7 @@
         const pursuitNote = pursuers.length > 0 ? ` Footsteps echo from ${direction === "down" ? "above" : "below"}…` : "";
         state.message = `The party enters ${floor.id}: ${floor.name}.${pursuitNote}`;
         reveal();
+        if (typeof onModeFloorEntered === "function") onModeFloorEntered();
         render();
       }
 

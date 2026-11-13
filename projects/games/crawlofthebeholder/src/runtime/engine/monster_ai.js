@@ -837,6 +837,10 @@
         if ((monster.confusedTurns || 0) > 0) {
           return confusedMonsterAction(monster, floorState, messages);
         }
+        if (typeof isGameMode === "function" && isGameMode("foresight") && monster.foresight && typeof executeForesightMonsterAction === "function") {
+          const foresightResult = executeForesightMonsterAction(monster, floorState, messages);
+          if (foresightResult !== null) return foresightResult;
+        }
         const distance = distanceToPlayer(monster);
         const discovered = floorState.discovered.has(keyOf(monster.x, monster.y));
         if (monster.traits?.maintainRange && monster.ranged && distance <= 2 && monsterFlee(monster)) {
@@ -1056,6 +1060,7 @@
           }
         }
         appendTurnMessages(messages);
+        if (typeof onModeTurnEnd === "function") onModeTurnEnd();
         if (typeof saveGame === "function") saveGame();
       }
 

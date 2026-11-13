@@ -1291,6 +1291,32 @@
           const rect = drawImageMappedQuad(context, floorItem.tile, itemQuad, data.light, fallback);
           if (rect && offset === 0) drawFloorLabel(context, floorItem.shortName, rect, depth);
         }
+
+        if (typeof isGameMode === "function" && isGameMode("foresight") && typeof foresightThreatCells === "function") {
+          const { attacks, steps } = foresightThreatCells();
+          const fk = keyOf(cell.x, cell.y);
+          const attackList = attacks.get(fk);
+          const stepList = steps.get(fk);
+          if (attackList && attackList.length) {
+            const threatQuad = pctQuad(floorDecalPoints(depth, { left: 0.14, top: 0.14, right: 0.86, bottom: 0.86 }, offset), width, height);
+            context.save();
+            drawQuadPath(context, threatQuad);
+            context.fillStyle = attackList.some((a) => a.isImpact) ? "rgba(255, 62, 48, 0.32)" : "rgba(245, 159, 59, 0.22)";
+            context.fill();
+            context.lineWidth = 2;
+            context.strokeStyle = "rgba(255, 92, 68, 0.9)";
+            context.stroke();
+            context.restore();
+          } else if (stepList && stepList.length) {
+            const stepQuad = pctQuad(floorDecalPoints(depth, { left: 0.24, top: 0.24, right: 0.76, bottom: 0.76 }, offset), width, height);
+            context.save();
+            drawQuadPath(context, stepQuad);
+            context.strokeStyle = "rgba(77, 208, 225, 0.72)";
+            context.lineWidth = 1.6;
+            context.stroke();
+            context.restore();
+          }
+        }
       }
 
       function drawSpentFloorDecor(context, points) {
@@ -1710,6 +1736,25 @@
         drawRangedCue(context, monster, rect);
         drawMonsterStatusCue(context, monster, rect);
         drawHealthBar(context, monster, rect);
+        if (typeof isGameMode === "function" && isGameMode("foresight") && monster.foresight && monster.foresight.label && monster.foresight.label !== "IDLE") {
+          context.save();
+          const label = monster.foresight.label;
+          const badgeY = Math.max(12, rect.y - 12);
+          context.font = "bold 11px system-ui, sans-serif";
+          const tw = context.measureText(label).width + 10;
+          const bx = rect.x + rect.width / 2 - tw / 2;
+          context.fillStyle = monster.foresight.kind === "canceled"
+            ? "rgba(88, 96, 112, 0.88)"
+            : monster.foresight.kind === "step"
+              ? "rgba(18, 86, 102, 0.88)"
+              : "rgba(154, 30, 24, 0.9)";
+          context.fillRect(bx, badgeY - 9, tw, 15);
+          context.fillStyle = "#fff4dc";
+          context.textAlign = "center";
+          context.textBaseline = "middle";
+          context.fillText(label, rect.x + rect.width / 2, badgeY - 1);
+          context.restore();
+        }
       }
 
       function drawFrontSurface(context, width, height, depth, offset, cell) {
