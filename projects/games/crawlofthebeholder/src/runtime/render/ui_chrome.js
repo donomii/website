@@ -83,6 +83,11 @@
             <p title="${klass ? escapeHtml(klass.description) : ""}">${klass ? `${escapeHtml(klass.signature.label)} ${klass.signatureCooldown}t · ${escapeHtml(klass.ultimate.label)} ${klass.ultimate.cooldown}t` : "Choose a class."}</p>
           </div>`;
         }).join("");
+        if (els.characterCreateGameMode && typeof currentGameMode === "function") {
+          const active = els.characterCreateGameMode.value || state.gameMode || "standard";
+          const def = (typeof getGameModeDefinitions === "function" ? getGameModeDefinitions() : []).find((m) => m.key === active);
+          if (els.gameModeHelp && def) els.gameModeHelp.textContent = def.summary;
+        }
       }
 
       function renderMarkersList() {
@@ -449,7 +454,9 @@
         const runesNeeded = state.runesInWorld != null && typeof requiredRunesForZot === "function" ? requiredRunesForZot() : 0;
         const runeTag = !orbHeld && runesNeeded > 0 && typeof runesHeld === "function" ? ` · runes ${runesHeld()}/${runesNeeded}` : "";
         const orbTag = orbHeld ? " · orb held — flee!" : "orb below";
-        els.statusLine.textContent = `T${state.turnCount} (F${state.floorTurnCount || 0}) · L${state.level} ${state.experience}/${state.nextLevel} XP · ${state.gold}g${hasteStatus}${mightStatus}${rageStatus}${resistanceStatus}${silenceStatus}${snareStatus}${barbedStatus}${engulfedStatus}${slowStatus}${poisonStatus}${dazedStatus}${corrodedStatus}${vitrifiedStatus}${hungerTag}${talentTag}${comboTag}${allyTag}${deityTag}${encTag}${runeTag} · ${orbTag} · ${state.party.filter((member) => member.hp > 0).length}/4 up${difficultyTag}${dailyTag}`;
+        const modeTag = typeof modeStatusLabel === "function" ? modeStatusLabel() : "";
+        const modePrefix = modeTag ? `${modeTag} · ` : "";
+        els.statusLine.textContent = `${modePrefix}T${state.turnCount} (F${state.floorTurnCount || 0}) · L${state.level} ${state.experience}/${state.nextLevel} XP · ${state.gold}g${hasteStatus}${mightStatus}${rageStatus}${resistanceStatus}${silenceStatus}${snareStatus}${barbedStatus}${engulfedStatus}${slowStatus}${poisonStatus}${dazedStatus}${corrodedStatus}${vitrifiedStatus}${hungerTag}${talentTag}${comboTag}${allyTag}${deityTag}${encTag}${runeTag} · ${orbTag} · ${state.party.filter((member) => member.hp > 0).length}/4 up${difficultyTag}${dailyTag}`;
         els.versionBadge.textContent = `v${resources.version}`;
         const hazard = typeof currentHazard === "function" && !context.hazardsDisabled ? currentHazard() : null;
         const hazardTag = hazard && hazard.id !== "none" ? ` · ${hazard.name}` : "";

@@ -4,7 +4,7 @@
 // served stale until CACHE_VERSION was bumped by hand, which looked like fixes
 // "breaking again". Network-first means a reload always picks up new code.)
 
-const CACHE_VERSION = "cotb-v39-vr-native-movement";
+const CACHE_VERSION = "cotb-v40-mode1-dungeon-sprint";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -105,6 +105,7 @@ const APP_SHELL = [
   "./src/runtime/render/mobile.js",
   "./src/runtime/render/vr.js",
   "./src/runtime/systems/short_expedition.js",
+  "./src/runtime/systems/game_modes.js",
   "./src/runtime/io/dev_options.js",
   "./src/runtime/io/input.js"
 ];

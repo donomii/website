@@ -11,7 +11,7 @@
   //   index.html?floor=7&pos=3,4,1         → floor + exact tile/facing
   window.CotBRuntime.installDevOptions = function installDevOptions(context) {
     with (context) {
-      const TRIGGER_KEYS = ["new", "autostart", "play", "floor", "classes", "seed", "daily", "difficulty", "deity", "pos", "expedition"];
+      const TRIGGER_KEYS = ["new", "autostart", "play", "floor", "classes", "seed", "daily", "difficulty", "deity", "pos", "expedition", "mode", "gameMode"];
 
       function parseStartupOptions(search) {
         const raw = search != null ? search : (typeof location !== "undefined" ? location.search : "");
@@ -23,6 +23,7 @@
         if (params.has("deity")) opts.deity = params.get("deity");
         if (params.has("seed")) opts.seed = params.get("seed");
         if (params.has("expedition")) opts.expedition = params.get("expedition");
+        if (params.has("mode") || params.has("gameMode")) opts.gameMode = params.get("mode") || params.get("gameMode");
         opts.daily = params.has("daily");
         if (params.has("floor")) opts.floor = params.get("floor");
         if (params.has("pos")) opts.pos = params.get("pos");
@@ -75,9 +76,13 @@
       // the URL/CLI options.
       function beginRun(config = {}) {
         const expedition = config.expedition ?? (els.characterCreateExpedition?.value || "campaign");
+        const requestedMode = config.gameMode ?? config.mode ?? (els.characterCreateGameMode?.value || state.gameMode || "standard");
         els.characterCreateExpedition?.setCustomValidity?.("");
         if (state.characterCreated || context.saveLoadError) {
           setMessage(context.saveLoadError || "The party's classes and actions are fixed for this run. Start a new expedition to choose another party.");
+          return false;
+        } else if (typeof isValidGameMode === "function" && !isValidGameMode(requestedMode)) {
+          setMessage(`Cannot begin expedition: unknown game mode '${requestedMode}'.`);
           return false;
         } else if (config.classes && (!Array.isArray(config.classes) || config.classes.length === 0 || config.classes.some((key) => !getClassDefinitions().some((definition) => definition.key === key)))) {
           setMessage(`Cannot begin expedition: unsupported classes ${JSON.stringify(config.classes)}. Choose warrior, rogue, or mage; the healer is no longer available.`);
@@ -103,13 +108,16 @@
         if (config.daily && typeof dailySeed === "function") state.dailySeed = dailySeed();
         else if (config.seed) state.dailySeed = null;
 
+        const gameMode = typeof normalizeGameMode === "function" ? normalizeGameMode(requestedMode) : "standard";
         state.tutorialSeen = true;
         state.characterCreated = true;
         state.expedition = expedition;
+        state.gameMode = gameMode;
 
-        // Build compact DCSS layouts; unseeded campaigns retain their content/order.
+        // Build compact DCSS layouts or mode-specific world.
         try {
-          if (expedition === "short") startShortExpedition();
+          if (gameMode === "sprint" && typeof startSprintMode === "function") startSprintMode();
+          else if (expedition === "short") startShortExpedition();
           else if (state.dailySeed && typeof regenerateWorld === "function") regenerateWorld();
           else if (config.seed && typeof regenerateWorld === "function") regenerateWorld(undefined, { seed: `run:${config.seed}` });
           else {

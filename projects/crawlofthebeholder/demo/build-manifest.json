@@ -71,6 +71,7 @@
     "src/runtime/systems/fishing.js",
     "src/runtime/systems/floor_hazards.js",
     "src/runtime/systems/gadgets.js",
+    "src/runtime/systems/game_modes.js",
     "src/runtime/systems/graves.js",
     "src/runtime/systems/harvesting.js",
     "src/runtime/systems/herbalism.js",

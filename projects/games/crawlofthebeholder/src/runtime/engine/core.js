@@ -26,6 +26,9 @@
 
     const state = {
       expedition: "campaign",
+      gameMode: "standard",
+      sprintWavesSpawned: 0,
+      sprintSealed: false,
       floorIndex: 0,
       x: resources.floors[0].start.x,
       y: resources.floors[0].start.y,
@@ -166,6 +169,8 @@
       characterCreateStart: document.getElementById("characterCreateStart"),
       characterCreateRandom: document.getElementById("characterCreateRandom"),
       characterCreateExpedition: document.getElementById("characterCreateExpedition"),
+      characterCreateGameMode: document.getElementById("characterCreateGameMode"),
+      gameModeHelp: document.getElementById("gameModeHelp"),
       characterCreateDifficulty: document.getElementById("characterCreateDifficulty"),
       characterCreateDeity: document.getElementById("characterCreateDeity"),
       characterCreateDaily: document.getElementById("characterCreateDaily"),

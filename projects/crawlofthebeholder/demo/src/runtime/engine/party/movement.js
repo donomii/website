@@ -18,6 +18,7 @@
         state.itemsCollected = (state.itemsCollected || 0) + 1;
         if (typeof pulse === "function") pulse("pickup");
         state.message = found.kind === "quest" ? `${found.name} flares in the pack. The way out matters now.` : `${found.name} slides into the pack.`;
+        if (typeof onModeItemCollected === "function") onModeItemCollected(found);
         return true;
       }
 
@@ -71,6 +72,7 @@
 
 
       function openDoor(x, y) {
+        if (typeof sprintDoorBlocks === "function" && sprintDoorBlocks(x, y)) return;
         // Locked doors (locks module): a key opens silently, a failed bash
         // costs the turn and leaves the door shut.
         if (typeof doorLockBlocks === "function" && doorLockBlocks(x, y)) return;

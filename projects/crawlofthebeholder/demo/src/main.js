@@ -90,6 +90,7 @@
   runtime.installMobile(context);
   runtime.installVr(context);
   runtime.installShortExpedition(context);
+  runtime.installGameModes(context);
   runtime.installDevOptions(context);
   runtime.installInput(context);
 

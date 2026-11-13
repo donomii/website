@@ -324,6 +324,16 @@
         <div class="character-create-options">
           <div class="character-create-row">
             <label>
+              <strong>Game Mode</strong>
+              <select id="characterCreateGameMode" aria-describedby="gameModeHelp">
+                <option value="standard" selected>Standard Crawl</option>
+                <option value="sprint">Dungeon Sprint</option>
+              </select>
+            </label>
+            <p id="gameModeHelp">Classic DCSS-inspired delve across curated branches or The Four Ways.</p>
+          </div>
+          <div class="character-create-row">
+            <label>
               <strong>Expedition</strong>
               <select id="characterCreateExpedition" aria-describedby="expeditionHelp">
                 <option value="campaign" selected>Full campaign</option>
@@ -442,14 +452,14 @@
     <script src="src/vaults.generated.js?v=0.5.25"></script>
     <script src="src/monster_flavour.generated.js?v=0.5.25"></script>
     <script src="src/lore.generated.js?v=0.5.25"></script>
-    <script src="src/runtime/engine/core.js?v=0.5.32"></script>
+    <script src="src/runtime/engine/core.js?v=0.5.34"></script>
     <script src="src/runtime/engine/monster_traits.js?v=0.5.25"></script>
     <script src="src/runtime/engine/combat_math.js?v=0.5.25"></script>
     <script src="src/runtime/engine/messages_and_visibility.js?v=0.5.25"></script>
     <script src="src/runtime/engine/floor_marks.js?v=0.5.25"></script>
     <script src="src/runtime/engine/monster_ai.js?v=0.5.30"></script>
-    <script src="src/runtime/engine/party/combat.js?v=0.5.25"></script>
-    <script src="src/runtime/engine/party/movement.js?v=0.5.26"></script>
+    <script src="src/runtime/engine/party/combat.js?v=0.5.34"></script>
+    <script src="src/runtime/engine/party/movement.js?v=0.5.34"></script>
     <script src="src/runtime/engine/party/traversal.js?v=0.5.25"></script>
     <script src="src/runtime/engine/party/interaction.js?v=0.5.25"></script>
     <script src="src/runtime/engine/party/fixtures.js?v=0.5.25"></script>
@@ -459,12 +469,12 @@
     <script src="src/runtime/engine/items/use.js?v=0.5.25"></script>
     <script src="src/runtime/engine/party/turn.js?v=0.5.25"></script>
     <script src="src/runtime/render/viewport_rendering.js?v=0.5.35"></script>
-    <script src="src/runtime/render/ui_chrome.js?v=0.5.32-fit"></script>
+    <script src="src/runtime/render/ui_chrome.js?v=0.5.34"></script>
     <script src="src/runtime/engine/classes.js?v=0.5.25"></script>
     <script src="src/runtime/engine/dcss_layouts.js?v=1"></script>
     <script src="src/runtime/engine/expedition_layouts.js?v=1"></script>
     <script src="src/runtime/engine/mapgen.js?v=0.5.26"></script>
-    <script src="src/runtime/io/persistence.js?v=0.5.25"></script>
+    <script src="src/runtime/io/persistence.js?v=0.5.34"></script>
     <script src="src/runtime/config/difficulty.js?v=0.5.25"></script>
     <script src="src/runtime/config/deities.js?v=0.5.25"></script>
     <script src="src/runtime/config/portraits.js?v=0.5.25"></script>
@@ -528,11 +538,12 @@
     <script src="src/runtime/systems/constellations.js?v=0.5.25"></script>
     <script src="src/runtime/systems/charms.js?v=0.5.25"></script>
     <script src="src/runtime/render/mobile.js?v=0.5.32"></script>
-    <script src="src/runtime/render/vr.js?v=0.5.33"></script>
+    <script src="src/runtime/render/vr.js?v=0.5.34"></script>
     <script src="src/runtime/systems/short_expedition.js?v=0.5.25"></script>
-    <script src="src/runtime/io/dev_options.js?v=0.5.25"></script>
-    <script src="src/runtime/io/input.js?v=0.5.33"></script>
-    <script src="src/main.js?v=0.5.25"></script>
+    <script src="src/runtime/systems/game_modes.js?v=0.5.34"></script>
+    <script src="src/runtime/io/dev_options.js?v=0.5.34"></script>
+    <script src="src/runtime/io/input.js?v=0.5.34"></script>
+    <script src="src/main.js?v=0.5.34"></script>
     <script>
       // Register the service worker for offline play. Best-effort — game still
       // works without it.

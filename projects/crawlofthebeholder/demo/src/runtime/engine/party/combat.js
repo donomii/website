@@ -22,7 +22,8 @@
         const base = Math.max(2, hd + Math.ceil((monster?.exp || 1) / 8));
         const bossMultiplier = monster?.boss ? 6 : 1;
         const difficultyScale = typeof currentDifficulty === "function" ? (currentDifficulty().goldScale || 1) : 1;
-        return Math.max(1, Math.round(base * bossMultiplier * difficultyScale));
+        const modeGold = typeof modeGoldScale === "function" ? modeGoldScale() : 1;
+        return Math.max(1, Math.round(base * bossMultiplier * difficultyScale * modeGold));
       }
 
 
@@ -105,7 +106,8 @@
         // Kill combo: each kill without taking damage raises the multiplier.
         state.killCombo = (state.killCombo || 0) + 1;
         if (state.killCombo > (state.bestCombo || 0)) state.bestCombo = state.killCombo;
-        const messages = [`${awardExperience(monster)} ${dropMonsterLoot(monster)}`.trim()];
+        const modeNote = typeof onModeMonsterKilled === "function" ? onModeMonsterKilled(monster) : "";
+        const messages = [`${awardExperience(monster)} ${dropMonsterLoot(monster)} ${modeNote}`.trim()];
         removeMonster(monster);
         if (monster.immolationTurns > 0) explodeMonster(monster, messages);
         return messages.filter(Boolean).join(" ");
@@ -119,7 +121,8 @@
         const deityXp = typeof deityXpScale === "function" ? deityXpScale() : 1;
         const runeBonus = typeof runeXpBonus === "function" ? runeXpBonus(monster) : 0;
         const skyXp = typeof constellationXpBonus === "function" ? constellationXpBonus() : 0;
-        const gained = Math.max(1, Math.round(base * 1.25 * difficultyXp * deityXp)) + runeBonus + skyXp;
+        const modeXp = typeof modeXpScale === "function" ? modeXpScale() : 1;
+        const gained = Math.max(1, Math.round(base * 1.25 * difficultyXp * deityXp * modeXp)) + runeBonus + skyXp;
         state.experience += gained;
         const messages = [`+${gained} XP.`];
 

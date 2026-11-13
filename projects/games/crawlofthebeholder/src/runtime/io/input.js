@@ -373,6 +373,29 @@
             renderCharacterCreate();
           });
         }
+        if (els.characterCreateGameMode?.addEventListener) {
+          if (typeof getGameModeDefinitions === "function" && typeof els.characterCreateGameMode.replaceChildren === "function" && typeof document.createElement === "function") {
+            const options = getGameModeDefinitions().map((mode) => {
+              const option = document.createElement("option");
+              option.value = mode.key;
+              option.textContent = mode.name;
+              if (mode.key === (state.gameMode || "standard")) option.selected = true;
+              return option;
+            });
+            if (options.every((o) => o && typeof o.value !== "undefined")) {
+              els.characterCreateGameMode.replaceChildren(...options);
+            }
+          }
+          const syncModeUi = () => {
+            const selected = els.characterCreateGameMode.value;
+            if (typeof setGameMode === "function") setGameMode(selected);
+            if (els.gameModeHelp && typeof currentGameMode === "function") {
+              els.gameModeHelp.textContent = currentGameMode().summary;
+            }
+          };
+          els.characterCreateGameMode.addEventListener("change", syncModeUi);
+          syncModeUi();
+        }
         if (els.characterCreateDifficulty?.addEventListener) {
           els.characterCreateDifficulty.addEventListener("change", () => {
             if (typeof setDifficulty === "function") setDifficulty(els.characterCreateDifficulty.value);

@@ -42,7 +42,8 @@
         { label: "Formation", action: "cycleFormation" }, { label: "Primary", action: "signature" }, { label: "Secondary", action: "ultimate" }, { label: "Search", action: "search" },
         { label: "Pickup", action: "pickup" }, { label: "Disarm", action: "disarm" }, { label: "Level", action: "vr:level" },
         { label: "Doll Mode", action: "vr:dolls" }, { label: "Art Style", action: "vr:art" }, { label: "Reset View", action: "vr:reset" },
-        { label: "Use potion", action: "vr:recovery" }, { label: "Overhead", action: "vr:overhead" }, { label: "Exit VR", action: "vr:exit" }
+        { label: "Use potion", action: "vr:recovery" }, { label: "Overhead", action: "vr:overhead" }, { label: "Exit VR", action: "vr:exit" },
+        { label: "Mode", action: "vr:mode" }
       ];
       // Panel plane, in metres: anchored to the left of the diorama, billboarded
       // to face the head. width/height are the full quad; cols/rows tile it.
@@ -555,6 +556,7 @@
         }
         return [
           state.floorIndex,
+          state.gameMode || "standard",
           vrArtStyle(),
           floorState.discovered.size,
           floorState.openedDoors.size,
@@ -570,11 +572,14 @@
       function vrHudModel() {
         const floor = currentFloor();
         const message = state.victory ? `VICTORY — ${state.message}` : state.defeated ? `DEFEATED — ${state.message}` : state.message || "";
+        const modeTag = typeof modeStatusLabel === "function" ? modeStatusLabel() : "";
+        const prefix = modeTag ? `${modeTag} ` : "";
         return {
-          title: `${floor.id} ${floor.name} · T${state.turnCount} · ${state.gold}g`,
+          title: `${prefix}${floor.id} ${floor.name} · T${state.turnCount} · ${state.gold}g`,
           message,
           party: state.party.map((member) => ({ name: member.name, hp: Math.max(0, member.hp), maxHp: member.maxHp })),
           mode: vrDollMode(),
+          gameMode: state.gameMode || "standard",
           hints: "Grab & place party piece to move · Drop on enemy to attack, door to open, in place to wait · Twist piece or stick turns · Drop potion on piece to heal"
         };
       }
@@ -2175,6 +2180,15 @@
         return { u, v, index: row * (panel.cols || 1) + col, point, t };
       }
 
+      function vrInvalidateAll() {
+        vrLastArchSignature = null;
+        vrLastHudSignature = null;
+        vrPaletteDrawnHover = -2;
+        vrPartyDrawnSig = null;
+        vrInvDrawnSig = null;
+        vrResetGameFeel();
+      }
+
       function vrActivateButton(index) {
         const btn = VR_CONTROL_BUTTONS[index];
         if (!btn) return;
@@ -2193,6 +2207,9 @@
           exitVr();
         } else if (btn.action === "vr:recovery") {
           handleAction("recover");
+        } else if (btn.action === "vr:mode") {
+          if (typeof cycleGameMode === "function") cycleGameMode(1);
+          vrInvalidateAll();
         } else {
           handleAction(btn.action);
         }
@@ -2230,7 +2247,11 @@
           ctx.strokeRect(x + 3, y + 3, cw - 6, ch - 6);
           ctx.fillStyle = hovered ? "#141210" : "#f1d07a";
           ctx.font = "bold 20px system-ui, sans-serif";
-          ctx.fillText(VR_CONTROL_BUTTONS[i].label, x + cw / 2, y + ch / 2);
+          const btn = VR_CONTROL_BUTTONS[i];
+          const text = btn.action === "vr:mode" && typeof currentGameMode === "function"
+            ? `Mode: ${currentGameMode().shortName}`
+            : btn.label;
+          ctx.fillText(text, x + cw / 2, y + ch / 2);
         }
         return true;
       }
@@ -3671,6 +3692,7 @@
         vrArPlacementState,
         vrSpatializeTile,
         vrResetGameFeel,
+        vrInvalidateAll,
         vrGameFeel: () => ({ anims: vrDollAnim.size, flashes: vrDollFlash.size, floaters: vrFloaters.map((f) => ({ text: f.text, color: f.color })) }),
         vrEmitFloaters,
       });

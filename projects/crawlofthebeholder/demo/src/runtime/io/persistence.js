@@ -112,6 +112,9 @@
           schema: SAVE_SCHEMA,
           version: resources.version,
           expedition: state.expedition || "campaign",
+          gameMode: state.gameMode || "standard",
+          sprintWavesSpawned: state.sprintWavesSpawned || 0,
+          sprintSealed: !!state.sprintSealed,
           zotFloorIndex: state.zotFloorIndex,
           runesInWorld: state.runesInWorld,
           orbRun: !!state.orbRun,
@@ -182,11 +185,17 @@
         } else {
           context.saveLoadError = null;
         }
-        if (state.expedition === "short" || saved.expedition === "short") {
+        if (saved.gameMode === "sprint" && typeof makeSprintFloor === "function") {
+          resources.floors = [makeSprintFloor()];
+          state.expedition = saved.expedition ?? "campaign";
+        } else if (state.expedition === "short" || saved.expedition === "short" || state.gameMode === "sprint") {
           restoreExpeditionResources(saved.expedition ?? "campaign");
         } else {
           state.expedition = saved.expedition ?? "campaign";
         }
+        state.gameMode = saved.gameMode || "standard";
+        state.sprintWavesSpawned = saved.sprintWavesSpawned || 0;
+        state.sprintSealed = !!saved.sprintSealed;
         state.floorIndex = saved.floorIndex;
         state.x = saved.x;
         state.y = saved.y;
@@ -292,6 +301,8 @@
           return "Cannot load save: expected four party members. The saved data has been preserved.";
         } else if (saved.party.some((member) => !member || ((saved.characterCreated || member.classKey) && !Object.hasOwn(CLASSES, member.classKey)))) {
           return "Cannot load save: the party contains an unsupported class, including the removed healer. The saved data has been preserved.";
+        } else if (saved.gameMode && typeof isValidGameMode === "function" && !isValidGameMode(saved.gameMode)) {
+          return `Cannot load save: unknown game mode '${saved.gameMode}'. The saved data has been preserved.`;
         } else {
           return expeditionSaveProblem(saved);
         }
