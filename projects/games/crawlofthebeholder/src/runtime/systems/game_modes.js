@@ -33,6 +33,12 @@
           name: "Oldschool Wireframe",
           shortName: "Oldschool",
           summary: "Wizardry & Grimrock Oldschool Mode: neon green CRT phosphor vector wireframe 2D & VR geometry, automap disabled, and 1.25x XP."
+        },
+        tempo: {
+          key: "tempo",
+          name: "Necro-Beat Tempo",
+          shortName: "Tempo",
+          summary: "Crypt of the NecroDancer rhythm crawl: act on the 110 BPM beat in 2D & VR to build 1x-4x Groove damage & gold; skipping a beat lets monsters advance."
         }
       };
 
@@ -69,7 +75,14 @@
       }
 
       function modeGoldScale() {
-        return isGameMode("sprint") ? 2 : 1;
+        if (isGameMode("sprint")) return 2;
+        if (isGameMode("tempo")) return Math.max(1, state.tempoGroove || 1);
+        return 1;
+      }
+
+      function modeDamageScale() {
+        if (!isGameMode("tempo")) return 1;
+        return 1 + (Math.max(1, state.tempoGroove || 1) - 1) * 0.5;
       }
 
       function isWireframeStyle() {
@@ -95,6 +108,11 @@
         }
         if (mode.key === "oldschool") {
           return "[Oldschool · No Map]";
+        }
+        if (mode.key === "tempo") {
+          const groove = Math.max(1, state.tempoGroove || 1);
+          const status = tempoStatus();
+          return `[Tempo · x${groove} ${status.onBeat ? "♪" : "·"}]`;
         }
         return `[${mode.shortName}]`;
       }
@@ -366,6 +384,11 @@
         state.criticalHits = 0;
         state.killCombo = 0;
         state.bestCombo = 0;
+        state.tempoStreak = 0;
+        state.tempoGroove = 1;
+        state.tempoAnchorMs = 0;
+        state.tempoLastBeatIndex = 0;
+        state.tempoActedBeat = -1;
         state.talentPoints = 0;
         state.talents = {};
         state.mapMarkers = [];
@@ -690,8 +713,130 @@
         return null;
       }
 
+      // ── Mode 4: Necro-Beat Tempo (110 BPM rhythm + Groove multiplier) ────
+      const TEMPO_BPM = 110;
+      const TEMPO_BEAT_MS = 60000 / TEMPO_BPM;
+      const TEMPO_TOLERANCE = 0.34;
+      const TEMPO_ACTIONS = new Set([
+        "moveForward", "moveLeft", "moveRight", "moveBack",
+        "attack", "interact", "disarm", "wait", "stairs",
+        "charge", "sweep", "signature", "ultimate"
+      ]);
+      let tempoTimer = null;
+
+      function tempoStatus(nowMs = Date.now()) {
+        const anchor = state.tempoAnchorMs || 0;
+        if (!anchor) {
+          return {
+            bpm: TEMPO_BPM,
+            beatMs: TEMPO_BEAT_MS,
+            beatIndex: 0,
+            phase: 0,
+            distToBeat: 0,
+            onBeat: true,
+            groove: Math.max(1, state.tempoGroove || 1),
+            streak: state.tempoStreak || 0,
+            armed: false
+          };
+        }
+        const elapsed = Math.max(0, nowMs - anchor);
+        const exactBeat = elapsed / TEMPO_BEAT_MS;
+        const nearestBeat = Math.round(exactBeat);
+        const rawPhase = exactBeat - Math.floor(exactBeat);
+        const distToBeat = Math.min(rawPhase, 1 - rawPhase);
+        const onBeat = distToBeat <= TEMPO_TOLERANCE;
+        return {
+          bpm: TEMPO_BPM,
+          beatMs: TEMPO_BEAT_MS,
+          beatIndex: nearestBeat,
+          phase: rawPhase,
+          distToBeat,
+          onBeat,
+          groove: Math.max(1, state.tempoGroove || 1),
+          streak: state.tempoStreak || 0,
+          armed: true
+        };
+      }
+
+      function tempoEvaluateAction(action, nowMs = Date.now()) {
+        if (!isGameMode("tempo") || !TEMPO_ACTIONS.has(action)) return { active: false };
+        if (!state.tempoAnchorMs) {
+          state.tempoAnchorMs = nowMs;
+          state.tempoLastBeatIndex = 0;
+          state.tempoActedBeat = 0;
+          state.tempoStreak = 1;
+          state.tempoGroove = 1;
+          if (typeof playSound === "function") playSound("beatAccent");
+          return { active: true, onBeat: true, groove: 1, streak: 1, beatIndex: 0 };
+        }
+        const status = tempoStatus(nowMs);
+        if (status.onBeat) {
+          state.tempoStreak = (state.tempoStreak || 0) + 1;
+          state.tempoGroove = 1 + Math.min(3, Math.floor(state.tempoStreak / 3));
+          state.tempoActedBeat = Math.max(state.tempoActedBeat ?? -1, status.beatIndex);
+          state.tempoLastBeatIndex = Math.max(state.tempoLastBeatIndex || 0, status.beatIndex);
+          if (typeof playSound === "function") playSound("beatAccent");
+          return { active: true, onBeat: true, groove: state.tempoGroove, streak: state.tempoStreak, beatIndex: status.beatIndex };
+        }
+        state.tempoStreak = 0;
+        state.tempoGroove = 1;
+        state.tempoActedBeat = Math.max(state.tempoActedBeat ?? -1, status.beatIndex);
+        if (typeof playSound === "function") playSound("beat");
+        if (typeof setMessage === "function") setMessage("Off-beat! Groove reset (1x).");
+        return { active: true, onBeat: false, groove: 1, streak: 0, beatIndex: status.beatIndex };
+      }
+
+      function tempoTickAt(nowMs = Date.now()) {
+        if (!isGameMode("tempo") || state.victory || state.defeated || !state.tempoAnchorMs) return false;
+        const beatIndex = Math.floor(Math.max(0, nowMs - state.tempoAnchorMs) / TEMPO_BEAT_MS);
+        if (beatIndex <= (state.tempoLastBeatIndex || 0)) return false;
+        const missed = beatIndex - 1 > (state.tempoActedBeat ?? -1);
+        state.tempoLastBeatIndex = beatIndex;
+        if (typeof playSound === "function") playSound("beat");
+        if (missed) {
+          state.tempoStreak = 0;
+          state.tempoGroove = 1;
+          if (typeof advanceTurn === "function") advanceTurn();
+          if (typeof setMessage === "function" && !state.victory && !state.defeated) {
+            state.message = "Missed the beat! Groove reset — dungeon advances.";
+          }
+          if (typeof render === "function") render();
+          return true;
+        }
+        if (typeof renderViewport === "function") renderViewport();
+        return false;
+      }
+
+      function stopTempoTicker() {
+        if (tempoTimer) {
+          clearInterval(tempoTimer);
+          tempoTimer = null;
+        }
+      }
+
+      function startTempoTicker() {
+        stopTempoTicker();
+        if (!isGameMode("tempo") || typeof setInterval !== "function" || context.disableTempoTimer) return;
+        tempoTimer = setInterval(() => {
+          if (!isGameMode("tempo") || state.victory || state.defeated) {
+            stopTempoTicker();
+            return;
+          }
+          if (state.tempoAnchorMs) tempoTickAt(Date.now());
+          else if (typeof renderViewport === "function" && els.viewport?.getContext) renderViewport();
+        }, 50);
+        tempoTimer?.unref?.();
+      }
+
+      function onModeAction(action, nowMs) {
+        if (isGameMode("tempo")) return tempoEvaluateAction(action, nowMs);
+        return null;
+      }
+
       function onModeRunStarted() {
+        stopTempoTicker();
         if (isGameMode("foresight")) planAllForesightIntents();
+        if (isGameMode("tempo")) startTempoTicker();
       }
 
       function onModeTurnEnd() {
@@ -712,6 +857,7 @@
         setGameMode,
         modeXpScale,
         modeGoldScale,
+        modeDamageScale,
         isWireframeStyle,
         isAutomapDisabled,
         modeStatusLabel,
@@ -729,6 +875,12 @@
         foresightThreatCells,
         foresightShoveMonster,
         executeForesightMonsterAction,
+        tempoStatus,
+        tempoEvaluateAction,
+        tempoTickAt,
+        startTempoTicker,
+        stopTempoTicker,
+        onModeAction,
         onModeRunStarted,
         onModeTurnEnd,
         onModeFloorEntered

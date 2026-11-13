@@ -1958,6 +1958,31 @@
         }
         drawEffectWash(context, width, height);
         drawPartyStatusOverlays(context, width, height);
+        if (typeof isGameMode === "function" && isGameMode("tempo") && typeof tempoStatus === "function") {
+          const beat = tempoStatus();
+          const barW = Math.min(width * 0.56, 360);
+          const barH = 14;
+          const bx = (width - barW) * 0.5;
+          const by = height - 26;
+          context.save();
+          context.fillStyle = beat.onBeat ? "rgba(255, 79, 216, 0.24)" : "rgba(18, 14, 28, 0.78)";
+          context.fillRect(bx, by, barW, barH);
+          context.strokeStyle = beat.onBeat ? "#ff6ee6" : "#8b6bd6";
+          context.lineWidth = beat.onBeat ? 2 : 1.2;
+          context.strokeRect(bx, by, barW, barH);
+          const half = barW * 0.5;
+          const offset = (1 - beat.phase) * (half - 10);
+          context.fillStyle = beat.onBeat ? "#ffe875" : "#d38cff";
+          context.fillRect(bx + half - offset - 3, by + 2, 6, barH - 4);
+          context.fillRect(bx + half + offset - 3, by + 2, 6, barH - 4);
+          context.fillStyle = beat.onBeat ? "#ffffff" : "#bfa8e8";
+          context.fillRect(bx + half - 2, by - 2, 4, barH + 4);
+          context.font = "bold 11px system-ui, sans-serif";
+          context.textAlign = "center";
+          context.fillStyle = beat.onBeat ? "#ff9ef0" : "#d8c7f7";
+          context.fillText(`NECRO-BEAT ${beat.bpm} BPM · GROOVE x${beat.groove} · STREAK ${beat.streak}`, width * 0.5, by - 8);
+          context.restore();
+        }
         if (state.victory || state.defeated) drawLabel(context, state.victory ? "escaped" : "defeated", { x: width * 0.4, y: height * 0.42, width: width * 0.2, height: 30 });
         if (typeof renderViewportInteractions === "function") renderViewportInteractions(width, height);
       }

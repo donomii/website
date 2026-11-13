@@ -115,6 +115,8 @@
           gameMode: state.gameMode || "standard",
           sprintWavesSpawned: state.sprintWavesSpawned || 0,
           sprintSealed: !!state.sprintSealed,
+          tempoStreak: state.tempoStreak || 0,
+          tempoGroove: state.tempoGroove || 1,
           zotFloorIndex: state.zotFloorIndex,
           runesInWorld: state.runesInWorld,
           orbRun: !!state.orbRun,
@@ -196,6 +198,11 @@
         state.gameMode = saved.gameMode || "standard";
         state.sprintWavesSpawned = saved.sprintWavesSpawned || 0;
         state.sprintSealed = !!saved.sprintSealed;
+        state.tempoStreak = saved.tempoStreak || 0;
+        state.tempoGroove = Math.max(1, saved.tempoGroove || 1);
+        state.tempoAnchorMs = 0;
+        state.tempoLastBeatIndex = 0;
+        state.tempoActedBeat = -1;
         state.floorIndex = saved.floorIndex;
         state.x = saved.x;
         state.y = saved.y;

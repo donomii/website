@@ -287,6 +287,7 @@
         if (options.chargeBonus) damage = Math.round(damage * options.chargeBonus);
         if (typeof consumeRestedAttack === "function") damage = consumeRestedAttack(damage);
         if (typeof applyOmen === "function") damage = applyOmen(damage);
+        if (typeof modeDamageScale === "function") damage = Math.max(1, Math.round(damage * modeDamageScale()));
         // Execution finisher: when target sits below 10% HP, finish them.
         const executed = target.maxHp > 0 && target.hp > 0 && target.hp <= Math.max(2, Math.ceil(target.maxHp * 0.1)) && !options.skipExecution;
         if (executed) damage = Math.max(damage, target.hp);

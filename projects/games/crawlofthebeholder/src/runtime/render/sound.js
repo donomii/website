@@ -202,6 +202,12 @@
           case "spell":
             tone({ freq: 660, freqEnd: 220, type: "sine", duration: 220, volume: 0.12 });
             return true;
+          case "beat":
+            tone({ freq: 110, freqEnd: 72, type: "triangle", duration: 48, volume: 0.08 });
+            return true;
+          case "beatAccent":
+            tone({ freq: 440, freqEnd: 220, type: "triangle", duration: 55, volume: 0.11 });
+            return true;
           default:
             return false;
         }

@@ -465,6 +465,20 @@
             });
           }
         }
+        // Mode 4 (Tempo): pulse the party's VR beat halo ring on every 110 BPM beat.
+        if (typeof isGameMode === "function" && isGameMode("tempo") && typeof tempoStatus === "function") {
+          const beat = tempoStatus();
+          surfaces.push({
+            kind: "decal",
+            x: state.x,
+            y: state.y,
+            glyph: beat.onBeat ? "◈" : "◇",
+            color: beat.onBeat ? "#ff4fd8" : "#8b6bd6",
+            inset: beat.onBeat ? 0.04 : 0.16,
+            lift: 0.028,
+            alpha: beat.onBeat ? 0.94 : 0.56
+          });
+        }
         // Each active ray lights its own target on the floor or door cap.
         for (const { x, y, glyph, lift } of vrAimTiles.values()) {
           surfaces.push({ kind: "decal", x, y, glyph, color: "#f1d07a", inset: 0.08, lift, alpha: 0.85 });

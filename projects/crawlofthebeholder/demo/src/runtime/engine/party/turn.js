@@ -143,7 +143,10 @@
       function handleAction(action) {
         if (state.victory || state.defeated) return;
         const run = ACTIONS[action];
-        if (run) run();
+        if (run) {
+          if (typeof onModeAction === "function") onModeAction(action);
+          run();
+        }
       }
 
       Object.assign(context, {
