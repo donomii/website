@@ -170,6 +170,13 @@
       }
 
       function renderMap() {
+        if (typeof isAutomapDisabled === "function" && isAutomapDisabled()) {
+          els.map.innerHTML = `<div class="automap-disabled-notice">NO AUTOMAP — OLDSCHOOL CRT (${dirs[state.dir]?.name || ""})</div>`;
+          els.map.style.gridTemplateColumns = "1fr";
+          els.map.classList?.add("automap-disabled");
+          return;
+        }
+        els.map.classList?.remove("automap-disabled");
         const floor = currentFloor();
         const floorState = currentFloorState();
         const width = floor.map.width;

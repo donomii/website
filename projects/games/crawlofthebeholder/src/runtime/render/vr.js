@@ -96,6 +96,10 @@
         return state.tileset === "linocut" ? "linocut" : "classic";
       }
 
+      function vrWireframeEnabled() {
+        return typeof isWireframeStyle === "function" && isWireframeStyle();
+      }
+
       function vrRenderedAssets() {
         return typeof renderedAssets === "function" ? renderedAssets() : currentAssets();
       }
@@ -321,27 +325,33 @@
         const width = floor.map.width;
         const height = floor.map.height;
         const surfaces = [];
+        const wireframe = vrWireframeEnabled();
 
         for (let y = -1; y <= height; y += 1) {
           for (let x = -1; x <= width; x += 1) {
             const inMap = mapContains(x, y);
             if (inMap && !solidAt(x, y) && vrCellDiscovered(floorState, x, y)) {
-              const floorTexturePath = vrRenderedTile(floorTexture({ x, y }));
-              surfaces.push({ kind: "floor", x, y, texture: floorTexturePath, normal: vrNormalPath(floorTexturePath), shade: VR_SHADE.floor });
+              const terrain = wireframe ? terrainAt(x, y) : "floor";
+              const floorTexturePath = wireframe
+                ? (terrain === "lava" ? "wireframe:lava" : (terrain === "water" || terrain === "deep-water") ? "wireframe:water" : "wireframe:floor")
+                : vrRenderedTile(floorTexture({ x, y }));
+              surfaces.push({ kind: "floor", x, y, texture: floorTexturePath, normal: wireframe ? null : vrNormalPath(floorTexturePath), shade: wireframe ? 1 : VR_SHADE.floor });
               const openDoor = doorCellAt(x, y) && !closedDoorAt(x, y);
               if (openDoor) {
-                const texture = vrRenderedTile(assets.openDoor);
-                surfaces.push({ kind: "decal", x, y, texture, normal: vrNormalPath(texture), inset: 0.06, lift: 0.012, alpha: 1 });
+                const texture = wireframe ? "wireframe:open-door" : vrRenderedTile(assets.openDoor);
+                surfaces.push({ kind: "decal", x, y, texture, normal: wireframe ? null : vrNormalPath(texture), inset: 0.06, lift: 0.012, alpha: 1 });
               }
               const stairs = stairsAt(x, y);
               if (stairs) {
-                const texture = vrRenderedTile(stairs.direction === "down" ? assets.stairsDown : assets.stairsUp);
-                surfaces.push({ kind: "decal", x, y, texture, normal: vrNormalPath(texture), inset: 0.1, lift: 0.014, alpha: 1 });
+                const texture = wireframe
+                  ? (stairs.direction === "down" ? "wireframe:stairs-down" : "wireframe:stairs-up")
+                  : vrRenderedTile(stairs.direction === "down" ? assets.stairsDown : assets.stairsUp);
+                surfaces.push({ kind: "decal", x, y, texture, normal: wireframe ? null : vrNormalPath(texture), inset: 0.1, lift: 0.014, alpha: 1 });
               }
               const decor = decorAt(x, y);
               if (decor && decor.kind === "floor") {
                 const texture = vrRenderedTile(decor.tile);
-                surfaces.push({ kind: "decal", x, y, texture, normal: vrNormalPath(texture), inset: 0.08, lift: 0.018, alpha: decorUsed(decor) ? 0.45 : 1 });
+                surfaces.push({ kind: "decal", x, y, texture, normal: wireframe ? null : vrNormalPath(texture), inset: 0.08, lift: 0.018, alpha: decorUsed(decor) ? 0.45 : 1 });
               }
               continue;
             }
@@ -360,22 +370,22 @@
               // gating it on the neighbor left known walls invisible when none
               // of their open neighbors had been seen yet (the map shows them).
               anyFace = true;
-              const texture = vrRenderedTile(door ? assets.door : wallSurfaceTexture(cell));
+              const texture = wireframe ? (door ? "wireframe:door" : "wireframe:wall") : vrRenderedTile(door ? assets.door : wallSurfaceTexture(cell));
               surfaces.push({
                 kind: door ? "door-face" : "wall-face",
                 x, y,
                 side: dir.name,
                 texture,
-                normal: vrNormalPath(texture),
-                shade: door ? VR_SHADE.doorFace : (dir.name === "N" || dir.name === "S" ? VR_SHADE.faceNS : VR_SHADE.faceEW)
+                normal: wireframe ? null : vrNormalPath(texture),
+                shade: wireframe ? 1 : (door ? VR_SHADE.doorFace : (dir.name === "N" || dir.name === "S" ? VR_SHADE.faceNS : VR_SHADE.faceEW))
               });
             }
             // Every discovered in-map wall gets its cap so the diorama seen
             // from above matches the map's wall cells; the virtual ring just
             // outside the map is only capped where it actually shows a face.
             if (inMap || anyFace) {
-              const texture = vrRenderedTile(door ? assets.door : wallSurfaceTexture(cell));
-              surfaces.push({ kind: "wall-top", x, y, texture, normal: vrNormalPath(texture), shade: door ? VR_SHADE.doorTop : VR_SHADE.top });
+              const texture = wireframe ? (door ? "wireframe:door" : "wireframe:wall") : vrRenderedTile(door ? assets.door : wallSurfaceTexture(cell));
+              surfaces.push({ kind: "wall-top", x, y, texture, normal: wireframe ? null : vrNormalPath(texture), shade: wireframe ? 1 : (door ? VR_SHADE.doorTop : VR_SHADE.top) });
             }
           }
         }
@@ -591,7 +601,7 @@
         return [
           state.floorIndex,
           state.gameMode || "standard",
-          vrArtStyle(),
+          vrWireframeEnabled() ? "wireframe" : vrArtStyle(),
           floorState.discovered.size,
           floorState.openedDoors.size,
           floorState.usedDecor ? floorState.usedDecor.size : 0,
@@ -1013,6 +1023,45 @@
       function vrTileUv(src, normalSrc = null) {
         vrEnsureAtlasScope();
         if (!src) return vrFallbackUv();
+        if (src.startsWith("wireframe:")) {
+          return vrAtlasShape(src, (ctx, rect, cell) => {
+            const x = cell.x;
+            const y = cell.y;
+            const w = cell.w;
+            const h = cell.h;
+            const stroke = src === "wireframe:door" || src === "wireframe:open-door"
+              ? "#ffb84d"
+              : src === "wireframe:lava"
+                ? "#ff6b35"
+                : src === "wireframe:water"
+                  ? "#38d8ff"
+                  : src.startsWith("wireframe:stairs")
+                    ? "#f1d07a"
+                    : "#48ff84";
+            ctx.fillStyle = src === "wireframe:lava" ? "#160502" : src === "wireframe:water" ? "#020b14" : "#020804";
+            ctx.fillRect(x, y, w, h);
+            ctx.strokeStyle = stroke;
+            ctx.lineWidth = Math.max(2, Math.round(w * 0.04));
+            ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
+            if (src === "wireframe:wall" || src === "wireframe:door") {
+              ctx.lineWidth = 1.5;
+              ctx.beginPath();
+              if (src === "wireframe:door") {
+                ctx.moveTo(x + 4, y + 4); ctx.lineTo(x + w - 4, y + h - 4);
+                ctx.moveTo(x + w - 4, y + 4); ctx.lineTo(x + 4, y + h - 4);
+              } else {
+                ctx.moveTo(x + 2, y + h * 0.5); ctx.lineTo(x + w - 2, y + h * 0.5);
+                ctx.moveTo(x + w * 0.5, y + 2); ctx.lineTo(x + w * 0.5, y + h * 0.5);
+                ctx.moveTo(x + w * 0.25, y + h * 0.5); ctx.lineTo(x + w * 0.25, y + h - 2);
+              }
+              ctx.stroke();
+            } else if (src.startsWith("wireframe:stairs")) {
+              ctx.lineWidth = 1.8;
+              ctx.strokeRect(x + w * 0.2, y + h * 0.2, w * 0.6, h * 0.6);
+              ctx.strokeRect(x + w * 0.36, y + h * 0.36, w * 0.28, h * 0.28);
+            }
+          }, 64);
+        }
         const slot = vrAtlas.tiles.get(src);
         if (slot) {
           if (normalSrc && !slot.normalSrc) {

@@ -553,6 +553,18 @@ h2 {
 .map-cell.foresight-step {
   outline: 1px dashed #4dd0e1;
 }
+
+.automap-disabled-notice {
+  padding: 2.5em 1em;
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: #48ff84;
+  background: #030a05;
+  border: 1px solid #269a4c;
+  text-shadow: 0 0 8px rgba(72, 255, 132, 0.45);
+}
 }
 
 .map-cell.decor {

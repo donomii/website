@@ -996,9 +996,33 @@
           .sort((a, b) => sideWallSortValue(a.cell) - sideWallSortValue(b.cell));
       }
 
+      function wireframeEnabled() {
+        return typeof isWireframeStyle === "function" && isWireframeStyle();
+      }
+
       function drawSideWall(context, width, height, depth, offset, entry, data) {
         const points = pctQuad(sideFacePoints(depth, entry.boundary), width, height);
         const surface = sideFacePoints(depth, entry.boundary);
+        if (wireframeEnabled()) {
+          const glow = Math.max(0.24, Math.min(1, data.light + 0.12));
+          context.save();
+          drawQuadPath(context, points);
+          context.fillStyle = "#030a05";
+          context.fill();
+          context.lineWidth = Math.max(1.2, 2.2 - depth * 0.18);
+          context.strokeStyle = `rgba(68, 255, 132, ${glow})`;
+          context.stroke();
+          const midTop = lerpPoint(surface.topNear, surface.topFar, 0.5);
+          const midBot = lerpPoint(surface.bottomNear, surface.bottomFar, 0.5);
+          context.beginPath();
+          context.moveTo(midTop.x * width / 100, midTop.y * height / 100);
+          context.lineTo(midBot.x * width / 100, midBot.y * height / 100);
+          context.lineWidth = 1;
+          context.strokeStyle = `rgba(68, 255, 132, ${glow * 0.42})`;
+          context.stroke();
+          context.restore();
+          return;
+        }
         drawVerticalMappedQuad(context, wallSurfaceTexture(entry.cell), points, depth, Math.max(0.2, data.light - 0.1), "#25211d");
         drawWallRelief(context, width, height, depth, entry.cell, surface, true);
         drawWallPatch(context, width, height, depth, offset, entry.cell, surface);
@@ -1013,6 +1037,31 @@
         const data = geometryAt(depth);
         const floorQuad = pctQuad(floorSegmentPoints(depth, offset), width, height);
         const ceilingQuad = pctQuad(ceilingSegmentPoints(depth, offset), width, height);
+        if (wireframeEnabled()) {
+          const glow = Math.max(0.2, Math.min(0.95, data.light + 0.08));
+          const terrain = terrainAt(cell.x, cell.y);
+          const floorStroke = terrain === "lava"
+            ? `rgba(255, 118, 56, ${glow})`
+            : terrain === "water" || terrain === "deep-water"
+              ? `rgba(64, 212, 255, ${glow})`
+              : `rgba(56, 255, 122, ${glow * 0.72})`;
+          context.save();
+          drawQuadPath(context, ceilingQuad);
+          context.fillStyle = "#020604";
+          context.fill();
+          context.strokeStyle = `rgba(38, 176, 86, ${glow * 0.36})`;
+          context.lineWidth = 1;
+          context.stroke();
+          drawQuadPath(context, floorQuad);
+          context.fillStyle = "#020805";
+          context.fill();
+          context.strokeStyle = floorStroke;
+          context.lineWidth = 1.25;
+          context.stroke();
+          context.restore();
+          drawFloorMarks(context, width, height, depth, offset, cell);
+          return;
+        }
         drawHorizontalMappedQuad(context, themedAsset("ceiling", "ceilingAlt", cell, 5), ceilingQuad, depth, Math.max(0.2, data.light - 0.24), "#171513");
         drawHorizontalMappedQuad(context, floorTexture(cell), floorQuad, depth, Math.max(0.2, data.light - 0.05), floorFallback(cell));
         drawTerrainOverlay(context, width, height, depth, offset, cell);
@@ -1769,6 +1818,27 @@
         const data = geometryAt(faceDepth);
         const assets = currentAssets();
         const points = pctQuad(frontFacePoints(faceDepth, offset), width, height);
+        if (wireframeEnabled()) {
+          const glow = Math.max(0.26, Math.min(1, data.light + 0.16));
+          context.save();
+          drawQuadPath(context, points);
+          context.fillStyle = kind === "door" ? "#0b0702" : "#030a05";
+          context.fill();
+          context.lineWidth = Math.max(1.3, 2.3 - faceDepth * 0.18);
+          context.strokeStyle = kind === "door" ? `rgba(255, 184, 77, ${glow})` : `rgba(76, 255, 136, ${glow})`;
+          context.stroke();
+          if (kind === "door") {
+            context.beginPath();
+            context.moveTo(points[0].x, points[0].y);
+            context.lineTo(points[2].x, points[2].y);
+            context.moveTo(points[1].x, points[1].y);
+            context.lineTo(points[3].x, points[3].y);
+            context.lineWidth = 1.1;
+            context.stroke();
+          }
+          context.restore();
+          return;
+        }
         if (kind === "door") {
           drawVerticalMappedQuad(context, environmentAsset(assets.door), points, faceDepth, data.light, "#281d13");
           strokeQuad(context, points, "rgba(238, 193, 101, 0.12)");
@@ -1778,6 +1848,7 @@
       }
 
       function drawFrontSurfaceDetails(context, width, height, depth, offset, cell, occluders = []) {
+        if (wireframeEnabled()) return;
         const kind = mapKind(cell.x, cell.y);
         if (kind !== "wall") return;
         const faceDepth = nearEdgeDepth(depth);
@@ -1864,14 +1935,27 @@
         viewportCanvas.style.imageRendering = state.tileset === "linocut" ? "auto" : "pixelated";
         context.clearRect(0, 0, width, height);
         context.imageSmoothingEnabled = false;
-        context.fillStyle = "#070606";
+        context.fillStyle = wireframeEnabled() ? "#020804" : "#070606";
         context.fillRect(0, 0, width, height);
 
         for (const layer of sceneWallLayers(context, width, height)) layer.draw();
         drawEffectTrails(context, width, height);
 
-        drawViewportHaze(context, width, height);
-        drawBranchAtmosphere(context, width, height);
+        if (wireframeEnabled()) {
+          context.save();
+          context.fillStyle = "rgba(4, 18, 8, 0.16)";
+          for (let sy = 0; sy < height; sy += 4) context.fillRect(0, sy, width, 1);
+          context.strokeStyle = "rgba(72, 255, 132, 0.35)";
+          context.lineWidth = 2;
+          context.strokeRect(2, 2, width - 4, height - 4);
+          context.fillStyle = "#48ff84";
+          context.font = "11px ui-monospace, monospace";
+          context.fillText(`CRT WIREFRAME · ${dirs[state.dir]?.name?.toUpperCase() || ""}${typeof isAutomapDisabled === "function" && isAutomapDisabled() ? " · NO AUTOMAP" : ""}`, 12, 18);
+          context.restore();
+        } else {
+          drawViewportHaze(context, width, height);
+          drawBranchAtmosphere(context, width, height);
+        }
         drawEffectWash(context, width, height);
         drawPartyStatusOverlays(context, width, height);
         if (state.victory || state.defeated) drawLabel(context, state.victory ? "escaped" : "defeated", { x: width * 0.4, y: height * 0.42, width: width * 0.2, height: 30 });

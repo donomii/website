@@ -27,6 +27,12 @@
           name: "Foresight Tactics",
           shortName: "Foresight",
           summary: "Into the Breach tactical combat: every enemy telegraphs its next strike or step in 2D & VR, and every melee hit shoves foes into walls, hazards, traps, or friendly fire."
+        },
+        oldschool: {
+          key: "oldschool",
+          name: "Oldschool Wireframe",
+          shortName: "Oldschool",
+          summary: "Wizardry & Grimrock Oldschool Mode: neon green CRT phosphor vector wireframe 2D & VR geometry, automap disabled, and 1.25x XP."
         }
       };
 
@@ -57,11 +63,21 @@
       }
 
       function modeXpScale() {
-        return isGameMode("sprint") ? 2 : 1;
+        if (isGameMode("sprint")) return 2;
+        if (isGameMode("oldschool")) return 1.25;
+        return 1;
       }
 
       function modeGoldScale() {
         return isGameMode("sprint") ? 2 : 1;
+      }
+
+      function isWireframeStyle() {
+        return state.tileset === "wireframe" || isGameMode("oldschool");
+      }
+
+      function isAutomapDisabled() {
+        return isGameMode("oldschool");
       }
 
       function modeStatusLabel() {
@@ -76,6 +92,9 @@
           const floorState = typeof currentFloorState === "function" ? currentFloorState() : null;
           const threats = (floorState?.monsters || []).filter((m) => m.hp > 0 && m.foresight && ["melee", "reach", "ranged"].includes(m.foresight.kind)).length;
           return `[Foresight · ${threats} Telegraphs]`;
+        }
+        if (mode.key === "oldschool") {
+          return "[Oldschool · No Map]";
         }
         return `[${mode.shortName}]`;
       }
@@ -693,6 +712,8 @@
         setGameMode,
         modeXpScale,
         modeGoldScale,
+        isWireframeStyle,
+        isAutomapDisabled,
         modeStatusLabel,
         makeSprintFloor,
         startSprintMode,
