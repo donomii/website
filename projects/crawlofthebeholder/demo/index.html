@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="icon.svg">
     <link rel="license" href="vendor/crawl/LICENSE" title="DCSS-derived generator code: GPL-2.0-or-later">
     <title>Crawl of the Beholder</title>
-    <link rel="stylesheet" href="styles.css?v=0.5.32-fit2">
+    <link rel="stylesheet" href="styles.css?v=0.5.39">
   </head>
   <body>
     <div class="app">
@@ -21,6 +21,14 @@
           <span class="brand-mark"><img src="art/beholder_96.png" alt="CoB"></span>
           <h1>Crawl of the Beholder</h1>
           <span id="versionBadge" class="version-badge"></span>
+          <select id="topbarModeSelect" class="topbar-mode-select" aria-label="Game variation" title="Switch game variation (starts a new run in that mode)">
+            <option value="standard" selected>Standard Crawl</option>
+            <option value="sprint">Dungeon Sprint</option>
+            <option value="foresight">Foresight Tactics</option>
+            <option value="oldschool">Oldschool Wireframe</option>
+            <option value="tempo">Necro-Beat Tempo</option>
+            <option value="cardcrawl">Card &amp; AP Crawl</option>
+          </select>
           <button type="button" id="installButton" class="install-button hidden" aria-label="Install app">Install</button>
           <button type="button" id="vrButton" class="install-button hidden" aria-label="Enter VR">Enter VR</button>
           <button type="button" id="arButton" class="install-button hidden" aria-label="Enter AR">Enter AR</button>
@@ -252,6 +260,17 @@
         <button type="button" class="modal-close" data-modal-close="settingsModal" aria-label="Close settings">&times;</button>
         <h2 id="settingsModalTitle">Settings</h2>
         <div class="settings-list">
+          <label class="settings-choice" for="settingGameMode">
+            <span>Game variation</span>
+            <select id="settingGameMode">
+              <option value="standard" selected>Standard Crawl</option>
+              <option value="sprint">Dungeon Sprint</option>
+              <option value="foresight">Foresight Tactics</option>
+              <option value="oldschool">Oldschool Wireframe</option>
+              <option value="tempo">Necro-Beat Tempo</option>
+              <option value="cardcrawl">Card &amp; AP Crawl</option>
+            </select>
+          </label>
           <label class="settings-choice" for="settingTileset">
             <span>Dungeon artwork</span>
             <select id="settingTileset" aria-describedby="settingTilesetHelp">
@@ -329,6 +348,10 @@
               <select id="characterCreateGameMode" aria-describedby="gameModeHelp">
                 <option value="standard" selected>Standard Crawl</option>
                 <option value="sprint">Dungeon Sprint</option>
+                <option value="foresight">Foresight Tactics</option>
+                <option value="oldschool">Oldschool Wireframe</option>
+                <option value="tempo">Necro-Beat Tempo</option>
+                <option value="cardcrawl">Card &amp; AP Crawl</option>
               </select>
             </label>
             <p id="gameModeHelp">Classic DCSS-inspired delve across curated branches or The Four Ways.</p>
@@ -453,7 +476,7 @@
     <script src="src/vaults.generated.js?v=0.5.25"></script>
     <script src="src/monster_flavour.generated.js?v=0.5.25"></script>
     <script src="src/lore.generated.js?v=0.5.25"></script>
-    <script src="src/runtime/engine/core.js?v=0.5.34"></script>
+    <script src="src/runtime/engine/core.js?v=0.5.39"></script>
     <script src="src/runtime/engine/monster_traits.js?v=0.5.25"></script>
     <script src="src/runtime/engine/combat_math.js?v=0.5.25"></script>
     <script src="src/runtime/engine/messages_and_visibility.js?v=0.5.25"></script>
@@ -470,7 +493,7 @@
     <script src="src/runtime/engine/items/use.js?v=0.5.25"></script>
     <script src="src/runtime/engine/party/turn.js?v=0.5.25"></script>
     <script src="src/runtime/render/viewport_rendering.js?v=0.5.35"></script>
-    <script src="src/runtime/render/ui_chrome.js?v=0.5.34"></script>
+    <script src="src/runtime/render/ui_chrome.js?v=0.5.39"></script>
     <script src="src/runtime/engine/classes.js?v=0.5.25"></script>
     <script src="src/runtime/engine/dcss_layouts.js?v=1"></script>
     <script src="src/runtime/engine/expedition_layouts.js?v=1"></script>
@@ -541,10 +564,10 @@
     <script src="src/runtime/render/mobile.js?v=0.5.32"></script>
     <script src="src/runtime/render/vr.js?v=0.5.38"></script>
     <script src="src/runtime/systems/short_expedition.js?v=0.5.25"></script>
-    <script src="src/runtime/systems/game_modes.js?v=0.5.38"></script>
+    <script src="src/runtime/systems/game_modes.js?v=0.5.39"></script>
     <script src="src/runtime/io/dev_options.js?v=0.5.38"></script>
-    <script src="src/runtime/io/input.js?v=0.5.38"></script>
-    <script src="src/main.js?v=0.5.38"></script>
+    <script src="src/runtime/io/input.js?v=0.5.39"></script>
+    <script src="src/main.js?v=0.5.39"></script>
     <script>
       // Register the service worker for offline play. Best-effort — game still
       // works without it.

@@ -127,7 +127,16 @@
 <p>Crawl of the Beholder is a browser prototype of a classic grid-stepping, first-person dungeon crawler in the style of Eye of the Beholder and Dungeon Master.  It uses monster sprites, tiles, spell data and vault maps from <a href="https://crawl.develz.org/">Dungeon Crawl Stone Soup</a>, so the dungeon is populated with hundreds of monsters, items, and spells right out of the box.</p>
 <p>Like most of my recent projects, this one was vibe coded.  The behaviour scenarios and the high level specs do most of the heavy lifting; the AI fills in the rendering, combat math, monster AI, and the UI.</p>
 <p>The current build ships <strong>38 procedurally-assembled floors</strong> spanning the entire DCSS branch progression — Dungeon, Orc, Lair, Swamp, Shoals, Snake Pit, Spider Nest, Slime Pits, Crypt, Elven Halls, Vaults, Depths, Realm of Zot — plus the four Hells (Gehenna, Cocytus, Tartarus, Dis), the Abyss, Pandemonium, the Tomb, and seven portal vaults (Ossuary, Ice Cave, Bailey, Volcano, Necropolis, Desolation, the deep-elf WizLab).  About 280 monsters and 200+ DCSS monster spells are wired in, so endgame fiends actually hurl damnation, ancient liches torment, royal mummies summon undead, and stone giants throw crystal spears.  Twenty-five DCSS gods grant real boons.  The party hunts the Orb of Zot Soup.</p>
-<p>Play it in your browser: <a href="demo/index.html">Crawl of the Beholder</a>.</p>
+<p>Play it in your browser: <a href="demo/index.html">Crawl of the Beholder</a>. You can switch variations anytime from the dropdown bar at the top of the screen, Settings, or the <strong>Mode</strong> button in VR.</p>
+<h2 id="variations">Game Variations (2D &amp; VR)</h2>
+<ul>
+<li><a href="demo/index.html?mode=standard">Standard Crawl</a> — Classic multi-branch campaign from the Dungeon down to the Realm of Zot to recover the Orb of Zot Soup.</li>
+<li><a href="demo/index.html?mode=sprint">Dungeon Sprint</a> — Tight 21×15 single-floor gauntlet with 2× XP &amp; gold, kill-streak Might rushes, reinforcement waves, and a 3-rune Sanctum seal.</li>
+<li><a href="demo/index.html?mode=foresight">Foresight Tactics</a> — Deterministic enemy attack/move intents shown on the 2D view, minimap, and VR board tiles, plus tactical bump-shoves into walls, hazards, or other foes.</li>
+<li><a href="demo/index.html?mode=oldschool">Oldschool Wireframe</a> — Neon green phosphor CRT vector rendering in 2D and VR with automap disabled and 1.25× XP.</li>
+<li><a href="demo/index.html?mode=tempo">Necro-Beat Tempo</a> — 110 BPM rhythm delve with audio pulses, pulsing floor beat rings, and up to a 4× Groove gold/damage multiplier for acting on the beat.</li>
+<li><a href="demo/index.html?mode=cardcrawl">Card &amp; AP Crawl (Noir Torch)</a> — Spend 2 AP per round playing tactical cards from a 4-card hand (clickable bar in 2D, VR inventory pane in headset) under flickering amber torchlight.</li>
+</ul>
 <p>The VR tabletop now supports native physical piece movement and board actions:
 grab and place your party miniature to step or travel, bump-attack adjacent
 monsters, push open doors, twist your wrist to rotate party facing, tap the party
@@ -135,7 +144,7 @@ piece or drop in place to wait, disarm traps on the board, and drag potions
 directly onto the miniature to heal.</p>
 <p>The September 2026 build has four adventurers drawn from warrior, rogue and mage, with both class actions available from the start. There is no healer or hunger clock; recovery uses finite supplies. Meteor requires clear sight, and Rally cannot stack with an active might effect. Older saves are preserved but cannot be resumed under these rules; starting over requires explicitly discarding the old expedition.</p>
 <p>Download a self-contained build to run offline: <a href="crawlofthebeholder.zip">crawlofthebeholder.zip</a> (~20 MB — unzip and open <code>index.html</code> from a local web server).</p>
-<p>ZIP SHA-256: <code>b2a3bf1e1693233a34682a58136052e32df0fea46b8f0cfedfc7b6cb2b8a1ce3</code>.</p>
+<p>ZIP SHA-256: <code>2f732a32e24dac576c9df4ef3c3bd394dba8bd42935c4c5ea39bd3b36ec5ae54</code>.</p>
 <p>The source is on <a href="https://gitlab.com/donomii/crawlofthebeholder">GitLab</a>.</p>
 
 			</article>

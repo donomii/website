@@ -804,6 +804,13 @@ h2 {
   .brand {
     min-width: 0;
     gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .topbar-mode-select {
+    margin-left: 2px;
+    padding: 2px 6px;
+    font-size: 11px;
   }
 
   .brand-mark {
@@ -1698,6 +1705,21 @@ body.low-hp-warning::after {
 }
 
 /* PWA install button */
+.topbar-mode-select {
+  margin-left: 6px;
+  padding: 4px 8px;
+  border: 1px solid #6e5530;
+  background: linear-gradient(#2c2216, #15120f);
+  color: #f4d78b;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.topbar-mode-select:hover,
+.topbar-mode-select:focus-visible {
+  border-color: #d1a64d;
+}
 .install-button {
   margin-left: 8px;
   padding: 4px 10px;

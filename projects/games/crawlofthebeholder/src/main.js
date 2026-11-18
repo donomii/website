@@ -99,6 +99,15 @@
   // Startup options (URL query / forwarded launcher flags) can skip the menu and
   // drop the party at a chosen floor — see README for the full list.
   const startup = typeof context.parseStartupOptions === "function" ? context.parseStartupOptions() : {};
+  let switchedModeFromUrl = false;
+  if (resumed && startup.gameMode && typeof context.isValidGameMode === "function" && context.isValidGameMode(startup.gameMode)) {
+    const requested = context.normalizeGameMode(startup.gameMode);
+    const active = context.normalizeGameMode(context.state.gameMode);
+    if (requested !== active && typeof context.restartInGameMode === "function") {
+      context.restartInGameMode(requested);
+      switchedModeFromUrl = true;
+    }
+  }
   if (!resumed && startup.autostart && typeof context.beginRun === "function") {
     // beginRun builds the world (curated or seeded), applies the party/difficulty
     // and hides the character-create modal, so bindInput never shows it.
@@ -117,7 +126,7 @@
   if (startup.pos && typeof context.applyStartPosition === "function") context.applyStartPosition(startup.pos);
   if (startup.reveal && typeof context.revealAll === "function") context.revealAll();
   context.render();
-  if (resumed) {
+  if (resumed && !switchedModeFromUrl) {
     context.state.message = `${context.state.message ? `${context.state.message} ` : ""}Save resumed.`;
     context.renderChrome();
   }

@@ -373,19 +373,24 @@
             renderCharacterCreate();
           });
         }
-        if (els.characterCreateGameMode?.addEventListener) {
-          if (typeof getGameModeDefinitions === "function" && typeof els.characterCreateGameMode.replaceChildren === "function" && typeof document.createElement === "function") {
+        function populateModeSelect(selectEl, includeSummary = false) {
+          if (!selectEl || typeof getGameModeDefinitions !== "function") return;
+          if (typeof selectEl.replaceChildren === "function" && typeof document.createElement === "function") {
+            const active = typeof normalizeGameMode === "function" ? normalizeGameMode(state.gameMode) : (state.gameMode || "standard");
             const options = getGameModeDefinitions().map((mode) => {
               const option = document.createElement("option");
               option.value = mode.key;
-              option.textContent = mode.name;
-              if (mode.key === (state.gameMode || "standard")) option.selected = true;
+              option.textContent = includeSummary ? `${mode.name} — ${mode.summary}` : mode.name;
+              if (mode.key === active) option.selected = true;
               return option;
             });
             if (options.every((o) => o && typeof o.value !== "undefined")) {
-              els.characterCreateGameMode.replaceChildren(...options);
+              selectEl.replaceChildren(...options);
             }
           }
+        }
+        if (els.characterCreateGameMode?.addEventListener) {
+          populateModeSelect(els.characterCreateGameMode);
           const syncModeUi = () => {
             const selected = els.characterCreateGameMode.value;
             if (typeof setGameMode === "function") setGameMode(selected);
@@ -395,6 +400,24 @@
           };
           els.characterCreateGameMode.addEventListener("change", syncModeUi);
           syncModeUi();
+        }
+        for (const switcher of [els.topbarModeSelect, els.settingGameMode]) {
+          if (!switcher?.addEventListener) continue;
+          populateModeSelect(switcher);
+          switcher.addEventListener("change", () => {
+            const nextKey = switcher.value;
+            if (typeof restartInGameMode === "function") {
+              restartInGameMode(nextKey);
+            } else if (typeof setGameMode === "function") {
+              setGameMode(nextKey);
+            }
+            if (typeof hideAllModals === "function" && switcher === els.settingGameMode) {
+              hideAllModals();
+            }
+            if (typeof showToast === "function" && typeof currentGameMode === "function") {
+              showToast(`Mode: ${currentGameMode().name}`);
+            }
+          });
         }
         if (els.characterCreateDifficulty?.addEventListener) {
           els.characterCreateDifficulty.addEventListener("change", () => {

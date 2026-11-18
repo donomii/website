@@ -482,6 +482,10 @@
         const modePrefix = modeTag ? `${modeTag} · ` : "";
         els.statusLine.textContent = `${modePrefix}T${state.turnCount} (F${state.floorTurnCount || 0}) · L${state.level} ${state.experience}/${state.nextLevel} XP · ${state.gold}g${hasteStatus}${mightStatus}${rageStatus}${resistanceStatus}${silenceStatus}${snareStatus}${barbedStatus}${engulfedStatus}${slowStatus}${poisonStatus}${dazedStatus}${corrodedStatus}${vitrifiedStatus}${hungerTag}${talentTag}${comboTag}${allyTag}${deityTag}${encTag}${runeTag} · ${orbTag} · ${state.party.filter((member) => member.hp > 0).length}/4 up${difficultyTag}${dailyTag}`;
         els.versionBadge.textContent = `v${resources.version}`;
+        const activeModeKey = typeof normalizeGameMode === "function" ? normalizeGameMode(state.gameMode) : (state.gameMode || "standard");
+        if (els.topbarModeSelect) els.topbarModeSelect.value = activeModeKey;
+        if (els.settingGameMode) els.settingGameMode.value = activeModeKey;
+        if (els.characterCreateGameMode && !state.characterCreated) els.characterCreateGameMode.value = activeModeKey;
         const hazard = typeof currentHazard === "function" && !context.hazardsDisabled ? currentHazard() : null;
         const hazardTag = hazard && hazard.id !== "none" ? ` · ${hazard.name}` : "";
         els.floorBadge.textContent = `${currentFloor().id}/${resources.floors.length} · ${floorExploredPercent()}%${hazardTag}`;

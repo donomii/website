@@ -179,6 +179,8 @@
       characterCreateRandom: document.getElementById("characterCreateRandom"),
       characterCreateExpedition: document.getElementById("characterCreateExpedition"),
       characterCreateGameMode: document.getElementById("characterCreateGameMode"),
+      topbarModeSelect: document.getElementById("topbarModeSelect"),
+      settingGameMode: document.getElementById("settingGameMode"),
       gameModeHelp: document.getElementById("gameModeHelp"),
       cardHandBar: document.getElementById("cardHandBar"),
       characterCreateDifficulty: document.getElementById("characterCreateDifficulty"),
