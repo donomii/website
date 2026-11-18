@@ -1023,11 +1023,13 @@
           context.lineWidth = Math.max(1.2, 2.2 - depth * 0.18);
           context.strokeStyle = `rgba(68, 255, 132, ${glow})`;
           context.stroke();
-          const midTop = lerpPoint(surface.topNear, surface.topFar, 0.5);
-          const midBot = lerpPoint(surface.bottomNear, surface.bottomFar, 0.5);
+          const midTopX = lerp(points[0].x, points[1].x, 0.5);
+          const midTopY = lerp(points[0].y, points[1].y, 0.5);
+          const midBotX = lerp(points[3].x, points[2].x, 0.5);
+          const midBotY = lerp(points[3].y, points[2].y, 0.5);
           context.beginPath();
-          context.moveTo(midTop.x * width / 100, midTop.y * height / 100);
-          context.lineTo(midBot.x * width / 100, midBot.y * height / 100);
+          context.moveTo(midTopX, midTopY);
+          context.lineTo(midBotX, midBotY);
           context.lineWidth = 1;
           context.strokeStyle = `rgba(68, 255, 132, ${glow * 0.42})`;
           context.stroke();
