@@ -161,6 +161,7 @@
           bestiarySeenIds: state.bestiarySeenIds ? [...state.bestiarySeenIds] : [],
           goldSpent: state.goldSpent || 0,
           visitedBranches: state.visitedBranches ? [...state.visitedBranches] : [],
+          branchReturns: state.branchReturns ? JSON.parse(JSON.stringify(state.branchReturns)) : {},
           claimedQuests: { ...(state.claimedQuests || {}) },
           autoPickup: state.autoPickup !== false,
           killCombo: state.killCombo || 0,
@@ -246,6 +247,7 @@
         state.bestiarySeenIds = new Set(saved.bestiarySeenIds || []);
         state.goldSpent = saved.goldSpent || 0;
         state.visitedBranches = new Set(saved.visitedBranches || []);
+        state.branchReturns = saved.branchReturns ? JSON.parse(JSON.stringify(saved.branchReturns)) : {};
         state.claimedQuests = { ...(saved.claimedQuests || {}) };
         state.autoPickup = saved.autoPickup !== false;
         state.killCombo = saved.killCombo || 0;

@@ -345,7 +345,7 @@
               if (stairs) {
                 const texture = wireframe
                   ? (stairs.direction === "down" ? "wireframe:stairs-down" : "wireframe:stairs-up")
-                  : vrRenderedTile(stairs.direction === "down" ? assets.stairsDown : assets.stairsUp);
+                  : vrRenderedTile(stairs.tile || (stairs.direction === "down" ? assets.stairsDown : assets.stairsUp));
                 surfaces.push({ kind: "decal", x, y, texture, normal: wireframe ? null : vrNormalPath(texture), inset: 0.1, lift: 0.014, alpha: 1 });
               }
               const decor = decorAt(x, y);

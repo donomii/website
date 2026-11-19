@@ -122,6 +122,9 @@
     if (typeof context.normalizeCampaign === "function") context.normalizeCampaign();
     context.reveal();
   }
+  if (resumed && typeof context.seedFloorOneBranchEntrances === "function") {
+    context.seedFloorOneBranchEntrances();
+  }
   // Dev navigation: jump to a chosen floor / tile, and optionally reveal the map.
   if (startup.floor != null && typeof context.goToFloor === "function") context.goToFloor(startup.floor);
   if (startup.pos && typeof context.applyStartPosition === "function") context.applyStartPosition(startup.pos);

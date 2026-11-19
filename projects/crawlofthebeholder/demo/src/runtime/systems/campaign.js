@@ -187,12 +187,206 @@
         state.orbRunTurns = 0;
       }
 
+      const GATEWAY_ROOT = "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways";
+      const FLOOR_ONE_BRANCH_SPECS = [
+        {
+          key: "branchShoals",
+          branch: "shoals",
+          idPattern: /^shoals:/i,
+          label: "Enter Shoals",
+          detail: "Tide-washed islands, shallow surf, and merfolk shoals. Ascend its entrance stair to return to D:1.",
+          tile: `${GATEWAY_ROOT}/enter_shoals.png`
+        },
+        {
+          key: "branchSwamp",
+          branch: "swamp",
+          idPattern: /^swamp:/i,
+          label: "Enter Swamp",
+          detail: "Sunken fen of cypresses, bogs, and hydras. Ascend its entrance stair to return to D:1.",
+          tile: `${GATEWAY_ROOT}/enter_swamp.png`
+        },
+        {
+          key: "branchLair",
+          branch: "lair",
+          idPattern: /^lair:/i,
+          label: "Enter Lair",
+          detail: "Overgrown beast caverns and subterranean groves. Ascend its entrance stair to return to D:1.",
+          tile: `${GATEWAY_ROOT}/enter_lair.png`
+        },
+        {
+          key: "branchSnake",
+          branch: "snake",
+          idPattern: /^snake:/i,
+          label: "Enter Snake Pit",
+          detail: "Serpentine vaults patrolled by nagas and adders. Ascend its entrance stair to return to D:1.",
+          tile: `${GATEWAY_ROOT}/enter_snake.png`
+        },
+        {
+          key: "branchSpider",
+          branch: "spider",
+          idPattern: /^spider:/i,
+          label: "Enter Spider Nest",
+          detail: "Web-choked burrows crawling with arachnids. Ascend its entrance stair to return to D:1.",
+          tile: `${GATEWAY_ROOT}/enter_spider.png`
+        },
+        {
+          key: "branchSlime",
+          branch: "slime",
+          idPattern: /^slime:/i,
+          label: "Enter Slime Pits",
+          detail: "Acid-slick caverns pulsing with oozes and jellies. Ascend its entrance stair to return to D:1.",
+          tile: `${GATEWAY_ROOT}/enter_slime.png`
+        },
+        {
+          key: "branchOrc",
+          branch: "orc",
+          idPattern: /^orc:/i,
+          label: "Enter Orcish Mines",
+          detail: "Carved granite galleries held by orc warbands. Ascend its entrance stair to return to D:1.",
+          tile: `${GATEWAY_ROOT}/enter_orc.png`
+        }
+      ];
+
+      function findBranchFloorIndex(spec) {
+        const floors = resources.floors || [];
+        let idx = floors.findIndex((f, i) => i > 0 && spec.idPattern.test(f.id || ""));
+        if (idx >= 0) return idx;
+        idx = floors.findIndex((f, i) => i > 0 && String(f.biome || "").toLowerCase() === spec.branch);
+        return idx;
+      }
+
+      function validBranchLanding(targetFloor) {
+        if (!targetFloor || !targetFloor.map || !Array.isArray(targetFloor.map.rows)) return null;
+        const doors = new Set(targetFloor.doors || []);
+        const isGood = (p) => p && Number.isInteger(p.x) && Number.isInteger(p.y)
+          && targetFloor.map.rows[p.y]?.[p.x] === "."
+          && !doors.has(keyOf(p.x, p.y));
+        if (isGood(targetFloor.stairs?.up)) return { x: targetFloor.stairs.up.x, y: targetFloor.stairs.up.y };
+        if (isGood(targetFloor.start)) return { x: targetFloor.start.x, y: targetFloor.start.y };
+        for (let y = 1; y < targetFloor.map.rows.length - 1; y += 1) {
+          for (let x = 1; x < targetFloor.map.rows[y].length - 1; x += 1) {
+            if (isGood({ x, y })) return { x, y };
+          }
+        }
+        return null;
+      }
+
+      // Place direct gateways to Shoals, Swamp, Lair, Snake, Spider, Slime, and
+      // Orcish Mines on Floor 1 (D:1) within easy reach of the entrance so players
+      // can visit and explore the major branches immediately.
+      function seedFloorOneBranchEntrances() {
+        if (context.branchPortalsDisabled) return 0;
+        if (state.expedition === "short") return 0;
+        if (typeof isGameMode === "function" && isGameMode("sprint")) return 0;
+        const floor = resources.floors?.[0];
+        if (!floor || !floor.map || !Array.isArray(floor.map.rows)) return 0;
+        if (!floor.stairs) floor.stairs = {};
+
+        // Build BFS distance list of reachable dry open cells from D:1's start.
+        const start = floor.start || floor.stairs.up || { x: 1, y: 1 };
+        const dist = new Map();
+        if (openAt(floor, start.x, start.y)) {
+          dist.set(keyOf(start.x, start.y), 0);
+          const q = [start];
+          for (let head = 0; head < q.length; head += 1) {
+            const cur = q[head];
+            const d = dist.get(keyOf(cur.x, cur.y));
+            for (const [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+              const nx = cur.x + dx;
+              const ny = cur.y + dy;
+              const k = keyOf(nx, ny);
+              const g = floor.map.rows[ny]?.[nx];
+              if ((g === "." || g === "+") && !dist.has(k)) {
+                dist.set(k, d + 1);
+                q.push({ x: nx, y: ny });
+              }
+            }
+          }
+        }
+
+        const blocked = new Set();
+        const mark = (p) => { if (p && Number.isInteger(p.x) && Number.isInteger(p.y)) blocked.add(keyOf(p.x, p.y)); };
+        mark(floor.start);
+        mark(floor.stairs.up);
+        mark(floor.stairs.down);
+        for (const d of floor.doors || []) blocked.add(d);
+        for (const it of floor.floorItems || []) mark(it);
+        for (const tr of floor.traps || []) mark(tr);
+        for (const dc of floor.decor || []) mark(dc);
+        for (const m of floor.encounters || []) mark(m);
+
+        // Also respect live floor state items/traps/monsters if already hydrated.
+        const fs0 = state.floors?.[0];
+        if (fs0) {
+          for (const it of fs0.floorItems || []) mark(it);
+          for (const tr of fs0.traps || []) mark(tr);
+          for (const m of fs0.monsters || []) mark(m);
+        }
+
+        const candidates = [...dist.entries()]
+          .filter(([k, d]) => d >= 2 && !blocked.has(k))
+          .map(([k, d]) => {
+            const [x, y] = k.split(",").map(Number);
+            return { x, y, d };
+          })
+          .filter((c) => floor.map.rows[c.y]?.[c.x] === ".")
+          .sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+
+        const placedCoords = [];
+        let placed = 0;
+
+        for (const spec of FLOOR_ONE_BRANCH_SPECS) {
+          if (floor.stairs[spec.key]) {
+            placedCoords.push(floor.stairs[spec.key]);
+            placed += 1;
+            continue;
+          }
+          const targetFloor = findBranchFloorIndex(spec);
+          if (targetFloor < 0) continue;
+          const landing = validBranchLanding(resources.floors[targetFloor]);
+          if (!landing) continue;
+
+          // Prefer well-spaced spots (distance >= 3 from previous portals) near start,
+          // falling back to >= 2 or any open reachable candidate if floor is tight.
+          let spot = candidates.find((c) =>
+            !blocked.has(keyOf(c.x, c.y))
+            && placedCoords.every((p) => Math.abs(p.x - c.x) + Math.abs(p.y - c.y) >= 3)
+          );
+          if (!spot) {
+            spot = candidates.find((c) =>
+              !blocked.has(keyOf(c.x, c.y))
+              && placedCoords.every((p) => Math.abs(p.x - c.x) + Math.abs(p.y - c.y) >= 2)
+            );
+          }
+          if (!spot) spot = candidates.find((c) => !blocked.has(keyOf(c.x, c.y)));
+          if (!spot) break;
+
+          blocked.add(keyOf(spot.x, spot.y));
+          placedCoords.push(spot);
+          floor.stairs[spec.key] = {
+            x: spot.x,
+            y: spot.y,
+            direction: "down",
+            targetFloor,
+            landing,
+            label: spec.label,
+            detail: spec.detail,
+            tile: spec.tile,
+            branchKey: spec.branch,
+            branchReturn: true
+          };
+          placed += 1;
+        }
+        return placed;
+      }
+
       // Called at run start (curated) and from regenerateWorld (generated).
       function normalizeCampaign(opts = {}) {
         if (context.campaignDisabled) return;
         if (!resources.floors || resources.floors.length === 0) return;
         if (opts.generated) normalizeGeneratedCampaign();
         else normalizeCuratedCampaign();
+        seedFloorOneBranchEntrances();
       }
 
       // The seal of Zot: descending into the sanctum needs enough runes. Only
@@ -294,6 +488,8 @@
         findZotIndex,
         runeFloorIndices,
         pickDeepCell,
+        FLOOR_ONE_BRANCH_SPECS,
+        seedFloorOneBranchEntrances,
         normalizeCampaign,
         runeGateBlocks,
         runeGateMessage,

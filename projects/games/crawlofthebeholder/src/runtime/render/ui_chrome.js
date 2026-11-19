@@ -268,8 +268,8 @@
                 labels.push("open door");
               }
               if (stairs) {
-                cls += " stairs";
-                text = stairs.direction === "down" ? ">" : "<";
+                cls += stairs.branchKey ? " stairs branch-entrance" : " stairs";
+                text = stairs.branchKey ? "Ω" : stairs.direction === "down" ? ">" : "<";
                 labels.push(stairs.label ? `${stairs.label}: ${stairs.detail}` : stairs.direction === "down" ? "downstairs" : "upstairs");
               }
               if (item) {

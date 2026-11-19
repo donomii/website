@@ -1936,3 +1936,4 @@ body.colorblind .map-cell.ally { background: #56b4e9; color: #04121d; }
 .map-cell.seen.floor.room-conservatory { background: #253b28; }
 .map-cell.seen.floor.room-treasury { background: #42351d; }
 .map-cell.seen.furniture { color: #d4b06a; }
+.map-cell.seen.stairs.branch-entrance { background: #1e4252; color: #7ae8ff; font-weight: 700; }

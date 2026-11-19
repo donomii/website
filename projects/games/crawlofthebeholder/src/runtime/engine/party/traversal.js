@@ -166,6 +166,9 @@
         const preferUp = state.floorIndex === 0 && hasPrize();
         const ordered = stairs.sort((a, b) => {
           if (preferUp) return a.direction === "up" ? -1 : 1;
+          const aMainDown = a.direction === "down" && !a.branchReturn;
+          const bMainDown = b.direction === "down" && !b.branchReturn;
+          if (aMainDown !== bMainDown) return aMainDown ? -1 : 1;
           return a.direction === "down" ? -1 : 1;
         });
         let steps = 0;

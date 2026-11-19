@@ -1286,13 +1286,38 @@
           context.fill();
         }
         if (theme.floorPattern === "rug") {
-          const rugQuad = pctQuad(quadDecalPoints(floorSurf, { left: 0.14, top: 0.12, right: 0.86, bottom: 0.88 }), width, height);
+          const sameRoom = (nx, ny) => {
+            const nz = cellThemeAt(nx, ny);
+            return nz && nz.kind === "room" && nz.roomId === zone.roomId;
+          };
+          const fwd = dirAt(0);
+          const rt = dirAt(1);
+          const hasFar = sameRoom(cell.x + fwd.x, cell.y + fwd.y);
+          const hasNear = sameRoom(cell.x - fwd.x, cell.y - fwd.y);
+          const hasLeft = sameRoom(cell.x - rt.x, cell.y - rt.y);
+          const hasRight = sameRoom(cell.x + rt.x, cell.y + rt.y);
+          const inset = {
+            left: hasLeft ? 0 : 0.16,
+            right: hasRight ? 1 : 0.84,
+            top: hasFar ? 0 : 0.16,
+            bottom: hasNear ? 1 : 0.84
+          };
+          const rugQuad = pctQuad(quadDecalPoints(floorSurf, inset), width, height);
           drawQuadPath(context, rugQuad);
           context.fillStyle = theme.rugColor;
           context.fill();
-          context.lineWidth = Math.max(1, 2.2 - depth * 0.22);
+          context.lineWidth = Math.max(1.2, 2.4 - depth * 0.22);
           context.strokeStyle = theme.rugBorder;
-          context.stroke();
+          const drawEdge = (a, b) => {
+            context.beginPath();
+            context.moveTo(a.x, a.y);
+            context.lineTo(b.x, b.y);
+            context.stroke();
+          };
+          if (!hasFar) drawEdge(rugQuad[0], rugQuad[1]);
+          if (!hasRight) drawEdge(rugQuad[1], rugQuad[2]);
+          if (!hasNear) drawEdge(rugQuad[2], rugQuad[3]);
+          if (!hasLeft) drawEdge(rugQuad[3], rugQuad[0]);
         } else if (theme.floorPattern === "checker") {
           const isLight = (cell.x + cell.y) % 2 === 0;
           drawQuadPath(context, floorQuad);
@@ -1381,7 +1406,7 @@
         }
 
         const theme = wz.theme;
-        if (!theme) return;
+        if (!theme || theme.wallTrimStyle === "none") return;
         const lightAlpha = Math.max(0.22, Math.min(1, data.light));
         context.save();
         if (theme.wallTint) {
@@ -1751,10 +1776,16 @@
 
         const stairs = stairsAt(cell.x, cell.y);
         if (stairs) {
-          const stairQuad = pctQuad(floorDecalPoints(depth, { left: 0.24, top: 0.18, right: 0.76, bottom: 0.94 }, offset), width, height);
-          const texture = environmentAsset(stairs.direction === "down" ? assets.stairsDown : assets.stairsUp);
-          const rect = drawImageMappedQuad(context, texture, stairQuad, data.light, "#7f6742");
-          if (rect && offset === 0) drawFloorLabel(context, stairs.label || (stairs.direction === "down" ? "downstairs" : "upstairs"), rect, depth);
+          if (stairs.tile) {
+            const portalTexture = environmentAsset(stairs.tile);
+            const bounds = standingBounds(nearEdgeDepth(depth), offset, 0.56, 0.76, tileContentBox(portalTexture).bottom);
+            drawSprite(context, portalTexture, bounds, width, height);
+          } else {
+            const stairQuad = pctQuad(floorDecalPoints(depth, { left: 0.24, top: 0.18, right: 0.76, bottom: 0.94 }, offset), width, height);
+            const texture = environmentAsset(stairs.direction === "down" ? assets.stairsDown : assets.stairsUp);
+            const rect = drawImageMappedQuad(context, texture, stairQuad, data.light, "#7f6742");
+            if (rect && offset === 0) drawFloorLabel(context, stairs.label || (stairs.direction === "down" ? "downstairs" : "upstairs"), rect, depth);
+          }
         }
 
         const trap = trapAt(cell.x, cell.y);

@@ -309,12 +309,20 @@
           return;
         }
         if (Object.hasOwn(stairs, "targetFloor")) {
-          const problem = linkedStairProblem(stairs, resources.floors);
+          const problem = typeof linkedStairProblem === "function" ? linkedStairProblem(stairs, resources.floors) : null;
           if (problem) {
             setMessage(`Cannot use stairs: ${problem}`);
           } else if (runeGateBlocks(stairs.targetFloor)) {
             setMessage(runeGateMessage());
           } else {
+            if (stairs.branchReturn) {
+              state.branchReturns = state.branchReturns || {};
+              state.branchReturns[stairs.targetFloor] = {
+                targetFloor: state.floorIndex,
+                landing: { x: stairs.x, y: stairs.y },
+                label: currentFloor().id
+              };
+            }
             changeFloor(stairs.targetFloor, stairs.direction, stairs.landing);
           }
           return;
@@ -329,6 +337,12 @@
             return;
           }
           changeFloor(state.floorIndex + 1, "down");
+          return;
+        }
+        if (state.branchReturns && state.branchReturns[state.floorIndex]) {
+          const ret = state.branchReturns[state.floorIndex];
+          delete state.branchReturns[state.floorIndex];
+          changeFloor(ret.targetFloor, "up", ret.landing);
           return;
         }
         if (state.floorIndex === 0) {

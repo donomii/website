@@ -577,6 +577,50 @@
       // ── Floor room / corridor analysis & furniture placement ───────────────
       const floorThemeCache = new WeakMap();
 
+      function isOutdoorBranch(floor) {
+        const id = String(floor?.id || "").toLowerCase();
+        const biome = String(floor?.biome || "").toLowerCase();
+        return /^(shoals|swamp|lair|slime|spider|volcano|icecave|desolation):/.test(id)
+          || ["shoals", "swamp", "lair", "slime", "spider"].includes(biome);
+      }
+
+      const OUTDOOR_THEMES = [
+        {
+          id: "conservatory",
+          name: "Overgrown Clearing",
+          shortLabel: "Clearing",
+          floorPattern: "none",
+          floorTint: null,
+          wallTint: null,
+          wallTrimStyle: "none",
+          trimColor: null,
+          ceilingTint: null,
+          ceilingBeams: false,
+          ambientColor: [94, 184, 128],
+          ambientAlpha: 0.05,
+          wallProps: ["planter", "urn", "barrel"],
+          centerProps: ["brazier", "garden_bench"],
+          cornerProps: ["planter", "crate"]
+        },
+        {
+          id: "armory",
+          name: "Explorer's Camp",
+          shortLabel: "Camp",
+          floorPattern: "none",
+          floorTint: null,
+          wallTint: null,
+          wallTrimStyle: "none",
+          trimColor: null,
+          ceilingTint: null,
+          ceilingBeams: false,
+          ambientColor: [236, 176, 92],
+          ambientAlpha: 0.05,
+          wallProps: ["crate", "barrel", "weapon_rack"],
+          centerProps: ["brazier", "bench"],
+          cornerProps: ["barrel", "crate"]
+        }
+      ];
+
       function biomeThemeOrder(floor) {
         const id = String(floor?.id || "").toLowerCase();
         if (id.startsWith("crypt") || id.startsWith("tomb") || id.startsWith("ossuary") || id.startsWith("tartarus") || id.startsWith("necropolis")) {
@@ -584,9 +628,6 @@
         }
         if (id.startsWith("orc") || id.startsWith("vault") || id.startsWith("bailey") || id.startsWith("dis")) {
           return ["armory", "banquet", "treasury", "chapel", "library", "alchemy", "crypt", "conservatory"];
-        }
-        if (id.startsWith("lair") || id.startsWith("swamp") || id.startsWith("shoals") || id.startsWith("spider") || id.startsWith("snake")) {
-          return ["conservatory", "alchemy", "chapel", "banquet", "treasury", "library", "armory", "crypt"];
         }
         if (id.startsWith("elf") || id.startsWith("wizlab") || id.startsWith("zot")) {
           return ["library", "alchemy", "treasury", "chapel", "conservatory", "armory", "banquet", "crypt"];
@@ -784,10 +825,15 @@
         }
 
         // 2. Assign distinct themes to rooms (never repeating the previous room's theme).
+        const outdoor = isOutdoorBranch(floor);
         for (let i = 0; i < rooms.length; i += 1) {
           const room = rooms[i];
-          const themeId = order[(floorHash + i) % order.length];
-          room.theme = THEME_BY_ID.get(themeId) || ROOM_THEMES[i % ROOM_THEMES.length];
+          if (outdoor) {
+            room.theme = OUTDOOR_THEMES[(floorHash + i) % OUTDOOR_THEMES.length];
+          } else {
+            const themeId = order[(floorHash + i) % order.length];
+            room.theme = THEME_BY_ID.get(themeId) || ROOM_THEMES[i % ROOM_THEMES.length];
+          }
           for (const c of room.cells) {
             cellZone.set(keyOf(c.x, c.y), { kind: "room", roomId: room.id, theme: room.theme, room });
           }
