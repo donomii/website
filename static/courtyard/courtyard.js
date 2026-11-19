@@ -1,7 +1,7 @@
 import * as T from "../../projects/games/domino-rush/vendor/three.module.js";
 import { composeExhibitsRoom } from "./compose-room.js?v=20261111";
 import { gamepadMenu, readGamepad } from "./gamepad.js?v=20261111";
-import { attachVrInput, thumbsticks, vrSessionOptions } from "./xr-input.js?v=20261111";
+import { attachVrInput, vrSessionOptions, vrSticks } from "./xr-input.js?v=20261112d";
 import {
     ADJACENT, DOOR_ENTRANCES, OCTAGON_APOTHEM, ZONES, ZONE_MAP,
     buildArchitecture, faceFrame, inDoorway, inOctagon, roomLocalToWorld, worldToRoomLocal, zoneAt,
@@ -1161,25 +1161,205 @@ function walk(dt, [strafe = 0, travel = 0, lookX = 0, lookY = 0] = []) {
 }
 
 const up = new T.Vector3(0, 1, 0);
+const VR_TURN_ANGLE = Math.PI / 2;
+const TELEPORT_STEPS = 28;
+const TELEPORT_DT = 0.085;
+const TELEPORT_SPEED = 10.5;
+const TELEPORT_GRAVITY = -9.8;
+const TELEPORT_VALID_COLOR = 0x7ef7d4;
+const TELEPORT_BLOCKED_COLOR = 0xff6b5b;
 let turnReady = true;
+let sessionHasStick = false;
+let teleportTarget = null;
+let teleportVisual = null;
+const headOffset = new T.Vector3();
+const vrInputs = [];
 
-function walkVr(renderer, frame, dt) {
-    const pose = frame?.getViewerPose(renderer.xr.getReferenceSpace());
-    if (!pose) return;
-    const [strafe, travel, turn] = thumbsticks(frame.session.inputSources);
-    const deadZone = value => Math.sign(value) * Math.max(0, Math.abs(value) - 0.18) / 0.82;
-    if (Math.abs(turn) < 0.3) turnReady = true;
-    if (turnReady && Math.abs(turn) >= 0.65) {
-        turnReady = false;
-        const delta = -Math.sign(turn) * Math.PI / 6;
-        const offset = new T.Vector3().copy(pose.transform.position).setY(0).applyAxisAngle(up, rig.rotation.y);
-        rig.position.add(offset).sub(offset.clone().applyAxisAngle(up, delta));
-        rig.rotation.y += delta;
+function createTeleportVisual() {
+    if (teleportVisual) return teleportVisual;
+    const arcPositions = new Float32Array((TELEPORT_STEPS + 1) * 3);
+    const arcGeom = new T.BufferGeometry();
+    const posAttr = new T.BufferAttribute(arcPositions, 3);
+    posAttr.setUsage(T.DynamicDrawUsage);
+    arcGeom.setAttribute("position", posAttr);
+    const arcMat = new T.LineBasicMaterial({ color: TELEPORT_VALID_COLOR, transparent: true, opacity: 0.92, depthWrite: false });
+    const arcLine = new T.Line(arcGeom, arcMat);
+    arcLine.frustumCulled = false;
+
+    const ringMat = new T.MeshBasicMaterial({ color: TELEPORT_VALID_COLOR, side: T.DoubleSide, transparent: true, opacity: 0.95, depthWrite: false });
+    const fillMat = new T.MeshBasicMaterial({ color: TELEPORT_VALID_COLOR, side: T.DoubleSide, transparent: true, opacity: 0.24, depthWrite: false });
+    const outerRing = new T.Mesh(new T.RingGeometry(0.30, 0.39, 36).rotateX(-Math.PI / 2), ringMat);
+    const innerRing = new T.Mesh(
+        new T.RingGeometry(0.08, 0.13, 24).rotateX(-Math.PI / 2),
+        new T.MeshBasicMaterial({ color: 0xffffff, side: T.DoubleSide, transparent: true, opacity: 0.88, depthWrite: false })
+    );
+    const fillDisc = new T.Mesh(new T.CircleGeometry(0.29, 36).rotateX(-Math.PI / 2), fillMat);
+    const reticle = new T.Group();
+    reticle.add(fillDisc, outerRing, innerRing);
+
+    const group = new T.Group();
+    group.visible = false;
+    group.renderOrder = 2;
+    group.add(arcLine, reticle);
+    scene.add(group);
+
+    teleportVisual = {
+        group,
+        hide() { group.visible = false; },
+        update(points, count, result, now) {
+            for (let i = 0; i < count; i++) {
+                arcPositions[i * 3] = points[i].x;
+                arcPositions[i * 3 + 1] = points[i].y;
+                arcPositions[i * 3 + 2] = points[i].z;
+            }
+            posAttr.needsUpdate = true;
+            arcGeom.setDrawRange(0, count);
+            const color = result.valid ? TELEPORT_VALID_COLOR : TELEPORT_BLOCKED_COLOR;
+            arcMat.color.setHex(color);
+            ringMat.color.setHex(color);
+            fillMat.color.setHex(color);
+            fillDisc.visible = result.valid;
+            innerRing.visible = result.valid;
+            reticle.position.set(result.point.x, result.point.y, result.point.z).addScaledVector(result.normal, 0.025);
+            reticle.quaternion.setFromUnitVectors(up, result.normal);
+            reticle.scale.setScalar(result.valid ? 1 + 0.06 * Math.sin(now * 0.008) : 0.72);
+            group.visible = true;
+        },
+    };
+    return teleportVisual;
+}
+
+const arcPoints = Array.from({ length: TELEPORT_STEPS + 1 }, () => new T.Vector3());
+const arcOrigin = new T.Vector3();
+const arcDir = new T.Vector3();
+const arcQuat = new T.Quaternion();
+const segVec = new T.Vector3();
+const segNormal = new T.Vector3();
+const segRay = new T.Raycaster();
+
+function hitWorldNormal(hit) {
+    if (!hit?.face?.normal) return segNormal.copy(up);
+    return segNormal.copy(hit.face.normal).transformDirection(hit.object.matrixWorld).normalize();
+}
+
+function traceTeleportArc(controller) {
+    controller.getWorldPosition(arcOrigin);
+    arcDir.set(0, 0, -1).applyQuaternion(controller.getWorldQuaternion(arcQuat)).normalize();
+    arcPoints[0].copy(arcOrigin);
+    let count = 1;
+
+    for (let i = 1; i <= TELEPORT_STEPS; i++) {
+        const t = i * TELEPORT_DT;
+        const curr = arcPoints[i];
+        curr.copy(arcOrigin).addScaledVector(arcDir, TELEPORT_SPEED * t);
+        curr.y += 0.5 * TELEPORT_GRAVITY * t * t;
+
+        const prev = arcPoints[i - 1];
+        segVec.copy(curr).sub(prev);
+        const segLen = segVec.length();
+        if (segLen <= 1e-5) continue;
+
+        segRay.ray.origin.copy(prev);
+        segRay.ray.direction.copy(segVec).divideScalar(segLen);
+        segRay.near = 0;
+        segRay.far = segLen;
+
+        const wallHit = raycastFirst(segRay, wallMeshes);
+        const floorHit = raycastFirst(segRay, floorMeshes);
+        if (wallHit && (!floorHit || wallHit.distance <= floorHit.distance)) {
+            curr.copy(wallHit.point);
+            count = i + 1;
+            return { points: arcPoints, count, valid: false, point: curr, normal: hitWorldNormal(wallHit) };
+        }
+        if (floorHit) {
+            curr.copy(floorHit.point);
+            count = i + 1;
+            const valid = canStandWorld(floorHit.point.x, floorHit.point.z);
+            const normal = hitWorldNormal(floorHit);
+            return {
+                points: arcPoints,
+                count,
+                valid: valid && normal.y > 0.5,
+                x: floorHit.point.x,
+                y: heightAt(floorHit.point.x, floorHit.point.z),
+                z: floorHit.point.z,
+                point: curr,
+                normal: normal.y > 0.5 ? up : normal,
+            };
+        }
+        count = i + 1;
+        if (curr.y < -3) break;
     }
-    if (Math.abs(strafe) > 0.18 || Math.abs(travel) > 0.18) {
-        const facing = new T.Vector3(0, 0, -1).applyQuaternion(pose.transform.orientation);
-        const heading = Math.atan2(-facing.x, -facing.z) + rig.rotation.y;
-        moveRig(dt * 1.7, -deadZone(travel), deadZone(strafe), heading);
+
+    const last = arcPoints[count - 1];
+    return { points: arcPoints, count, valid: false, point: last, normal: up };
+}
+
+function raycastFirst(ray, objects) {
+    return ray.intersectObjects(objects, false)[0] ?? null;
+}
+
+function resolveStickInput(stick, stickIndex) {
+    const bySource = vrInputs.find(inp => inp.source === stick.source && inp.ray.visible);
+    if (bySource) return bySource;
+    if (stick.handedness) {
+        const byHand = vrInputs.find(inp => inp.handedness === stick.handedness && inp.ray.visible);
+        if (byHand) return byHand;
+    }
+    if (vrInputs[stickIndex]?.ray.visible) return vrInputs[stickIndex];
+    return vrInputs.find(inp => inp.ray.visible) ?? null;
+}
+
+function applyTeleportTarget(target) {
+    if (!target?.valid) return false;
+    rig.position.set(target.x - headOffset.x, target.y, target.z - headOffset.z);
+    rig.updateMatrixWorld(true);
+    return true;
+}
+
+function walkVr(renderer, frame) {
+    const pose = frame?.getViewerPose(renderer.xr.getReferenceSpace());
+    if (!pose) {
+        teleportVisual?.hide();
+        teleportTarget = null;
+        return;
+    }
+
+    headOffset.copy(pose.transform.position).setY(0).applyAxisAngle(up, rig.rotation.y);
+    const sticks = vrSticks(frame.session.inputSources);
+    sessionHasStick = sticks.length > 0;
+
+    if (!sticks.some(s => Math.abs(s.x) >= 0.3)) turnReady = true;
+    const lateralSticks = sticks.filter(s => Math.abs(s.x) >= 0.65 && Math.abs(s.x) > Math.abs(s.y) * 1.15);
+    const turnStick = lateralSticks.find(s => s.handedness === "right") ?? lateralSticks[0];
+    if (turnReady && turnStick) {
+        turnReady = false;
+        const delta = -Math.sign(turnStick.x) * VR_TURN_ANGLE;
+        rig.position.add(headOffset).sub(headOffset.clone().applyAxisAngle(up, delta));
+        rig.rotation.y += delta;
+        rig.updateMatrixWorld(true);
+        headOffset.applyAxisAngle(up, delta);
+    }
+
+    let aimStick = null;
+    let aimIndex = -1;
+    sticks.forEach((s, index) => {
+        const wasAiming = teleportTarget?.source === s.source;
+        const active = wasAiming ? s.y <= -0.25 : (s.y <= -0.45 && -s.y >= Math.abs(s.x) * 0.8);
+        if (active && (!aimStick || s.y < aimStick.y)) {
+            aimStick = s;
+            aimIndex = index;
+        }
+    });
+
+    const aimInput = aimStick ? resolveStickInput(aimStick, aimIndex) : null;
+    if (aimInput?.ray?.visible) {
+        const trace = traceTeleportArc(aimInput.ray);
+        teleportTarget = { input: aimInput, source: aimStick.source, ...trace };
+        createTeleportVisual().update(trace.points, trace.count, trace, performance.now());
+    } else {
+        teleportVisual?.hide();
+        teleportTarget = null;
     }
 }
 
@@ -1187,37 +1367,88 @@ async function bindVR(renderer, inputs) {
     if (!navigator.xr || !await navigator.xr.isSessionSupported("immersive-vr")) return;
     renderer.xr.enabled = true;
     renderer.xr.setReferenceSpaceType("local-floor");
+    vrInputs.length = 0;
     for (let i = 0; i < 2; i++) {
         const input = attachVrInput(renderer.xr, rig, i);
+        input.source = null;
+        input.handedness = "";
         inputs.push(input);
+        vrInputs.push(input);
         const controller = input.ray;
+        controller.addEventListener("connected", event => {
+            input.source = event.data;
+            input.handedness = event.data?.handedness || "";
+        });
+        controller.addEventListener("disconnected", () => {
+            if (teleportTarget?.input === input) {
+                teleportVisual?.hide();
+                teleportTarget = null;
+            }
+            input.source = null;
+            input.handedness = "";
+        });
+        controller.addEventListener("selectstart", () => {
+            if (!controller.visible) {
+                controller.userData.selectOutcome = "ignore";
+                return;
+            }
+            if (teleportTarget?.input === input) {
+                applyTeleportTarget(teleportTarget);
+                controller.userData.selectOutcome = "teleported";
+                return;
+            }
+            controller.userData.selectOutcome = "interact";
+        });
         controller.addEventListener("select", () => {
+            const outcome = controller.userData.selectOutcome;
+            controller.userData.selectOutcome = undefined;
+            if (outcome === "ignore" || outcome === "teleported") return;
             if (!controller.visible) return;
+            if (outcome === undefined && teleportTarget?.input === input) {
+                applyTeleportTarget(teleportTarget);
+                return;
+            }
             const ray = new T.Raycaster(controller.getWorldPosition(new T.Vector3()),
                 new T.Vector3(0, 0, -1).applyQuaternion(controller.getWorldQuaternion(new T.Quaternion())));
             if (interactAlongRay(ray)) return;
 
-            const wallHit = ray.intersectObjects(wallMeshes, false)[0];
-            const wallDist = wallHit?.distance ?? Infinity;
-            const floorHit = ray.intersectObjects(floorMeshes, false)[0];
-            if (floorHit && floorHit.distance < wallDist && ray.ray.direction.y < -0.02 &&
-                canStandWorld(floorHit.point.x, floorHit.point.z)) {
-                rig.position.set(floorHit.point.x, heightAt(floorHit.point.x, floorHit.point.z), floorHit.point.z);
+            if (!sessionHasStick) {
+                const wallHit = raycastFirst(ray, wallMeshes);
+                const wallDist = wallHit?.distance ?? Infinity;
+                const floorHit = raycastFirst(ray, floorMeshes);
+                if (floorHit && floorHit.distance < wallDist && ray.ray.direction.y < -0.02 &&
+                    canStandWorld(floorHit.point.x, floorHit.point.z)) {
+                    rig.position.set(floorHit.point.x - headOffset.x, heightAt(floorHit.point.x, floorHit.point.z), floorHit.point.z - headOffset.z);
+                    rig.updateMatrixWorld(true);
+                }
             }
         });
     }
     vr.hidden = false;
     vr.addEventListener("click", async () => {
+        setMenu(false);
+        vr.disabled = true;
         try {
             const session = await navigator.xr.requestSession("immersive-vr", vrSessionOptions);
             turnReady = true;
+            sessionHasStick = false;
+            teleportTarget = null;
+            teleportVisual?.hide();
             rig.rotation.y = pendingVrYaw;
             session.addEventListener("end", () => {
+                teleportVisual?.hide();
+                teleportTarget = null;
+                turnReady = true;
                 rig.rotation.y = 0;
                 pendingVrYaw = 0;
+                vr.disabled = false;
+                vr.hidden = false;
             }, { once: true });
             await renderer.xr.setSession(session);
+            vr.hidden = true;
         } catch (error) {
+            vr.disabled = false;
+            vr.hidden = false;
             status.textContent = `VR could not start: ${error.message}`;
         }
     });
@@ -1302,7 +1533,7 @@ function start() {
     const inputs = [];
     bindVR(renderer, inputs).catch(() => { vr.hidden = true; });
     const pollGamepad = readGamepad();
-    const useMenu = gamepadMenu("#menu-toggle, main button, main a[href], #destination");
+    const useMenu = gamepadMenu("#menu-toggle, #vr, main button, main a[href], #destination");
 
     window.addEventListener("pagehide", () => persistPose(renderer));
     window.addEventListener("beforeunload", () => persistPose(renderer));

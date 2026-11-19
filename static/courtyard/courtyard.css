@@ -23,6 +23,26 @@ nav a[aria-current="true"], #project { background: #84462f; }
 [hidden] { display: none !important; }
 body:not([data-menu-open]) main > header, body:not([data-menu-open]) main > section { display: none; }
 #menu-toggle { position: fixed; top: .65rem; right: .65rem; z-index: 2; padding: .3rem .5rem; font-size: 1rem; background: #241b16b3; }
+body > #vr {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 3;
+  padding: .85rem 1.85rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #fff8eb;
+  background: linear-gradient(180deg, #b85b2c, #843d1d);
+  border: 2px solid #ffd891;
+  border-radius: 999px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .58), 0 0 0 1px rgba(255, 216, 145, .35);
+  cursor: pointer;
+}
+body > #vr:hover { background: linear-gradient(180deg, #cb6937, #974824); }
+body > #vr:focus-visible { outline: 3px solid #ffe6a8; outline-offset: 3px; }
+body > #vr:disabled { opacity: .65; cursor: progress; }
 #aim { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; pointer-events: none; text-shadow: 0 0 3px #000; }
 #destinations { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem; }
 #destination { max-width: 100%; font: inherit; color: inherit; background: #49342b; padding: .35rem; }

@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Portfolio Courtyard</title>
-  <link rel="stylesheet" href="./courtyard.css?v=20261111">
+  <link rel="stylesheet" href="./courtyard.css?v=20261112d">
 </head>
 <body>
   <button id="menu-toggle" aria-label="Open gallery menu" aria-expanded="false" title="Gallery menu">☰</button>
+  <button id="vr" hidden>Enter VR</button>
   <main>
     <div id="viewport" aria-label="Walkable Roman courtyard"></div>
     <span id="aim" hidden aria-hidden="true">+</span>
@@ -16,7 +17,6 @@
       <p>OPEN-AIR GALLERY</p>
       <h1>The Courtyard</h1>
       <p id="status" role="status">Choose an exhibit to visit.</p>
-      <button id="vr" hidden>Enter VR</button>
     </header>
     <section aria-label="Exhibits">
       <div id="destinations">
@@ -27,7 +27,7 @@
       <details><summary>Controls</summary>
       <p>Drag to look · Hold right mouse button, WASD, or arrow keys to walk through doorways · Choose an exhibit to go directly there</p>
       <p>Gamepad · Left stick walks, right stick looks. D-pad up/down highlights controls; left/right changes the exhibit choice. A/Cross visits it or selects the crosshair target.</p>
-      <p>VR · Left thumbstick to walk, right thumbstick to turn. Point at the floor and pull the trigger or pinch to teleport through open doorways. Point at exhibits and buttons to select them.</p>
+      <p>VR · Push a thumbstick forward to highlight a move target, then pull the trigger to teleport through open doorways. Push left or right on a thumbstick to orient 90° in that direction. Point and pull the trigger to select exhibits and buttons.</p>
       <p>Asteroid Farmer · Select soil to plant or harvest and structures to build. Aim the crosshair and press Space or A/Cross, or click, trigger or pinch directly.</p>
       <p>Station · Choose a module blueprint on the console, select a room, then a glowing port to extend it. An occupied neighboring cell connects a tube. Click, trigger, pinch, Space or A/Cross selects the target. Limit: 96 modules; each Habitat adds 3 crew, up to 24.</p>
       </details>
@@ -72,6 +72,6 @@
     {"imports":{"three":"../../projects/games/domino-rush/vendor/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
   </script>
   <script src="../../projects/starsandships/datasets.js?v=20261111"></script>
-  <script type="module" src="./courtyard.js?v=20261112c"></script>
+  <script type="module" src="./courtyard.js?v=20261112d"></script>
 </body>
 </html>

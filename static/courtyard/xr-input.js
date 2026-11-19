@@ -45,6 +45,17 @@ export function attachVrInput(xr, rig, index, showRay = true) {
     return { ray, update };
 }
 
+export function vrSticks(sources) {
+    const out = [];
+    for (const source of sources) {
+        const axes = source.gamepad?.mapping === "xr-standard" ? source.gamepad.axes : null;
+        if (!axes || axes.length < 2) continue;
+        const [x, y] = axes.length >= 4 ? [axes[2] ?? 0, axes[3] ?? 0] : [axes[0] ?? 0, axes[1] ?? 0];
+        out.push({ source, handedness: source.handedness || "", x, y });
+    }
+    return out;
+}
+
 export function thumbsticks(sources) {
     const controllers = Array.from(sources).filter(source =>
         source.gamepad?.mapping === "xr-standard" && source.gamepad.axes.length >= 4);
