@@ -421,9 +421,6 @@
         const floorState = currentFloorState();
         const surfaces = [];
         const seen = (x, y) => vrCellDiscovered(floorState, x, y);
-        for (const item of floorState.floorItems) {
-          if (seen(item.x, item.y)) surfaces.push({ kind: "decal", x: item.x, y: item.y, texture: item.tile, inset: 0.24, lift: 0.02, alpha: 1 });
-        }
         for (const trap of floorState.traps) {
           if (trap.armed && seen(trap.x, trap.y)) {
             const texture = vrRenderedTile(trap.tile);
@@ -573,6 +570,24 @@
               tint: null
             });
           }
+        }
+        for (const item of floorState.floorItems) {
+          if (!vrCellDiscovered(floorState, item.x, item.y)) continue;
+          const prominent = item.kind === "prize" || item.kind === "rune" || item.kind === "orb";
+          const size = prominent ? 0.78 : 0.62;
+          dolls.push({
+            kind: "item",
+            id: `item:${item.id}`,
+            x: item.x,
+            y: item.y,
+            w: size,
+            h: size,
+            texture: item.tile,
+            normal: null,
+            facing: 0,
+            alpha: 1,
+            tint: null
+          });
         }
         for (const monster of floorState.monsters) {
           if (monster.hp <= 0) continue;
