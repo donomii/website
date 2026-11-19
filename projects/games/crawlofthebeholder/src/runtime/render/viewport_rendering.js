@@ -141,8 +141,87 @@
         return choices[cellHash(cell.x, cell.y, 31) % choices.length] || wall || sideWall;
       }
 
+      const DCSS_WATER_DIR = "vendor/crawl/crawl-ref/source/rltiles/dngn/water";
+      const DCSS_FLOOR_DIR = "vendor/crawl/crawl-ref/source/rltiles/dngn/floor";
+      const SHOALS_SAND_TILES = Array.from({ length: 8 }, (_, i) => `${DCSS_FLOOR_DIR}/sand${i + 1}.png`);
+      const SHOALS_SHALLOW_FRAMES = Array.from({ length: 12 }, (_, i) => `${DCSS_WATER_DIR}/shoals_shallow_water${i}.png`);
+      const SHOALS_DEEP_FRAMES = Array.from({ length: 12 }, (_, i) => `${DCSS_WATER_DIR}/shoals_deep_water${i}.png`);
+      const SHOALS_DISTURBANCE_FRAMES = [1, 2, 3].map((i) => `${DCSS_WATER_DIR}/shoals_shallow_water_disturbance${i}.png`);
+      const SHALLOW_WAVE_EDGES = {
+        far: `${DCSS_WATER_DIR}/shallow_water_wave_N.png`,
+        near: `${DCSS_WATER_DIR}/shallow_water_wave_S.png`,
+        left: `${DCSS_WATER_DIR}/shallow_water_wave_W.png`,
+        right: `${DCSS_WATER_DIR}/shallow_water_wave_E.png`
+      };
+      const DEEP_WAVE_EDGES = {
+        far: [`${DCSS_WATER_DIR}/deep_water_wave_N1.png`, `${DCSS_WATER_DIR}/deep_water_wave_N2.png`],
+        near: [`${DCSS_WATER_DIR}/deep_water_wave_S1.png`, `${DCSS_WATER_DIR}/deep_water_wave_S2.png`],
+        left: [`${DCSS_WATER_DIR}/deep_water_wave_W1.png`, `${DCSS_WATER_DIR}/deep_water_wave_W2.png`],
+        right: [`${DCSS_WATER_DIR}/deep_water_wave_E1.png`, `${DCSS_WATER_DIR}/deep_water_wave_E2.png`]
+      };
+      const MURKY_BORD_EDGES = {
+        far: `${DCSS_WATER_DIR}/murky_bord_top.png`,
+        near: `${DCSS_WATER_DIR}/murky_bord_btm.png`,
+        left: `${DCSS_WATER_DIR}/murky_bord_lft.png`,
+        right: `${DCSS_WATER_DIR}/murky_bord_rgt.png`
+      };
+
+      let waterAnimFrame = 0;
+      let waterAnimTimer = null;
+
+      function isShoalsFloor(floor = currentFloor()) {
+        if (!floor) return false;
+        return /^shoals:/i.test(floor.id || "") || String(floor.biome || "").toLowerCase() === "shoals";
+      }
+
+      function isSwampFloor(floor = currentFloor()) {
+        if (!floor) return false;
+        return /^swamp:/i.test(floor.id || "") || String(floor.biome || "").toLowerCase() === "swamp";
+      }
+
+      function floorHasAnimatedWater(floor = currentFloor()) {
+        return isShoalsFloor(floor) || isSwampFloor(floor);
+      }
+
+      function ensureWaterAnimation() {
+        if (typeof window === "undefined" || typeof window.setInterval !== "function") return;
+        if (context.disableWaterAnimation) return;
+        if (!floorHasAnimatedWater()) {
+          if (waterAnimTimer) {
+            window.clearInterval(waterAnimTimer);
+            waterAnimTimer = null;
+          }
+          return;
+        }
+        if (waterAnimTimer) return;
+        waterAnimTimer = window.setInterval(() => {
+          if (!floorHasAnimatedWater()) {
+            window.clearInterval(waterAnimTimer);
+            waterAnimTimer = null;
+            return;
+          }
+          if (typeof document !== "undefined" && document.hidden) return;
+          if (typeof context.vrIsPresenting === "function" && context.vrIsPresenting()) return;
+          waterAnimFrame = (waterAnimFrame + 1) % 12;
+          scheduleViewportRender();
+        }, 260);
+      }
+
       function floorTexture(cell) {
         const terrain = terrainAt(cell.x, cell.y);
+        if (isShoalsFloor()) {
+          if (terrain === "deep-water") {
+            const idx = (cellHash(cell.x, cell.y, 37) + waterAnimFrame) % SHOALS_DEEP_FRAMES.length;
+            return environmentAsset(SHOALS_DEEP_FRAMES[idx]);
+          }
+          if (terrain === "water") {
+            const idx = (cellHash(cell.x, cell.y, 29) + waterAnimFrame) % SHOALS_SHALLOW_FRAMES.length;
+            return environmentAsset(SHOALS_SHALLOW_FRAMES[idx]);
+          }
+          if (terrain === "floor") {
+            return environmentAsset(SHOALS_SAND_TILES[cellHash(cell.x, cell.y, 11) % SHOALS_SAND_TILES.length]);
+          }
+        }
         const normalFloor = themedAsset("floor", "floorAlt", cell, 11);
         if (terrain === "deep-water") {
           return themedAsset("deepWater", "deepWaterAlt", cell, 29) || themedAsset("water", "waterAlt", cell, 29) || normalFloor;
@@ -1542,19 +1621,105 @@
           drawFloorMarks(context, width, height, depth, offset, cell);
           return;
         }
-        drawHorizontalMappedQuad(context, themedAsset("ceiling", "ceilingAlt", cell, 5), ceilingQuad, depth, Math.max(0.2, data.light - 0.24), "#171513");
-        drawRoomCeilingTheme(context, width, height, depth, offset, cell, ceilingQuad, data);
+        const shoals = isShoalsFloor();
+        if (!shoals) {
+          drawHorizontalMappedQuad(context, themedAsset("ceiling", "ceilingAlt", cell, 5), ceilingQuad, depth, Math.max(0.2, data.light - 0.24), "#171513");
+          drawRoomCeilingTheme(context, width, height, depth, offset, cell, ceilingQuad, data);
+        }
         drawHorizontalMappedQuad(context, floorTexture(cell), floorQuad, depth, Math.max(0.2, data.light - 0.05), floorFallback(cell));
+        drawWaterShoreline(context, width, height, depth, offset, cell, data);
         drawRoomFloorTheme(context, width, height, depth, offset, cell, floorQuad, data);
         drawTerrainOverlay(context, width, height, depth, offset, cell);
         drawFloorVeil(context, width, height, depth, offset, cell);
         drawFloorAccent(context, width, height, depth, offset, cell);
         drawFloorMarks(context, width, height, depth, offset, cell);
         drawPartyAura(context, width, height, depth, offset, cell);
-        strokeQuad(context, floorQuad, `rgba(240, 205, 132, ${Math.max(0.05, data.light * 0.11)})`);
-        strokeQuad(context, ceilingQuad, `rgba(105, 91, 71, ${Math.max(0.04, data.light * 0.08)})`);
+        if (!shoals) {
+          strokeQuad(context, floorQuad, `rgba(240, 205, 132, ${Math.max(0.05, data.light * 0.11)})`);
+          strokeQuad(context, ceilingQuad, `rgba(105, 91, 71, ${Math.max(0.04, data.light * 0.08)})`);
+        }
         // Side walls are NOT drawn here — they go through the distance-sorted
         // wall pass in renderViewport so every wall obeys far-to-near order.
+      }
+
+      // Draw DCSS shoreline surf waves & organic beach edges where dry land meets
+      // water (and deep-water crests where shallow water meets deep water), plus
+      // animated wave disturbances on Shoals surf.
+      function drawWaterShoreline(context, width, height, depth, offset, cell, data) {
+        if (depth > 6) return;
+        const terrain = terrainAt(cell.x, cell.y);
+        const shoals = isShoalsFloor();
+        const swamp = isSwampFloor();
+        if (!shoals && !swamp && terrain === "floor") return;
+
+        const fwd = dirAt(0);
+        const rt = dirAt(1);
+        const neighbors = [
+          { side: "far", terrain: terrainAt(cell.x + fwd.x, cell.y + fwd.y) },
+          { side: "near", terrain: terrainAt(cell.x - fwd.x, cell.y - fwd.y) },
+          { side: "left", terrain: terrainAt(cell.x - rt.x, cell.y - rt.y) },
+          { side: "right", terrain: terrainAt(cell.x + rt.x, cell.y + rt.y) }
+        ];
+
+        const phase = (waterAnimFrame + cellHash(cell.x, cell.y, 71)) % 2;
+        const lap = Math.sin((waterAnimFrame + (cell.x + cell.y) * 1.3) * (Math.PI / 6)) * 0.04;
+        const fullSurf = floorSegmentPoints(depth, offset);
+
+        if (terrain === "floor") {
+          for (const n of neighbors) {
+            if (n.terrain !== "water" && n.terrain !== "deep-water") continue;
+            let tex = null;
+            if (swamp) {
+              tex = environmentAsset(MURKY_BORD_EDGES[n.side]);
+            } else if (n.terrain === "deep-water") {
+              tex = environmentAsset(DEEP_WAVE_EDGES[n.side][phase]);
+            } else {
+              tex = environmentAsset(SHALLOW_WAVE_EDGES[n.side]);
+            }
+            if (!tex) continue;
+            const footprint = n.side === "far"
+              ? { left: 0, top: 0, right: 1, bottom: Math.min(1, 0.52 + lap) }
+              : n.side === "near"
+                ? { left: 0, top: Math.max(0, 0.48 - lap), right: 1, bottom: 1 }
+                : n.side === "left"
+                  ? { left: 0, top: 0, right: Math.min(1, 0.46 + lap), bottom: 1 }
+                  : { left: Math.max(0, 0.54 - lap), top: 0, right: 1, bottom: 1 };
+            const quad = pctQuad(quadDecalPoints(fullSurf, footprint), width, height);
+            drawImageMappedQuad(context, tex, quad, Math.min(1, data.light + 0.14), "#7ad8e6", {
+              alpha: swamp ? 0.72 : 0.92,
+              noShade: true,
+              shadow: false
+            });
+          }
+        } else if (terrain === "water") {
+          for (const n of neighbors) {
+            if (n.terrain !== "deep-water") continue;
+            const tex = environmentAsset(DEEP_WAVE_EDGES[n.side][phase]);
+            const footprint = n.side === "far"
+              ? { left: 0, top: 0, right: 1, bottom: 0.46 + lap }
+              : n.side === "near"
+                ? { left: 0, top: 0.54 - lap, right: 1, bottom: 1 }
+                : n.side === "left"
+                  ? { left: 0, top: 0, right: 0.44 + lap, bottom: 1 }
+                  : { left: 0.56 - lap, top: 0, right: 1, bottom: 1 };
+            const quad = pctQuad(quadDecalPoints(fullSurf, footprint), width, height);
+            drawImageMappedQuad(context, tex, quad, Math.min(1, data.light + 0.12), "#1b4e84", {
+              alpha: 0.85,
+              noShade: true,
+              shadow: false
+            });
+          }
+          if (shoals && (cellHash(cell.x, cell.y, 193) + waterAnimFrame) % 7 === 0) {
+            const distTex = environmentAsset(SHOALS_DISTURBANCE_FRAMES[(cellHash(cell.x, cell.y, 197) + waterAnimFrame) % SHOALS_DISTURBANCE_FRAMES.length]);
+            const quad = pctQuad(quadDecalPoints(fullSurf, { left: 0.14, top: 0.14, right: 0.86, bottom: 0.86 }), width, height);
+            drawImageMappedQuad(context, distTex, quad, Math.min(1, data.light + 0.16), "#76d6e4", {
+              alpha: 0.42,
+              composite: "screen",
+              noShade: true,
+              shadow: false
+            });
+          }
+        }
       }
 
       function drawTerrainOverlay(context, width, height, depth, offset, cell) {
@@ -2522,12 +2687,21 @@
       }
 
       function renderViewport() {
+        ensureWaterAnimation();
         const { context, width, height } = ensureViewportCanvas();
         viewportCanvas.style.imageRendering = state.tileset === "linocut" ? "auto" : "pixelated";
         context.clearRect(0, 0, width, height);
         context.imageSmoothingEnabled = false;
         context.fillStyle = wireframeEnabled() ? "#020804" : "#070606";
         context.fillRect(0, 0, width, height);
+        if (!wireframeEnabled() && isShoalsFloor()) {
+          const skyGrad = context.createLinearGradient(0, 0, 0, height * 0.54);
+          skyGrad.addColorStop(0, "#0b2238");
+          skyGrad.addColorStop(0.55, "#174863");
+          skyGrad.addColorStop(1, "#377b8e");
+          context.fillStyle = skyGrad;
+          context.fillRect(0, 0, width, height * 0.54);
+        }
 
         for (const layer of sceneWallLayers(context, width, height)) layer.draw();
         drawEffectTrails(context, width, height);
