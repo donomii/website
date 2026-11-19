@@ -8,44 +8,28 @@
 </head>
 <body>
   <div class="page-shell">
-    <header class="masthead">
-      <div class="sigil" aria-hidden="true">§</div>
-      <div>
-        <p class="eyebrow">Ministry of Infernal Economics</p>
+    <header class="app-bar">
+      <div class="brand">
+        <span class="sigil" aria-hidden="true">§</span>
         <h1>Evil Empires</h1>
-        <p class="subtitle">The Dismal God has awakened. Balance the books or burn forever.</p>
       </div>
+      <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="council-menu">Ledger &amp; Help</button>
     </header>
 
     <main>
-      <section class="status-panel" aria-label="Kingdom readouts">
-        <div class="status-card" title="Infernal Favour measures the Dark Lord's patience. If it reaches zero, you go to Hell.">
-          <div class="status-heading"><span>Infernal Favour</span><span id="favour-value">62</span></div>
-          <div class="meter"><div class="meter-fill favour" id="favour-meter"></div></div>
-          <p>The Dark Lord's patience. Zero means damnation.</p>
-        </div>
-        <div class="status-card" title="Treasury measures the Crown's financial health. If it reaches zero, the kingdom is bankrupt.">
-          <div class="status-heading"><span>Treasury</span><span id="treasury-value">48</span></div>
-          <div class="meter"><div class="meter-fill treasury" id="treasury-meter"></div></div>
-          <p>The Crown's finances. Zero means bankruptcy.</p>
-        </div>
-        <div class="status-card" title="Prosperity measures investment, output, and private wealth. Higher is better, but it does not show who benefits.">
-          <div class="status-heading"><span>Prosperity</span><span id="prosperity-value">42</span></div>
-          <div class="meter"><div class="meter-fill prosperity" id="prosperity-meter"></div></div>
-          <p>Output and private wealth—not their distribution.</p>
-        </div>
-        <div class="status-card" title="Social Peace measures public solidarity and political stability. If it reaches zero, the people overthrow you.">
-          <div class="status-heading"><span>Social Peace</span><span id="peace-value">68</span></div>
-          <div class="meter"><div class="meter-fill peace" id="peace-meter"></div></div>
-          <p>Solidarity and stability. Zero means revolution.</p>
-        </div>
-      </section>
-
       <section class="game-grid">
         <article class="decree-card" id="decree-card">
-          <div class="decree-meta">
-            <span id="year-label">Year I</span>
-            <span id="doctrine-label">Privatisation</span>
+          <div class="decree-header">
+            <div class="decree-meta">
+              <span id="year-label">Year I</span>
+              <span id="doctrine-label">Privatisation</span>
+            </div>
+            <div class="compact-stats" aria-label="Current kingdom readouts">
+              <span title="Infernal Favour"><b>F</b><output id="favour-value">62</output></span>
+              <span title="Treasury"><b>T</b><output id="treasury-value">48</output></span>
+              <span title="Prosperity"><b>P</b><output id="prosperity-value">42</output></span>
+              <span title="Social Peace"><b>S</b><output id="peace-value">68</output></span>
+            </div>
           </div>
           <p class="speaker">The Dismal God commands:</p>
           <h2 id="decree-title">Auction the Crown Industries</h2>
@@ -66,26 +50,39 @@
 
         <aside class="chronicle-card">
           <h2>Royal Chronicle</h2>
-          <p class="chronicle-help">Your decisions and their consequences appear here.</p>
           <ol id="chronicle" aria-live="polite"></ol>
         </aside>
       </section>
     </main>
-
-    <footer>
-      <strong>How to play:</strong> enact, temper, or resist each decree. Every choice changes the four readouts above. Survive seven years without damnation, bankruptcy, or revolution.
-    </footer>
   </div>
 
-  <div class="opening" id="opening" role="dialog" aria-modal="true" aria-labelledby="opening-title">
-    <div class="opening-panel">
-      <p class="eyebrow">A constitutional emergency</p>
-      <h2 id="opening-title">The ancient evil has awakened.</h2>
-      <p>The kingdom is stagnant, indebted, and thoroughly uncompetitive. From beneath the Treasury, the Dismal God demands reform.</p>
-      <p>You are the High Priest—recently retitled <strong>High Economist</strong>. Satisfy the demands, preserve the realm, or go to Hell.</p>
-      <button id="begin-button" type="button">Assume the Robes of Office</button>
+  <aside class="council-menu" id="council-menu" role="dialog" aria-modal="true" aria-labelledby="menu-title" hidden>
+    <div class="menu-heading">
+      <h2 id="menu-title">Council Ledger</h2>
+      <button id="close-menu-button" type="button" aria-label="Close ledger and help">Close</button>
     </div>
-  </div>
+    <p>You are the High Priest, retitled High Economist. Enact, temper, or resist ten decrees without reaching zero in Favour, Treasury, or Social Peace.</p>
+    <div class="status-list" aria-label="Detailed kingdom readouts">
+      <div class="status-row">
+        <div><strong>Infernal Favour</strong><span>The Dismal God's patience. Zero means damnation.</span></div>
+        <div class="meter"><div class="meter-fill favour" id="favour-meter"></div></div>
+      </div>
+      <div class="status-row">
+        <div><strong>Treasury</strong><span>The Crown's finances. Zero means bankruptcy.</span></div>
+        <div class="meter"><div class="meter-fill treasury" id="treasury-meter"></div></div>
+      </div>
+      <div class="status-row">
+        <div><strong>Prosperity</strong><span>Output and private wealth, not their distribution.</span></div>
+        <div class="meter"><div class="meter-fill prosperity" id="prosperity-meter"></div></div>
+      </div>
+      <div class="status-row">
+        <div><strong>Social Peace</strong><span>Solidarity and stability. Zero means revolution.</span></div>
+        <div class="meter"><div class="meter-fill peace" id="peace-meter"></div></div>
+      </div>
+    </div>
+    <p class="menu-note"><strong>Compact readouts:</strong> F = Favour, T = Treasury, P = Prosperity, S = Social Peace. Every value ranges from 0 to 100.</p>
+  </aside>
+  <div class="menu-backdrop" id="menu-backdrop" hidden></div>
 
   <script src="game-core.js"></script>
   <script src="game-ui.js"></script>

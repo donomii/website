@@ -2,8 +2,10 @@
   "use strict";
 
   const elements = {
-    opening: document.getElementById("opening"),
-    beginButton: document.getElementById("begin-button"),
+    menuButton: document.getElementById("menu-button"),
+    menu: document.getElementById("council-menu"),
+    closeMenuButton: document.getElementById("close-menu-button"),
+    menuBackdrop: document.getElementById("menu-backdrop"),
     decreeCard: document.getElementById("decree-card"),
     yearLabel: document.getElementById("year-label"),
     doctrineLabel: document.getElementById("doctrine-label"),
@@ -39,7 +41,7 @@
   let state = game.createGame();
 
   function romanYear(number) {
-    return ["I", "II", "III", "IV", "V", "VI", "VII"][number];
+    return ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"][number];
   }
 
   function renderStats() {
@@ -121,13 +123,25 @@
   function restart() {
     state = game.createGame();
     render();
-    elements.opening.hidden = false;
-    elements.beginButton.focus();
+    elements.decreeCard.scrollIntoView({ block: "start" });
   }
 
-  elements.beginButton.addEventListener("click", function beginReign() {
-    elements.opening.hidden = true;
-  });
+  function setMenu(open) {
+    elements.menu.hidden = !open;
+    elements.menuBackdrop.hidden = !open;
+    elements.menuButton.setAttribute("aria-expanded", String(open));
+    (open ? elements.closeMenuButton : elements.menuButton).focus();
+  }
+
   elements.restartButton.addEventListener("click", restart);
+  elements.menuButton.addEventListener("click", function openMenu() {
+    setMenu(true);
+  });
+  elements.closeMenuButton.addEventListener("click", function closeMenu() {
+    setMenu(false);
+  });
+  elements.menuBackdrop.addEventListener("click", function closeMenuFromBackdrop() {
+    setMenu(false);
+  });
   render();
 }(document, EvilEmpires));

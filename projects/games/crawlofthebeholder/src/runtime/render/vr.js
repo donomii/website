@@ -1360,6 +1360,7 @@
         const halfW = model.width / 2;
         const halfH = model.height / 2;
         const H = VR.wallHeight;
+        const decalLiftByCell = new Map();
         for (const surface of model.surfaces) {
           const x0 = surface.x - halfW;
           const z0 = surface.y - halfH;
@@ -1384,7 +1385,12 @@
             vrPushQuad(solid, corners, uv, shade, shade, shade, 1, hasNormal);
           } else if (surface.kind === "decal") {
             const half = 0.5 - (surface.inset ?? 0.1);
-            const corners = vrRotatedFloorCorners(x0 + 0.5, z0 + 0.5, half, surface.lift ?? 0.012, surface.rot || 0);
+            const cellKey = `${surface.x},${surface.y}`;
+            const rawLift = surface.lift ?? 0.012;
+            const prevLift = decalLiftByCell.get(cellKey);
+            const lift = prevLift !== undefined && rawLift <= prevLift + 0.005 ? prevLift + 0.006 : rawLift;
+            decalLiftByCell.set(cellKey, lift);
+            const corners = vrRotatedFloorCorners(x0 + 0.5, z0 + 0.5, half, lift, surface.rot || 0);
             const target = alpha < 1 || surface.tint ? translucent : solid;
             vrPushQuad(target, corners, uv, tint.r * shade, tint.g * shade, tint.b * shade, alpha, hasNormal);
           }
@@ -1395,28 +1401,62 @@
       // Same solid/translucent split as the architecture: a see-through doll
       // (spent decor) or the party's floor arrow must not write depth, or the
       // dolls drawn after them vanish behind their transparent pixels.
+      const VR_DOLL_Z_PRIORITY = { party: 0, monster: 1, ally: 2, item: 3, decor: 4, furniture: 5 };
+
       function vrEmitDolls(model, headModel, mode, nowMs = 0) {
         const solid = [];
         const translucent = [];
         const halfW = model.width / 2;
         const halfH = model.height / 2;
         const white = vrWhiteUv();
-        for (const doll of model.dolls) {
-          // Animated tile position: dolls glide between tiles (and flash /
-          // shed damage numbers — vrDollFeel tracks the deltas).
-          const feel = vrDollFeel(doll, nowMs);
-          doll.mx = feel.x + 0.5 - halfW;
-          doll.mz = feel.z + 0.5 - halfH;
+        // Pre-compute animated positions and group co-located dolls on the same
+        // tile so multiple things on one square get distinct depth/Z slots and
+        // never z-fight.
+        const prepared = model.dolls.map((doll) => ({ doll, feel: vrDollFeel(doll, nowMs) }));
+        const tileGroups = new Map();
+        for (const entry of prepared) {
+          const k = keyOf(Math.round(entry.feel.x), Math.round(entry.feel.z));
+          let list = tileGroups.get(k);
+          if (!list) { list = []; tileGroups.set(k, list); }
+          list.push(entry);
+        }
+        for (const list of tileGroups.values()) {
+          if (list.length > 1) {
+            list.sort((a, b) => (VR_DOLL_Z_PRIORITY[a.doll.kind] ?? 9) - (VR_DOLL_Z_PRIORITY[b.doll.kind] ?? 9));
+          }
+          list.forEach((entry, idx) => {
+            entry.slotIndex = idx;
+            entry.slotCount = list.length;
+          });
+        }
+        for (const { doll, feel, slotIndex, slotCount } of prepared) {
+          const baseX = feel.x + 0.5 - halfW;
+          const baseZ = feel.z + 0.5 - halfH;
           const base = doll.airborne ? 0.2 : 0;
           // Plant the artwork (not the padded tile) on the floor, same trick
           // as the 2D renderer's actorTileBounds.
           const content = doll.texture && typeof tileContentBox === "function" ? tileContentBox(doll.texture) : { bottom: 1 };
           const sink = (1 - content.bottom) * doll.h;
           const y0 = base - sink;
-          const cx = doll.mx;
-          const cz = doll.mz;
+          const { yaw, rx, rz, ux, uy, uz } = vrBillboardAxes(baseX, y0 + doll.h * 0.5, baseZ, headModel, mode, doll.facing || 0);
+          const fwdX = Math.sin(yaw);
+          const fwdZ = Math.cos(yaw);
+          const sinTilt = Math.hypot(ux, uz);
+          // Outward unit normal of the (possibly tilted) billboard plane toward the viewer.
+          const nx = fwdX * uy;
+          const ny = sinTilt;
+          const nz = fwdZ * uy;
+          let cx = baseX;
+          let cz = baseZ;
+          if (slotCount > 1) {
+            const depthStep = (0.5 * (slotCount - 1) - slotIndex) * 0.08;
+            const latStep = (slotIndex - 0.5 * (slotCount - 1)) * 0.14;
+            cx += fwdX * depthStep + rx * latStep;
+            cz += fwdZ * depthStep + rz * latStep;
+          }
+          doll.mx = cx;
+          doll.mz = cz;
           const hw = doll.w / 2;
-          const { rx, rz, ux, uy, uz } = vrBillboardAxes(cx, y0 + doll.h * 0.5, cz, headModel, mode, doll.facing || 0);
           const uv = doll.glyph ? vrGlyphUv(doll.glyph, doll.color || "#f1d07a") : vrTileUv(doll.texture, doll.normal);
           const hasNormal = !doll.glyph && !!doll.normal && vrTileHasNormal(doll.texture);
           const tint = doll.tint || { r: 1, g: 1, b: 1 };
@@ -1430,46 +1470,53 @@
           ], uv, tint.r, tint.g, tint.b, alpha, hasNormal);
 
           if (doll.kind === "party") {
-            const arrow = vrRotatedFloorCorners(cx, cz, 0.32, 0.024, doll.facing + Math.PI);
+            const arrow = vrRotatedFloorCorners(baseX, baseZ, 0.32, 0.024, doll.facing + Math.PI);
             vrPushQuad(translucent, arrow, vrArrowUv(doll.color || "#f1d07a"), 1, 1, 1, 0.92);
           }
-          // Status art over the afflicted doll, on its own plane: the net
-          // wraps it, flames lick its lower half, poison washes it green,
-          // fear hangs a sigil by its head. Same vocabulary as the 2D view.
-          for (const status of doll.statuses || []) {
+          // Status art over the afflicted doll, offset strictly forward along the
+          // billboard normal so it never z-fights with the doll itself.
+          (doll.statuses || []).forEach((status, statusIdx) => {
             const suv = vrTileUv(status.texture);
+            const push = (statusIdx + 1) * 0.018;
+            const ox = cx + nx * push;
+            const oy = y0 + ny * push;
+            const oz = cz + nz * push;
             const quad = (x0f, y0f, x1f, y1f, list, r, g, b, a) => vrPushQuad(list, [
-              [cx - rx * hw + rx * doll.w * x0f + ux * doll.h * y1f, y0 + uy * doll.h * y1f, cz - rz * hw + rz * doll.w * x0f + uz * doll.h * y1f],
-              [cx - rx * hw + rx * doll.w * x1f + ux * doll.h * y1f, y0 + uy * doll.h * y1f, cz - rz * hw + rz * doll.w * x1f + uz * doll.h * y1f],
-              [cx - rx * hw + rx * doll.w * x1f + ux * doll.h * y0f, y0 + uy * doll.h * y0f, cz - rz * hw + rz * doll.w * x1f + uz * doll.h * y0f],
-              [cx - rx * hw + rx * doll.w * x0f + ux * doll.h * y0f, y0 + uy * doll.h * y0f, cz - rz * hw + rz * doll.w * x0f + uz * doll.h * y0f]
+              [ox - rx * hw + rx * doll.w * x0f + ux * doll.h * y1f, oy + uy * doll.h * y1f, oz - rz * hw + rz * doll.w * x0f + uz * doll.h * y1f],
+              [ox - rx * hw + rx * doll.w * x1f + ux * doll.h * y1f, oy + uy * doll.h * y1f, oz - rz * hw + rz * doll.w * x1f + uz * doll.h * y1f],
+              [ox - rx * hw + rx * doll.w * x1f + ux * doll.h * y0f, oy + uy * doll.h * y0f, oz - rz * hw + rz * doll.w * x1f + uz * doll.h * y0f],
+              [ox - rx * hw + rx * doll.w * x0f + ux * doll.h * y0f, oy + uy * doll.h * y0f, oz - rz * hw + rz * doll.w * x0f + uz * doll.h * y0f]
             ], suv, r, g, b, a);
             if (status.classic) quad(-status.shift / 32, 0, 1 - status.shift / 32, 1, translucent, 1, 1, 1, status.alpha);
             else if (status.badge) quad(0.62, 0.85, 1.02, 1.25, translucent, 1, 1, 1, status.alpha);
             else if (status.lower) quad(0, 0, 1, 0.55, translucent, 1, 1, 1, status.alpha);
             else quad(-0.04, -0.02, 1.04, 1.02, translucent, 1, 1, 1, status.alpha);
-          }
+          });
           if (typeof doll.hpFrac === "number" && doll.hpFrac < 1) {
             const barLift = doll.h + 0.05;
             const barW = doll.w * 0.6;
-            const bar = (frac, h0, h1, r, g, b) => vrPushQuad(solid, [
-              [cx - rx * barW / 2 + ux * h1, y0 + uy * h1, cz - rz * barW / 2 + uz * h1],
-              [cx - rx * barW / 2 + rx * barW * frac + ux * h1, y0 + uy * h1, cz - rz * barW / 2 + rz * barW * frac + uz * h1],
-              [cx - rx * barW / 2 + rx * barW * frac + ux * h0, y0 + uy * h0, cz - rz * barW / 2 + rz * barW * frac + uz * h0],
-              [cx - rx * barW / 2 + ux * h0, y0 + uy * h0, cz - rz * barW / 2 + uz * h0]
+            const bar = (frac, h0, h1, push, r, g, b) => vrPushQuad(solid, [
+              [cx + nx * push - rx * barW / 2 + ux * h1, y0 + ny * push + uy * h1, cz + nz * push - rz * barW / 2 + uz * h1],
+              [cx + nx * push - rx * barW / 2 + rx * barW * frac + ux * h1, y0 + ny * push + uy * h1, cz + nz * push - rz * barW / 2 + rz * barW * frac + uz * h1],
+              [cx + nx * push - rx * barW / 2 + rx * barW * frac + ux * h0, y0 + ny * push + uy * h0, cz + nz * push - rz * barW / 2 + rz * barW * frac + uz * h0],
+              [cx + nx * push - rx * barW / 2 + ux * h0, y0 + ny * push + uy * h0, cz + nz * push - rz * barW / 2 + uz * h0]
             ], white, r, g, b, 1);
-            bar(1, barLift, barLift + 0.06, 0.06, 0.05, 0.04);
-            bar(Math.max(0.02, doll.hpFrac), barLift + 0.012, barLift + 0.048, 0.85, 0.32, 0.26);
+            bar(1, barLift, barLift + 0.06, 0, 0.06, 0.05, 0.04);
+            bar(Math.max(0.02, doll.hpFrac), barLift + 0.012, barLift + 0.048, 0.01, 0.85, 0.32, 0.26);
           }
-          // Hit flash: a white-hot wash over the doll that fades in ~200ms.
+          // Hit flash: offset slightly forward along the normal so it never z-fights.
           const flashStart = nowMs && doll.id ? vrDollFlash.get(doll.id) : undefined;
           if (flashStart !== undefined && nowMs - flashStart < VR_FLASH_MS) {
             const fade = 1 - (nowMs - flashStart) / VR_FLASH_MS;
+            const push = 0.012;
+            const ox = cx + nx * push;
+            const oy = y0 + ny * push;
+            const oz = cz + nz * push;
             vrPushQuad(translucent, [
-              [cx - rx * hw + ux * doll.h, y0 + uy * doll.h, cz - rz * hw + uz * doll.h],
-              [cx + rx * hw + ux * doll.h, y0 + uy * doll.h, cz + rz * hw + uz * doll.h],
-              [cx + rx * hw, y0, cz + rz * hw],
-              [cx - rx * hw, y0, cz - rz * hw]
+              [ox - rx * hw + ux * doll.h, oy + uy * doll.h, oz - rz * hw + uz * doll.h],
+              [ox + rx * hw + ux * doll.h, oy + uy * doll.h, oz + rz * hw + uz * doll.h],
+              [ox + rx * hw, oy, oz + rz * hw],
+              [ox - rx * hw, oy, oz - rz * hw]
             ], white, 1, 0.62, 0.5, 0.65 * fade);
           }
         }

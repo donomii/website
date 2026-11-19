@@ -90,6 +90,32 @@
       ]
     },
     {
+      doctrine: "Tax reform",
+      title: "Cut the Highest Tribute",
+      command: "The most ambitious sorcerers surrender nearly all their final gold piece. Lower the highest tribute and let appetite become enterprise.",
+      briefing: "Lower top income-tax rates can improve incentives and investment. Replacing the revenue with consumption taxes shifts more of the burden toward ordinary households.",
+      choices: [
+        {
+          title: "Slash the top rate and tax consumption",
+          description: "Reward high earners immediately and recover revenue at every shop counter.",
+          effects: { favour: 8, treasury: 4, prosperity: 6, peace: -3 },
+          outcome: "Entrepreneurs discover fresh enthusiasm. So do tax collectors stationed beside every loaf, boot, and candle."
+        },
+        {
+          title: "Lower rates while closing exemptions",
+          description: "Broaden the tax base and keep the change roughly funded.",
+          effects: { favour: 2, treasury: 3, prosperity: 5, peace: 0 },
+          outcome: "Rates fall, loopholes close, and the court accountants briefly experience the dangerous thrill of coherence."
+        },
+        {
+          title: "Keep steep tribute on the great fortunes",
+          description: "Preserve progressive rates and the intricate avoidance industry around them.",
+          effects: { favour: -16, treasury: -4, prosperity: -2, peace: 3 },
+          outcome: "The wealthy retain their tax alchemists. The Dismal God notes that even confiscation has become inefficient."
+        }
+      ]
+    },
+    {
       doctrine: "Right to Buy",
       title: "Sell the Council Keeps",
       command: "A tenant defends a door. An owner defends an order. Sell the public keeps to those who dwell within them.",
@@ -116,6 +142,32 @@
       ]
     },
     {
+      doctrine: "Exchange controls",
+      title: "Open the Capital Gates",
+      command: "Gold imprisoned in the kingdom grows timid. Abolish the wardens at the border. Let every coin seek its highest return.",
+      briefing: "Removing exchange controls lets firms invest and borrow internationally. It also allows wealth and financial trouble to leave or enter with little warning.",
+      choices: [
+        {
+          title: "Abolish every capital control tonight",
+          description: "Let money cross the border without permission or delay.",
+          effects: { favour: 9, treasury: 5, prosperity: 8, peace: -2 },
+          outcome: "Capital surges through the open gates in both directions. The clerks lose their stamps and the bankers gain the world."
+        },
+        {
+          title: "Open the gates with reporting rules",
+          description: "Permit free movement while making large transfers visible.",
+          effects: { favour: 2, treasury: 3, prosperity: 6, peace: -1 },
+          outcome: "Investment travels freely, carrying a small label for the auditors. The Dismal God calls the label cowardice."
+        },
+        {
+          title: "Keep the gold safely behind the walls",
+          description: "Require permission for foreign investment and currency transfers.",
+          effects: { favour: -18, treasury: -3, prosperity: -5, peace: 2 },
+          outcome: "The kingdom retains its gold and its paperwork. Foreign investors retain their distance."
+        }
+      ]
+    },
+    {
       doctrine: "Financial deregulation",
       title: "Unchain the City of Coin",
       command: "A gentleman's handshake is no match for a foreign algorithm. Tear down the old rules. Let capital move at the speed of greed.",
@@ -138,6 +190,32 @@
           description: "Keep foreign banks and modern trading outside the walls.",
           effects: { favour: -19, treasury: -4, prosperity: -6, peace: 3 },
           outcome: "The old houses retain their manners and commissions. Global capital takes its vulgar business elsewhere."
+        }
+      ]
+    },
+    {
+      doctrine: "Enterprise zones",
+      title: "Consecrate the Abandoned Wards",
+      command: "Where mills have died, suspend taxes and planning law. Mark the ruins as enterprise zones and command prosperity to appear.",
+      briefing: "Targeted tax relief can attract development to declining districts. Without local hiring and infrastructure, it can simply move investment across a boundary.",
+      choices: [
+        {
+          title: "Erase taxes inside the sacred boundary",
+          description: "Offer developers maximum relief with few conditions.",
+          effects: { favour: 8, treasury: 5, prosperity: 7, peace: 1 },
+          outcome: "Warehouses and offices bloom on cheap land. Some employ the old residents; others employ their former landlords."
+        },
+        {
+          title: "Tie relief to jobs and local transport",
+          description: "Grant incentives only with hiring, training, and infrastructure commitments.",
+          effects: { favour: 2, treasury: 2, prosperity: 5, peace: 1 },
+          outcome: "The zones grow more slowly, but wages and buses arrive with the glass buildings."
+        },
+        {
+          title: "Let the councils rebuild directly",
+          description: "Fund municipal industry instead of private tax relief.",
+          effects: { favour: -17, treasury: -6, prosperity: -1, peace: 4 },
+          outcome: "The councils open workshops with excellent canteens and extremely patient business plans."
         }
       ]
     },
@@ -253,6 +331,11 @@
       ending = {
         title: "The People Amend the Constitution",
         text: "The crowd enters the palace carrying banners, grievances, and practical tools. Your office is abolished with unusual enthusiasm."
+      };
+    } else if (completed && state.stats.favour >= 90 && state.stats.prosperity >= 75 && state.stats.peace < 35) {
+      ending = {
+        title: "Infernal Orthodoxy",
+        text: "The ledgers blaze with prosperity while the kingdom holds together by three remaining threads. The Dismal God promotes you from servant to precedent."
       };
     } else if (completed && state.stats.prosperity >= 65 && state.stats.peace >= 45) {
       ending = {
