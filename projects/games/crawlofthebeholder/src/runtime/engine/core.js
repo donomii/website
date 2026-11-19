@@ -8,13 +8,14 @@
       { name: "W", x: -1, y: 0 }
     ];
     const viewFrames = [
-      { left: -18, top: -12, right: 118, bottom: 112 },
+      { left: 0, top: 0, right: 100, bottom: 100 },
       { left: 16, top: 13, right: 84, bottom: 87 },
       { left: 28, top: 23, right: 72, bottom: 77 },
       { left: 37, top: 31, right: 63, bottom: 69 },
       { left: 43, top: 38, right: 57, bottom: 62 }
     ];
     const geometry = {
+      0: { front: [0, 0, 100, 100], sprite: [24, 16, 52, 72], item: [43, 74, 14, 14], tile: 180, light: 1.0, z: 16 },
       1: { front: [16, 13, 68, 74], sprite: [31, 24, 38, 52], item: [45, 68, 10, 10], tile: 152, light: 0.92, z: 14 },
       2: { front: [28, 23, 44, 54], sprite: [39, 32, 22, 32], item: [47, 61, 7, 7], tile: 116, light: 0.72, z: 11 },
       3: { front: [37, 31, 26, 38], sprite: [44, 38, 12, 19], item: [48, 56, 5, 5], tile: 82, light: 0.56, z: 8 },

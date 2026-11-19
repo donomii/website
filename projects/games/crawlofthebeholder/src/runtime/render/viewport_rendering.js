@@ -1059,10 +1059,11 @@
       }
 
       function drawFloorLabel(context, text, rect, depth) {
+        if (depth >= 3) return;
         const nearFrame = frameAt(nearEdgeDepth(depth));
         const referenceFrame = frameAt(0);
         const scale = (nearFrame.right - nearFrame.left) / (referenceFrame.right - referenceFrame.left);
-        if (scale >= 0.42) drawLabel(context, text, rect, Math.min(1, scale));
+        if (scale >= 0.48) drawLabel(context, text, rect, Math.min(1, scale));
       }
 
       function drawViewportHaze(context, width, height) {
@@ -1217,7 +1218,7 @@
         const dx = x - state.x;
         const dy = y - state.y;
         return {
-          depth: dx * forward.x + dy * forward.y + 1,
+          depth: dx * forward.x + dy * forward.y,
           offset: dx * right.x + dy * right.y
         };
       }
@@ -1268,14 +1269,17 @@
         if (!solidAt(state.x, state.y)) {
           const seenOpen = new Set();
           const emitted = new Set();
-          const queue = [{ x: state.x, y: state.y, depth: 1, offset: 0 }];
+          // Start BFS at the party's current cell (depth 0), but NEVER emit
+          // depth <= 0: the square the player is standing on is underneath
+          // them, not drawn in front of them.
+          const queue = [{ x: state.x, y: state.y, depth: 0, offset: 0 }];
           seenOpen.add(keyOf(state.x, state.y));
           let head = 0;
 
           while (head < queue.length) {
             const cur = queue[head++];
             const curKey = keyOf(cur.x, cur.y);
-            if (!emitted.has(curKey) && cellInHorizontalFrustum(cur.depth, cur.offset, bounds, 0)) {
+            if (cur.depth >= 1 && !emitted.has(curKey) && cellInHorizontalFrustum(cur.depth, cur.offset, bounds, 0)) {
               emitted.add(curKey);
               addCell(cur.x, cur.y, cur.depth, cur.offset);
             }
@@ -1342,18 +1346,18 @@
       // tile) and the sprite shrinks and its feet rise with the floor as the
       // cell recedes — true perspective, no floating, no forced humanoid box.
       function actorTileBounds(monster, depth, offset) {
-        // Stand the monster on the NEAR edge of its own tile (one band forward),
-        // not the far edge — drawing it at frameAt(depth) puts it a square too far
-        // back, into the next tile.
-        const frame = frameAt(nearEdgeDepth(depth));
-        const cellWidth = frame.right - frame.left;
-        const cellHeight = frame.bottom - frame.top;
+        // Depth 1 is 1 step ahead of the party; plant the monster squarely on
+        // its own tile's floor strip between farFrame (depth) and nearFrame (depth - 1).
+        const farFrame = frameAt(Math.max(1, depth));
+        const nearFrame = frameAt(Math.max(0, depth - 1));
+        const cellWidth = farFrame.right - farFrame.left;
+        const cellHeight = farFrame.bottom - farFrame.top;
         // Strictly proportional to the cell — NO fixed minimums. A fixed
         // viewport-percent inset or sprite size outgrows the shrinking floor
         // strip at distance and shoves far monsters above their own tile.
         const size = cellWidth * 0.92;
-        const center = (frame.left + frame.right) / 2 + cellWidth * offset;
-        const floorSeam = frame.bottom - cellHeight * 0.04;
+        const center = (farFrame.left + farFrame.right) / 2 + cellWidth * offset;
+        const floorSeam = farFrame.bottom + (nearFrame.bottom - farFrame.bottom) * 0.25;
         // Plant the artwork's bottom (not the padded tile's) on the floor seam by
         // pushing the tile down past the seam by however much empty space sits
         // below the creature in its tile. Airborne creatures hover above it.
@@ -1648,11 +1652,11 @@
       }
 
       function drawFurniture(context, width, height, depth, offset, cell) {
-        if ((depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y)) return;
+        if (depth < 1 || (cell && cell.x === state.x && cell.y === state.y)) return;
         if (typeof furnitureAt !== "function") return;
         const piece = furnitureAt(cell.x, cell.y);
         if (!piece) return;
-        const bounds = standingBounds(nearEdgeDepth(depth), offset, piece.widthScale || 0.48, piece.heightScale || 0.58, 0.94);
+        const bounds = standingBounds(Math.max(1, depth), offset, piece.widthScale || 0.48, piece.heightScale || 0.58, 0.94);
         const rect = drawSprite(context, piece.tile, bounds, width, height);
         if (rect && offset === 0 && depth <= 2) {
           drawFloorLabel(context, piece.shortName || piece.name, rect, depth);
@@ -1707,7 +1711,7 @@
           noRepeat: shoals,
           waveShift
         });
-        const isCurrentCell = (depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y);
+        const isCurrentCell = depth < 1 || (cell && cell.x === state.x && cell.y === state.y);
         drawWaterShoreline(context, width, height, depth, offset, cell, data);
         drawRoomFloorTheme(context, width, height, depth, offset, cell, floorQuad, data);
         drawTerrainOverlay(context, width, height, depth, offset, cell);
@@ -2042,7 +2046,7 @@
       }
 
       function drawFloorFeature(context, width, height, depth, offset, cell) {
-        if ((depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y)) return;
+        if (depth < 1 || (cell && cell.x === state.x && cell.y === state.y)) return;
         const data = geometryAt(depth);
         const assets = currentAssets();
         const openDoor = doorCellAt(cell.x, cell.y) && !closedDoorAt(cell.x, cell.y);
@@ -2057,7 +2061,7 @@
         if (stairs) {
           if (stairs.tile) {
             const portalTexture = environmentAsset(stairs.tile);
-            const bounds = standingBounds(nearEdgeDepth(depth), offset, 0.56, 0.76, tileContentBox(portalTexture).bottom);
+            const bounds = standingBounds(Math.max(1, depth), offset, 0.56, 0.76, tileContentBox(portalTexture).bottom);
             drawSprite(context, portalTexture, bounds, width, height);
           } else {
             const stairQuad = pctQuad(floorDecalPoints(depth, { left: 0.24, top: 0.18, right: 0.76, bottom: 0.94 }, offset), width, height);
@@ -2139,10 +2143,10 @@
       }
 
       function drawDecor(context, width, height, depth, offset, cell) {
-        if ((depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y)) return;
+        if (depth < 1 || (cell && cell.x === state.x && cell.y === state.y)) return;
         const decor = decorAt(cell.x, cell.y);
         if (!decor) return;
-        const data = geometryAt(nearEdgeDepth(depth));
+        const data = geometryAt(Math.max(1, depth));
         const spent = decorUsed(decor);
         if (decor.kind === "floor") {
           const decorQuad = pctQuad(floorDecalPoints(depth, { left: 0.17, top: 0.16, right: 0.83, bottom: 0.98 }, offset), width, height);
@@ -2160,7 +2164,7 @@
 
         const tall = decor.name.includes("column") || decor.name.includes("idol");
         const texture = environmentAsset(decor.tile);
-        const bounds = standingBounds(nearEdgeDepth(depth), offset, tall ? 0.38 : 0.44, tall ? 0.7 : 0.56, tileContentBox(texture).bottom);
+        const bounds = standingBounds(Math.max(1, depth), offset, tall ? 0.38 : 0.44, tall ? 0.7 : 0.56, tileContentBox(texture).bottom);
         const rect = drawSprite(
           context,
           texture,
@@ -2201,7 +2205,7 @@
       function viewportDecorTargetRect(width, height, view, decor) {
         if (decor.kind === "floor") return viewportFloorTargetRect(width, height, view, VIEWPORT_FLOOR_TARGETS.floorDecor);
         const tall = decor.name.includes("column") || decor.name.includes("idol");
-        return pctRect(standingBounds(nearEdgeDepth(view.depth), view.offset, tall ? 0.38 : 0.44, tall ? 0.7 : 0.56), width, height);
+        return pctRect(standingBounds(Math.max(1, view.depth), view.offset, tall ? 0.38 : 0.44, tall ? 0.7 : 0.56), width, height);
       }
 
       function viewportTargetId(kind, entry) {
@@ -2350,6 +2354,21 @@
       }
 
       function viewportInteractionTarget(width, height, kind, entry, enabled, action = null, occluders = null) {
+        if (entry.x === state.x && entry.y === state.y) {
+          const rect = { x: width * 0.38, y: height * 0.88, width: width * 0.24, height: height * 0.08 };
+          return {
+            id: viewportTargetId(kind, entry),
+            kind,
+            label: viewportInteractionLabel(kind, entry, enabled),
+            ...(entry.detail ? { detail: entry.detail } : {}),
+            action: enabled ? action : null,
+            enabled: Boolean(enabled),
+            rect,
+            cell: { x: entry.x, y: entry.y },
+            depth: 0,
+            offset: 0
+          };
+        }
         const view = viewportTargetView(entry.x, entry.y);
         if (!view) return null;
         const rect = viewportInteractionRect(width, height, kind, entry, view);
@@ -2646,7 +2665,7 @@
       }
 
       function drawCellContents(context, width, height, depth, offset, cell) {
-        if ((depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y)) return;
+        if (depth < 1 || (cell && cell.x === state.x && cell.y === state.y)) return;
         drawDecor(context, width, height, depth, offset, cell);
         drawFurniture(context, width, height, depth, offset, cell);
         drawFloorFeature(context, width, height, depth, offset, cell);
