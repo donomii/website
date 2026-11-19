@@ -169,8 +169,11 @@
         }).join("") + setNote;
       }
 
+      let mapGridCache = { floorId: null, width: 0, height: 0, nodes: null, lastStates: null };
+
       function renderMap() {
         if (typeof isAutomapDisabled === "function" && isAutomapDisabled()) {
+          mapGridCache = { floorId: null, width: 0, height: 0, nodes: null, lastStates: null };
           els.map.innerHTML = `<div class="automap-disabled-notice">NO AUTOMAP — OLDSCHOOL CRT (${dirs[state.dir]?.name || ""})</div>`;
           els.map.style.gridTemplateColumns = "1fr";
           els.map.classList?.add("automap-disabled");
@@ -184,118 +187,171 @@
         const foresight = typeof isGameMode === "function" && isGameMode("foresight") && typeof foresightThreatCells === "function"
           ? foresightThreatCells()
           : null;
-        els.map.innerHTML = "";
         const zoom = Math.max(0.5, Math.min(3, state.mapZoom || 1));
         const cellSize = Math.round(9 * zoom);
         els.map.style.gridTemplateColumns = `repeat(${width}, ${cellSize}px)`;
         els.map.style.setProperty?.("--map-cell-size", `${cellSize}px`);
 
-        for (let y = 0; y < height; y += 1) {
-          for (let x = 0; x < width; x += 1) {
-            const node = document.createElement("div");
-            const seen = floorState.discovered.has(keyOf(x, y));
-            const monster = seen && monsterAt(x, y);
-            const item = seen && itemAt(x, y);
-            const trap = seen && trapAt(x, y);
-            const decor = seen && decorAt(x, y);
-            const cloud = seen && cloudAt(x, y);
-            const stairs = seen && stairsAt(x, y);
-            const openDoor = seen && doorCellAt(x, y) && !closedDoorAt(x, y);
-            const floorMarks = seen ? floorMarksAt(x, y) : [];
-            const kind = seen ? mapKind(x, y) : "";
-            const terrain = seen && kind === "floor" ? terrainAt(x, y) : "";
-            const labels = [];
-            const viewClass = seen ? mapViewClass(x, y) : "";
+        const total = width * height;
+        const canReuse = mapGridCache.nodes
+          && mapGridCache.floorId === floor.id
+          && mapGridCache.width === width
+          && mapGridCache.height === height
+          && mapGridCache.nodes.length === total
+          && els.map.childElementCount === total;
 
-            node.className = `map-cell ${seen ? `seen ${kind}` : ""}`;
-            if (terrain && terrain !== "floor") node.classList.add(terrain);
-            if (viewClass) node.classList.add(viewClass);
-            if (seen && kind === "door") {
-              node.textContent = "+";
-              labels.push("door");
-            }
-            if (openDoor) {
-              node.classList.add("open-door");
-              node.textContent = "/";
-              labels.push("open door");
-            }
-            if (stairs) {
-              node.classList.add("stairs");
-              node.textContent = stairs.direction === "down" ? ">" : "<";
-              labels.push(stairs.label ? `${stairs.label}: ${stairs.detail}` : stairs.direction === "down" ? "downstairs" : "upstairs");
-            }
-            if (item) {
-              node.classList.add(item.kind === "quest" ? "prize" : item.kind === "gold" ? "gold" : "item");
-              node.textContent = item.kind === "quest" ? "*" : item.kind === "gold" ? "$" : "%";
-              labels.push(item.name);
-            }
-            if (trap) {
-              node.classList.add("trap");
-              node.textContent = "^";
-              labels.push(trap.name);
-            }
-            if (decor) {
-              node.classList.add("decor");
-              if (decorUsed(decor)) node.classList.add("spent");
-              if (decor.kind === "chest") node.classList.add("chest");
-              node.textContent = decorUsed(decor) ? "." : decor.kind === "chest" ? "▢" : "o";
-              labels.push(decorUsed(decor) ? `${decor.name} spent` : decor.name);
-            }
-            if (cloud) {
-              const kind = cloud.kind || "fog";
-              node.classList.add("cloud", kind);
-              node.textContent = kind === "poison" ? "p" : kind === "flame" ? "f" : "~";
-              labels.push(`${kind} ${cloud.turns}`);
-            }
-            if (floorMarks.length > 0 && kind === "floor") {
-              const mark = floorMarks.at(-1);
-              node.classList.add("mark", mark.kind);
-              if (!stairs && !item && !trap && !decor && !cloud && !monster) node.textContent = "·";
-              labels.push(`${mark.kind} mark`);
-            }
-            if (monster) {
-              node.classList.add("monster");
-              if (monster.immolationTurns > 0) node.classList.add("inner-flame");
-              if (monster.ranged) node.classList.add("ranged");
-              if (monster.boss) node.classList.add("boss");
-              node.textContent = monster.boss ? monster.name[0].toUpperCase() : monster.name[0].toLowerCase();
-              labels.push(monster.name);
-            }
-            const ally = seen && typeof allyAt === "function" && allyAt(x, y);
-            if (ally) {
-              node.classList.add("ally");
-              node.textContent = ally.name[0].toLowerCase();
-              labels.push(`${ally.name} (ally)`);
-            }
-            const marker = (state.mapMarkers || []).find((m) => m.floorIndex === state.floorIndex && m.x === x && m.y === y);
-            if (marker) {
-              node.classList.add("mark-user", `marker-${marker.kind}`);
-              if (!monster && !item && !decor) {
-                node.textContent = marker.kind === "warn" ? "!" : marker.kind === "treasure" ? "★" : "⛳";
+        let nodes = canReuse ? mapGridCache.nodes : null;
+        let lastStates = canReuse ? mapGridCache.lastStates : null;
+        let fragment = null;
+        if (!nodes) {
+          els.map.innerHTML = "";
+          nodes = new Array(total);
+          lastStates = new Array(total);
+          fragment = typeof document.createDocumentFragment === "function" ? document.createDocumentFragment() : null;
+          for (let i = 0; i < total; i += 1) {
+            const cell = document.createElement("div");
+            cell.className = "map-cell";
+            nodes[i] = cell;
+            lastStates[i] = "map-cell\u0000\u0000";
+            if (fragment) fragment.appendChild(cell);
+            else els.map.appendChild(cell);
+          }
+          if (fragment) els.map.appendChild(fragment);
+          mapGridCache = { floorId: floor.id, width, height, nodes, lastStates };
+        }
+
+        let markerMap = null;
+        if (state.mapMarkers && state.mapMarkers.length > 0) {
+          markerMap = new Map();
+          for (const m of state.mapMarkers) {
+            if (m.floorIndex === state.floorIndex) markerMap.set(keyOf(m.x, m.y), m);
+          }
+        }
+
+        let idx = 0;
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1, idx += 1) {
+            const cellKey = keyOf(x, y);
+            const seen = floorState.discovered.has(cellKey);
+            let cls = "map-cell";
+            let text = "";
+            let title = "";
+            if (seen) {
+              const monster = monsterAt(x, y);
+              const item = itemAt(x, y);
+              const trap = trapAt(x, y);
+              const decor = decorAt(x, y);
+              const cloud = cloudAt(x, y);
+              const stairs = stairsAt(x, y);
+              const openDoor = doorCellAt(x, y) && !closedDoorAt(x, y);
+              const floorMarks = floorMarksAt(x, y);
+              const kind = mapKind(x, y);
+              const terrain = kind === "floor" ? terrainAt(x, y) : "";
+              const labels = [];
+              const viewClass = mapViewClass(x, y);
+
+              cls = `map-cell seen ${kind}`;
+              if (terrain && terrain !== "floor") cls += ` ${terrain}`;
+              if (viewClass) cls += ` ${viewClass}`;
+              if (kind === "door") {
+                text = "+";
+                labels.push("door");
               }
-              labels.push(`marker: ${marker.kind}`);
-            }
-            if (state.x === x && state.y === y) {
-              node.classList.add("hero");
-              node.textContent = "@";
-              labels.unshift("party");
-            }
-            if (foresight && seen) {
-              const fk = keyOf(x, y);
-              const threats = foresight.attacks.get(fk);
-              const stepTargets = foresight.steps.get(fk);
-              if (threats && threats.length) {
-                node.classList.add("foresight-threat");
-                if (!monster && !(state.x === x && state.y === y) && !item && !stairs) node.textContent = "!";
-                labels.push(...threats.map((t) => `Threat: ${t.monster.name} (${t.label})`));
-              } else if (stepTargets && stepTargets.length) {
-                node.classList.add("foresight-step");
-                if (!monster && !(state.x === x && state.y === y) && !item && !stairs && !node.textContent) node.textContent = "→";
-                labels.push(...stepTargets.map((s) => `${s.monster.name} stepping here`));
+              if (openDoor) {
+                cls += " open-door";
+                text = "/";
+                labels.push("open door");
               }
+              if (stairs) {
+                cls += " stairs";
+                text = stairs.direction === "down" ? ">" : "<";
+                labels.push(stairs.label ? `${stairs.label}: ${stairs.detail}` : stairs.direction === "down" ? "downstairs" : "upstairs");
+              }
+              if (item) {
+                cls += item.kind === "quest" ? " prize" : item.kind === "gold" ? " gold" : " item";
+                text = item.kind === "quest" ? "*" : item.kind === "gold" ? "$" : "%";
+                labels.push(item.name);
+              }
+              if (trap) {
+                cls += " trap";
+                text = "^";
+                labels.push(trap.name);
+              }
+              if (decor) {
+                const used = decorUsed(decor);
+                cls += " decor";
+                if (used) cls += " spent";
+                if (decor.kind === "chest") cls += " chest";
+                text = used ? "." : decor.kind === "chest" ? "▢" : "o";
+                labels.push(used ? `${decor.name} spent` : decor.name);
+              }
+              if (cloud) {
+                const ckind = cloud.kind || "fog";
+                cls += ` cloud ${ckind}`;
+                text = ckind === "poison" ? "p" : ckind === "flame" ? "f" : "~";
+                labels.push(`${ckind} ${cloud.turns}`);
+              }
+              if (floorMarks.length > 0 && kind === "floor") {
+                const mark = floorMarks.at(-1);
+                cls += ` mark ${mark.kind}`;
+                if (!stairs && !item && !trap && !decor && !cloud && !monster) text = "·";
+                labels.push(`${mark.kind} mark`);
+              }
+              if (monster) {
+                cls += " monster";
+                if (monster.immolationTurns > 0) cls += " inner-flame";
+                if (monster.ranged) cls += " ranged";
+                if (monster.boss) cls += " boss";
+                text = monster.boss ? monster.name[0].toUpperCase() : monster.name[0].toLowerCase();
+                labels.push(monster.name);
+              }
+              const ally = typeof allyAt === "function" && allyAt(x, y);
+              if (ally) {
+                cls += " ally";
+                text = ally.name[0].toLowerCase();
+                labels.push(`${ally.name} (ally)`);
+              }
+              const marker = markerMap ? markerMap.get(cellKey) : null;
+              if (marker) {
+                cls += ` mark-user marker-${marker.kind}`;
+                if (!monster && !item && !decor) {
+                  text = marker.kind === "warn" ? "!" : marker.kind === "treasure" ? "★" : "⛳";
+                }
+                labels.push(`marker: ${marker.kind}`);
+              }
+              if (state.x === x && state.y === y) {
+                cls += " hero";
+                text = "@";
+                labels.unshift("party");
+              }
+              if (foresight) {
+                const threats = foresight.attacks.get(cellKey);
+                const stepTargets = foresight.steps.get(cellKey);
+                if (threats && threats.length) {
+                  cls += " foresight-threat";
+                  if (!monster && !(state.x === x && state.y === y) && !item && !stairs) text = "!";
+                  labels.push(...threats.map((t) => `Threat: ${t.monster.name} (${t.label})`));
+                } else if (stepTargets && stepTargets.length) {
+                  cls += " foresight-step";
+                  if (!monster && !(state.x === x && state.y === y) && !item && !stairs && !text) text = "→";
+                  labels.push(...stepTargets.map((s) => `${s.monster.name} stepping here`));
+                }
+              }
+              if (labels.length > 0) title = labels.join(", ");
+            } else if (state.x === x && state.y === y) {
+              cls = "map-cell hero";
+              text = "@";
+              title = "party";
             }
-            if (labels.length > 0) node.title = labels.join(", ");
-            els.map.appendChild(node);
+
+            const sig = `${cls}\u0000${text}\u0000${title}`;
+            if (lastStates[idx] !== sig) {
+              const node = nodes[idx];
+              node.className = cls;
+              node.textContent = text;
+              node.title = title;
+              lastStates[idx] = sig;
+            }
           }
         }
       }
@@ -691,11 +747,17 @@
         return `<span ${attrs} aria-hidden="true">${label}</span>`;
       }
 
+      let lastViewportInteractionsHtml = null;
+
       function renderViewportInteractions(width, height) {
         const layer = viewportInteractionLayer();
         if (!layer || typeof viewportInteractionTargets !== "function") return;
         bindViewportInteractionTargets();
-        layer.innerHTML = viewportInteractionTargets(width, height).map((target) => viewportTargetHtml(target, width, height)).join("");
+        const html = viewportInteractionTargets(width, height).map((target) => viewportTargetHtml(target, width, height)).join("");
+        if (html !== lastViewportInteractionsHtml) {
+          layer.innerHTML = html;
+          lastViewportInteractionsHtml = html;
+        }
       }
 
       function handleViewportInteractionClick(event) {

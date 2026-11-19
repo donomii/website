@@ -2,6 +2,20 @@
   window.CotBRuntime = window.CotBRuntime || {};
   window.CotBRuntime.installViewportRendering = function (context) {
     with (context) {
+      let viewportRenderQueued = false;
+      function scheduleViewportRender() {
+        if (typeof window !== "undefined" && typeof window.requestAnimationFrame === "function") {
+          if (viewportRenderQueued) return;
+          viewportRenderQueued = true;
+          window.requestAnimationFrame(() => {
+            viewportRenderQueued = false;
+            renderViewport();
+          });
+          return;
+        }
+        renderViewport();
+      }
+
       function imageEntry(src, allowClassicFallback = true) {
         const cacheKey = allowClassicFallback ? src : `${src}\u0000linocut-only`;
         const directEntry = imageCache.get(src);
@@ -24,7 +38,7 @@
           image.onload = () => {
             entry.loadedSrc = candidate;
             entry.ready = true;
-            renderViewport();
+            scheduleViewportRender();
           };
           image.onerror = () => {
             if (canFallback && entry.fallbackSrc) {
@@ -32,7 +46,7 @@
               return;
             }
             entry.failed = true;
-            renderViewport();
+            scheduleViewportRender();
           };
           image.src = candidate;
         };
@@ -316,7 +330,8 @@
         const width = Math.max(1, Math.floor(bounds.width));
         const height = Math.max(1, Math.floor(bounds.height));
         const projection = updateViewportProjection(width, height);
-        const scale = window.devicePixelRatio || 1;
+        const maxScale = state.tileset === "linocut" ? 2 : 1.5;
+        const scale = Math.min(window.devicePixelRatio || 1, maxScale);
         const canvasWidth = Math.floor(width * scale);
         const canvasHeight = Math.floor(height * scale);
 
@@ -411,6 +426,7 @@
       }
 
       function drawWallRelief(context, width, height, depth, cell, surfacePoints, side = false) {
+        if (depth > 4) return;
         const data = geometryAt(depth);
         const shadow = `rgba(0, 0, 0, ${Math.max(0.12, 0.44 - data.light * 0.18)})`;
         const shine = `rgba(240, 215, 154, ${Math.max(0.03, data.light * 0.07)})`;
@@ -465,11 +481,142 @@
         return ys;
       }
 
+      function boundsForPoints(points) {
+        let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+        for (let i = 0; i < points.length; i += 1) {
+          const p = points[i];
+          if (p.x < left) left = p.x;
+          if (p.x > right) right = p.x;
+          if (p.y < top) top = p.y;
+          if (p.y > bottom) bottom = p.y;
+        }
+        return { x: left, y: top, width: right - left, height: bottom - top };
+      }
+
+      function isAxisAlignedRect(points) {
+        return points.length === 4
+          && Math.abs(points[0].y - points[1].y) < 0.05
+          && Math.abs(points[3].y - points[2].y) < 0.05
+          && Math.abs(points[0].x - points[3].x) < 0.05
+          && Math.abs(points[1].x - points[2].x) < 0.05;
+      }
+
+      function isHorizontalTrapezoid(points) {
+        return points.length === 4
+          && Math.abs(points[0].y - points[1].y) < 0.05
+          && Math.abs(points[3].y - points[2].y) < 0.05;
+      }
+
+      function isVerticalTrapezoid(points) {
+        return points.length === 4
+          && Math.abs(points[0].x - points[3].x) < 0.05
+          && Math.abs(points[1].x - points[2].x) < 0.05;
+      }
+
+      function quadOutsideViewport(bounds) {
+        if (!viewportProjection) return false;
+        return bounds.x + bounds.width <= -2
+          || bounds.x >= viewportProjection.width + 2
+          || bounds.y + bounds.height <= -2
+          || bounds.y >= viewportProjection.height + 2;
+      }
+
+      function drawHorizontalTrapezoidStrips(context, img, points, maxStrips) {
+        let y0 = points[0].y;
+        let xT0 = Math.min(points[0].x, points[1].x);
+        let xT1 = Math.max(points[0].x, points[1].x);
+        let y1 = points[3].y;
+        let xB0 = Math.min(points[3].x, points[2].x);
+        let xB1 = Math.max(points[3].x, points[2].x);
+        if (y1 < y0) {
+          const ty = y0; y0 = y1; y1 = ty;
+          const t0 = xT0; xT0 = xB0; xB0 = t0;
+          const t1 = xT1; xT1 = xB1; xB1 = t1;
+        }
+        const spanY = y1 - y0;
+        if (spanY < 0.5) return;
+        const vpH = viewportProjection ? viewportProjection.height : y1;
+        const drawMinY = Math.max(0, y0);
+        const drawMaxY = Math.min(vpH, y1);
+        const visibleH = drawMaxY - drawMinY;
+        if (visibleH < 0.5) return;
+
+        const imgW = img.width || img.naturalWidth || 32;
+        const imgH = img.height || img.naturalHeight || 32;
+        const strips = Math.min(maxStrips, Math.max(2, Math.ceil(visibleH / 8)));
+        const step = visibleH / strips;
+        const dxL = xB0 - xT0;
+        const dxR = xB1 - xT1;
+
+        for (let i = 0; i < strips; i += 1) {
+          const sy0 = drawMinY + i * step;
+          const sy1 = i === strips - 1 ? drawMaxY : sy0 + step;
+          const t0 = Math.max(0, Math.min(1, (sy0 - y0) / spanY));
+          const t1 = Math.max(0, Math.min(1, (sy1 - y0) / spanY));
+          const lx0 = xT0 + dxL * t0;
+          const lx1 = xT0 + dxL * t1;
+          const rx0 = xT1 + dxR * t0;
+          const rx1 = xT1 + dxR * t1;
+          const leftX = (lx0 < lx1 ? lx0 : lx1) - 1;
+          const rightX = (rx0 > rx1 ? rx0 : rx1) + 1;
+          const w = rightX - leftX;
+          if (w < 0.5) continue;
+          const v0 = t0 * imgH;
+          const vH = Math.max(0.5, Math.min(imgH - v0, (t1 - t0) * imgH));
+          context.drawImage(img, 0, v0, imgW, vH, leftX, sy0, w, (sy1 - sy0) + 0.75);
+        }
+      }
+
+      function drawVerticalTrapezoidStrips(context, img, points, maxStrips) {
+        let x0 = points[0].x;
+        let top0 = Math.min(points[0].y, points[3].y);
+        let bot0 = Math.max(points[0].y, points[3].y);
+        let x1 = points[1].x;
+        let top1 = Math.min(points[1].y, points[2].y);
+        let bot1 = Math.max(points[1].y, points[2].y);
+        if (x1 < x0) {
+          const tx = x0; x0 = x1; x1 = tx;
+          const tt = top0; top0 = top1; top1 = tt;
+          const tb = bot0; bot0 = bot1; bot1 = tb;
+        }
+        const spanX = x1 - x0;
+        if (spanX < 0.5) return;
+        const vpW = viewportProjection ? viewportProjection.width : x1;
+        const drawMinX = Math.max(0, x0);
+        const drawMaxX = Math.min(vpW, x1);
+        const visibleW = drawMaxX - drawMinX;
+        if (visibleW < 0.5) return;
+
+        const imgW = img.width || img.naturalWidth || 32;
+        const imgH = img.height || img.naturalHeight || 32;
+        const strips = Math.min(maxStrips, Math.max(2, Math.ceil(visibleW / 8)));
+        const step = visibleW / strips;
+        const dTop = top1 - top0;
+        const dBot = bot1 - bot0;
+
+        for (let i = 0; i < strips; i += 1) {
+          const sx0 = drawMinX + i * step;
+          const sx1 = i === strips - 1 ? drawMaxX : sx0 + step;
+          const t0 = Math.max(0, Math.min(1, (sx0 - x0) / spanX));
+          const t1 = Math.max(0, Math.min(1, (sx1 - x0) / spanX));
+          const yt0 = top0 + dTop * t0;
+          const yt1 = top0 + dTop * t1;
+          const yb0 = bot0 + dBot * t0;
+          const yb1 = bot0 + dBot * t1;
+          const yTop = (yt0 < yt1 ? yt0 : yt1) - 1;
+          const yBot = (yb0 > yb1 ? yb0 : yb1) + 1;
+          const h = yBot - yTop;
+          if (h < 0.5) continue;
+          const u0 = t0 * imgW;
+          const uW = Math.max(0.5, Math.min(imgW - u0, (t1 - t0) * imgW));
+          context.drawImage(img, u0, 0, uW, imgH, sx0, yTop, (sx1 - sx0) + 0.75, h);
+        }
+      }
+
       function drawHorizontalMappedQuad(context, texture, points, depth, light, fallback) {
+        const bounds = boundsForPoints(points);
+        if (quadOutsideViewport(bounds)) return;
         const entry = imageEntry(texture);
-        const minY = Math.floor(Math.min(...points.map((point) => point.y)));
-        const maxY = Math.ceil(Math.max(...points.map((point) => point.y)));
-        const tileSize = geometryAt(depth).tile;
 
         if (!entry.ready) {
           fillQuad(context, points, fallback, light);
@@ -481,44 +628,21 @@
         drawQuadPath(context, points);
         context.clip();
 
-        const linocut = isLinocutTexture(texture, entry);
-        const rowCount = Math.max(1, maxY - minY + 1);
-        const sourceRowHeight = entry.image.height / rowCount;
-
-        for (let y = minY; y <= maxY; y += 1) {
-          const xs = scanlineIntersections(points, y + 0.5);
-          if (xs.length < 2) continue;
-
-          const leftX = Math.floor(xs[0]);
-          const rightX = Math.ceil(xs[xs.length - 1]);
-          const sourceY = ((y - minY) / rowCount) * entry.image.height;
-          const classicY = Math.floor(((y - minY) / Math.max(1, maxY - minY)) * entry.image.height) % entry.image.height;
-          const textureY = linocut ? sourceY : classicY;
-          const textureHeight = linocut ? sourceRowHeight : 1;
-
-          for (let x = leftX; x < rightX; x += tileSize) {
-            const drawnWidth = Math.min(tileSize, rightX - x);
-            context.drawImage(entry.image, 0, textureY, entry.image.width, textureHeight, x, y, drawnWidth, 1);
-          }
+        if (isHorizontalTrapezoid(points)) {
+          const maxStrips = depth <= 1 ? 12 : depth <= 2 ? 9 : depth <= 4 ? 6 : 3;
+          drawHorizontalTrapezoidStrips(context, entry.image, points, maxStrips);
+        } else {
+          context.drawImage(entry.image, bounds.x, bounds.y, Math.max(1, bounds.width), Math.max(1, bounds.height));
         }
 
         context.restore();
         shadeQuad(context, points, light);
       }
 
-      function boundsForPoints(points) {
-        const left = Math.min(...points.map((point) => point.x));
-        const right = Math.max(...points.map((point) => point.x));
-        const top = Math.min(...points.map((point) => point.y));
-        const bottom = Math.max(...points.map((point) => point.y));
-        return { x: left, y: top, width: right - left, height: bottom - top };
-      }
-
       function drawImageMappedQuad(context, texture, points, light, fallback, options = {}) {
-        const entry = imageEntry(texture, options.allowClassicFallback !== false);
-        const minY = Math.floor(Math.min(...points.map((point) => point.y)));
-        const maxY = Math.ceil(Math.max(...points.map((point) => point.y)));
         const bounds = boundsForPoints(points);
+        if (quadOutsideViewport(bounds)) return bounds;
+        const entry = imageEntry(texture, options.allowClassicFallback !== false);
 
         if (options.shadow !== false) {
           context.save();
@@ -534,28 +658,24 @@
           return bounds;
         }
 
+        if (bounds.width < 0.5 || bounds.height < 0.5) return bounds;
+
         context.save();
-        drawQuadPath(context, points);
-        context.clip();
         setTextureSmoothing(context, texture, entry);
-        const linocut = isLinocutTexture(texture, entry);
-        const rowCount = Math.max(1, maxY - minY + 1);
-        const sourceRowHeight = entry.image.height / rowCount;
         if (options.composite) context.globalCompositeOperation = options.composite;
         if (options.alpha !== undefined) context.globalAlpha = options.alpha;
         if (options.shadeTexture) context.filter = `brightness(${Math.max(0, Math.min(1, light))})`;
 
-        for (let y = minY; y <= maxY; y += 1) {
-          const xs = scanlineIntersections(points, y + 0.5);
-          if (xs.length < 2) continue;
-
-          const leftX = Math.floor(xs[0]);
-          const rightX = Math.ceil(xs[xs.length - 1]);
-          const mappedY = ((y - minY) / rowCount) * entry.image.height;
-          const classicY = Math.max(0, Math.min(entry.image.height - 1, Math.floor(((y - minY) / Math.max(1, maxY - minY)) * entry.image.height)));
-          const sourceY = linocut ? mappedY : classicY;
-          const sourceHeight = linocut ? sourceRowHeight : 1;
-          context.drawImage(entry.image, 0, sourceY, entry.image.width, sourceHeight, leftX, y, Math.max(1, rightX - leftX), 1);
+        if (isAxisAlignedRect(points)) {
+          context.drawImage(entry.image, bounds.x, bounds.y, bounds.width, bounds.height);
+        } else if (isHorizontalTrapezoid(points)) {
+          drawQuadPath(context, points);
+          context.clip();
+          drawHorizontalTrapezoidStrips(context, entry.image, points, 8);
+        } else {
+          drawQuadPath(context, points);
+          context.clip();
+          context.drawImage(entry.image, bounds.x, bounds.y, bounds.width, bounds.height);
         }
 
         context.restore();
@@ -564,10 +684,9 @@
       }
 
       function drawVerticalMappedQuad(context, texture, points, depth, light, fallback, options = {}) {
-        const entry = imageEntry(texture, options.allowClassicFallback !== false);
-        const minX = Math.floor(Math.min(...points.map((point) => point.x)));
-        const maxX = Math.ceil(Math.max(...points.map((point) => point.x)));
         const bounds = boundsForPoints(points);
+        if (quadOutsideViewport(bounds)) return bounds;
+        const entry = imageEntry(texture, options.allowClassicFallback !== false);
 
         if (!entry.ready) {
           if (options.shadow === false) return bounds;
@@ -575,29 +694,25 @@
           return bounds;
         }
 
+        if (bounds.width < 0.5 || bounds.height < 0.5) return bounds;
+
         context.save();
         setTextureSmoothing(context, texture, entry);
-        drawQuadPath(context, points);
-        context.clip();
         if (options.composite) context.globalCompositeOperation = options.composite;
         if (options.alpha !== undefined) context.globalAlpha = options.alpha;
         if (options.shadeTexture) context.filter = `brightness(${Math.max(0, Math.min(1, light))})`;
 
-        const linocut = isLinocutTexture(texture, entry);
-        const columnCount = Math.max(1, maxX - minX + 1);
-        const sourceColumnWidth = entry.image.width / columnCount;
-
-        for (let x = minX; x <= maxX; x += 1) {
-          const ys = verticalIntersections(points, x + 0.5);
-          if (ys.length < 2) continue;
-
-          const topY = ys[0];
-          const bottomY = ys[ys.length - 1];
-          const sourceX = ((x - minX) / columnCount) * entry.image.width;
-          const classicX = Math.floor(((x - minX) / Math.max(1, maxX - minX)) * entry.image.width) % entry.image.width;
-          const textureX = linocut ? sourceX : classicX;
-          const textureWidth = linocut ? sourceColumnWidth : 1;
-          context.drawImage(entry.image, textureX, 0, textureWidth, entry.image.height, x, topY, 1, bottomY - topY);
+        if (isAxisAlignedRect(points)) {
+          context.drawImage(entry.image, bounds.x, bounds.y, bounds.width, bounds.height);
+        } else if (isVerticalTrapezoid(points)) {
+          drawQuadPath(context, points);
+          context.clip();
+          const maxStrips = depth <= 1 ? 20 : depth <= 2 ? 12 : depth <= 4 ? 8 : 4;
+          drawVerticalTrapezoidStrips(context, entry.image, points, maxStrips);
+        } else {
+          drawQuadPath(context, points);
+          context.clip();
+          context.drawImage(entry.image, bounds.x, bounds.y, bounds.width, bounds.height);
         }
 
         context.restore();
@@ -646,10 +761,22 @@
         const entry = imageEntry(source, options.allowClassicFallback !== false);
         if (!entry.ready) return null;
         const rect = pctRect(bounds, width, height);
+        if (quadOutsideViewport(rect)) return null;
         context.save();
-        context.shadowColor = "rgba(0, 0, 0, 0.65)";
-        context.shadowBlur = 18;
-        context.shadowOffsetY = 12;
+        if (!options.filter && (options.alpha === undefined || options.alpha > 0.65)) {
+          context.fillStyle = "rgba(0, 0, 0, 0.36)";
+          context.beginPath();
+          context.ellipse(
+            rect.x + rect.width * 0.5,
+            rect.y + rect.height * 0.94,
+            Math.max(2, rect.width * 0.34),
+            Math.max(1.5, rect.height * 0.08),
+            0,
+            0,
+            Math.PI * 2
+          );
+          context.fill();
+        }
         setTextureSmoothing(context, source, entry);
         if (options.alpha !== undefined) context.globalAlpha = options.alpha;
         if (options.filter) context.filter = options.filter;
@@ -919,18 +1046,92 @@
         return view.offset === 0 ? "view-axis" : "view";
       }
 
-      function mapCellsInViewRows() {
+      const MAX_VIEW_DEPTH = 10;
+
+      function viewHorizontalBounds(width, height) {
+        const proj = width && height ? viewportProjectionFor(width, height) : viewportProjection;
+        if (!proj || !proj.xScale) return { minPctX: -25, maxPctX: 125 };
+        return {
+          minPctX: Math.min(0, -proj.xOffset / proj.xScale),
+          maxPctX: Math.max(100, (proj.width - proj.xOffset) / proj.xScale)
+        };
+      }
+
+      function cellInHorizontalFrustum(depth, offset, bounds, marginCells = 0) {
+        if (depth === 1 && Math.abs(offset) <= 1) return true;
+        const nearFrame = frameAt(Math.max(0, depth - 1));
+        const farFrame = frameAt(depth);
+        const nearW = nearFrame.right - nearFrame.left;
+        const farW = farFrame.right - farFrame.left;
+        const pad = nearW * marginCells;
+        const xMin = Math.min(50 + (offset - 0.5) * nearW, 50 + (offset - 0.5) * farW);
+        const xMax = Math.max(50 + (offset + 0.5) * nearW, 50 + (offset + 0.5) * farW);
+        return xMax >= bounds.minPctX - pad && xMin <= bounds.maxPctX + pad;
+      }
+
+      function mapCellsInViewRows(width = null, height = null, maxDepth = MAX_VIEW_DEPTH) {
         const rows = new Map();
         const floor = currentFloor();
-        for (let y = -1; y <= floor.map.height; y += 1) {
-          for (let x = -1; x <= floor.map.width; x += 1) {
-            if (!boundaryWallCell(x, y)) continue;
-            const view = viewCoordinates(x, y);
-            if (view.depth < 1) continue;
-            if (!rows.has(view.depth)) rows.set(view.depth, []);
-            rows.get(view.depth).push({ x, y, offset: view.offset });
+        const bounds = viewHorizontalBounds(width, height);
+        const addCell = (x, y, depth, offset) => {
+          if (!rows.has(depth)) rows.set(depth, []);
+          rows.get(depth).push({ x, y, offset });
+        };
+
+        // Flood-fill open cells visible within the forward frustum starting at the
+        // party's cell, then include any solid wall cell 8-adjacent to a visible
+        // open cell. This skips rooms sealed behind solid walls as well as
+        // off-screen and beyond-horizon cells.
+        if (!solidAt(state.x, state.y)) {
+          const seenOpen = new Set();
+          const emitted = new Set();
+          const queue = [{ x: state.x, y: state.y, depth: 1, offset: 0 }];
+          seenOpen.add(keyOf(state.x, state.y));
+          let head = 0;
+
+          while (head < queue.length) {
+            const cur = queue[head++];
+            const curKey = keyOf(cur.x, cur.y);
+            if (!emitted.has(curKey) && cellInHorizontalFrustum(cur.depth, cur.offset, bounds, 0)) {
+              emitted.add(curKey);
+              addCell(cur.x, cur.y, cur.depth, cur.offset);
+            }
+
+            for (let dy = -1; dy <= 1; dy += 1) {
+              for (let dx = -1; dx <= 1; dx += 1) {
+                if (dx === 0 && dy === 0) continue;
+                const nx = cur.x + dx;
+                const ny = cur.y + dy;
+                if (!boundaryWallCell(nx, ny)) continue;
+                const view = viewCoordinates(nx, ny);
+                if (view.depth < 1) continue;
+                const nKey = keyOf(nx, ny);
+                if (solidAt(nx, ny)) {
+                  if (view.depth <= maxDepth + 1 && !emitted.has(nKey) && cellInHorizontalFrustum(view.depth, view.offset, bounds, 0)) {
+                    emitted.add(nKey);
+                    addCell(nx, ny, view.depth, view.offset);
+                  }
+                } else if (view.depth <= maxDepth && (dx === 0 || dy === 0) && !seenOpen.has(nKey)) {
+                  if (cellInHorizontalFrustum(view.depth, view.offset, bounds, 1)) {
+                    seenOpen.add(nKey);
+                    queue.push({ x: nx, y: ny, depth: view.depth, offset: view.offset });
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          for (let y = -1; y <= floor.map.height; y += 1) {
+            for (let x = -1; x <= floor.map.width; x += 1) {
+              if (!boundaryWallCell(x, y)) continue;
+              const view = viewCoordinates(x, y);
+              if (view.depth < 1 || view.depth > maxDepth) continue;
+              if (!cellInHorizontalFrustum(view.depth, view.offset, bounds, 0)) continue;
+              addCell(x, y, view.depth, view.offset);
+            }
           }
         }
+
         return [...rows.entries()]
           .map(([depth, cells]) => ({ depth, cells: cells.sort((a, b) => a.offset - b.offset) }))
           .sort((a, b) => b.depth - a.depth);
@@ -1573,31 +1774,59 @@
         return viewportRectHitsQuad(rect, quad);
       }
 
-      function viewportTargetOccluded(width, height, rect, view, entry) {
-        const floor = currentFloor();
-        for (let y = -1; y <= floor.map.height; y += 1) {
-          for (let x = -1; x <= floor.map.width; x += 1) {
-            if (boundaryWallCell(x, y) && viewportFrontWallBlocksTarget(width, height, rect, view, x, y, entry)) return true;
-          }
-        }
-        for (const row of mapCellsInViewRows()) {
-          if (row.depth >= view.depth) continue;
-          const open = row.cells.filter((cell) => !solidAt(cell.x, cell.y));
-          for (const cell of open) {
-            for (const side of sideWallEntries(cell, cell.offset)) {
-              if (viewportSideWallBlocksTarget(width, height, rect, view, cell, side, entry)) return true;
+      function buildViewportTargetOccluders(width, height) {
+        const fronts = [];
+        const sides = [];
+        const rows = mapCellsInViewRows(width, height, VIEWPORT_TARGET_MAX_DEPTH);
+        for (const row of rows) {
+          for (const cell of row.cells) {
+            if (solidAt(cell.x, cell.y)) {
+              if (Math.abs(cell.offset) <= Math.max(2, Math.ceil(row.depth * 0.7))) {
+                fronts.push({
+                  x: cell.x,
+                  y: cell.y,
+                  depth: row.depth,
+                  quad: pctQuad(frontFacePoints(nearEdgeDepth(row.depth), cell.offset), width, height)
+                });
+              }
+            } else {
+              for (const side of sideWallEntries(cell, cell.offset)) {
+                sides.push({
+                  x: side.cell.x,
+                  y: side.cell.y,
+                  depth: row.depth,
+                  quad: pctQuad(sideFacePoints(row.depth, side.boundary), width, height)
+                });
+              }
             }
           }
+        }
+        return { fronts, sides };
+      }
+
+      function viewportTargetOccluded(width, height, rect, view, entry, occluders = null) {
+        const resolved = occluders || buildViewportTargetOccluders(width, height);
+        for (let i = 0; i < resolved.fronts.length; i += 1) {
+          const wall = resolved.fronts[i];
+          if (wall.depth >= view.depth) continue;
+          if (wall.x === entry.x && wall.y === entry.y) continue;
+          if (viewportRectHitsQuad(rect, wall.quad)) return true;
+        }
+        for (let i = 0; i < resolved.sides.length; i += 1) {
+          const wall = resolved.sides[i];
+          if (wall.depth >= view.depth) continue;
+          if (wall.x === entry.x && wall.y === entry.y) continue;
+          if (viewportRectHitsQuad(rect, wall.quad)) return true;
         }
         return false;
       }
 
-      function viewportInteractionTarget(width, height, kind, entry, enabled, action = null) {
+      function viewportInteractionTarget(width, height, kind, entry, enabled, action = null, occluders = null) {
         const view = viewportTargetView(entry.x, entry.y);
         if (!view) return null;
         const rect = viewportInteractionRect(width, height, kind, entry, view);
         if (!viewportTargetIntersects(rect, width, height)) return null;
-        if (viewportTargetOccluded(width, height, rect, view, entry)) return null;
+        if (viewportTargetOccluded(width, height, rect, view, entry, occluders)) return null;
         return {
           id: viewportTargetId(kind, entry),
           kind,
@@ -1619,11 +1848,12 @@
         const active = viewportInteractionSpec();
         const activeId = active ? viewportTargetId(active.kind, active.entry) : null;
         const seenIds = new Set();
+        const occluders = buildViewportTargetOccluders(width, height);
         const pushTarget = (kind, entry) => {
           const id = viewportTargetId(kind, entry);
           if (seenIds.has(id)) return;
           const enabled = id === activeId;
-          const target = viewportInteractionTarget(width, height, kind, entry, enabled, enabled ? active.action : null);
+          const target = viewportInteractionTarget(width, height, kind, entry, enabled, enabled ? active.action : null, occluders);
           if (!target) return;
           seenIds.add(id);
           targets.push(target);
@@ -1645,9 +1875,11 @@
         for (const decor of floor.decor || []) {
           if (floorState.discovered.has(keyOf(decor.x, decor.y))) pushTarget("decor", decor);
         }
-        for (let y = 0; y < floor.map.height; y += 1) {
-          for (let x = 0; x < floor.map.width; x += 1) {
-            if (floorState.discovered.has(keyOf(x, y)) && doorCellAt(x, y)) pushTarget("door", { id: `door-${x}-${y}`, x, y });
+        for (const row of mapCellsInViewRows(width, height, VIEWPORT_TARGET_MAX_DEPTH)) {
+          for (const cell of row.cells) {
+            if (floorState.discovered.has(keyOf(cell.x, cell.y)) && doorCellAt(cell.x, cell.y)) {
+              pushTarget("door", { id: `door-${cell.x}-${cell.y}`, x: cell.x, y: cell.y });
+            }
           }
         }
 
@@ -1715,13 +1947,15 @@
         context.globalCompositeOperation = "lighter";
         context.lineCap = "round";
         context.lineJoin = "round";
-        context.shadowColor = color;
-        context.shadowBlur = 16;
-        context.strokeStyle = color;
-        context.lineWidth = Math.max(3, width * 0.004);
         context.beginPath();
         context.moveTo(points[0].x, points[0].y);
         for (const point of points.slice(1)) context.lineTo(point.x, point.y);
+        context.globalAlpha = 0.35;
+        context.strokeStyle = color;
+        context.lineWidth = Math.max(8, width * 0.012);
+        context.stroke();
+        context.globalAlpha = 1;
+        context.lineWidth = Math.max(3, width * 0.004);
         context.stroke();
         context.lineWidth = Math.max(1, width * 0.0016);
         context.strokeStyle = "rgba(255, 245, 208, 0.82)";
@@ -1753,14 +1987,18 @@
       function drawEffectSprite(context, source, bounds, width, height, color) {
         const entry = imageEntry(source);
         const rect = pctRect(bounds, width, height);
+        const cx = rect.x + rect.width / 2;
+        const cy = rect.y + rect.height / 2;
         context.save();
         context.globalCompositeOperation = "lighter";
-        context.shadowColor = color;
-        context.shadowBlur = 22;
         context.fillStyle = color;
+        context.globalAlpha = 0.24;
+        context.beginPath();
+        context.ellipse(cx, cy, Math.max(6, rect.width * 0.55), Math.max(6, rect.height * 0.55), 0, 0, Math.PI * 2);
+        context.fill();
         context.globalAlpha = 0.58;
         context.beginPath();
-        context.ellipse(rect.x + rect.width / 2, rect.y + rect.height / 2, Math.max(3, rect.width * 0.3), Math.max(3, rect.height * 0.3), 0, 0, Math.PI * 2);
+        context.ellipse(cx, cy, Math.max(3, rect.width * 0.3), Math.max(3, rect.height * 0.3), 0, 0, Math.PI * 2);
         context.fill();
         if (entry.ready) {
           context.globalAlpha = 0.95;
@@ -1906,7 +2144,37 @@
       // walls so a block keeps the same visible markings when viewed head-on.
       // Returns the layer list in draw order; renderViewport draws it verbatim
       // and the render-order regression tests assert on this same list.
+      let atmosphereCache = { key: null, canvas: null };
+
+      function drawCachedAtmosphere(context, width, height) {
+        if (typeof document === "undefined" || typeof document.createElement !== "function" || context !== viewportContext) {
+          drawViewportHaze(context, width, height);
+          drawBranchAtmosphere(context, width, height);
+          return;
+        }
+        const noir = typeof isNoirLighting === "function" && isNoirLighting();
+        const floor = currentFloor();
+        const key = `${width}x${height}:${noir ? `n${(state.turnCount || 0) % 2}` : "s"}:${floor.id}:${floor.name}`;
+        if (atmosphereCache.key !== key || !atmosphereCache.canvas) {
+          const canvas = atmosphereCache.canvas || document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            drawViewportHaze(context, width, height);
+            drawBranchAtmosphere(context, width, height);
+            return;
+          }
+          ctx.clearRect(0, 0, width, height);
+          drawViewportHaze(ctx, width, height);
+          drawBranchAtmosphere(ctx, width, height);
+          atmosphereCache = { key, canvas };
+        }
+        context.drawImage(atmosphereCache.canvas, 0, 0, width, height);
+      }
+
       function sceneWallLayers(context, width, height) {
+        viewportProjectionFor(width, height);
         const layers = [];
         const pushFrontBases = (fronts, facing) => {
           for (const front of fronts) {
@@ -1920,7 +2188,7 @@
           }
         };
         let pending = []; // solids one row deeper — their faces close off THIS row
-        for (const row of mapCellsInViewRows()) { // far → near
+        for (const row of mapCellsInViewRows(width, height)) { // far → near
           const depth = row.depth;
           const open = row.cells.filter((cell) => !solidAt(cell.x, cell.y));
           for (const cell of open) drawCellShell(context, width, height, depth, cell.offset, cell);
@@ -1966,8 +2234,7 @@
           context.fillText(`CRT WIREFRAME · ${dirs[state.dir]?.name?.toUpperCase() || ""}${typeof isAutomapDisabled === "function" && isAutomapDisabled() ? " · NO AUTOMAP" : ""}`, 12, 18);
           context.restore();
         } else {
-          drawViewportHaze(context, width, height);
-          drawBranchAtmosphere(context, width, height);
+          drawCachedAtmosphere(context, width, height);
         }
         drawEffectWash(context, width, height);
         drawPartyStatusOverlays(context, width, height);
