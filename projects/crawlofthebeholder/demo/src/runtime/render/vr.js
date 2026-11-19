@@ -1,8 +1,9 @@
 (function () {
   window.CotBRuntime = window.CotBRuntime || {};
-  // Meta Quest (WebXR) mode: renders the CURRENT game as a room-scale diorama —
-  // dungeon architecture in true 3D, everything that lives in it as flat
-  // "paper doll" sprites standing on their tiles. This file is a front end
+  // Meta Quest (WebXR) tabletop-native front end: renders the CURRENT game as a
+  // room-scale diorama — dungeon architecture in true 3D, everything that lives
+  // in it as flat "paper doll" sprites standing on their tiles, plus 3D Mode
+  // Totems and 3D Tactical Cards on the board rim. This file is a front end
   // only: it reads state through the same helpers the 2D map/viewport use and
   // runs player commands through the shared game engine.
   window.CotBRuntime.installVr = function (context) {
