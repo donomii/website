@@ -179,9 +179,11 @@
 
       const THEME_BY_ID = new Map(ROOM_THEMES.map((theme) => [theme.id, theme]));
 
+      const DCSS_DNGN = "vendor/crawl/crawl-ref/source/rltiles/dngn";
       const FURNITURE_CATALOG = {
         bookshelf: { name: "oak bookshelf", shortName: "bookshelf", tall: true, widthScale: 0.54, heightScale: 0.76, interact: "You leaf through dusty dungeon treatises — ancient marginalia hint at chambers ahead." },
         study_desk: { name: "scholar's desk", shortName: "study desk", tall: false, widthScale: 0.56, heightScale: 0.5, interact: "Wax drips beside an open grimoire. A warm candle still burns on the corner." },
+        lectern: { name: "carved lectern", shortName: "lectern", tall: true, widthScale: 0.44, heightScale: 0.66, dcssTile: `${DCSS_DNGN}/vaults/lectern.png`, interact: "An ancient leather-bound codex rests open on a carved reading lectern." },
         banquet_table: { name: "banquet table", shortName: "feast table", tall: false, widthScale: 0.64, heightScale: 0.5, heal: 3, interact: "A long oak feast table laden with pewter goblets and preserved provisions." },
         bench: { name: "oak bench", shortName: "bench", tall: false, widthScale: 0.5, heightScale: 0.4, interact: "A scarred timber bench pushed back from the hall." },
         barrel: { name: "oak barrels", shortName: "barrels", tall: false, widthScale: 0.48, heightScale: 0.54, interact: "Iron-hooped casks smell faintly of dark ale and cedar." },
@@ -195,13 +197,27 @@
         pew: { name: "carved pew", shortName: "pew", tall: false, widthScale: 0.56, heightScale: 0.44, interact: "Worn cathedral pews face quietly toward the sanctuary." },
         candelabra: { name: "brass candelabra", shortName: "candelabra", tall: true, widthScale: 0.36, heightScale: 0.74, light: true, interact: "Three beeswax tapers cast steady golden light across the chamber." },
         altar_stone: { name: "velvet-draped altar", shortName: "sanctuary altar", tall: false, widthScale: 0.58, heightScale: 0.58, heal: 4, interact: "A serene carved stone altar draped in crimson velvet brings a moment of calm." },
-        sarcophagus: { name: "stone sarcophagus", shortName: "sarcophagus", tall: false, widthScale: 0.58, heightScale: 0.52, interact: "A weathered stone effigy lies sealed beneath ancient wards." },
+        sarcophagus: { name: "stone sarcophagus", shortName: "sarcophagus", tall: false, widthScale: 0.56, heightScale: 0.6, dcssTile: `${DCSS_DNGN}/vaults/sarcophagus_sealed.png`, interact: "A weathered stone effigy lies sealed beneath ancient wards." },
         urn: { name: "reliquary urn", shortName: "urn", tall: false, widthScale: 0.36, heightScale: 0.54, interact: "A tall carved urn etched with forgotten dungeon heraldry." },
-        planter: { name: "fern planter", shortName: "planter", tall: false, widthScale: 0.46, heightScale: 0.58, interact: "Lush subterranean ferns and pale golden blossoms spill from a stone urn." },
+        planter: { name: "fern planter", shortName: "planter", tall: false, widthScale: 0.46, heightScale: 0.62, dcssTile: `${DCSS_DNGN}/vaults/flower_pot_1.png`, interact: "Lush subterranean ferns and pale golden blossoms spill from a stone urn." },
         garden_bench: { name: "marble bench", shortName: "garden bench", tall: false, widthScale: 0.54, heightScale: 0.44, heal: 2, interact: "A moss-touched marble bench offers a brief breather amidst the foliage." },
         coffer: { name: "banded coffer", shortName: "coffer", tall: false, widthScale: 0.5, heightScale: 0.46, interact: "A heavy brass-bound vault coffer bolted firmly to the flagstones." },
         pedestal: { name: "gilded pedestal", shortName: "pedestal", tall: true, widthScale: 0.4, heightScale: 0.7, interact: "An ornate marble plinth crowns the chamber with a warm golden gleam." },
-        torch_sconce: { name: "wall torch", shortName: "torch", tall: false, widthScale: 0.3, heightScale: 0.46, light: true, interact: "A wrought-iron wall torch flickers steadily in its bracket." }
+        torch_sconce: { name: "wall torch", shortName: "torch", tall: false, widthScale: 0.3, heightScale: 0.46, light: true, interact: "A wrought-iron wall torch flickers steadily in its bracket." },
+        // Authentic DCSS outdoor branch landmarks
+        shoals_statue: { name: "sea-worn statue", shortName: "sea statue", tall: true, widthScale: 0.48, heightScale: 0.74, dcssTile: `${DCSS_DNGN}/vaults/silver_statue_0.png`, interact: "Salt-crusted marble depicts an ancient mariner watching the tide." },
+        shoals_pillar: { name: "weathered sea pillar", shortName: "sea pillar", tall: true, widthScale: 0.46, heightScale: 0.76, dcssTile: `${DCSS_DNGN}/statues/crumbled_column_1.png`, interact: "Barnacles cling to the base of a sunken temple column." },
+        shoals_fountain: { name: "tidal fountain", shortName: "tidal fountain", tall: false, widthScale: 0.52, heightScale: 0.64, heal: 3, dcssTile: `${DCSS_DNGN}/vaults/fountain_double_decker.png`, interact: "Clear sea-cooled spring water spills down twin stone basins." },
+        shoals_lantern: { name: "stone sea lantern", shortName: "sea lantern", tall: true, widthScale: 0.42, heightScale: 0.68, light: true, dcssTile: `${DCSS_DNGN}/vaults/fountain_stone_lantern.png`, interact: "A carved coastal beacon lantern guides ships through the shoals." },
+        shoals_spring: { name: "tidal spring", shortName: "spring", tall: false, widthScale: 0.5, heightScale: 0.58, heal: 3, dcssTile: `${DCSS_DNGN}/decor/blue_fountain.png`, interact: "Fresh spring water bubbles up amidst the salt sand." },
+        swamp_mangrove: { name: "mangrove tree", shortName: "mangrove", tall: true, widthScale: 0.58, heightScale: 0.82, dcssTile: `${DCSS_DNGN}/trees/mangrove1.png`, interact: "Tangled mangrove roots arch down into the murky fen." },
+        swamp_mangrove_b: { name: "gnarled mangrove", shortName: "mangrove", tall: true, widthScale: 0.58, heightScale: 0.82, dcssTile: `${DCSS_DNGN}/trees/mangrove3.png`, interact: "Moss drapes thickly from the twisted swamp boughs." },
+        swamp_dead_tree: { name: "drowned cypress", shortName: "dead tree", tall: true, widthScale: 0.54, heightScale: 0.8, dcssTile: `${DCSS_DNGN}/trees/tree_dead3.png`, interact: "Bleached branches claw skyward out of the bog." },
+        lair_tree: { name: "cavern oak", shortName: "tree", tall: true, widthScale: 0.58, heightScale: 0.82, dcssTile: `${DCSS_DNGN}/trees/tree4.png`, interact: "A hardy subterranean tree thrives in the damp Lair soil." },
+        lair_tree_b: { name: "mossy cavern tree", shortName: "tree", tall: true, widthScale: 0.58, heightScale: 0.82, dcssTile: `${DCSS_DNGN}/trees/tree12.png`, interact: "Thick moss and lichen coat the ancient bark." },
+        lair_petrified: { name: "petrified tree", shortName: "petrified tree", tall: true, widthScale: 0.52, heightScale: 0.78, dcssTile: `${DCSS_DNGN}/trees/tree_petrified1.png`, interact: "Mineral-hard stone preserves every knot of the fallen trunk." },
+        slime_crystal: { name: "ooze-etched crystal", shortName: "crystal", tall: true, widthScale: 0.46, heightScale: 0.7, dcssTile: `${DCSS_DNGN}/vaults/bedevilled_crystal_abyss_0.png`, interact: "A luminescent crystal formation hums amidst the slime." },
+        slime_vat: { name: "alchemical vat", shortName: "vat", tall: false, widthScale: 0.46, heightScale: 0.58, dcssTile: `${DCSS_DNGN}/vaults/bottled_spirits.png`, interact: "Strange viscous reagents shimmer behind thick glass." }
       };
 
       const furnitureSpriteCache = new Map();
@@ -584,42 +600,84 @@
           || ["shoals", "swamp", "lair", "slime", "spider"].includes(biome);
       }
 
-      const OUTDOOR_THEMES = [
-        {
-          id: "conservatory",
-          name: "Overgrown Clearing",
-          shortLabel: "Clearing",
-          floorPattern: "none",
-          floorTint: null,
-          wallTint: null,
-          wallTrimStyle: "none",
-          trimColor: null,
-          ceilingTint: null,
-          ceilingBeams: false,
-          ambientColor: [94, 184, 128],
-          ambientAlpha: 0.05,
-          wallProps: ["planter", "urn", "barrel"],
-          centerProps: ["brazier", "garden_bench"],
-          cornerProps: ["planter", "crate"]
-        },
-        {
-          id: "armory",
-          name: "Explorer's Camp",
-          shortLabel: "Camp",
-          floorPattern: "none",
-          floorTint: null,
-          wallTint: null,
-          wallTrimStyle: "none",
-          trimColor: null,
-          ceilingTint: null,
-          ceilingBeams: false,
-          ambientColor: [236, 176, 92],
-          ambientAlpha: 0.05,
-          wallProps: ["crate", "barrel", "weapon_rack"],
-          centerProps: ["brazier", "bench"],
-          cornerProps: ["barrel", "crate"]
+      function outdoorThemeForFloor(floor, roomIndex) {
+        const id = String(floor?.id || "").toLowerCase();
+        const biome = String(floor?.biome || "").toLowerCase();
+        if (id.startsWith("shoals:") || biome === "shoals") {
+          return {
+            id: "shoals_isle",
+            name: roomIndex % 2 === 0 ? "Tidal Island" : "Sunken Reef",
+            shortLabel: "Shoals",
+            floorPattern: "none",
+            floorTint: null,
+            wallTint: null,
+            wallTrimStyle: "none",
+            trimColor: null,
+            ceilingTint: null,
+            ceilingBeams: false,
+            ambientColor: [88, 174, 198],
+            ambientAlpha: 0.04,
+            wallProps: ["shoals_pillar", "shoals_lantern", "shoals_statue"],
+            centerProps: ["shoals_fountain", "shoals_statue", "shoals_spring"],
+            cornerProps: ["shoals_lantern", "shoals_pillar"]
+          };
         }
-      ];
+        if (id.startsWith("swamp:") || biome === "swamp") {
+          return {
+            id: "swamp_fen",
+            name: roomIndex % 2 === 0 ? "Mangrove Grove" : "Sunken Fen",
+            shortLabel: "Swamp",
+            floorPattern: "none",
+            floorTint: null,
+            wallTint: null,
+            wallTrimStyle: "none",
+            trimColor: null,
+            ceilingTint: null,
+            ceilingBeams: false,
+            ambientColor: [84, 152, 86],
+            ambientAlpha: 0.04,
+            wallProps: ["swamp_mangrove", "swamp_dead_tree", "swamp_mangrove_b"],
+            centerProps: ["swamp_mangrove_b", "swamp_dead_tree"],
+            cornerProps: ["swamp_mangrove", "swamp_dead_tree"]
+          };
+        }
+        if (id.startsWith("slime:") || biome === "slime") {
+          return {
+            id: "slime_grotto",
+            name: "Ooze Cavern",
+            shortLabel: "Slime",
+            floorPattern: "none",
+            floorTint: null,
+            wallTint: null,
+            wallTrimStyle: "none",
+            trimColor: null,
+            ceilingTint: null,
+            ceilingBeams: false,
+            ambientColor: [118, 198, 82],
+            ambientAlpha: 0.04,
+            wallProps: ["slime_crystal", "slime_vat"],
+            centerProps: ["slime_crystal", "slime_vat"],
+            cornerProps: ["slime_crystal"]
+          };
+        }
+        return {
+          id: "lair_grove",
+          name: roomIndex % 2 === 0 ? "Cavern Grove" : "Wild Clearing",
+          shortLabel: "Grove",
+          floorPattern: "none",
+          floorTint: null,
+          wallTint: null,
+          wallTrimStyle: "none",
+          trimColor: null,
+          ceilingTint: null,
+          ceilingBeams: false,
+          ambientColor: [94, 174, 108],
+          ambientAlpha: 0.04,
+          wallProps: ["lair_tree", "lair_tree_b", "lair_petrified"],
+          centerProps: ["lair_tree_b", "planter"],
+          cornerProps: ["lair_tree", "lair_petrified"]
+        };
+      }
 
       function biomeThemeOrder(floor) {
         const id = String(floor?.id || "").toLowerCase();
@@ -829,13 +887,13 @@
         for (let i = 0; i < rooms.length; i += 1) {
           const room = rooms[i];
           if (outdoor) {
-            room.theme = OUTDOOR_THEMES[(floorHash + i) % OUTDOOR_THEMES.length];
+            room.theme = outdoorThemeForFloor(floor, i);
           } else {
             const themeId = order[(floorHash + i) % order.length];
             room.theme = THEME_BY_ID.get(themeId) || ROOM_THEMES[i % ROOM_THEMES.length];
           }
           for (const c of room.cells) {
-            cellZone.set(keyOf(c.x, c.y), { kind: "room", roomId: room.id, theme: room.theme, room });
+            cellZone.set(keyOf(c.x, c.y), { kind: "room", roomId: room.id, theme: room.theme, room, outdoor });
           }
         }
 
@@ -844,7 +902,7 @@
           for (let x = 0; x < W; x += 1) {
             if (!isWalkableFloorGlyph(rows, x, y)) continue;
             const k = keyOf(x, y);
-            if (!cellZone.has(k)) cellZone.set(k, { kind: "corridor", roomId: -1, theme: null, room: null });
+            if (!cellZone.has(k)) cellZone.set(k, { kind: "corridor", roomId: -1, theme: null, room: null, outdoor });
           }
         }
 
@@ -865,15 +923,17 @@
                 kind: "room",
                 roomId: roomNeighbour.roomId,
                 theme: roomNeighbour.theme,
-                torch: false
+                torch: false,
+                outdoor
               });
             } else if (corridorNeighbour) {
-              const torchRoll = hashString(`torch:${floor.id}:${x},${y}`) % 7 === 0;
+              const torchRoll = !outdoor && (hashString(`torch:${floor.id}:${x},${y}`) % 7 === 0);
               wallZone.set(keyOf(x, y), {
                 kind: "corridor",
                 roomId: -1,
                 theme: null,
-                torch: torchRoll
+                torch: torchRoll,
+                outdoor
               });
             }
           }
@@ -931,7 +991,9 @@
             tall: Boolean(spec.tall),
             widthScale: spec.widthScale,
             heightScale: spec.heightScale,
-            tile: furnitureTileKey(kind),
+            tile: spec.dcssTile
+              ? (typeof environmentAsset === "function" ? environmentAsset(spec.dcssTile) : spec.dcssTile)
+              : furnitureTileKey(kind),
             x: cell.x,
             y: cell.y,
             interact: spec.interact,

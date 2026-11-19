@@ -524,7 +524,33 @@
           || bounds.y >= viewportProjection.height + 2;
       }
 
-      function drawHorizontalTrapezoidStrips(context, img, points, maxStrips) {
+      const horizontalTileCache = new WeakMap();
+
+      function horizontalTiledSource(img, reps) {
+        if (reps <= 1 || typeof document === "undefined" || typeof document.createElement !== "function") return img;
+        let byReps = horizontalTileCache.get(img);
+        if (!byReps) {
+          byReps = new Map();
+          horizontalTileCache.set(img, byReps);
+        }
+        const cached = byReps.get(reps);
+        if (cached) return cached;
+        const w = img.width || img.naturalWidth || 32;
+        const h = img.height || img.naturalHeight || 32;
+        const canvas = document.createElement("canvas");
+        canvas.width = w * reps;
+        canvas.height = h;
+        const ctx = canvas.getContext ? canvas.getContext("2d") : null;
+        if (!ctx) return img;
+        ctx.imageSmoothingEnabled = false;
+        for (let i = 0; i < reps; i += 1) {
+          ctx.drawImage(img, i * w, 0, w, h);
+        }
+        byReps.set(reps, canvas);
+        return canvas;
+      }
+
+      function drawHorizontalTrapezoidStrips(context, img, points, maxStrips, tileSize = 0) {
         let y0 = points[0].y;
         let xT0 = Math.min(points[0].x, points[1].x);
         let xT1 = Math.max(points[0].x, points[1].x);
@@ -544,9 +570,17 @@
         const visibleH = drawMaxY - drawMinY;
         if (visibleH < 0.5) return;
 
-        const imgW = img.width || img.naturalWidth || 32;
-        const imgH = img.height || img.naturalHeight || 32;
-        const strips = Math.min(maxStrips, Math.max(2, Math.ceil(visibleH / 8)));
+        let source = img;
+        if (tileSize > 0) {
+          const avgW = ((xT1 - xT0) + (xB1 - xB0)) * 0.5;
+          const reps = Math.max(1, Math.min(5, Math.round(avgW / Math.max(48, tileSize))));
+          source = horizontalTiledSource(img, reps);
+        }
+
+        const imgW = source.width || source.naturalWidth || 32;
+        const imgH = source.height || source.naturalHeight || 32;
+        const targetStripPx = tileSize > 0 ? 3 : 6;
+        const strips = Math.min(maxStrips, Math.max(2, Math.ceil(visibleH / targetStripPx)));
         const step = visibleH / strips;
         const dxL = xB0 - xT0;
         const dxR = xB1 - xT1;
@@ -566,7 +600,7 @@
           if (w < 0.5) continue;
           const v0 = t0 * imgH;
           const vH = Math.max(0.5, Math.min(imgH - v0, (t1 - t0) * imgH));
-          context.drawImage(img, 0, v0, imgW, vH, leftX, sy0, w, (sy1 - sy0) + 0.75);
+          context.drawImage(source, 0, v0, imgW, vH, leftX, sy0, w, (sy1 - sy0) + 0.75);
         }
       }
 
@@ -632,8 +666,8 @@
         context.clip();
 
         if (isHorizontalTrapezoid(points)) {
-          const maxStrips = depth <= 1 ? 12 : depth <= 2 ? 9 : depth <= 4 ? 6 : 3;
-          drawHorizontalTrapezoidStrips(context, entry.image, points, maxStrips);
+          const maxStrips = depth <= 1 ? 24 : depth <= 2 ? 16 : depth <= 4 ? 10 : 5;
+          drawHorizontalTrapezoidStrips(context, entry.image, points, maxStrips, geometryAt(depth).tile);
         } else {
           context.drawImage(entry.image, bounds.x, bounds.y, Math.max(1, bounds.width), Math.max(1, bounds.height));
         }
@@ -1254,7 +1288,7 @@
         if (typeof cellThemeAt !== "function") return;
         if (terrainAt(cell.x, cell.y) !== "floor") return;
         const zone = cellThemeAt(cell.x, cell.y);
-        if (!zone) return;
+        if (!zone || zone.outdoor) return;
         const floorSurf = floorSegmentPoints(depth, offset);
         const alphaScale = Math.max(0.25, Math.min(1, data.light));
 
@@ -1347,7 +1381,7 @@
       function drawRoomCeilingTheme(context, width, height, depth, offset, cell, ceilingQuad, data) {
         if (typeof cellThemeAt !== "function") return;
         const zone = cellThemeAt(cell.x, cell.y);
-        if (!zone) return;
+        if (!zone || zone.outdoor) return;
         const ceilSurf = ceilingSegmentPoints(depth, offset);
         context.save();
         if (zone.kind === "corridor") {
@@ -1382,7 +1416,7 @@
       function drawRoomWallTrim(context, width, height, depth, offset, cell, surfacePoints, data, side = false) {
         if (depth > 6 || typeof wallThemeAt !== "function") return;
         const wz = wallThemeAt(cell.x, cell.y);
-        if (!wz) return;
+        if (!wz || wz.outdoor) return;
 
         if (wz.kind === "corridor") {
           if (wz.torch && depth <= 4 && Math.abs(offset) <= 2) {
@@ -1526,6 +1560,11 @@
       function drawTerrainOverlay(context, width, height, depth, offset, cell) {
         const terrain = terrainAt(cell.x, cell.y);
         if (terrain === "floor") return;
+        const assets = currentAssets();
+        const hasWaterTile = (terrain === "water" && Boolean(assets.water)) || (terrain === "deep-water" && Boolean(assets.deepWater || assets.water));
+        // When a branch already supplies real DCSS water tiles (Shoals, Swamp, Lair),
+        // avoid washing them out with a heavy flat blue screen overlay.
+        if (hasWaterTile) return;
         const data = geometryAt(depth);
         const quad = pctQuad(floorSegmentPoints(depth, offset), width, height);
         const flicker = (cellHash(cell.x, cell.y, 131) % 7) / 100;

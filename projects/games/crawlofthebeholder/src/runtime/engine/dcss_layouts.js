@@ -209,7 +209,7 @@
       for (let y = 1; y < cfg.height - 1; y += 1) for (let x = 1; x < cfg.width - 1; x += 1) {
         const height = smooth[y][x];
         grid[y][x] = swamp ? (height > 6 ? "w" : height > -8 ? "." : height > -10 ? "w" : "x")
-          : (height >= 135 ? "x" : height >= 0 ? "." : height >= -30 ? "w" : "W");
+          : (height >= 88 ? "x" : height >= 0 ? "." : height >= -30 ? "w" : "W");
       }
       // First-person adaptation: dry causeways connect islands, not mandatory swimming.
       connectDryLand(grid);

@@ -4,7 +4,7 @@
 // served stale until CACHE_VERSION was bumped by hand, which looked like fixes
 // "breaking again". Network-first means a reload always picks up new code.)
 
-const CACHE_VERSION = "cotb-v50-floor1-branch-entrances";
+const CACHE_VERSION = "cotb-v51-shoals-original-tiles-fix";
 const APP_SHELL = [
   "./",
   "./index.html",
