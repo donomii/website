@@ -162,6 +162,35 @@
         return vrDollAnimPos(anim, nowMs);
       }
 
+      // Billboard orientation axes for an upright sprite/icon at model-space (cx, cy, cz).
+      // In "billboard" mode, rotates in yaw AND tilts off vertical toward the head
+      // when viewed from above so icons stay readable and never vanish edge-on
+      // when looking straight down from overhead.
+      function vrBillboardAxes(cx, cy, cz, headModel, mode = "billboard", fixedFacing = 0) {
+        const yaw = mode === "billboard" && headModel
+          ? Math.atan2(headModel.x - cx, headModel.z - cz)
+          : (fixedFacing || 0);
+        const rx = Math.cos(yaw);
+        const rz = -Math.sin(yaw);
+        let ux = 0, uy = 1, uz = 0;
+        if (mode === "billboard" && headModel) {
+          const dx = headModel.x - cx;
+          const dz = headModel.z - cz;
+          const horiz = Math.hypot(dx, dz);
+          const dy = Math.max(0, headModel.y - cy);
+          const elevation = Math.atan2(dy, Math.max(1e-4, horiz));
+          const tilt = Math.min(elevation * 0.9, Math.PI * 0.46);
+          const sinT = Math.sin(tilt);
+          const cosT = Math.cos(tilt);
+          const fwdX = Math.sin(yaw);
+          const fwdZ = Math.cos(yaw);
+          ux = -fwdX * sinT;
+          uy = cosT;
+          uz = -fwdZ * sinT;
+        }
+        return { yaw, rx, rz, ux, uy, uz };
+      }
+
       // Floating combat numbers: digit glyphs riding up off the doll.
       function vrEmitFloaters(model, headModel, nowMs, translucent) {
         if (!nowMs) { vrFloaters = []; return; }
@@ -173,11 +202,9 @@
           const alpha = Math.max(0, 1 - progress * progress);
           const mx = floater.x + 0.5 - halfW;
           const mz = floater.y + 0.5 - halfH;
-          const yaw = headModel ? Math.atan2(headModel.x - mx, headModel.z - mz) : 0;
-          const rx = Math.cos(yaw);
-          const rz = -Math.sin(yaw);
           const size = 0.34;
           const y0 = floater.lift + 0.18 + progress * 0.55;
+          const { rx, rz, ux, uy, uz } = vrBillboardAxes(mx, y0 + size * 0.5, mz, headModel, "billboard");
           const chars = [...floater.text];
           const total = chars.length * size * 0.62;
           chars.forEach((ch, i) => {
@@ -185,8 +212,8 @@
             const cx = mx + rx * off;
             const cz = mz + rz * off;
             vrPushQuad(translucent, [
-              [cx - rx * size / 2, y0 + size, cz - rz * size / 2],
-              [cx + rx * size / 2, y0 + size, cz + rz * size / 2],
+              [cx - rx * size / 2 + ux * size, y0 + uy * size, cz - rz * size / 2 + uz * size],
+              [cx + rx * size / 2 + ux * size, y0 + uy * size, cz + rz * size / 2 + uz * size],
               [cx + rx * size / 2, y0, cz + rz * size / 2],
               [cx - rx * size / 2, y0, cz - rz * size / 2]
             ], vrGlyphUv(ch, floater.color), 1, 1, 1, alpha);
@@ -993,12 +1020,20 @@
         };
       }
 
+      function vrQueueDirtyCell(atlas, cell) {
+        const key = `${cell.x},${cell.y}`;
+        const existingIdx = atlas.dirtyCells.findIndex((entry) => `${entry.x},${entry.y}` === key);
+        if (existingIdx >= 0) atlas.dirtyCells[existingIdx] = cell;
+        else atlas.dirtyCells.push(cell);
+      }
+
       function vrFillNeutralNormal(rect) {
         if (!vrNormalAtlasInit()) return;
         const cell = vrAtlasCellRect(rect);
+        cell.flat = [128, 128, 255, 255];
         vrNormalAtlas.ctx.fillStyle = "#8080ff";
         vrNormalAtlas.ctx.fillRect(cell.x, cell.y, cell.w, cell.h);
-        vrNormalAtlas.dirtyCells.push(cell);
+        vrQueueDirtyCell(vrNormalAtlas, cell);
       }
 
       function vrAtlasShape(key, draw, size = 64) {
@@ -1010,7 +1045,7 @@
         const cell = vrAtlasCellRect(rect);
         vrAtlas.ctx.clearRect(cell.x, cell.y, cell.w, cell.h);
         draw(vrAtlas.ctx, rect, cell);
-        vrAtlas.dirtyCells.push(cell);
+        vrQueueDirtyCell(vrAtlas, cell);
         vrFillNeutralNormal(rect);
         const uv = vrAtlasUvFromRect(rect);
         vrAtlas.slots.set(key, uv);
@@ -1122,9 +1157,10 @@
         const tileSlot = normalSrc ? VR_LINOCUT_TILE_SLOT : VR_TILE_SLOT;
         const rect = vrAtlasAllocate(tileSlot, tileSlot);
         const cell = vrAtlasCellRect(rect);
+        cell.flat = [239, 234, 226, 255];
         vrAtlas.ctx.fillStyle = "#efeae2";
         vrAtlas.ctx.fillRect(cell.x, cell.y, cell.w, cell.h);
-        vrAtlas.dirtyCells.push(cell);
+        vrQueueDirtyCell(vrAtlas, cell);
         vrFillNeutralNormal(rect);
         const fresh = { uv: vrAtlasUvFromRect(rect), rect, stamped: false, normalSrc, normalReady: false };
         vrAtlas.tiles.set(src, fresh);
@@ -1137,11 +1173,25 @@
         return vrAtlas.tiles.get(src)?.normalReady === true;
       }
 
-      // Fill white slots as their images arrive: decoded off-thread first
-      // (image.decode()), at most VR_STAMP_BUDGET per frame, stamped straight
-      // into the slot the geometry already points at. Only an odd-sized image
-      // (slot too small) forces a relocation and a structure re-emit.
-      const VR_STAMP_BUDGET = 3;
+      // Fill placeholder slots as images arrive: decoded off-thread first
+      // (image.decode()), at most VR_STAMP_BUDGET per frame and strictly bounded
+      // by wall-clock frame time so demand loading never drops XR framerate.
+      const VR_STAMP_BUDGET = 1;
+      const VR_ATLAS_FLUSH_BUDGET_MS = 1.8;
+      const vrStampScratch = { canvas: null, ctx: null };
+      let vrLastNormalRebuildMs = 0;
+
+      function vrStampScratchInit(w, h) {
+        if (!vrStampScratch.canvas) {
+          vrStampScratch.canvas = document.createElement("canvas");
+          vrStampScratch.ctx = vrStampScratch.canvas.getContext ? vrStampScratch.canvas.getContext("2d", { willReadFrequently: true }) : null;
+        }
+        if (vrStampScratch.canvas.width < w || vrStampScratch.canvas.height < h) {
+          vrStampScratch.canvas.width = Math.max(vrStampScratch.canvas.width, w);
+          vrStampScratch.canvas.height = Math.max(vrStampScratch.canvas.height, h);
+        }
+        return vrStampScratch.ctx;
+      }
 
       function vrNow() {
         return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
@@ -1210,15 +1260,20 @@
           vrStampWithGutter(entry.image, slot.rect, vrNormalAtlas);
           slot.normalReady = true;
           vrNormalAtlas.pending.delete(src);
-          vrLastArchSignature = null;
+          const now = vrNow();
+          if (vrNormalAtlas.pending.size === 0 || now - vrLastNormalRebuildMs >= 450) {
+            vrLastNormalRebuildMs = now;
+            vrLastArchSignature = null;
+          }
           stamped += 1;
         }
       }
 
       // Stamp the image and replicate its outermost pixels across the whole
       // cell's gutter, so every mip level keeps sampling this tile's colours.
+      // Draws onto a tiny scratch canvas to extract pixels directly without
+      // stalling on a 2048×4096 GPU canvas readback.
       function vrStampWithGutter(image, rect, atlas) {
-        const ctx = atlas.ctx;
         const cell = vrAtlasCellRect(rect);
         const { x, y, w, h } = rect;
         const sourceWidth = image.naturalWidth || image.width || w;
@@ -1227,17 +1282,26 @@
         const top = y - cell.y;
         const right = cell.x + cell.w - (x + w);
         const bottom = cell.y + cell.h - (y + h);
-        ctx.clearRect(cell.x, cell.y, cell.w, cell.h);
-        ctx.drawImage(image, 0, 0, sourceWidth, sourceHeight, x, y, w, h);
-        ctx.drawImage(image, 0, 0, sourceWidth, 1, x, cell.y, w, top);
-        ctx.drawImage(image, 0, sourceHeight - 1, sourceWidth, 1, x, y + h, w, bottom);
-        ctx.drawImage(image, 0, 0, 1, sourceHeight, cell.x, y, left, h);
-        ctx.drawImage(image, sourceWidth - 1, 0, 1, sourceHeight, x + w, y, right, h);
-        ctx.drawImage(image, 0, 0, 1, 1, cell.x, cell.y, left, top);            // corners
-        ctx.drawImage(image, sourceWidth - 1, 0, 1, 1, x + w, cell.y, right, top);
-        ctx.drawImage(image, 0, sourceHeight - 1, 1, 1, cell.x, y + h, left, bottom);
-        ctx.drawImage(image, sourceWidth - 1, sourceHeight - 1, 1, 1, x + w, y + h, right, bottom);
-        atlas.dirtyCells.push(cell);
+        const drawInto = (ctx, ox, oy) => {
+          ctx.clearRect(ox, oy, cell.w, cell.h);
+          ctx.drawImage(image, 0, 0, sourceWidth, sourceHeight, ox + left, oy + top, w, h);
+          ctx.drawImage(image, 0, 0, sourceWidth, 1, ox + left, oy, w, top);
+          ctx.drawImage(image, 0, sourceHeight - 1, sourceWidth, 1, ox + left, oy + top + h, w, bottom);
+          ctx.drawImage(image, 0, 0, 1, sourceHeight, ox, oy + top, left, h);
+          ctx.drawImage(image, sourceWidth - 1, 0, 1, sourceHeight, ox + left + w, oy + top, right, h);
+          ctx.drawImage(image, 0, 0, 1, 1, ox, oy, left, top);
+          ctx.drawImage(image, sourceWidth - 1, 0, 1, 1, ox + left + w, oy, right, top);
+          ctx.drawImage(image, 0, sourceHeight - 1, 1, 1, ox, oy + top + h, left, bottom);
+          ctx.drawImage(image, sourceWidth - 1, sourceHeight - 1, 1, 1, ox + left + w, oy + top + h, right, bottom);
+        };
+        const scratchCtx = vrStampScratchInit(cell.w, cell.h);
+        if (scratchCtx && typeof scratchCtx.getImageData === "function") {
+          drawInto(scratchCtx, 0, 0);
+          cell.pixels = scratchCtx.getImageData(0, 0, cell.w, cell.h).data;
+        } else if (atlas.ctx) {
+          drawInto(atlas.ctx, cell.x, cell.y);
+        }
+        vrQueueDirtyCell(atlas, cell);
       }
 
       // ---------------------------------------------------------------------
@@ -1328,27 +1392,24 @@
           const feel = vrDollFeel(doll, nowMs);
           doll.mx = feel.x + 0.5 - halfW;
           doll.mz = feel.z + 0.5 - halfH;
-          const yaw = vrDollYaw(doll, headModel, mode);
-          const rx = Math.cos(yaw);
-          const rz = -Math.sin(yaw);
           const base = doll.airborne ? 0.2 : 0;
           // Plant the artwork (not the padded tile) on the floor, same trick
           // as the 2D renderer's actorTileBounds.
           const content = doll.texture && typeof tileContentBox === "function" ? tileContentBox(doll.texture) : { bottom: 1 };
           const sink = (1 - content.bottom) * doll.h;
           const y0 = base - sink;
-          const y1 = y0 + doll.h;
           const cx = doll.mx;
           const cz = doll.mz;
           const hw = doll.w / 2;
+          const { rx, rz, ux, uy, uz } = vrBillboardAxes(cx, y0 + doll.h * 0.5, cz, headModel, mode, doll.facing || 0);
           const uv = doll.glyph ? vrGlyphUv(doll.glyph, doll.color || "#f1d07a") : vrTileUv(doll.texture, doll.normal);
           const hasNormal = !doll.glyph && !!doll.normal && vrTileHasNormal(doll.texture);
           const tint = doll.tint || { r: 1, g: 1, b: 1 };
           let alpha = doll.alpha ?? 1;
           if (doll.kind === "party" && vrPieceGhosts.length > 0) alpha = 0.35;
           vrPushQuad(alpha < 1 ? translucent : solid, [
-            [cx - rx * hw, y1, cz - rz * hw],
-            [cx + rx * hw, y1, cz + rz * hw],
+            [cx - rx * hw + ux * doll.h, y0 + uy * doll.h, cz - rz * hw + uz * doll.h],
+            [cx + rx * hw + ux * doll.h, y0 + uy * doll.h, cz + rz * hw + uz * doll.h],
             [cx + rx * hw, y0, cz + rz * hw],
             [cx - rx * hw, y0, cz - rz * hw]
           ], uv, tint.r, tint.g, tint.b, alpha, hasNormal);
@@ -1363,10 +1424,10 @@
           for (const status of doll.statuses || []) {
             const suv = vrTileUv(status.texture);
             const quad = (x0f, y0f, x1f, y1f, list, r, g, b, a) => vrPushQuad(list, [
-              [cx - rx * hw + rx * doll.w * x0f, y0 + doll.h * y1f, cz - rz * hw + rz * doll.w * x0f],
-              [cx - rx * hw + rx * doll.w * x1f, y0 + doll.h * y1f, cz - rz * hw + rz * doll.w * x1f],
-              [cx - rx * hw + rx * doll.w * x1f, y0 + doll.h * y0f, cz - rz * hw + rz * doll.w * x1f],
-              [cx - rx * hw + rx * doll.w * x0f, y0 + doll.h * y0f, cz - rz * hw + rz * doll.w * x0f]
+              [cx - rx * hw + rx * doll.w * x0f + ux * doll.h * y1f, y0 + uy * doll.h * y1f, cz - rz * hw + rz * doll.w * x0f + uz * doll.h * y1f],
+              [cx - rx * hw + rx * doll.w * x1f + ux * doll.h * y1f, y0 + uy * doll.h * y1f, cz - rz * hw + rz * doll.w * x1f + uz * doll.h * y1f],
+              [cx - rx * hw + rx * doll.w * x1f + ux * doll.h * y0f, y0 + uy * doll.h * y0f, cz - rz * hw + rz * doll.w * x1f + uz * doll.h * y0f],
+              [cx - rx * hw + rx * doll.w * x0f + ux * doll.h * y0f, y0 + uy * doll.h * y0f, cz - rz * hw + rz * doll.w * x0f + uz * doll.h * y0f]
             ], suv, r, g, b, a);
             if (status.classic) quad(-status.shift / 32, 0, 1 - status.shift / 32, 1, translucent, 1, 1, 1, status.alpha);
             else if (status.badge) quad(0.62, 0.85, 1.02, 1.25, translucent, 1, 1, 1, status.alpha);
@@ -1374,24 +1435,24 @@
             else quad(-0.04, -0.02, 1.04, 1.02, translucent, 1, 1, 1, status.alpha);
           }
           if (typeof doll.hpFrac === "number" && doll.hpFrac < 1) {
-            const barY = base + doll.h + 0.05;
+            const barLift = doll.h + 0.05;
             const barW = doll.w * 0.6;
-            const bar = (frac, y0b, y1b, r, g, b) => vrPushQuad(solid, [
-              [cx - rx * barW / 2, y1b, cz - rz * barW / 2],
-              [cx - rx * barW / 2 + rx * barW * frac, y1b, cz - rz * barW / 2 + rz * barW * frac],
-              [cx - rx * barW / 2 + rx * barW * frac, y0b, cz - rz * barW / 2 + rz * barW * frac],
-              [cx - rx * barW / 2, y0b, cz - rz * barW / 2]
+            const bar = (frac, h0, h1, r, g, b) => vrPushQuad(solid, [
+              [cx - rx * barW / 2 + ux * h1, y0 + uy * h1, cz - rz * barW / 2 + uz * h1],
+              [cx - rx * barW / 2 + rx * barW * frac + ux * h1, y0 + uy * h1, cz - rz * barW / 2 + rz * barW * frac + uz * h1],
+              [cx - rx * barW / 2 + rx * barW * frac + ux * h0, y0 + uy * h0, cz - rz * barW / 2 + rz * barW * frac + uz * h0],
+              [cx - rx * barW / 2 + ux * h0, y0 + uy * h0, cz - rz * barW / 2 + uz * h0]
             ], white, r, g, b, 1);
-            bar(1, barY, barY + 0.06, 0.06, 0.05, 0.04);
-            bar(Math.max(0.02, doll.hpFrac), barY + 0.012, barY + 0.048, 0.85, 0.32, 0.26);
+            bar(1, barLift, barLift + 0.06, 0.06, 0.05, 0.04);
+            bar(Math.max(0.02, doll.hpFrac), barLift + 0.012, barLift + 0.048, 0.85, 0.32, 0.26);
           }
           // Hit flash: a white-hot wash over the doll that fades in ~200ms.
           const flashStart = nowMs && doll.id ? vrDollFlash.get(doll.id) : undefined;
           if (flashStart !== undefined && nowMs - flashStart < VR_FLASH_MS) {
             const fade = 1 - (nowMs - flashStart) / VR_FLASH_MS;
             vrPushQuad(translucent, [
-              [cx - rx * hw, y1, cz - rz * hw],
-              [cx + rx * hw, y1, cz + rz * hw],
+              [cx - rx * hw + ux * doll.h, y0 + uy * doll.h, cz - rz * hw + uz * doll.h],
+              [cx + rx * hw + ux * doll.h, y0 + uy * doll.h, cz + rz * hw + uz * doll.h],
               [cx + rx * hw, y0, cz + rz * hw],
               [cx - rx * hw, y0, cz - rz * hw]
             ], white, 1, 0.62, 0.5, 0.65 * fade);
@@ -1417,63 +1478,11 @@
         return { solid, translucent };
       }
 
-      // Party statuses cover the VIEW itself, head-locked like a visor: a net
-      // across everything while snared, fire licking up from the bottom while
-      // burning, colour washes for poison and engulfment. Driven by the same
-      // partyStatusOverlays list as the 2D viewport.
-      function vrEmitPartyOverlay(headTransform, nowMs = 0) {
-        const overlays = typeof partyStatusOverlays === "function" ? partyStatusOverlays() : [];
-        // Transient hit pulse: a red edge that flares when the party takes
-        // damage and fades within a quarter second.
-        if (nowMs && vrPartyHitAt && nowMs - vrPartyHitAt < 260) {
-          overlays.push({ kind: "hit", color: [214, 60, 40], alpha: 0.3 * (1 - (nowMs - vrPartyHitAt) / 260) });
-        }
-        if (overlays.length === 0) return [];
-        const o = headTransform.orientation;
-        const q = o ? [o.x, o.y, o.z, o.w] : [0, 0, 0, 1];
-        const p = headTransform.position;
-        const fwd = vrQRotate(q, [0, 0, -1]);
-        const right = vrQRotate(q, [1, 0, 0]);
-        const up = vrQRotate(q, [0, 1, 0]);
-        const D = 0.5;
-        const W = 1.35;
-        const H = 1.0;
-        const c = [p.x + fwd[0] * D, p.y + fwd[1] * D, p.z + fwd[2] * D];
-        const at = (u, v) => [
-          c[0] + right[0] * u * W + up[0] * v * H,
-          c[1] + right[1] * u * W + up[1] * v * H,
-          c[2] + right[2] * u * W + up[2] * v * H
-        ];
-        const verts = [];
-        const white = vrWhiteUv();
-        const quad = (u0, v0, u1, v1, uv, r, g, b, a) => vrPushQuad(verts, [at(u0, v1), at(u1, v1), at(u1, v0), at(u0, v0)], uv, r, g, b, a);
-        for (const overlay of overlays) {
-          if (overlay.classic) {
-            const index = overlays.indexOf(overlay);
-            quad(-0.46 + index * 0.08, -0.44, -0.38 + index * 0.08, -0.34, vrTileUv(overlay.texture), 1, 1, 1, overlay.alpha);
-          } else if (overlay.kind === "net") {
-            // A mesh of net tiles, not one blurry stretch.
-            const uv = vrTileUv(overlay.texture);
-            const cols = 6;
-            const rows = 4;
-            for (let i = 0; i < cols; i += 1) {
-              for (let j = 0; j < rows; j += 1) {
-                quad(-0.5 + i / cols, -0.5 + j / rows, -0.5 + (i + 1) / cols, -0.5 + (j + 1) / rows, uv, 1, 1, 1, overlay.alpha);
-              }
-            }
-          } else {
-            const [r, g, b] = overlay.color;
-            quad(-0.5, -0.5, 0.5, 0.5, white, r / 255, g / 255, b / 255, overlay.alpha);
-            if (overlay.texture) {
-              const uv = vrTileUv(overlay.texture);
-              const cols = 5;
-              for (let i = 0; i < cols; i += 1) {
-                quad(-0.5 + i / cols, -0.5, -0.5 + (i + 1) / cols, -0.28, uv, 1, 1, 1, Math.min(1, overlay.alpha * 1.8));
-              }
-            }
-          }
-        }
-        return verts;
+      // Never plaster head-locked net, poison, fire, or wash overlays across the
+      // player's face in VR; party statuses render cleanly on the tabletop
+      // miniature and status HUD instead.
+      function vrEmitPartyOverlay() {
+        return [];
       }
 
       // ---------------------------------------------------------------------
@@ -1824,17 +1833,46 @@
         return { data: out, w: nw, h: nh };
       }
 
-      // Upload a cell's full mip chain. Cells are 64-aligned, so x>>level and
-      // y>>level stay exact through the level where the cell collapses; the
-      // last few 1–2px levels of overlapping cells just hold average colours.
+      const vrFlatMipCache = new Map();
+
+      function vrFlatRgbaBytes(w, h, rgba) {
+        const key = `${w}x${h}:${rgba.join(",")}`;
+        let buf = vrFlatMipCache.get(key);
+        if (!buf) {
+          buf = new Uint8Array(w * h * 4);
+          for (let i = 0; i < buf.length; i += 4) {
+            buf[i] = rgba[0];
+            buf[i + 1] = rgba[1];
+            buf[i + 2] = rgba[2];
+            buf[i + 3] = rgba[3];
+          }
+          vrFlatMipCache.set(key, buf);
+        }
+        return buf;
+      }
+
+      // Upload a cell's full mip chain. Flat placeholders upload directly from a
+      // cached solid buffer without getImageData or CPU downsampling; stamped
+      // tiles use their pre-extracted scratch pixels to avoid 2048×4096 readbacks.
       function vrUploadCellMips(glState, atlas, texture, cell, halve) {
         const gl = vrGl;
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        let image = atlas.ctx.getImageData(cell.x, cell.y, cell.w, cell.h);
         let level = 0;
         let x = cell.x, y = cell.y, w = cell.w, h = cell.h;
-        let data = image.data;
+        if (cell.flat) {
+          gl.texSubImage2D(gl.TEXTURE_2D, 0, x, y, w, h, gl.RGBA, gl.UNSIGNED_BYTE, vrFlatRgbaBytes(w, h, cell.flat));
+          while ((w > 1 || h > 1) && level < glState.atlasLevels - 1) {
+            w = Math.max(1, w >> 1);
+            h = Math.max(1, h >> 1);
+            level += 1;
+            x = x >> 1;
+            y = y >> 1;
+            gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, w, h, gl.RGBA, gl.UNSIGNED_BYTE, vrFlatRgbaBytes(w, h, cell.flat));
+          }
+          return;
+        }
+        let data = cell.pixels || atlas.ctx.getImageData(cell.x, cell.y, cell.w, cell.h).data;
         gl.texSubImage2D(gl.TEXTURE_2D, 0, x, y, w, h, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(data.buffer, data.byteOffset, data.byteLength));
         while ((w > 1 || h > 1) && level < glState.atlasLevels - 1) {
           const halved = halve(data, w, h);
@@ -1862,16 +1900,31 @@
           vrClearAtlasTexture(glState, glState.normalAtlasTexture);
           vrAtlasesNeedClear = false;
         }
-        if (vrAtlas.ctx) {
-          for (const cell of vrAtlas.dirtyCells.splice(0)) vrUploadCellMips(glState, vrAtlas, glState.atlasTexture, cell, vrHalveLinear);
-        } else {
-          vrAtlas.dirtyCells.length = 0;
-        }
-        if (vrNormalAtlas.ctx) {
-          for (const cell of vrNormalAtlas.dirtyCells.splice(0)) vrUploadCellMips(glState, vrNormalAtlas, glState.normalAtlasTexture, cell, vrHalveNormal);
-        } else {
-          vrNormalAtlas.dirtyCells.length = 0;
-        }
+        const t0 = vrNow();
+        let heavyFlushed = 0;
+        let flatFlushed = 0;
+        const drain = (atlas, texture, halve) => {
+          if (!atlas.ctx) {
+            atlas.dirtyCells.length = 0;
+            return;
+          }
+          while (atlas.dirtyCells.length > 0) {
+            const next = atlas.dirtyCells[0];
+            if (next.flat) {
+              if (flatFlushed >= 6 && vrNow() - t0 >= VR_ATLAS_FLUSH_BUDGET_MS) break;
+              atlas.dirtyCells.shift();
+              vrUploadCellMips(glState, atlas, texture, next, halve);
+              flatFlushed += 1;
+            } else {
+              if (heavyFlushed >= 2 || (heavyFlushed >= 1 && vrNow() - t0 >= VR_ATLAS_FLUSH_BUDGET_MS)) break;
+              atlas.dirtyCells.shift();
+              vrUploadCellMips(glState, atlas, texture, next, halve);
+              heavyFlushed += 1;
+            }
+          }
+        };
+        drain(vrAtlas, glState.atlasTexture, vrHalveLinear);
+        drain(vrNormalAtlas, glState.normalAtlasTexture, vrHalveNormal);
       }
 
       function vrModelMatrix() {
@@ -2118,9 +2171,6 @@
         for (const prop of props) {
           const cx = prop.mx;
           const cz = prop.mz;
-          const yaw = headModel ? Math.atan2(headModel.x - cx, headModel.z - cz) : 0;
-          const rx = Math.cos(yaw);
-          const rz = -Math.sin(yaw);
           if (prop.kind === "modeTotem") {
             const plinthH = prop.active ? 0.18 : 0.1;
             const hw = 0.45;
@@ -2132,10 +2182,11 @@
             const y0 = plinthH + 0.04 + (prop.active ? bob : 0);
             const h = prop.active ? 0.88 : 0.72;
             const w = prop.active ? 0.88 : 0.72;
+            const { rx, rz, ux, uy, uz } = vrBillboardAxes(cx, y0 + h * 0.5, cz, headModel, "billboard");
             const uv = vrGlyphUv(prop.glyph, prop.color);
             vrPushQuad(translucent, [
-              [cx - rx * w / 2, y0 + h, cz - rz * w / 2],
-              [cx + rx * w / 2, y0 + h, cz + rz * w / 2],
+              [cx - rx * w / 2 + ux * h, y0 + uy * h, cz - rz * w / 2 + uz * h],
+              [cx + rx * w / 2 + ux * h, y0 + uy * h, cz + rz * w / 2 + uz * h],
               [cx + rx * w / 2, y0, cz + rz * w / 2],
               [cx - rx * w / 2, y0, cz - rz * w / 2]
             ], uv, 1, 1, 1, prop.active ? 1 : 0.82);
@@ -2143,10 +2194,11 @@
             const y0 = 0.08 + bob * 0.5;
             const w = 0.92;
             const h = 1.05;
+            const { yaw, rx, rz, ux, uy, uz } = vrBillboardAxes(cx, y0 + h * 0.5, cz, headModel, "billboard");
             // Backing card plate
             vrPushQuad(solid, [
-              [cx - rx * w / 2, y0 + h, cz - rz * w / 2],
-              [cx + rx * w / 2, y0 + h, cz + rz * w / 2],
+              [cx - rx * w / 2 + ux * h, y0 + uy * h, cz - rz * w / 2 + uz * h],
+              [cx + rx * w / 2 + ux * h, y0 + uy * h, cz + rz * w / 2 + uz * h],
               [cx + rx * w / 2, y0, cz + rz * w / 2],
               [cx - rx * w / 2, y0, cz - rz * w / 2]
             ], white, 0.14, 0.11, 0.08, 1);
@@ -2154,13 +2206,15 @@
             const uv = prop.tile ? vrTileUv(prop.tile) : vrGlyphUv(prop.glyph, prop.color);
             const iw = w * 0.74;
             const ih = h * 0.68;
+            const ny0 = h * 0.18;
+            const ny1 = ny0 + ih;
             const nx = Math.sin(yaw) * 0.025;
             const nz = Math.cos(yaw) * 0.025;
             vrPushQuad(translucent, [
-              [cx + nx - rx * iw / 2, y0 + h * 0.86, cz + nz - rz * iw / 2],
-              [cx + nx + rx * iw / 2, y0 + h * 0.86, cz + nz + rz * iw / 2],
-              [cx + nx + rx * iw / 2, y0 + h * 0.86 - ih, cz + nz + rz * iw / 2],
-              [cx + nx - rx * iw / 2, y0 + h * 0.86 - ih, cz + nz - rz * iw / 2]
+              [cx + nx - rx * iw / 2 + ux * ny1, y0 + uy * ny1, cz + nz - rz * iw / 2 + uz * ny1],
+              [cx + nx + rx * iw / 2 + ux * ny1, y0 + uy * ny1, cz + nz + rz * iw / 2 + uz * ny1],
+              [cx + nx + rx * iw / 2 + ux * ny0, y0 + uy * ny0, cz + nz + rz * iw / 2 + uz * ny0],
+              [cx + nx - rx * iw / 2 + ux * ny0, y0 + uy * ny0, cz + nz - rz * iw / 2 + uz * ny0]
             ], uv, 1, 1, 1, 0.98);
           }
         }
@@ -4109,6 +4163,7 @@
         vrRayTablePropHit,
         vrRunFloorOperation,
         vrEmitPartyOverlay,
+        vrBillboardAxes,
         vrLoadPaneLayout,
         vrSavePaneLayout,
         vrPark2dRendering,
