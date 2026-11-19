@@ -1648,6 +1648,7 @@
       }
 
       function drawFurniture(context, width, height, depth, offset, cell) {
+        if ((depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y)) return;
         if (typeof furnitureAt !== "function") return;
         const piece = furnitureAt(cell.x, cell.y);
         if (!piece) return;
@@ -1706,13 +1707,16 @@
           noRepeat: shoals,
           waveShift
         });
+        const isCurrentCell = (depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y);
         drawWaterShoreline(context, width, height, depth, offset, cell, data);
         drawRoomFloorTheme(context, width, height, depth, offset, cell, floorQuad, data);
         drawTerrainOverlay(context, width, height, depth, offset, cell);
-        drawFloorVeil(context, width, height, depth, offset, cell);
-        drawFloorAccent(context, width, height, depth, offset, cell);
-        drawFloorMarks(context, width, height, depth, offset, cell);
-        drawPartyAura(context, width, height, depth, offset, cell);
+        if (!isCurrentCell) {
+          drawFloorVeil(context, width, height, depth, offset, cell);
+          drawFloorAccent(context, width, height, depth, offset, cell);
+          drawFloorMarks(context, width, height, depth, offset, cell);
+          drawPartyAura(context, width, height, depth, offset, cell);
+        }
         if (!shoals) {
           strokeQuad(context, floorQuad, `rgba(240, 205, 132, ${Math.max(0.05, data.light * 0.11)})`);
           strokeQuad(context, ceilingQuad, `rgba(105, 91, 71, ${Math.max(0.04, data.light * 0.08)})`);
@@ -2038,6 +2042,7 @@
       }
 
       function drawFloorFeature(context, width, height, depth, offset, cell) {
+        if ((depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y)) return;
         const data = geometryAt(depth);
         const assets = currentAssets();
         const openDoor = doorCellAt(cell.x, cell.y) && !closedDoorAt(cell.x, cell.y);
@@ -2134,6 +2139,7 @@
       }
 
       function drawDecor(context, width, height, depth, offset, cell) {
+        if ((depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y)) return;
         const decor = decorAt(cell.x, cell.y);
         if (!decor) return;
         const data = geometryAt(nearEdgeDepth(depth));
@@ -2640,6 +2646,7 @@
       }
 
       function drawCellContents(context, width, height, depth, offset, cell) {
+        if ((depth <= 1 && offset === 0) || (cell && cell.x === state.x && cell.y === state.y)) return;
         drawDecor(context, width, height, depth, offset, cell);
         drawFurniture(context, width, height, depth, offset, cell);
         drawFloorFeature(context, width, height, depth, offset, cell);
