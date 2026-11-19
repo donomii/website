@@ -4,7 +4,7 @@
 // served stale until CACHE_VERSION was bumped by hand, which looked like fixes
 // "breaking again". Network-first means a reload always picks up new code.)
 
-const CACHE_VERSION = "cotb-v48-sparse-wall-decals";
+const CACHE_VERSION = "cotb-v49-theme-rooms-and-furniture";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -68,6 +68,7 @@ const APP_SHELL = [
   "./src/runtime/systems/ecology.js",
   "./src/runtime/systems/mastery.js",
   "./src/runtime/systems/exploration.js",
+  "./src/runtime/systems/theme_rooms.js",
   "./src/runtime/systems/alchemy.js",
   "./src/runtime/systems/weather.js",
   "./src/runtime/systems/arcane.js",

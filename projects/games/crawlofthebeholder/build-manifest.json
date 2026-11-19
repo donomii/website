@@ -99,6 +99,7 @@
     "src/runtime/systems/smithing.js",
     "src/runtime/systems/spirits.js",
     "src/runtime/systems/talents.js",
+    "src/runtime/systems/theme_rooms.js",
     "src/runtime/systems/timewarp.js",
     "src/runtime/systems/totems.js",
     "src/runtime/systems/wanderers.js",

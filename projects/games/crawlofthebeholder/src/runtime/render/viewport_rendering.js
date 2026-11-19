@@ -17,6 +17,9 @@
       }
 
       function imageEntry(src, allowClassicFallback = true) {
+        if (typeof src === "string" && src.startsWith("furniture://") && typeof ensureFurnitureSprite === "function") {
+          return ensureFurnitureSprite(src.slice(12));
+        }
         const cacheKey = allowClassicFallback ? src : `${src}\u0000linocut-only`;
         const directEntry = imageCache.get(src);
         const existing = imageCache.get(cacheKey) || (!allowClassicFallback && directEntry?.ready && (!directEntry.loadedSrc || directEntry.loadedSrc === src) ? directEntry : null);
@@ -1239,11 +1242,215 @@
         }
         drawVerticalMappedQuad(context, wallSurfaceTexture(entry.cell), points, depth, Math.max(0.2, data.light - 0.1), "#25211d");
         drawWallRelief(context, width, height, depth, entry.cell, surface, true);
+        drawRoomWallTrim(context, width, height, depth, offset, entry.cell, surface, data, true);
         drawWallPatch(context, width, height, depth, offset, entry.cell, surface);
         drawWallStain(context, width, height, depth, offset, entry.cell, surface);
         drawSideWallAccent(context, width, height, depth, offset, entry.cell, surface);
         drawWallGlow(context, width, height, depth, offset, entry.cell, surface);
         strokeQuad(context, points, `rgba(11, 10, 9, ${Math.max(0.2, 0.56 - data.light * 0.25)})`);
+      }
+
+      function drawRoomFloorTheme(context, width, height, depth, offset, cell, floorQuad, data) {
+        if (typeof cellThemeAt !== "function") return;
+        if (terrainAt(cell.x, cell.y) !== "floor") return;
+        const zone = cellThemeAt(cell.x, cell.y);
+        if (!zone) return;
+        const floorSurf = floorSegmentPoints(depth, offset);
+        const alphaScale = Math.max(0.25, Math.min(1, data.light));
+
+        if (zone.kind === "corridor") {
+          // Corridors get shadowed side strips and a worn pale center runner so
+          // narrow passages immediately feel distinct from furnished chambers.
+          context.save();
+          const leftStrip = pctQuad(quadDecalPoints(floorSurf, { left: 0, top: 0, right: 0.16, bottom: 1 }), width, height);
+          const rightStrip = pctQuad(quadDecalPoints(floorSurf, { left: 0.84, top: 0, right: 1, bottom: 1 }), width, height);
+          context.fillStyle = `rgba(0, 0, 0, ${0.32 * alphaScale})`;
+          drawQuadPath(context, leftStrip);
+          context.fill();
+          drawQuadPath(context, rightStrip);
+          context.fill();
+          const runner = pctQuad(quadDecalPoints(floorSurf, { left: 0.24, top: 0.04, right: 0.76, bottom: 0.96 }), width, height);
+          context.fillStyle = `rgba(168, 152, 124, ${0.09 * alphaScale})`;
+          drawQuadPath(context, runner);
+          context.fill();
+          context.restore();
+          return;
+        }
+
+        const theme = zone.theme;
+        if (!theme) return;
+        context.save();
+        if (theme.floorTint) {
+          drawQuadPath(context, floorQuad);
+          context.fillStyle = theme.floorTint;
+          context.fill();
+        }
+        if (theme.floorPattern === "rug") {
+          const rugQuad = pctQuad(quadDecalPoints(floorSurf, { left: 0.14, top: 0.12, right: 0.86, bottom: 0.88 }), width, height);
+          drawQuadPath(context, rugQuad);
+          context.fillStyle = theme.rugColor;
+          context.fill();
+          context.lineWidth = Math.max(1, 2.2 - depth * 0.22);
+          context.strokeStyle = theme.rugBorder;
+          context.stroke();
+        } else if (theme.floorPattern === "checker") {
+          const isLight = (cell.x + cell.y) % 2 === 0;
+          drawQuadPath(context, floorQuad);
+          context.fillStyle = isLight ? theme.checkerLight : theme.checkerDark;
+          context.fill();
+        } else if (theme.floorPattern === "runes") {
+          const runeQuad = pctQuad(quadDecalPoints(floorSurf, { left: 0.2, top: 0.2, right: 0.8, bottom: 0.8 }), width, height);
+          drawQuadPath(context, runeQuad);
+          context.lineWidth = Math.max(0.8, 1.8 - depth * 0.2);
+          context.strokeStyle = theme.runeColor;
+          context.stroke();
+        } else if (theme.floorPattern === "moss") {
+          const patchQuad = pctQuad(quadDecalPoints(floorSurf, { left: 0.1, top: 0.14, right: 0.9, bottom: 0.92 }), width, height);
+          drawQuadPath(context, patchQuad);
+          context.fillStyle = theme.mossColor;
+          context.fill();
+        } else if (theme.borderColor) {
+          const inlayQuad = pctQuad(quadDecalPoints(floorSurf, { left: 0.1, top: 0.1, right: 0.9, bottom: 0.9 }), width, height);
+          drawQuadPath(context, inlayQuad);
+          context.lineWidth = Math.max(0.8, 1.8 - depth * 0.2);
+          context.strokeStyle = theme.borderColor;
+          context.stroke();
+        }
+        context.restore();
+      }
+
+      function drawRoomCeilingTheme(context, width, height, depth, offset, cell, ceilingQuad, data) {
+        if (typeof cellThemeAt !== "function") return;
+        const zone = cellThemeAt(cell.x, cell.y);
+        if (!zone) return;
+        const ceilSurf = ceilingSegmentPoints(depth, offset);
+        context.save();
+        if (zone.kind === "corridor") {
+          drawQuadPath(context, ceilingQuad);
+          context.fillStyle = "rgba(6, 5, 8, 0.34)";
+          context.fill();
+          if (depth <= 5) {
+            const rib = pctQuad(quadDecalPoints(ceilSurf, { left: 0, top: 0.44, right: 1, bottom: 0.56 }), width, height);
+            drawQuadPath(context, rib);
+            context.fillStyle = `rgba(0, 0, 0, ${0.38 * data.light})`;
+            context.fill();
+          }
+          context.restore();
+          return;
+        }
+        const theme = zone.theme;
+        if (!theme) { context.restore(); return; }
+        if (theme.ceilingTint) {
+          drawQuadPath(context, ceilingQuad);
+          context.fillStyle = theme.ceilingTint;
+          context.fill();
+        }
+        if (theme.ceilingBeams && depth <= 5) {
+          const beam = pctQuad(quadDecalPoints(ceilSurf, { left: 0, top: 0.4, right: 1, bottom: 0.6 }), width, height);
+          drawQuadPath(context, beam);
+          context.fillStyle = theme.beamColor;
+          context.fill();
+        }
+        context.restore();
+      }
+
+      function drawRoomWallTrim(context, width, height, depth, offset, cell, surfacePoints, data, side = false) {
+        if (depth > 6 || typeof wallThemeAt !== "function") return;
+        const wz = wallThemeAt(cell.x, cell.y);
+        if (!wz) return;
+
+        if (wz.kind === "corridor") {
+          if (wz.torch && depth <= 4 && Math.abs(offset) <= 2) {
+            const torchPts = pctQuad(quadDecalPoints(surfacePoints, { left: 0.36, top: 0.24, right: 0.64, bottom: 0.66 }), width, height);
+            const bounds = boundsForPoints(torchPts);
+            if (!quadOutsideViewport(bounds)) {
+              const cx = bounds.x + bounds.width * 0.5;
+              const cy = bounds.y + bounds.height * 0.28;
+              context.save();
+              context.globalCompositeOperation = "lighter";
+              context.fillStyle = `rgba(255, 162, 54, ${Math.min(0.24, data.light * 0.24)})`;
+              context.beginPath();
+              context.ellipse(cx, cy, Math.max(6, bounds.width * 1.15), Math.max(6, bounds.height * 0.72), 0, 0, Math.PI * 2);
+              context.fill();
+              context.restore();
+              const sconceKey = typeof furnitureTileKey === "function" ? furnitureTileKey("torch_sconce") : "furniture://torch_sconce";
+              drawImageMappedQuad(context, sconceKey, torchPts, Math.min(1, data.light + 0.25), "#d88a32", { noShade: true, shadow: false });
+            }
+          }
+          return;
+        }
+
+        const theme = wz.theme;
+        if (!theme) return;
+        const lightAlpha = Math.max(0.22, Math.min(1, data.light));
+        context.save();
+        if (theme.wallTint) {
+          const full = pctQuad(surfacePoints, width, height);
+          drawQuadPath(context, full);
+          context.fillStyle = theme.wallTint;
+          context.fill();
+        }
+        // Lower wainscoting / dado trim distinguishes themed rooms from plain stone corridors.
+        const dado = pctQuad(quadDecalPoints(surfacePoints, { left: 0, top: 0.74, right: 1, bottom: 1 }), width, height);
+        drawQuadPath(context, dado);
+        context.fillStyle = theme.trimColor;
+        context.globalAlpha = 0.52 * lightAlpha;
+        context.fill();
+
+        // Upper cornice frieze line
+        const cornice = pctQuad(quadDecalPoints(surfacePoints, { left: 0, top: 0, right: 1, bottom: 0.09 }), width, height);
+        drawQuadPath(context, cornice);
+        context.fillStyle = theme.trimAccent || theme.trimColor;
+        context.globalAlpha = 0.42 * lightAlpha;
+        context.fill();
+
+        // Theme-specific architectural wall accents (banners, ivy, bookcase bays, arcane conduits)
+        if (depth <= 4) {
+          const style = theme.wallTrimStyle;
+          if (style === "banners" && (cellHash(cell.x, cell.y, 311) % 3 === 0)) {
+            const banner = pctQuad(quadDecalPoints(surfacePoints, { left: 0.32, top: 0.12, right: 0.68, bottom: 0.72 }), width, height);
+            drawQuadPath(context, banner);
+            context.globalAlpha = 0.78 * lightAlpha;
+            context.fillStyle = theme.trimColor;
+            context.fill();
+            context.lineWidth = Math.max(1, 2 - depth * 0.25);
+            context.strokeStyle = theme.trimAccent;
+            context.stroke();
+          } else if (style === "ivy") {
+            const vine = pctQuad(quadDecalPoints(surfacePoints, { left: 0.08, top: 0.06, right: 0.34, bottom: 0.84 }), width, height);
+            drawQuadPath(context, vine);
+            context.globalAlpha = 0.48 * lightAlpha;
+            context.fillStyle = theme.trimColor;
+            context.fill();
+          } else if (style === "arcane") {
+            const conduit = pctQuad(quadDecalPoints(surfacePoints, { left: 0.04, top: 0.46, right: 0.96, bottom: 0.52 }), width, height);
+            drawQuadPath(context, conduit);
+            context.globalAlpha = 0.55 * lightAlpha;
+            context.fillStyle = theme.trimAccent;
+            context.fill();
+          } else if (style === "bookshelves" && (cellHash(cell.x, cell.y, 317) % 2 === 0)) {
+            const bay = pctQuad(quadDecalPoints(surfacePoints, { left: 0.14, top: 0.16, right: 0.86, bottom: 0.72 }), width, height);
+            drawQuadPath(context, bay);
+            context.globalAlpha = 0.45 * lightAlpha;
+            context.fillStyle = "rgba(44, 24, 12, 0.9)";
+            context.fill();
+            context.strokeStyle = theme.trimAccent;
+            context.lineWidth = 1;
+            context.stroke();
+          }
+        }
+        context.restore();
+      }
+
+      function drawFurniture(context, width, height, depth, offset, cell) {
+        if (typeof furnitureAt !== "function") return;
+        const piece = furnitureAt(cell.x, cell.y);
+        if (!piece) return;
+        const bounds = standingBounds(nearEdgeDepth(depth), offset, piece.widthScale || 0.48, piece.heightScale || 0.58, 0.94);
+        const rect = drawSprite(context, piece.tile, bounds, width, height);
+        if (rect && offset === 0 && depth <= 2) {
+          drawFloorLabel(context, piece.shortName || piece.name, rect, depth);
+        }
       }
 
       function drawCellShell(context, width, height, depth, offset, cell) {
@@ -1277,7 +1484,9 @@
           return;
         }
         drawHorizontalMappedQuad(context, themedAsset("ceiling", "ceilingAlt", cell, 5), ceilingQuad, depth, Math.max(0.2, data.light - 0.24), "#171513");
+        drawRoomCeilingTheme(context, width, height, depth, offset, cell, ceilingQuad, data);
         drawHorizontalMappedQuad(context, floorTexture(cell), floorQuad, depth, Math.max(0.2, data.light - 0.05), floorFallback(cell));
+        drawRoomFloorTheme(context, width, height, depth, offset, cell, floorQuad, data);
         drawTerrainOverlay(context, width, height, depth, offset, cell);
         drawFloorVeil(context, width, height, depth, offset, cell);
         drawFloorAccent(context, width, height, depth, offset, cell);
@@ -2116,6 +2325,7 @@
         const surface = frontFacePoints(faceDepth, offset);
         withFrontDetailClip(context, points, occluders, () => {
           drawWallRelief(context, width, height, faceDepth, cell, surface);
+          drawRoomWallTrim(context, width, height, faceDepth, offset, cell, surface, data, false);
           drawWallPatch(context, width, height, faceDepth, offset, cell, surface);
           drawWallStain(context, width, height, faceDepth, offset, cell, surface);
           drawWallAccent(context, width, height, faceDepth, offset, cell);
@@ -2126,6 +2336,7 @@
 
       function drawCellContents(context, width, height, depth, offset, cell) {
         drawDecor(context, width, height, depth, offset, cell);
+        drawFurniture(context, width, height, depth, offset, cell);
         drawFloorFeature(context, width, height, depth, offset, cell);
         drawActor(context, width, height, depth, offset, cell);
         drawCloud(context, width, height, depth, offset, cell);
@@ -2154,15 +2365,34 @@
       // and the render-order regression tests assert on this same list.
       let atmosphereCache = { key: null, canvas: null };
 
+      function drawRoomAtmosphere(context, width, height) {
+        if (typeof cellThemeAt !== "function") return;
+        const zone = cellThemeAt(state.x, state.y);
+        if (!zone || zone.kind !== "room" || !zone.theme?.ambientColor) return;
+        const [r, g, b] = zone.theme.ambientColor;
+        const alpha = zone.theme.ambientAlpha || 0.08;
+        context.save();
+        context.globalCompositeOperation = "screen";
+        const glow = context.createRadialGradient(width * 0.5, height * 0.56, width * 0.05, width * 0.5, height * 0.56, width * 0.58);
+        glow.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
+        glow.addColorStop(1, "rgba(0, 0, 0, 0)");
+        context.fillStyle = glow;
+        context.fillRect(0, 0, width, height);
+        context.restore();
+      }
+
       function drawCachedAtmosphere(context, width, height) {
         if (typeof document === "undefined" || typeof document.createElement !== "function" || context !== viewportContext) {
           drawViewportHaze(context, width, height);
           drawBranchAtmosphere(context, width, height);
+          drawRoomAtmosphere(context, width, height);
           return;
         }
         const noir = typeof isNoirLighting === "function" && isNoirLighting();
         const floor = currentFloor();
-        const key = `${width}x${height}:${noir ? `n${(state.turnCount || 0) % 2}` : "s"}:${floor.id}:${floor.name}`;
+        const zone = typeof cellThemeAt === "function" ? cellThemeAt(state.x, state.y) : null;
+        const roomTag = zone?.kind === "room" && zone.theme ? zone.theme.id : "corr";
+        const key = `${width}x${height}:${noir ? `n${(state.turnCount || 0) % 2}` : "s"}:${floor.id}:${floor.name}:${roomTag}`;
         if (atmosphereCache.key !== key || !atmosphereCache.canvas) {
           const canvas = atmosphereCache.canvas || document.createElement("canvas");
           canvas.width = width;
@@ -2171,11 +2401,13 @@
           if (!ctx) {
             drawViewportHaze(context, width, height);
             drawBranchAtmosphere(context, width, height);
+            drawRoomAtmosphere(context, width, height);
             return;
           }
           ctx.clearRect(0, 0, width, height);
           drawViewportHaze(ctx, width, height);
           drawBranchAtmosphere(ctx, width, height);
+          drawRoomAtmosphere(ctx, width, height);
           atmosphereCache = { key, canvas };
         }
         context.drawImage(atmosphereCache.canvas, 0, 0, width, height);
@@ -2370,6 +2602,11 @@
         drawSideWallAccent,
         drawFloorFeature,
         drawDecor,
+        drawFurniture,
+        drawRoomFloorTheme,
+        drawRoomCeilingTheme,
+        drawRoomWallTrim,
+        drawRoomAtmosphere,
         viewportTargetView,
         viewportFloorTargetRect,
         viewportDoorTargetRect,

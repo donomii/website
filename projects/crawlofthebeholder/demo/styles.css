@@ -1924,3 +1924,15 @@ body.colorblind .map-cell.ally { background: #56b4e9; color: #04121d; }
   border-color: #d1a64d;
   background: linear-gradient(#394832, #1c221c);
 }
+
+/* Themed room tints and furniture markers on the automap */
+.map-cell.seen.floor.corridor-cell { background: #26221c; }
+.map-cell.seen.floor.room-library { background: #362d26; }
+.map-cell.seen.floor.room-banquet { background: #3f2822; }
+.map-cell.seen.floor.room-armory { background: #28313a; }
+.map-cell.seen.floor.room-alchemy { background: #203833; }
+.map-cell.seen.floor.room-chapel { background: #413726; }
+.map-cell.seen.floor.room-crypt { background: #242e3d; }
+.map-cell.seen.floor.room-conservatory { background: #253b28; }
+.map-cell.seen.floor.room-treasury { background: #42351d; }
+.map-cell.seen.furniture { color: #d4b06a; }

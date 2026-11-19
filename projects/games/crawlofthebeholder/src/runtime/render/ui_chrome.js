@@ -252,6 +252,11 @@
 
               cls = `map-cell seen ${kind}`;
               if (terrain && terrain !== "floor") cls += ` ${terrain}`;
+              if (kind === "floor" && typeof cellThemeAt === "function") {
+                const zone = cellThemeAt(x, y);
+                if (zone?.kind === "room" && zone.theme) cls += ` room-${zone.theme.id}`;
+                else if (zone?.kind === "corridor") cls += " corridor-cell";
+              }
               if (viewClass) cls += ` ${viewClass}`;
               if (kind === "door") {
                 text = "+";
@@ -284,6 +289,12 @@
                 if (decor.kind === "chest") cls += " chest";
                 text = used ? "." : decor.kind === "chest" ? "▢" : "o";
                 labels.push(used ? `${decor.name} spent` : decor.name);
+              }
+              const furniture = typeof furnitureAt === "function" ? furnitureAt(x, y) : null;
+              if (furniture) {
+                cls += " furniture";
+                if (!decor && !stairs && !item && !trap) text = "▪";
+                labels.push(`${furniture.name} (${furniture.roomName})`);
               }
               if (cloud) {
                 const ckind = cloud.kind || "fog";
@@ -544,7 +555,9 @@
         if (els.characterCreateGameMode && !state.characterCreated) els.characterCreateGameMode.value = activeModeKey;
         const hazard = typeof currentHazard === "function" && !context.hazardsDisabled ? currentHazard() : null;
         const hazardTag = hazard && hazard.id !== "none" ? ` · ${hazard.name}` : "";
-        els.floorBadge.textContent = `${currentFloor().id}/${resources.floors.length} · ${floorExploredPercent()}%${hazardTag}`;
+        const roomLabel = typeof currentRoomLabel === "function" ? currentRoomLabel() : "";
+        const roomTag = roomLabel ? ` · ${roomLabel}` : "";
+        els.floorBadge.textContent = `${currentFloor().id}/${resources.floors.length} · ${floorExploredPercent()}%${roomTag}${hazardTag}`;
         els.facingBadge.textContent = dirs[state.dir].name;
         renderParty();
         renderInventory();

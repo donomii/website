@@ -25,6 +25,7 @@
       const floor = {
         ...clone(template), biome: branch,
         map: { name: template.name, width: layout.width, height: layout.height, rows: layout.rows, source: "dcss-compact-v1", family: layout.family },
+        rooms: Array.isArray(layout.rooms) ? layout.rooms.map((room) => ({ ...room })) : [],
         start, doors,
         stairs: { up: { x: start.x, y: start.y }, down },
         encounters: [], floorItems: [], traps: [], decor: []

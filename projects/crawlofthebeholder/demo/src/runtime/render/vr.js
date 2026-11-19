@@ -533,6 +533,25 @@
           const texture = vrRenderedTile(decor.tile);
           dolls.push({ kind: "decor", id: decorKey(decor), x: decor.x, y: decor.y, w: tall ? 0.6 : 0.72, h: tall ? 0.95 : 0.72, texture, normal: vrNormalPath(texture), facing: 0, alpha: spent ? 0.5 : 1, tint: spent ? { r: 0.6, g: 0.6, b: 0.6 } : null });
         }
+        if (typeof floorThemeLayout === "function") {
+          const layout = floorThemeLayout(floor);
+          for (const piece of layout?.furniture || []) {
+            if (!vrCellDiscovered(floorState, piece.x, piece.y)) continue;
+            dolls.push({
+              kind: "furniture",
+              id: piece.id,
+              x: piece.x,
+              y: piece.y,
+              w: piece.tall ? 0.68 : 0.72,
+              h: piece.tall ? 0.92 : 0.68,
+              texture: piece.tile,
+              normal: null,
+              facing: 0,
+              alpha: 1,
+              tint: null
+            });
+          }
+        }
         for (const monster of floorState.monsters) {
           if (monster.hp <= 0) continue;
           if (!vrCellDiscovered(floorState, monster.x, monster.y)) continue;

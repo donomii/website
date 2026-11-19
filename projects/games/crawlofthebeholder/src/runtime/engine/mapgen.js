@@ -428,6 +428,7 @@
           biome: biome.key,
           assets: { ...assets },
           map: { name: "generated", width: layout.width, height: layout.height, rows: layout.rows, source: "procedural" },
+          rooms: Array.isArray(layout.rooms) ? layout.rooms.map((room) => ({ ...room })) : [],
           start,
           doors,
           stairs: { up: upCell, down: downCell },

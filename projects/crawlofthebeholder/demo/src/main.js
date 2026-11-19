@@ -53,6 +53,7 @@
   runtime.installEcology(context);
   runtime.installMastery(context);
   runtime.installExploration(context);
+  runtime.installThemeRooms(context);
   runtime.installAlchemy(context);
   runtime.installWeather(context);
   runtime.installArcane(context);

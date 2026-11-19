@@ -10,6 +10,7 @@
         const item = itemAt(ahead.x, ahead.y) || itemAt(state.x, state.y);
         const trap = trapAt(ahead.x, ahead.y) || trapAt(state.x, state.y);
         const decor = decorAt(ahead.x, ahead.y) || decorAt(state.x, state.y);
+        const furniture = typeof furnitureAt === "function" ? (furnitureAt(ahead.x, ahead.y) || furnitureAt(state.x, state.y)) : null;
         const stairs = stairsAt(ahead.x, ahead.y) || stairsAt(state.x, state.y);
         if (monster) {
           setMessage(`${monster.name}: ${monster.hp}/${monster.maxHp} HP, AC ${monster.ac}, EV ${monster.ev}.`);
@@ -19,10 +20,13 @@
           setMessage(`${item.name}: ${item.kind}${item.power ? ` ${item.power}` : ""}${item.value ? ` worth ${item.value}g` : ""}.`);
         } else if (decor) {
           setMessage(`${decor.name}: ${decor.kind}${decorUsed(decor) ? " (spent)" : ""}.`);
+        } else if (furniture) {
+          setMessage(`${furniture.name} (${furniture.roomName}): ${furniture.interact}`);
         } else if (stairs) {
           setMessage(`${stairs.label || (stairs.direction === "down" ? "Downstairs" : "Upstairs")}. ${stairs.detail || ""}`.trim());
         } else {
-          setMessage("Nothing of note ahead.");
+          const roomLabel = typeof currentRoomLabel === "function" ? currentRoomLabel() : "";
+          setMessage(roomLabel ? `Nothing of note ahead (${roomLabel}).` : "Nothing of note ahead.");
         }
       }
 
@@ -111,6 +115,13 @@
         if (interactTrap()) return;
         if (interactFixture()) return;
         if (interactDoor()) return;
+        if (typeof furnitureTarget === "function" && typeof useFurniture === "function") {
+          const ft = furnitureTarget();
+          if (ft && useFurniture(ft.furniture)) {
+            render();
+            return;
+          }
+        }
         setMessage("Nothing here answers.");
       }
 
