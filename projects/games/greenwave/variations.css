@@ -377,8 +377,27 @@ p {
   touch-action: none;
 }
 
+.life-body .experiment-page {
+  max-width: 1080px;
+  padding-top: 12px;
+}
+
+.life-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.life-controls > summary {
+  cursor: pointer;
+  padding: 12px 0;
+}
+
 .life-canvas-wrap canvas {
   aspect-ratio: 9 / 5;
+  cursor: pointer;
 }
 
 .experiment-overlay {
