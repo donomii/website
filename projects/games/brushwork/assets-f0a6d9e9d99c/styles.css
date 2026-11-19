@@ -1,0 +1,205 @@
+:root {
+  color-scheme: light;
+  color: #202929;
+  background: #e5dcc2;
+  font: 14px/1.4 system-ui, sans-serif;
+  --header: #202929;
+  --paper: #f7eed6;
+  --jade: #71c4ad;
+  --red: #a33833;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+#game-shell {
+  position: fixed;
+  inset: 0;
+  isolation: isolate;
+}
+
+#game {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+#game:focus { outline: none; }
+
+#hud {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr minmax(140px, 300px) minmax(70px, 0.55fr) auto;
+  align-items: center;
+  gap: clamp(10px, 3vw, 40px);
+  min-height: 53px;
+  padding: 6px clamp(12px, 3vw, 42px);
+  border-bottom: 1px solid #72765e;
+  color: #f5e9ce;
+  background: var(--header);
+}
+
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0;
+  font: 600 27px/1 Georgia, serif;
+  letter-spacing: -0.035em;
+}
+
+.seal {
+  display: inline-grid;
+  place-items: center;
+  width: 19px;
+  height: 23px;
+  border: 1px solid #e39578;
+  color: #e39578;
+  transform: rotate(-8deg);
+}
+
+.seal::after {
+  width: 9px;
+  height: 13px;
+  background: currentColor;
+  clip-path: polygon(36% 0, 87% 0, 65% 42%, 100% 42%, 0 100%, 29% 54%, 0 54%);
+  content: "";
+}
+
+.meters, .actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meters { gap: clamp(8px, 2vw, 22px); }
+.meter-block { flex: 1; min-width: 0; }
+
+.meter-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.meter {
+  height: 5px;
+  margin-top: 3px;
+  border-radius: 1px;
+  background: #424b49;
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transform-origin: left;
+  background: #df7967;
+}
+
+#ink-bar { background: var(--jade); }
+
+.wave {
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.wave strong { margin-inline-start: 3px; }
+.wave small { display: block; color: #ddd0ad; font-size: 11px; }
+.wave, .stats { font-variant-numeric: tabular-nums; }
+
+button {
+  min-height: 34px;
+  padding: 4px 12px;
+  border: 1px solid #7f8574;
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  font: 600 13px system-ui, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:hover { background-color: #ffffff18; }
+button:focus-visible { outline: 2px solid #d4945c; outline-offset: 3px; }
+button:disabled { opacity: 0.5; cursor: default; }
+.accent { border-color: #c66852; background-color: var(--red); color: #fff4dc; }
+.accent:hover { background-color: #b7493d; }
+
+#menu, #result {
+  position: absolute;
+  z-index: 3;
+  width: min(320px, calc(100% - 24px));
+  max-height: calc(100% - 92px);
+  padding: 17px 19px;
+  overflow: auto;
+  border: 1px solid #9d8c66;
+  border-top: 3px solid var(--red);
+  background: var(--paper);
+  box-shadow: 0 9px 24px #3c382a30;
+}
+
+#menu { inset: 70px max(12px, 3vw) auto auto; }
+#result { inset: 50% auto auto 50%; transform: translate(-50%, -50%); }
+
+h2 { margin: 0 0 9px; font: 600 26px/1.1 Georgia, serif; }
+
+.controls {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 7px 12px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+dt { font-weight: 650; }
+dd { margin: 0; }
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px 0;
+  padding-top: 10px;
+  border-top: 1px solid #c5b794;
+  font-size: 11px;
+}
+
+.stats dd { font-size: 17px; }
+#dodge-button { display: none; }
+
+@media (any-pointer: coarse) {
+  #dodge-button {
+    display: block;
+    position: absolute;
+    inset: auto max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) auto;
+    min-height: 44px;
+    border-color: #817a64;
+    background: #f3e9ccdc;
+  }
+}
+
+@media (max-width: 620px) {
+  #hud { grid-template-columns: 1fr auto auto; gap: 5px 10px; padding: 6px 10px 8px; }
+  .brand { font-size: 23px; }
+  .seal { width: 15px; height: 18px; }
+  .actions { gap: 5px; }
+  .actions button { padding-inline: 8px; }
+  .meters { grid-column: 1 / -1; grid-row: 2; }
+  #menu { top: 84px; }
+}
+
+@media (max-width: 325px) {
+  .brand { font-size: 19px; gap: 5px; }
+}

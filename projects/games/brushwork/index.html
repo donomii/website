@@ -3,80 +3,73 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#17160f">
+  <meta name="theme-color" content="#202929">
   <title>Brushwork</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets-f0a6d9e9d99c/styles.css">
 </head>
 <body>
   <main id="game-shell">
-    <canvas id="game" aria-label="Brushwork game arena"></canvas>
-
-    <header id="hud" aria-label="Current run readouts">
-      <div class="brand" aria-hidden="true">
-        <span class="brand-mark">文</span>
-        <span>BRUSHWORK</span>
+    <canvas id="game" tabindex="-1" aria-label="Brushwork game arena"></canvas>
+    <header id="hud" aria-label="Current run">
+      <h1 class="brand"><span class="seal" aria-hidden="true"></span>Brushwork</h1>
+      <div class="meters">
+        <div class="meter-block" title="Health falls when creatures hit you. Clear a wave to recover some.">
+          <div class="meter-label"><span>Health</span><span id="health-value">100</span></div>
+          <div class="meter"><span id="health-bar"></span></div>
+        </div>
+        <div class="meter-block" title="Ink powers your strokes. Lift the brush or collect jade drops to refill it.">
+          <div class="meter-label"><span>Ink</span><span id="ink-value">100</span></div>
+          <div class="meter"><span id="ink-bar"></span></div>
+        </div>
       </div>
-      <div class="meter-block" title="Health is the damage you can still survive. Avoid touching ink creatures.">
-        <div class="meter-label"><span>Health</span><span id="health-value">100</span></div>
-        <div class="meter"><span id="health-bar"></span></div>
+      <div class="wave" title="Clear every creature to advance. Clear all six waves to win.">
+        <div>Wave <strong id="wave-value">1 / 6</strong></div>
+        <small id="wave-message">Ready</small>
       </div>
-      <div class="meter-block" title="Ink is spent as you paint. Lift the brush to refill it.">
-        <div class="meter-label"><span>Ink</span><span id="ink-value">100</span></div>
-        <div class="meter ink"><span id="ink-bar"></span></div>
-      </div>
-      <div class="readout" title="Time is how long this run has survived.">
-        <span>Time</span><strong id="time-value">0:00</strong>
-      </div>
-      <div class="readout" title="Defeated counts every ink creature destroyed this run.">
-        <span>Defeated</span><strong id="score-value">0</strong>
-      </div>
-      <div class="readout" title="Runes counts completed circle traps and crossed-line bursts.">
-        <span>Runes</span><strong id="rune-value">0</strong>
+      <div class="actions">
+        <button id="start-button" class="accent" type="button" title="Start the run (Enter)">Play</button>
+        <button id="menu-button" type="button" aria-expanded="false" aria-controls="menu" title="Open controls and pause (Esc or P)">Menu</button>
       </div>
     </header>
 
-    <section id="start-panel" class="panel visible" aria-labelledby="start-title">
-      <p class="eyebrow">A survival sketch</p>
-      <h1 id="start-title">Draw your way out.</h1>
-      <p class="intro">You are small. The brush is not. Drag it through the horde and turn your escape route into magic.</p>
-      <div class="instructions">
-        <div><kbd>WASD</kbd><span><strong>Move</strong> the painter and drag the brush.</span></div>
-        <div><kbd>SPACE</kbd><span><strong>Hold to paint.</strong> Ink refills while the brush is lifted.</span></div>
-        <div><span class="rune-icon circle-icon"></span><span><strong>Close a loop</strong> to create a slowing damage trap.</span></div>
-        <div><span class="rune-icon cross-icon">×</span><span><strong>Cross two lines</strong> to blast everything near the crossing.</span></div>
-      </div>
-      <button id="start-button" type="button">Begin the run <span>↵</span></button>
-      <p class="small-print">Arrow keys also move. The primary pointer button also paints. Press P to pause.</p>
+    <section id="menu" hidden aria-label="Controls and run details">
+      <h2>Controls</h2>
+      <dl class="controls">
+        <dt>Move</dt><dd>WASD or arrows. On touch, drag from the lower left.</dd>
+        <dt>Paint</dt><dd>Drag on the paper, or hold Space while moving. Release to cast.</dd>
+        <dt>Dodge</dt><dd>Shift or the Dodge button. Aim with movement. Dodge through a creature to damage it and recover ink. The ring shows the cooldown.</dd>
+        <dt>Pause</dt><dd>Menu, Esc, or P.</dd>
+        <dt>Ward</dt><dd>Close a loop to slow and damage creatures inside.</dd>
+        <dt>Burst</dt><dd>Cross two fresh straight lines near their middles.</dd>
+        <dt>Chain</dt><dd>Defeat creatures in quick succession. Every third in a chain restores bonus ink.</dd>
+        <dt>The Blot</dt><dd>Use wards and bursts against its armor. Dodge out of its red ring.</dd>
+      </dl>
+      <dl class="stats">
+        <div title="Time spent playing this run"><dt>Time</dt><dd id="run-time">0:00</dd></div>
+        <div title="Creatures defeated this run"><dt>Defeated</dt><dd id="run-score">0</dd></div>
+        <div title="Wards and bursts cast this run"><dt>Runes</dt><dd id="run-runes">0</dd></div>
+        <div title="Longest chain of quick defeats this run"><dt>Best chain</dt><dd id="run-chain">0</dd></div>
+      </dl>
+      <button id="resume-button" class="accent" type="button">Close</button>
     </section>
 
-    <section id="pause-panel" class="panel compact" aria-live="polite">
-      <p class="eyebrow">Brush lifted</p>
-      <h2>Paused</h2>
-      <p>Press <kbd>P</kbd> to return to the run.</p>
+    <button id="dodge-button" type="button" title="Dodge in the movement direction" hidden>Dodge</button>
+
+    <section id="result" hidden aria-labelledby="result-title">
+      <h2 id="result-title"></h2>
+      <dl class="stats">
+        <div title="Time spent playing this run"><dt>Time</dt><dd id="final-time">0:00</dd></div>
+        <div title="Creatures defeated this run"><dt>Defeated</dt><dd id="final-score">0</dd></div>
+        <div title="Wards and bursts cast this run"><dt>Runes</dt><dd id="final-runes">0</dd></div>
+        <div title="Longest chain of quick defeats this run"><dt>Best chain</dt><dd id="final-chain">0</dd></div>
+      </dl>
+      <button id="restart-button" class="accent" type="button" title="Start a new run (R)">Play again</button>
     </section>
-
-    <section id="game-over-panel" class="panel" aria-labelledby="game-over-title">
-      <p class="eyebrow">The page goes dark</p>
-      <h2 id="game-over-title">Overrun.</h2>
-      <div class="results">
-        <div><span>Survived</span><strong id="final-time">0:00</strong></div>
-        <div><span>Defeated</span><strong id="final-score">0</strong></div>
-        <div><span>Runes drawn</span><strong id="final-runes">0</strong></div>
-      </div>
-      <button id="restart-button" type="button">Paint again <span>R</span></button>
-    </section>
-
-    <aside id="rune-toast" aria-live="polite">
-      <span id="rune-toast-mark">○</span>
-      <span><strong id="rune-toast-title">Circle ward</strong><small id="rune-toast-copy">The loop becomes a trap.</small></span>
-    </aside>
-
-    <div id="draw-hint" aria-hidden="true">Hold SPACE to lower the brush</div>
   </main>
-
-  <script src="runes.js"></script>
-  <script src="effects.js"></script>
-  <script src="renderer.js"></script>
-  <script src="game.js"></script>
+  <script src="assets-f0a6d9e9d99c/runes.js"></script>
+  <script src="assets-f0a6d9e9d99c/effects.js"></script>
+  <script src="assets-f0a6d9e9d99c/combat.js"></script>
+  <script src="assets-f0a6d9e9d99c/renderer.js"></script>
+  <script src="assets-f0a6d9e9d99c/game.js"></script>
 </body>
 </html>
