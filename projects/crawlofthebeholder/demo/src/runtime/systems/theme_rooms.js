@@ -592,6 +592,7 @@
 
       // ── Floor room / corridor analysis & furniture placement ───────────────
       const floorThemeCache = new WeakMap();
+      const classicThemeCache = new WeakMap();
 
       function isOutdoorBranch(floor) {
         const id = String(floor?.id || "").toLowerCase();
@@ -1095,7 +1096,23 @@
       }
 
       function floorThemeLayout(floor = null) {
-        return analyzeFloorThemes(floor || currentFloor());
+        const layout = analyzeFloorThemes(floor || currentFloor());
+        if (!layout) return null;
+        if (state.tileset !== "classic") {
+          return layout;
+        } else {
+          const cached = classicThemeCache.get(layout);
+          if (cached) {
+            return cached;
+          } else {
+            // Original mode omits invented props; retain actual DCSS fixtures.
+            const furniture = layout.furniture.filter((piece) => !piece.tile.startsWith("furniture://"))
+              .map((piece) => ({ ...piece, tile: classicEnvironmentAsset(piece.tile) }));
+            const classic = { ...layout, furniture, furnitureByCell: new Map(furniture.map((piece) => [keyOf(piece.x, piece.y), piece])) };
+            classicThemeCache.set(layout, classic);
+            return classic;
+          }
+        }
       }
 
       function cellThemeAt(x, y, floor = null) {

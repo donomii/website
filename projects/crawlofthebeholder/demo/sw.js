@@ -4,7 +4,7 @@
 // served stale until CACHE_VERSION was bumped by hand, which looked like fixes
 // "breaking again". Network-first means a reload always picks up new code.)
 
-const CACHE_VERSION = "cotb-v56-never-draw-current-square";
+const CACHE_VERSION = "cotb-v57-original-dcss-graphics";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -33,6 +33,7 @@ const APP_SHELL = [
   "./src/runtime/engine/party/items.js",
   "./src/runtime/engine/items/use.js",
   "./src/runtime/engine/party/turn.js",
+  "./src/runtime/render/classic_graphics.js",
   "./src/runtime/render/viewport_rendering.js",
   "./src/runtime/render/ui_chrome.js",
   "./src/runtime/engine/classes.js",

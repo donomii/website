@@ -172,6 +172,8 @@
           name: "The Gauntlet of Zot",
           biome: "vaults",
           assets: clone(assetsSource.assets),
+          classicAssets: clone(assetsSource.classicAssets),
+          classicVariants: clone(assetsSource.classicVariants),
           map: {
             name: "The Gauntlet of Zot",
             width: SPRINT_ROWS[0].length,

@@ -226,6 +226,10 @@
       return currentFloor().assets;
     }
 
+    function graphicsAssets() {
+      return state.tileset === "classic" ? currentFloor().classicAssets || currentAssets() : currentAssets();
+    }
+
     function normalizeTileset(value) {
       return value === "linocut" ? "linocut" : "classic";
     }
@@ -254,7 +258,7 @@
     }
 
     function renderedAssets() {
-      return Object.fromEntries(Object.entries(currentAssets()).map(([key, value]) => [key, environmentAsset(value)]));
+      return Object.fromEntries(Object.entries(graphicsAssets()).map(([key, value]) => [key, environmentAsset(value)]));
     }
 
     function normalTile(src) {
@@ -608,6 +612,7 @@
       currentFloor,
       currentFloorState,
       currentAssets,
+      graphicsAssets,
       normalizeTileset,
       setTileset,
       activeTileset,

@@ -427,6 +427,8 @@
           name: `${biome.name} ${index + 1}`,
           biome: biome.key,
           assets: { ...assets },
+          classicAssets: _clone(resources.floors.find((floor) => floor.assets === assets)?.classicAssets || assets),
+          classicVariants: _clone(resources.floors.find((floor) => floor.assets === assets)?.classicVariants || {}),
           map: { name: "generated", width: layout.width, height: layout.height, rows: layout.rows, source: "procedural" },
           rooms: Array.isArray(layout.rooms) ? layout.rooms.map((room) => ({ ...room })) : [],
           start,

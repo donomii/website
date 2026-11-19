@@ -34,7 +34,8 @@
       };
 
       function classPortraits(classKey) {
-        return PORTRAITS[classKey] || [];
+        const choices = PORTRAITS[classKey] || [];
+        return state.tileset === "classic" ? choices.filter((entry) => entry.id.startsWith("dcss-")) : choices;
       }
 
       function classPortrait(classKey) {

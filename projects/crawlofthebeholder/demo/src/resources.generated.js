@@ -53,6 +53,348 @@ window.CotBResources = {
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood03.png"
       },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_stairs_down.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_stairs_up.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_NORMAL_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_dark0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_dark3.png",
+        "wall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "sideWall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_0.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_1.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_2.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_3.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_7.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_8.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_9.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_10.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_11.png",
+            "weight": 5
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_0.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_1.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_2.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_3.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_4.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_5.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_7.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
+      },
       "map": {
         "name": "matt_arrival_spirals",
         "width": 18,
@@ -252,6 +594,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_BAT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BAT_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 3
         },
@@ -281,6 +630,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_RAT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_RAT_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 5
         },
@@ -310,6 +666,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GOBLIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GOBLIN_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 7
         },
@@ -339,6 +702,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_KOBOLD_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_KOBOLD_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 11
         },
@@ -368,6 +738,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GNOLL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GNOLL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 13
         },
@@ -400,6 +777,13 @@ window.CotBResources = {
             "poisonDamage": 4,
             "poisonTurns": 3
           },
+          "classicTile": "art/tilesets/classic/MONS_ADDER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ADDER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 14,
           "y": 3
         },
@@ -429,6 +813,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_WARRIOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 14,
           "y": 5
         },
@@ -479,6 +870,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_WIZARD_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_WIZARD_0.png",
+              "weight": 8
+            }
+          ],
           "x": 7,
           "y": 13
         },
@@ -508,6 +906,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_OGRE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_OGRE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 9,
           "y": 13
         }
@@ -563,6 +968,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_2b.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood04.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood05_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_stairs_down.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_stairs_up.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_NORMAL_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown6.png",
+        "wall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "sideWall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_0.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_1.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_2.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_3.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_7.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_8.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_9.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_10.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_11.png",
+            "weight": 5
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_0.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_1.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_2.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_3.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_4.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_5.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_7.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_arrival_open_corners",
@@ -778,6 +1525,13 @@ window.CotBResources = {
             "poisonDamage": 4,
             "poisonTurns": 3
           },
+          "classicTile": "art/tilesets/classic/MONS_ADDER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ADDER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -807,6 +1561,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GNOLL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GNOLL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 7
         },
@@ -836,6 +1597,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_WARRIOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 1,
           "y": 1
         },
@@ -886,6 +1654,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_WIZARD_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_WIZARD_0.png",
+              "weight": 8
+            }
+          ],
           "x": 2,
           "y": 10
         },
@@ -921,6 +1696,13 @@ window.CotBResources = {
             "poisonDamage": 10,
             "poisonTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_KILLER_BEE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_KILLER_BEE_0.png",
+              "weight": 1
+            }
+          ],
           "x": 13,
           "y": 4
         },
@@ -956,6 +1738,13 @@ window.CotBResources = {
             "blinkDamage": 8,
             "blinkWith": true
           },
+          "classicTile": "art/tilesets/classic/MONS_PHANTOM_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_PHANTOM_0.png",
+              "weight": 8
+            }
+          ],
           "x": 13,
           "y": 2
         }
@@ -1011,6 +1800,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_4a.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_s.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_stairs_down.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_stairs_up.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_NORMAL_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall1.png",
+        "wall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "sideWall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_0.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_1.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_2.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_3.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_7.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_8.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_9.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_10.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_11.png",
+            "weight": 5
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_0.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_1.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_2.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_3.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_4.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_5.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_7.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "lemuel_arrival_funnel",
@@ -1225,6 +2356,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_PRIEST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_PRIEST_0.png",
+              "weight": 8
+            }
+          ],
           "x": 8,
           "y": 1
         },
@@ -1258,6 +2396,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 8
           },
+          "classicTile": "art/tilesets/classic/MONS_WIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 1
         },
@@ -1287,6 +2432,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_OGRE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_OGRE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 4,
           "y": 3
         },
@@ -1326,6 +2478,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_TROLL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TROLL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 2,
           "y": 2
         },
@@ -1361,6 +2520,13 @@ window.CotBResources = {
             "blinkDamage": 8,
             "blinkWith": true
           },
+          "classicTile": "art/tilesets/classic/MONS_PHANTOM_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_PHANTOM_0.png",
+              "weight": 8
+            }
+          ],
           "x": 1,
           "y": 2
         },
@@ -1401,6 +2567,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_KNIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 10,
           "y": 7
         }
@@ -1456,6 +2629,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/stone_smooth_beogh_1.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood04.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_orc.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_orc.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_ORC_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/orc1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/orc0.png",
+        "wall": "art/tilesets/classic/WALL_ORC_0.png",
+        "sideWall": "art/tilesets/classic/WALL_ORC_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_ORC_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_4.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_5.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_6.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_7.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_8.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_9.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_10.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ORC_11.png",
+            "weight": 2
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_ORC_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ORC_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ORC_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ORC_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ORC_4.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ORC_5.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ORC_6.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ORC_7.png",
+            "weight": 2
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "david_orc_1_choice",
@@ -1662,6 +3177,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_0.png",
+              "weight": 8
+            }
+          ],
           "x": 13,
           "y": 2
         },
@@ -1693,6 +3215,13 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_WARG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WARG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 12,
           "y": 2
         },
@@ -1744,6 +3273,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_PRIEST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_PRIEST_0.png",
+              "weight": 8
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -1773,6 +3309,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_WARRIOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 12,
           "y": 14
         },
@@ -1823,6 +3366,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_WIZARD_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_WIZARD_0.png",
+              "weight": 8
+            }
+          ],
           "x": 10,
           "y": 14
         },
@@ -1863,6 +3413,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_KNIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 5,
           "y": 11
         }
@@ -1921,6 +3478,366 @@ window.CotBResources = {
         "waterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shallow_water2.png",
         "deepWater": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water.png",
         "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water2.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_lair.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_lair.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_LAIR_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_lair0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/lair2.png",
+        "wall": "art/tilesets/classic/WALL_LAIR_0.png",
+        "sideWall": "art/tilesets/classic/WALL_LAIR_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "waterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shallow_water2.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water2.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_0.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_1.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_2.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_3.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_7.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_0.png",
+            "weight": 24
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_1.png",
+            "weight": 24
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_2.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_3.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_4.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_5.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_6.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_7.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_8.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_9.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_10.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_11.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_12.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_13.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_15.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_lair_entry_grove",
@@ -2110,6 +4027,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_WOLF_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WOLF_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 6
         },
@@ -2160,6 +4084,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BLACK_BEAR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BLACK_BEAR_0.png",
+              "weight": 1
+            }
+          ],
           "x": 8,
           "y": 7
         },
@@ -2189,6 +4120,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_YAK_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_YAK_0.png",
+              "weight": 1
+            }
+          ],
           "x": 8,
           "y": 10
         },
@@ -2223,6 +4161,13 @@ window.CotBResources = {
             "poisonDamage": 10,
             "poisonTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+              "weight": 1
+            }
+          ],
           "x": 11,
           "y": 8
         },
@@ -2263,6 +4208,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BASILISK_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BASILISK_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 4
         },
@@ -2292,6 +4244,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_KOMODO_DRAGON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_KOMODO_DRAGON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 9
         },
@@ -2321,6 +4280,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BULLFROG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BULLFROG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 13,
           "y": 8
         },
@@ -2352,6 +4318,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_WYVERN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WYVERN_0.png",
+              "weight": 10
+            }
+          ],
           "x": 4,
           "y": 2
         },
@@ -2391,6 +4364,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BLINK_FROG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BLINK_FROG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 2,
           "y": 10
         }
@@ -2444,6 +4424,364 @@ window.CotBResources = {
         "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/wall/wall_yak_skull.png",
         "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_vines3.png",
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown-vines4.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_lair.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_lair.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_LAIR_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_lair1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_lair3.png",
+        "wall": "art/tilesets/classic/WALL_LAIR_0.png",
+        "sideWall": "art/tilesets/classic/WALL_LAIR_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_0.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_1.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_2.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_3.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_7.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_0.png",
+            "weight": 24
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_1.png",
+            "weight": 24
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_2.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_3.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_4.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_5.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_6.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_7.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_8.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_9.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_10.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_11.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_12.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_13.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_15.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "due_lair_maze_entry_diamond",
@@ -2645,6 +4983,13 @@ window.CotBResources = {
             "poisonDamage": 10,
             "poisonTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+              "weight": 1
+            }
+          ],
           "x": 11,
           "y": 8
         },
@@ -2679,6 +5024,13 @@ window.CotBResources = {
             "poisonDamage": 8,
             "poisonTurns": 3
           },
+          "classicTile": "art/tilesets/classic/MONS_SCORPION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SCORPION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 9,
           "y": 4
         },
@@ -2708,6 +5060,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BULLFROG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BULLFROG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 9,
           "y": 3
         },
@@ -2758,6 +5117,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BLACK_BEAR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BLACK_BEAR_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 8
         },
@@ -2787,6 +5153,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_YAK_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_YAK_0.png",
+              "weight": 1
+            }
+          ],
           "x": 11,
           "y": 14
         },
@@ -2816,6 +5189,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_KOMODO_DRAGON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_KOMODO_DRAGON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 17,
           "y": 7
         },
@@ -2841,6 +5221,49 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_PLANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_0.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_1.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_2.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_3.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_4.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_5.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_6.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_7.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_8.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_PLANT_9.png",
+              "weight": 10
+            }
+          ],
           "x": 7,
           "y": 2
         },
@@ -2866,6 +5289,45 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_FUNGUS_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_0.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_1.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_2.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_3.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_4.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_5.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_6.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_7.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_FUNGUS_8.png",
+              "weight": 8
+            }
+          ],
           "x": 5,
           "y": 12
         },
@@ -2905,6 +5367,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BLINK_FROG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BLINK_FROG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 19,
           "y": 9
         },
@@ -2948,6 +5417,13 @@ window.CotBResources = {
             "petrify": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_CATOBLEPAS_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CATOBLEPAS_0.png",
+              "weight": 1
+            }
+          ],
           "x": 18,
           "y": 5
         }
@@ -3004,6 +5480,367 @@ window.CotBResources = {
         "lavaAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava04.png",
         "lavaAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava08.png",
         "lavaAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava_sea0000.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_lair.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_lair.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_LAIR_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall2.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall6.png",
+        "wall": "art/tilesets/classic/WALL_LAIR_0.png",
+        "sideWall": "art/tilesets/classic/WALL_LAIR_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "lavaAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava04.png",
+        "lavaAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava08.png",
+        "lavaAlt2": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava_sea0000.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_0.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_1.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_2.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_3.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_LAIR_7.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_0.png",
+            "weight": 24
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_1.png",
+            "weight": 24
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_2.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_3.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_4.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_5.png",
+            "weight": 12
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_6.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_7.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_8.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_9.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_10.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_11.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_12.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_13.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_LAIR_15.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_lair_entry_lava",
@@ -3218,6 +6055,13 @@ window.CotBResources = {
           "traits": {
             "fireDamage": 15
           },
+          "classicTile": "art/tilesets/classic/MONS_FIRE_CRAB_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FIRE_CRAB_0.png",
+              "weight": 1
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -3247,6 +6091,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_KOMODO_DRAGON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_KOMODO_DRAGON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 6
         },
@@ -3287,6 +6138,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BASILISK_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BASILISK_0.png",
+              "weight": 1
+            }
+          ],
           "x": 8,
           "y": 6
         },
@@ -3318,6 +6176,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_WYVERN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WYVERN_0.png",
+              "weight": 10
+            }
+          ],
           "x": 7,
           "y": 2
         },
@@ -3352,6 +6217,13 @@ window.CotBResources = {
             "poisonDamage": 8,
             "poisonTurns": 3
           },
+          "classicTile": "art/tilesets/classic/MONS_SCORPION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SCORPION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 9
         },
@@ -3386,6 +6258,13 @@ window.CotBResources = {
             "poisonDamage": 10,
             "poisonTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+              "weight": 1
+            }
+          ],
           "x": 1,
           "y": 3
         }
@@ -3444,6 +6323,303 @@ window.CotBResources = {
         "waterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/toxic_bog1.png",
         "deepWater": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water_murky.png",
         "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water_murky2.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_swamp.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_swamp.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_SWAMP_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/lair6.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_lair2.png",
+        "wall": "art/tilesets/classic/WALL_SWAMP_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SWAMP_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_MURKY_0.png",
+        "waterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shallow_water_murky2.png",
+        "waterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/toxic_bog1.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_MURKY_0.png",
+        "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water_murky2.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SWAMP_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SWAMP_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SWAMP_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SWAMP_3.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_SWAMP_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SWAMP_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SWAMP_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SWAMP_3.png",
+            "weight": 3
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_MURKY_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_MURKY_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_MURKY_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_MURKY_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_swamp_entry_eels",
@@ -3649,6 +6825,13 @@ window.CotBResources = {
             "elec": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ELECTRIC_EEL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ELECTRIC_EEL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 3
         },
@@ -3688,6 +6871,17 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SWAMP_WORM_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SWAMP_WORM_0.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SWAMP_WORM_1.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -3722,6 +6916,13 @@ window.CotBResources = {
             "poisonDamage": 10,
             "poisonTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 2
         },
@@ -3767,6 +6968,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SWAMP_DRAKE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SWAMP_DRAKE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 6
         },
@@ -3822,6 +7030,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SWAMP_DRAGON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SWAMP_DRAGON_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 1
         },
@@ -3853,6 +7068,37 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HYDRA_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_0.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_1.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_2.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_3.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_4.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_5.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_6.png",
+              "weight": 10
+            }
+          ],
           "x": 1,
           "y": 3
         },
@@ -3901,6 +7147,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_WILL_O_THE_WISP_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WILL_O_THE_WISP_0.png",
+              "weight": 8
+            }
+          ],
           "x": 2,
           "y": 6
         },
@@ -3932,6 +7185,13 @@ window.CotBResources = {
           "traits": {
             "reachDamage": 27
           },
+          "classicTile": "art/tilesets/classic/MONS_GOLIATH_FROG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GOLIATH_FROG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 1,
           "y": 2
         }
@@ -3990,6 +7250,303 @@ window.CotBResources = {
         "waterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shallow_water_murky.png",
         "deepWater": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water_murky.png",
         "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water_murky2.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_swamp.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_swamp.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_SWAMP_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/lair7.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_lair3.png",
+        "wall": "art/tilesets/classic/WALL_SWAMP_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SWAMP_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_MURKY_0.png",
+        "waterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/toxic_bog4.png",
+        "waterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shallow_water_murky.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_MURKY_0.png",
+        "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/deep_water_murky2.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SWAMP_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SWAMP_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SWAMP_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SWAMP_3.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_SWAMP_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SWAMP_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SWAMP_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SWAMP_3.png",
+            "weight": 3
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_MURKY_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_MURKY_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_MURKY_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_MURKY_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_swamp_entry_worms",
@@ -4193,6 +7750,17 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SWAMP_WORM_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SWAMP_WORM_0.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SWAMP_WORM_1.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 3
         },
@@ -4224,6 +7792,13 @@ window.CotBResources = {
           "traits": {
             "vampiricDamage": 35
           },
+          "classicTile": "art/tilesets/classic/MONS_TYRANT_LEECH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TYRANT_LEECH_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 2
         },
@@ -4258,6 +7833,13 @@ window.CotBResources = {
             "poisonDamage": 10,
             "poisonTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WATER_MOCCASIN_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 5
         },
@@ -4303,6 +7885,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SWAMP_DRAKE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SWAMP_DRAKE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 1,
           "y": 3
         },
@@ -4358,6 +7947,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SWAMP_DRAGON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SWAMP_DRAGON_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 2
         },
@@ -4389,6 +7985,37 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HYDRA_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_0.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_1.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_2.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_3.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_4.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_5.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_HYDRA_6.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -4424,6 +8051,13 @@ window.CotBResources = {
             "elec": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ELECTRIC_EEL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ELECTRIC_EEL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 2,
           "y": 5
         },
@@ -4466,6 +8100,13 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_TREANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TREANT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 1,
           "y": 4
         },
@@ -4502,6 +8143,13 @@ window.CotBResources = {
           "traits": {
             "dragDamage": 27
           },
+          "classicTile": "art/tilesets/classic/MONS_ALLIGATOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ALLIGATOR_0.png",
+              "weight": 1
+            }
+          ],
           "x": 1,
           "y": 1
         }
@@ -4560,6 +8208,320 @@ window.CotBResources = {
         "deepWater": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_deep_water0.png",
         "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_deep_water3.png",
         "deepWaterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/open_sea.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "art/tilesets/classic/DNGN_SHOALS_STAIRS_DOWN_0.png",
+        "stairsUp": "art/tilesets/classic/DNGN_SHOALS_STAIRS_UP_0.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_SAND_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/shoals_wall1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_shoals0.png",
+        "wall": "art/tilesets/classic/WALL_SHOALS_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SHOALS_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "waterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_shallow_water4.png",
+        "waterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_shallow_water8.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_deep_water3.png",
+        "deepWaterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/open_sea.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SHOALS_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SHOALS_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SHOALS_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SHOALS_3.png",
+            "weight": 3
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_0.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_1.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_2.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_3.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_4.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_5.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_6.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_7.png",
+            "weight": 2
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_shoals_entry_hut",
@@ -4777,6 +8739,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_MERFOLK_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MERFOLK_0.png",
+              "weight": 8
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -4817,6 +8786,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_MERFOLK_SIREN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MERFOLK_SIREN_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -4848,6 +8824,13 @@ window.CotBResources = {
           "traits": {
             "reachDamage": 35
           },
+          "classicTile": "art/tilesets/classic/MONS_SNAPPING_TURTLE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SNAPPING_TURTLE_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 7
         },
@@ -4900,6 +8883,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_MANTICORE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MANTICORE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 6,
           "y": 9
         },
@@ -4934,6 +8924,13 @@ window.CotBResources = {
           "traits": {
             "floodTurns": 5
           },
+          "classicTile": "art/tilesets/classic/MONS_WATER_ELEMENTAL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WATER_ELEMENTAL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 8,
           "y": 8
         },
@@ -4966,6 +8963,13 @@ window.CotBResources = {
             "poisonDamage": 24,
             "poisonTurns": 8
           },
+          "classicTile": "art/tilesets/classic/MONS_SEA_SNAKE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SEA_SNAKE_0.png",
+              "weight": 1
+            }
+          ],
           "x": 1,
           "y": 7
         }
@@ -5024,6 +9028,320 @@ window.CotBResources = {
         "deepWater": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_deep_water2.png",
         "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_deep_water7.png",
         "deepWaterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/open_sea2.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "art/tilesets/classic/DNGN_SHOALS_STAIRS_DOWN_0.png",
+        "stairsUp": "art/tilesets/classic/DNGN_SHOALS_STAIRS_UP_0.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_SAND_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_shoals1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/shoals_wall3.png",
+        "wall": "art/tilesets/classic/WALL_SHOALS_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SHOALS_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "waterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_shallow_water6.png",
+        "waterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_shallow_water10.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "deepWaterAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/shoals_deep_water7.png",
+        "deepWaterAlt1": "vendor/crawl/crawl-ref/source/rltiles/dngn/water/open_sea2.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SHOALS_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SHOALS_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SHOALS_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SHOALS_3.png",
+            "weight": 3
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_0.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_1.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_2.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_3.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_4.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_5.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_6.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SAND_7.png",
+            "weight": 2
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "elwin_shoals_entry_stream",
@@ -5218,6 +9536,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_MERFOLK_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MERFOLK_0.png",
+              "weight": 8
+            }
+          ],
           "x": 7,
           "y": 3
         },
@@ -5258,6 +9583,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_MERFOLK_SIREN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MERFOLK_SIREN_0.png",
+              "weight": 8
+            }
+          ],
           "x": 9,
           "y": 1
         },
@@ -5292,6 +9624,13 @@ window.CotBResources = {
           "traits": {
             "floodTurns": 5
           },
+          "classicTile": "art/tilesets/classic/MONS_WATER_ELEMENTAL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WATER_ELEMENTAL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 10,
           "y": 2
         },
@@ -5324,6 +9663,13 @@ window.CotBResources = {
             "poisonDamage": 24,
             "poisonTurns": 8
           },
+          "classicTile": "art/tilesets/classic/MONS_SEA_SNAKE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SEA_SNAKE_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 3
         },
@@ -5376,6 +9722,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_MANTICORE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MANTICORE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 11,
           "y": 3
         },
@@ -5407,6 +9760,13 @@ window.CotBResources = {
           "traits": {
             "reachDamage": 35
           },
+          "classicTile": "art/tilesets/classic/MONS_SNAPPING_TURTLE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SNAPPING_TURTLE_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 3
         },
@@ -5459,6 +9819,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_WIND_DRAKE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WIND_DRAKE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 4
         },
@@ -5509,6 +9876,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_MERFOLK_AQUAMANCER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MERFOLK_AQUAMANCER_0.png",
+              "weight": 8
+            }
+          ],
           "x": 12,
           "y": 4
         },
@@ -5595,6 +9969,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ILSUIW_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ILSUIW_0.png",
+              "weight": 8
+            }
+          ],
           "x": 1,
           "y": 3
         },
@@ -5636,6 +10017,13 @@ window.CotBResources = {
           "traits": {
             "drownDamage": 12
           },
+          "classicTile": "art/tilesets/classic/MONS_WATER_NYMPH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WATER_NYMPH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 12,
           "y": 5
         }
@@ -5689,6 +10077,372 @@ window.CotBResources = {
         "wallPatch0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_snake3.png",
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/snake9.png",
         "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/statues/statue_naga.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_snake.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_snake.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_MOSAIC_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_snake0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_snake2.png",
+        "wall": "art/tilesets/classic/WALL_SNAKE_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SNAKE_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_8.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SNAKE_9.png",
+            "weight": 10
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_4.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_5.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_6.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_7.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_8.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_9.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_10.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_11.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_12.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_13.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_14.png",
+            "weight": 4
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_MOSAIC_15.png",
+            "weight": 4
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_snake_entry_guardpost_large",
@@ -5915,6 +10669,13 @@ window.CotBResources = {
           "traits": {
             "snareTurns": 2
           },
+          "classicTile": "art/tilesets/classic/MONS_NAGA_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_NAGA_0.png",
+              "weight": 10
+            }
+          ],
           "x": 8,
           "y": 6
         },
@@ -5975,6 +10736,13 @@ window.CotBResources = {
           "traits": {
             "snareTurns": 2
           },
+          "classicTile": "art/tilesets/classic/MONS_NAGA_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_NAGA_WARRIOR_0.png",
+              "weight": 10
+            }
+          ],
           "x": 4,
           "y": 5
         },
@@ -6027,6 +10795,13 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GUARDIAN_SERPENT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GUARDIAN_SERPENT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 9,
           "y": 3
         },
@@ -6070,6 +10845,13 @@ window.CotBResources = {
           "traits": {
             "electricDamage": 20
           },
+          "classicTile": "art/tilesets/classic/MONS_SHOCK_SERPENT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SHOCK_SERPENT_0.png",
+              "weight": 1
+            }
+          ],
           "x": 6,
           "y": 10
         },
@@ -6106,6 +10888,13 @@ window.CotBResources = {
           "traits": {
             "snareTurns": 2
           },
+          "classicTile": "art/tilesets/classic/MONS_ANACONDA_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ANACONDA_0.png",
+              "weight": 1
+            }
+          ],
           "x": 12,
           "y": 7
         },
@@ -6176,6 +10965,13 @@ window.CotBResources = {
           "traits": {
             "snareTurns": 2
           },
+          "classicTile": "art/tilesets/classic/MONS_NAGA_MAGE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_NAGA_MAGE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 11,
           "y": 9
         }
@@ -6230,6 +11026,380 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/spider15.png",
         "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/cobweb_EW.png",
         "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/cobweb_NS.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_spider.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_spider.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_SPIDER_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_spider0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_spider2.png",
+        "wall": "art/tilesets/classic/WALL_SPIDER_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SPIDER_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SPIDER_15.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_0.png",
+            "weight": 20
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_1.png",
+            "weight": 20
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_2.png",
+            "weight": 20
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_3.png",
+            "weight": 20
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_7.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_8.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_9.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SPIDER_11.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "spider_nest_entry_webs",
@@ -6449,6 +11619,13 @@ window.CotBResources = {
             "poisonDamage": 18,
             "poisonTurns": 6
           },
+          "classicTile": "art/tilesets/classic/MONS_REDBACK_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_REDBACK_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 6
         },
@@ -6482,6 +11659,13 @@ window.CotBResources = {
           "traits": {
             "confuseTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_TARANTELLA_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TARANTELLA_0.png",
+              "weight": 1
+            }
+          ],
           "x": 8,
           "y": 6
         },
@@ -6530,6 +11714,13 @@ window.CotBResources = {
           "traits": {
             "snareTurns": 5
           },
+          "classicTile": "art/tilesets/classic/MONS_JUMPING_SPIDER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_JUMPING_SPIDER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 9,
           "y": 6
         },
@@ -6569,6 +11760,13 @@ window.CotBResources = {
             "poisonDamage": 15,
             "poisonTurns": 5
           },
+          "classicTile": "art/tilesets/classic/MONS_WOLF_SPIDER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WOLF_SPIDER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 6
         },
@@ -6611,6 +11809,13 @@ window.CotBResources = {
           "traits": {
             "maintainRange": true
           },
+          "classicTile": "art/tilesets/classic/MONS_ORB_SPIDER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORB_SPIDER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 10,
           "y": 6
         },
@@ -6655,6 +11860,13 @@ window.CotBResources = {
             "poisonDamage": 30,
             "poisonTurns": 8
           },
+          "classicTile": "art/tilesets/classic/MONS_EMPEROR_SCORPION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_EMPEROR_SCORPION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 7
         },
@@ -6689,6 +11901,13 @@ window.CotBResources = {
             "poisonDamage": 8,
             "poisonTurns": 3
           },
+          "classicTile": "art/tilesets/classic/MONS_SCORPION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SCORPION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 11,
           "y": 6
         },
@@ -6736,6 +11955,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_BROODMOTHER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BROODMOTHER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 9
         },
@@ -6779,6 +12005,13 @@ window.CotBResources = {
             "airborne": true,
             "rageTurns": 7
           },
+          "classicTile": "art/tilesets/classic/MONS_MOTH_OF_WRATH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MOTH_OF_WRATH_0.png",
+              "weight": 1
+            }
+          ],
           "x": 1,
           "y": 6
         },
@@ -6815,6 +12048,13 @@ window.CotBResources = {
             "poisonTurns": 6,
             "paralyseTurns": 3
           },
+          "classicTile": "art/tilesets/classic/MONS_HORNET_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HORNET_0.png",
+              "weight": 1
+            }
+          ],
           "x": 10,
           "y": 4
         },
@@ -6859,6 +12099,13 @@ window.CotBResources = {
           "traits": {
             "vampiricDamage": 27
           },
+          "classicTile": "art/tilesets/classic/MONS_CULICIVORA_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CULICIVORA_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 9
         },
@@ -6890,6 +12137,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 43
           },
+          "classicTile": "art/tilesets/classic/MONS_PHARAOH_ANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_PHARAOH_ANT_0.png",
+              "weight": 1
+            }
+          ],
           "x": 1,
           "y": 5
         },
@@ -6945,6 +12199,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ENTROPY_WEAVER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ENTROPY_WEAVER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 11,
           "y": 4
         },
@@ -6989,6 +12250,13 @@ window.CotBResources = {
             "poisonTurns": 8,
             "paralyseTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_JOROGUMO_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_JOROGUMO_0.png",
+              "weight": 10
+            }
+          ],
           "x": 2,
           "y": 9
         },
@@ -7022,6 +12290,13 @@ window.CotBResources = {
           "traits": {
             "barbedTurns": 6
           },
+          "classicTile": "art/tilesets/classic/MONS_STEELBARB_WORM_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_STEELBARB_WORM_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 1
         },
@@ -7067,6 +12342,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_RADROACH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_RADROACH_0.png",
+              "weight": 1
+            }
+          ],
           "x": 11,
           "y": 9
         },
@@ -7107,6 +12389,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_XAKKRIXIS_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_XAKKRIXIS_0.png",
+              "weight": 1
+            }
+          ],
           "x": 1,
           "y": 3
         }
@@ -7163,6 +12452,316 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_oozing2.png",
         "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/bedevilled_crystal_abyss_0.png",
         "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/bottled_spirits.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "art/tilesets/classic/DNGN_SLIMY_STAIRS_DOWN_0.png",
+        "stairsUp": "art/tilesets/classic/DNGN_SLIMY_STAIRS_UP_0.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_SLIME_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/slime_stone0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/slime_stone2.png",
+        "wall": "art/tilesets/classic/WALL_SLIME_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SLIME_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_7.png",
+            "weight": 10
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_SLIME_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SLIME_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SLIME_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SLIME_3.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_slime_entry_pillars",
@@ -7432,6 +13031,13 @@ window.CotBResources = {
           "traits": {
             "acidDamage": 3
           },
+          "classicTile": "art/tilesets/classic/MONS_JELLY_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_JELLY_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -7464,6 +13070,29 @@ window.CotBResources = {
             "corr": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SLIME_CREATURE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_0.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_1.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_2.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_3.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_4.png",
+              "weight": 10
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -7510,6 +13139,13 @@ window.CotBResources = {
           "traits": {
             "acidDamage": 42
           },
+          "classicTile": "art/tilesets/classic/MONS_ACID_BLOB_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ACID_BLOB_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 2
         },
@@ -7561,6 +13197,13 @@ window.CotBResources = {
           "traits": {
             "coldDamage": 12
           },
+          "classicTile": "art/tilesets/classic/MONS_AZURE_JELLY_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_AZURE_JELLY_0.png",
+              "weight": 10
+            }
+          ],
           "x": 7,
           "y": 6
         },
@@ -7584,6 +13227,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GLASS_EYE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GLASS_EYE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 6
         },
@@ -7622,6 +13272,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_GLASS_EYE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GLASS_EYE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 8,
           "y": 4
         },
@@ -7670,6 +13327,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_GOLDEN_EYE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GOLDEN_EYE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 9
         },
@@ -7708,6 +13372,17 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_EYE_OF_DRAINING_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_EYE_OF_DRAINING_0.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_EYE_OF_DRAINING_1.png",
+              "weight": 10
+            }
+          ],
           "x": 6,
           "y": 1
         }
@@ -7764,6 +13439,316 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_oozing3.png",
         "wallAccent0": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/bedevilled_crystal_pan_0.png",
         "wallAccent1": "vendor/crawl/crawl-ref/source/rltiles/dngn/vaults/bedevilled_crystal_pan_2.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "art/tilesets/classic/DNGN_SLIMY_STAIRS_DOWN_0.png",
+        "stairsUp": "art/tilesets/classic/DNGN_SLIMY_STAIRS_UP_0.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_SLIME_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/slime_stone1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/slime_stone2.png",
+        "wall": "art/tilesets/classic/WALL_SLIME_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SLIME_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SLIME_7.png",
+            "weight": 10
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_SLIME_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SLIME_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SLIME_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SLIME_3.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "dpeg_slime_entry_enclosed",
@@ -7845,6 +13830,29 @@ window.CotBResources = {
             "corr": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SLIME_CREATURE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_0.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_1.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_2.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_3.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_SLIME_CREATURE_4.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -7891,6 +13899,13 @@ window.CotBResources = {
           "traits": {
             "acidDamage": 42
           },
+          "classicTile": "art/tilesets/classic/MONS_ACID_BLOB_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ACID_BLOB_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 3
         },
@@ -7942,6 +13957,13 @@ window.CotBResources = {
           "traits": {
             "coldDamage": 12
           },
+          "classicTile": "art/tilesets/classic/MONS_AZURE_JELLY_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_AZURE_JELLY_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 3
         },
@@ -7965,6 +13987,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GLASS_EYE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GLASS_EYE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 5
         },
@@ -8003,6 +14032,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_GLASS_EYE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GLASS_EYE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 5
         },
@@ -8051,6 +14087,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_GOLDEN_EYE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GOLDEN_EYE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -8089,6 +14132,17 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_EYE_OF_DRAINING_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_EYE_OF_DRAINING_0.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_EYE_OF_DRAINING_1.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 4
         }
@@ -8145,6 +14199,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_gray2.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood03.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_crypt.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_crypt.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_CRYPT_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs2.png",
+        "wall": "art/tilesets/classic/ROCK_WALL_CRYPT_0.png",
+        "sideWall": "art/tilesets/classic/ROCK_WALL_CRYPT_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/ROCK_WALL_CRYPT_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/ROCK_WALL_CRYPT_1.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/ROCK_WALL_CRYPT_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/ROCK_WALL_CRYPT_3.png",
+            "weight": 2
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_1.png",
+            "weight": 2
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ],
+        "floorDomino0": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_1.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino1": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_B_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino2": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_C_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino3": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_D_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_D_1.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino4": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_E_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino5": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_F_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino6": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_G_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino7": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_H_0.png",
+            "weight": 2
+          }
+        ]
       },
       "map": {
         "name": "minmay_crypt_entry_simple_sparse",
@@ -8330,6 +14726,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 8
           },
+          "classicTile": "art/tilesets/classic/MONS_WIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 2
         },
@@ -8361,6 +14764,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ZOMBIE_SMALL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ZOMBIE_SMALL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 4
         },
@@ -8394,6 +14804,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -8425,6 +14842,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SKELETAL_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SKELETAL_WARRIOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 2
         },
@@ -8482,6 +14906,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_NECROMANCER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_NECROMANCER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 8,
           "y": 3
         },
@@ -8517,6 +14948,13 @@ window.CotBResources = {
             "blinkDamage": 8,
             "blinkWith": true
           },
+          "classicTile": "art/tilesets/classic/MONS_PHANTOM_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_PHANTOM_0.png",
+              "weight": 8
+            }
+          ],
           "x": 1,
           "y": 6
         }
@@ -8573,6 +15011,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crypt-metal2.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood01.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood02.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_crypt.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_crypt.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_CRYPT_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs3.png",
+        "wall": "art/tilesets/classic/ROCK_WALL_CRYPT_0.png",
+        "sideWall": "art/tilesets/classic/ROCK_WALL_CRYPT_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/ROCK_WALL_CRYPT_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/ROCK_WALL_CRYPT_1.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/ROCK_WALL_CRYPT_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/ROCK_WALL_CRYPT_3.png",
+            "weight": 2
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_1.png",
+            "weight": 2
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ],
+        "floorDomino0": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_1.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino1": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_B_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino2": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_C_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino3": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_D_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_D_1.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino4": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_E_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino5": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_F_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino6": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_G_0.png",
+            "weight": 2
+          }
+        ],
+        "floorDomino7": [
+          {
+            "src": "art/tilesets/classic/FLOOR_CRYPT_H_0.png",
+            "weight": 2
+          }
+        ]
       },
       "map": {
         "name": "minmay_crypt_entry_simple_corners",
@@ -8838,6 +15618,13 @@ window.CotBResources = {
           "traits": {
             "vampiricDamage": 15
           },
+          "classicTile": "art/tilesets/classic/MONS_VAMPIRE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_VAMPIRE_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 5
         },
@@ -8888,6 +15675,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ANCIENT_CHAMPION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ANCIENT_CHAMPION_0.png",
+              "weight": 8
+            }
+          ],
           "x": 5,
           "y": 2
         },
@@ -8921,6 +15715,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -8957,6 +15758,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GHOUL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GHOUL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 8
         },
@@ -8988,6 +15796,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SHADOW_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SHADOW_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 3
         },
@@ -9045,6 +15860,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_NECROMANCER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_NECROMANCER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 8,
           "y": 3
         },
@@ -9077,6 +15899,13 @@ window.CotBResources = {
             "cold": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SIMULACRUM_SMALL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SIMULACRUM_SMALL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 9
         },
@@ -9115,6 +15944,13 @@ window.CotBResources = {
           "traits": {
             "vampiricDamage": 27
           },
+          "classicTile": "art/tilesets/classic/MONS_JIANGSHI_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_JIANGSHI_0.png",
+              "weight": 8
+            }
+          ],
           "x": 7,
           "y": 1
         }
@@ -9171,6 +16007,300 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_2a.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood03_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_elf.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_elf.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_HALL_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_dark_3_0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_dark_3_2.png",
+        "wall": "art/tilesets/classic/WALL_HALL_0.png",
+        "sideWall": "art/tilesets/classic/WALL_HALL_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_HALL_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_HALL_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_HALL_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_HALL_3.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_HALL_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_HALL_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_HALL_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_HALL_3.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_elf_arrival_circle",
@@ -9401,6 +16531,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_AIR_MAGE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_AIR_MAGE_0.png",
+              "weight": 8
+            }
+          ],
           "x": 10,
           "y": 9
         },
@@ -9462,6 +16599,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_ARCHER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_ARCHER_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 8
         },
@@ -9511,6 +16655,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_KNIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 11
         },
@@ -9576,6 +16727,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_FIRE_MAGE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_FIRE_MAGE_0.png",
+              "weight": 8
+            }
+          ],
           "x": 7,
           "y": 15
         },
@@ -9635,6 +16793,25 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_ELEMENTALIST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_ELEMENTALIST_0.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_ELEMENTALIST_1.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_ELEMENTALIST_2.png",
+              "weight": 8
+            },
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_ELEMENTALIST_3.png",
+              "weight": 8
+            }
+          ],
           "x": 14,
           "y": 13
         }
@@ -9691,6 +16868,300 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_4a.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_elf.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_elf.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_HALL_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_dark_5_0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_dark_5_4.png",
+        "wall": "art/tilesets/classic/WALL_HALL_0.png",
+        "sideWall": "art/tilesets/classic/WALL_HALL_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_HALL_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_HALL_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_HALL_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_HALL_3.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_HALL_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_HALL_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_HALL_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_HALL_3.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "minmay_elf_arrival_plus",
@@ -9941,6 +17412,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_BLADEMASTER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_BLADEMASTER_0.png",
+              "weight": 8
+            }
+          ],
           "x": 9,
           "y": 8
         },
@@ -9970,6 +17448,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_MASTER_ARCHER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_MASTER_ARCHER_0.png",
+              "weight": 8
+            }
+          ],
           "x": 8,
           "y": 12
         },
@@ -10019,6 +17504,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_ANNIHILATOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_ANNIHILATOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 7
         },
@@ -10070,6 +17562,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_SORCERER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_SORCERER_0.png",
+              "weight": 8
+            }
+          ],
           "x": 12,
           "y": 10
         },
@@ -10127,6 +17626,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_DEATH_MAGE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_DEATH_MAGE_0.png",
+              "weight": 8
+            }
+          ],
           "x": 8,
           "y": 1
         },
@@ -10167,6 +17673,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_HIGH_PRIEST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_HIGH_PRIEST_0.png",
+              "weight": 8
+            }
+          ],
           "x": 9,
           "y": 14
         },
@@ -10226,6 +17739,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_DEMONOLOGIST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_DEMONOLOGIST_0.png",
+              "weight": 8
+            }
+          ],
           "x": 10,
           "y": 2
         }
@@ -10282,6 +17802,300 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall5.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_vaults_open.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_vaults.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_VAULT_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall3.png",
+        "wall": "art/tilesets/classic/WALL_VAULT_0.png",
+        "sideWall": "art/tilesets/classic/WALL_VAULT_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_VAULT_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VAULT_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VAULT_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VAULT_3.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_VAULT_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_VAULT_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_VAULT_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_VAULT_3.png",
+            "weight": 3
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "david_vaults_3",
@@ -10484,6 +18298,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_VAULT_GUARD_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_VAULT_GUARD_0.png",
+              "weight": 10
+            }
+          ],
           "x": 7,
           "y": 4
         },
@@ -10524,6 +18345,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_VAULT_SENTINEL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_VAULT_SENTINEL_0.png",
+              "weight": 10
+            }
+          ],
           "x": 4,
           "y": 5
         },
@@ -10564,6 +18392,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_IRONBOUND_PRESERVER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_IRONBOUND_PRESERVER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 8,
           "y": 6
         },
@@ -10614,6 +18449,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_IRONBOUND_CONVOKER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_IRONBOUND_CONVOKER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 2
         },
@@ -10655,6 +18497,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_TENGU_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TENGU_WARRIOR_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 6
         },
@@ -10686,6 +18535,13 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_WARG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WARG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 8,
           "y": 8
         }
@@ -10742,6 +18598,300 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall11.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_s.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_s.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_vaults_closed.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_vaults.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_VAULT_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall7.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/marble_wall9.png",
+        "wall": "art/tilesets/classic/WALL_VAULT_0.png",
+        "sideWall": "art/tilesets/classic/WALL_VAULT_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_VAULT_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VAULT_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VAULT_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VAULT_3.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_VAULT_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_VAULT_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_VAULT_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_VAULT_3.png",
+            "weight": 3
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "david_vaults_2",
@@ -10974,6 +19124,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_VAULT_WARDEN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_VAULT_WARDEN_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -11003,6 +19160,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_VAULT_GUARD_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_VAULT_GUARD_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 4
         },
@@ -11036,6 +19200,13 @@ window.CotBResources = {
           "traits": {
             "coldDamage": 25
           },
+          "classicTile": "art/tilesets/classic/MONS_IRONBOUND_FROSTHEART_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_IRONBOUND_FROSTHEART_0.png",
+              "weight": 10
+            }
+          ],
           "x": 6,
           "y": 7
         },
@@ -11086,6 +19257,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_IRONBOUND_THUNDERHULK_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_IRONBOUND_THUNDERHULK_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 3
         },
@@ -11115,6 +19293,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_IRONBOUND_BEASTMASTER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_IRONBOUND_BEASTMASTER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 4,
           "y": 1
         },
@@ -11149,6 +19334,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_IRONBOUND_MECHANIST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_IRONBOUND_MECHANIST_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 6
         },
@@ -11212,6 +19404,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_TENGU_REAVER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TENGU_REAVER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 8,
           "y": 7
         },
@@ -11235,6 +19434,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GUARDIAN_SPHINX_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GUARDIAN_SPHINX_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 7
         }
@@ -11291,6 +19497,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths_leafy2.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood02.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_depths.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_depths.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_GREY_DIRT_B_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_depths2.png",
+        "wall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "sideWall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_0.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_1.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_2.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_3.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_7.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_8.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_9.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_10.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_11.png",
+            "weight": 5
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_0.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_1.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_2.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_3.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_4.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_5.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_7.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "gammafunk_depths_entry_grave",
@@ -11529,6 +20077,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_TROLL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_TROLL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 7,
           "y": 6
         },
@@ -11563,6 +20118,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_TWO_HEADED_OGRE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TWO_HEADED_OGRE_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 3
         },
@@ -11597,6 +20159,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ETTIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ETTIN_0.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 7
         },
@@ -11626,6 +20195,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_CYCLOPS_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CYCLOPS_0.png",
+              "weight": 10
+            }
+          ],
           "x": 9,
           "y": 8
         },
@@ -11655,6 +20231,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_YAKTAUR_CAPTAIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_YAKTAUR_CAPTAIN_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 2
         },
@@ -11689,6 +20272,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_CENTAUR_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CENTAUR_WARRIOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 7,
           "y": 11
         },
@@ -11756,6 +20346,13 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_RAKSHASA_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_RAKSHASA_0.png",
+              "weight": 1
+            }
+          ],
           "x": 11,
           "y": 4
         },
@@ -11785,6 +20382,33 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_UGLY_THING_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_UGLY_THING_0.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_UGLY_THING_1.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_UGLY_THING_2.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_UGLY_THING_3.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_UGLY_THING_4.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_UGLY_THING_5.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 1
         }
@@ -11841,6 +20465,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths_leafy3.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood07_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood09_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_zot_closed.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_depths.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_GREY_DIRT_B_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_metal_depths2.png",
+        "wall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "sideWall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_0.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_1.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_2.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_3.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_7.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_8.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_9.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_10.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_11.png",
+            "weight": 5
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_0.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_1.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_2.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_3.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_4.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_5.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_GREY_DIRT_B_7.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "grunt_enter_depths_magical_seal",
@@ -12112,6 +21078,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_STONE_GIANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_STONE_GIANT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -12153,6 +21126,13 @@ window.CotBResources = {
             "fire": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_FIRE_GIANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FIRE_GIANT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 8
         },
@@ -12194,6 +21174,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_FROST_GIANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FROST_GIANT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 9,
           "y": 5
         },
@@ -12237,6 +21224,13 @@ window.CotBResources = {
             "damnation": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELLION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELLION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 8
         },
@@ -12283,6 +21277,13 @@ window.CotBResources = {
             "airborne": true,
             "fireDamage": 25
           },
+          "classicTile": "art/tilesets/classic/MONS_BALRUG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BALRUG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 2
         },
@@ -12344,6 +21345,13 @@ window.CotBResources = {
             "fire": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELL_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELL_KNIGHT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 1,
           "y": 4
         },
@@ -12392,6 +21400,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_CACODEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CACODEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 8
         },
@@ -12442,6 +21457,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SHADOW_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SHADOW_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 1
         },
@@ -12494,6 +21516,13 @@ window.CotBResources = {
             "elec": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_TITAN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TITAN_0.png",
+              "weight": 10
+            }
+          ],
           "x": 9,
           "y": 3
         }
@@ -12550,6 +21579,300 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_stone_last04.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood09_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/zot_stairs_down.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_zot.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_TOMB_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_blue0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/zot_blue2.png",
+        "wall": "art/tilesets/classic/WALL_ZOT_YELLOW_0.png",
+        "sideWall": "art/tilesets/classic/WALL_ZOT_YELLOW_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_YELLOW_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_YELLOW_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_YELLOW_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_YELLOW_3.png",
+            "weight": 10
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_TOMB_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_TOMB_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_TOMB_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_TOMB_3.png",
+            "weight": 3
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "zot_entry_small",
@@ -12671,6 +21994,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORB_GUARDIAN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORB_GUARDIAN_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -12710,6 +22040,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_ORB_OF_FIRE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORB_OF_FIRE_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 3
         },
@@ -12759,6 +22096,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DRACONIAN_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DRACONIAN_KNIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 4
         },
@@ -12808,6 +22152,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DRACONIAN_ANNIHILATOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DRACONIAN_ANNIHILATOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 6
         },
@@ -12866,6 +22217,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DRACONIAN_STORMCALLER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DRACONIAN_STORMCALLER_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 6
         },
@@ -12905,6 +22263,29 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_KILLER_KLOWN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_KILLER_KLOWN_0.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_KILLER_KLOWN_1.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_KILLER_KLOWN_2.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_KILLER_KLOWN_3.png",
+              "weight": 10
+            },
+            {
+              "src": "art/tilesets/classic/MONS_KILLER_KLOWN_4.png",
+              "weight": 10
+            }
+          ],
           "x": 3,
           "y": 5
         },
@@ -12956,6 +22337,13 @@ window.CotBResources = {
           "traits": {
             "snareTurns": 2
           },
+          "classicTile": "art/tilesets/classic/MONS_TENTACLED_MONSTROSITY_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TENTACLED_MONSTROSITY_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 3
         },
@@ -13013,6 +22401,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 20
           },
+          "classicTile": "art/tilesets/classic/MONS_ANCIENT_LICH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ANCIENT_LICH_0.png",
+              "weight": 10
+            }
+          ],
           "x": 4,
           "y": 7
         }
@@ -13069,6 +22464,300 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell11.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_s.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood09_s.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_gehenna1.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_ROUGH_RED_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_pyre0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_stone_pyre2.png",
+        "wall": "art/tilesets/classic/WALL_ZOT_RED_0.png",
+        "sideWall": "art/tilesets/classic/WALL_ZOT_RED_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_RED_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_RED_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_RED_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_RED_3.png",
+            "weight": 10
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_ROUGH_RED_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ROUGH_RED_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ROUGH_RED_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ROUGH_RED_3.png",
+            "weight": 10
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "pf_hell_entry_great_geh",
@@ -13316,6 +23005,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_BRIMSTONE_FIEND_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BRIMSTONE_FIEND_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 10
         },
@@ -13359,6 +23055,13 @@ window.CotBResources = {
             "damnation": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELLION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELLION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 2,
           "y": 10
         },
@@ -13405,6 +23108,13 @@ window.CotBResources = {
             "airborne": true,
             "fireDamage": 25
           },
+          "classicTile": "art/tilesets/classic/MONS_BALRUG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BALRUG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 12
         },
@@ -13442,6 +23152,13 @@ window.CotBResources = {
             "airborne": true,
             "fireDamage": 30
           },
+          "classicTile": "art/tilesets/classic/MONS_SUN_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SUN_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 7
         },
@@ -13478,6 +23195,13 @@ window.CotBResources = {
             "airborne": true,
             "barbedTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_RED_DEVIL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_RED_DEVIL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 6
         },
@@ -13532,6 +23256,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SMOKE_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SMOKE_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 3
         },
@@ -13593,6 +23324,13 @@ window.CotBResources = {
             "fire": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELL_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELL_KNIGHT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 3
         }
@@ -13649,6 +23387,340 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice_overlay_S.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_cocytus1.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_FROZEN_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall2.png",
+        "wall": "art/tilesets/classic/WALL_ICE_0.png",
+        "sideWall": "art/tilesets/classic/WALL_ICE_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_ICE_0.png",
+            "weight": 9
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ICE_1.png",
+            "weight": 9
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ICE_2.png",
+            "weight": 9
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ICE_3.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ICE_4.png",
+            "weight": 5
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_4.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_5.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_6.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_7.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_FROZEN_12.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "pf_coc_iceberg",
@@ -13783,6 +23855,13 @@ window.CotBResources = {
             "airborne": true,
             "coldDamage": 25
           },
+          "classicTile": "art/tilesets/classic/MONS_ICE_FIEND_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ICE_FIEND_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 7
         },
@@ -13818,6 +23897,13 @@ window.CotBResources = {
           "traits": {
             "coldDamage": 16
           },
+          "classicTile": "art/tilesets/classic/MONS_ICE_DEVIL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ICE_DEVIL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 6,
           "y": 5
         },
@@ -13859,6 +23945,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_FROST_GIANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FROST_GIANT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 7,
           "y": 6
         },
@@ -13899,6 +23992,13 @@ window.CotBResources = {
             "airborne": true,
             "coldDamage": 16
           },
+          "classicTile": "art/tilesets/classic/MONS_FREEZING_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FREEZING_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 7,
           "y": 8
         },
@@ -13945,6 +24045,13 @@ window.CotBResources = {
             "airborne": true,
             "coldDamage": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_WHITE_IMP_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WHITE_IMP_0.png",
+              "weight": 1
+            }
+          ],
           "x": 6,
           "y": 9
         },
@@ -13995,6 +24102,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SHADOW_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SHADOW_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 8
         }
@@ -14051,6 +24165,332 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/cobalt_stone12.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood03.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_tartarus1.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_BLACK_COBALT_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_dark0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_dark2.png",
+        "wall": "art/tilesets/classic/WALL_COBALT_ROCK_0.png",
+        "sideWall": "art/tilesets/classic/WALL_COBALT_ROCK_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_COBALT_ROCK_0.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_COBALT_ROCK_1.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_COBALT_ROCK_2.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_COBALT_ROCK_3.png",
+            "weight": 5
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_7.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_8.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_9.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_10.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_BLACK_COBALT_11.png",
+            "weight": 10
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "hangedman_tar_grid_catacomb",
@@ -14287,6 +24727,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SHADOW_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SHADOW_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 2
         },
@@ -14322,6 +24769,13 @@ window.CotBResources = {
             "airborne": true,
             "dragDamage": 36
           },
+          "classicTile": "art/tilesets/classic/MONS_REAPER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_REAPER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 5
         },
@@ -14374,6 +24828,13 @@ window.CotBResources = {
             "airborne": true,
             "drainDamage": 25
           },
+          "classicTile": "art/tilesets/classic/MONS_TZITZIMITL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TZITZIMITL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 6
         },
@@ -14405,6 +24866,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SHADOW_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SHADOW_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 6
         },
@@ -14445,6 +24913,13 @@ window.CotBResources = {
             "airborne": true,
             "coldDamage": 16
           },
+          "classicTile": "art/tilesets/classic/MONS_FREEZING_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FREEZING_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 8
         },
@@ -14502,6 +24977,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 20
           },
+          "classicTile": "art/tilesets/classic/MONS_ANCIENT_LICH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ANCIENT_LICH_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 10
         },
@@ -14533,6 +25015,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_REVENANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_REVENANT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 11
         }
@@ -14589,6 +25078,308 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron5-2.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_dis1.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_IRON_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron0-0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/iron2-0.png",
+        "wall": "art/tilesets/classic/WALL_ZOT_CYAN_0.png",
+        "sideWall": "art/tilesets/classic/WALL_ZOT_CYAN_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_CYAN_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_CYAN_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_CYAN_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_ZOT_CYAN_3.png",
+            "weight": 10
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_IRON_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_IRON_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_IRON_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_IRON_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_IRON_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_IRON_5.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "grunt_hell_entry_dis_old",
@@ -14851,6 +25642,13 @@ window.CotBResources = {
             "damnation": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELL_SENTINEL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELL_SENTINEL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 6,
           "y": 9
         },
@@ -14912,6 +25710,13 @@ window.CotBResources = {
             "fire": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELL_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELL_KNIGHT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 6,
           "y": 3
         },
@@ -14966,6 +25771,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_EXECUTIONER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_EXECUTIONER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 8,
           "y": 4
         },
@@ -15000,6 +25812,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_IRON_IMP_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_IRON_IMP_0.png",
+              "weight": 1
+            }
+          ],
           "x": 2,
           "y": 11
         },
@@ -15036,6 +25855,13 @@ window.CotBResources = {
           "traits": {
             "reachDamage": 15
           },
+          "classicTile": "art/tilesets/classic/MONS_ORANGE_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORANGE_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 10,
           "y": 4
         },
@@ -15070,6 +25896,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SIN_BEAST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SIN_BEAST_0.png",
+              "weight": 1
+            }
+          ],
           "x": 10,
           "y": 13
         },
@@ -15113,6 +25946,13 @@ window.CotBResources = {
             "damnation": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELLION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELLION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 14,
           "y": 5
         }
@@ -15169,6 +26009,276 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_4b.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_e.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood05_w.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/starry_portal.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal02.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_1.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_1a.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_1b.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "floor": [
+          {
+            "src": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal02.png",
+            "weight": 1
+          }
+        ],
+        "wall": [
+          {
+            "src": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/stone_magic_crackle_1a.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "hangedman_abyss_entry_splay",
@@ -15438,6 +26548,13 @@ window.CotBResources = {
           "traits": {
             "snareTurns": 2
           },
+          "classicTile": "art/tilesets/classic/MONS_TENTACLED_MONSTROSITY_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TENTACLED_MONSTROSITY_0.png",
+              "weight": 1
+            }
+          ],
           "x": 9,
           "y": 6
         },
@@ -15472,6 +26589,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_TENTACLED_STARSPAWN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_TENTACLED_STARSPAWN_0.png",
+              "weight": 1
+            }
+          ],
           "x": 6,
           "y": 8
         },
@@ -15501,6 +26625,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_STARCURSED_MASS_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_STARCURSED_MASS_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 8
         },
@@ -15540,6 +26671,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_WRETCHED_STAR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WRETCHED_STAR_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 8
         },
@@ -15588,6 +26726,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_THRASHING_HORROR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_THRASHING_HORROR_0.png",
+              "weight": 1
+            }
+          ],
           "x": 10,
           "y": 1
         },
@@ -15617,6 +26762,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_UNSEEN_HORROR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_UNSEEN_HORROR_0.png",
+              "weight": 1
+            }
+          ],
           "x": 6,
           "y": 11
         },
@@ -15646,6 +26798,29 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_CHAOS_SPAWN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CHAOS_SPAWN_0.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_CHAOS_SPAWN_1.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_CHAOS_SPAWN_2.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_CHAOS_SPAWN_3.png",
+              "weight": 1
+            },
+            {
+              "src": "art/tilesets/classic/MONS_CHAOS_SPAWN_4.png",
+              "weight": 1
+            }
+          ],
           "x": 13,
           "y": 3
         },
@@ -15695,6 +26870,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_APOCALYPSE_CRAB_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_APOCALYPSE_CRAB_0.png",
+              "weight": 1
+            }
+          ],
           "x": 2,
           "y": 8
         }
@@ -15751,6 +26933,276 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_zot_2.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_e.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_w.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/starry_portal.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal04.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell04.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell07.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell10.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell11.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "floor": [
+          {
+            "src": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/infernal04.png",
+            "weight": 1
+          }
+        ],
+        "wall": [
+          {
+            "src": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell10.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "grunt_pan_entry_sceptre",
@@ -16043,6 +27495,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_CACODEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CACODEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 2
         },
@@ -16097,6 +27556,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_EXECUTIONER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_EXECUTIONER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 5
         },
@@ -16139,6 +27605,13 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GREEN_DEATH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GREEN_DEATH_0.png",
+              "weight": 1
+            }
+          ],
           "x": 9,
           "y": 1
         },
@@ -16182,6 +27655,13 @@ window.CotBResources = {
             "damnation": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELLION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELLION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 3,
           "y": 4
         },
@@ -16228,6 +27708,13 @@ window.CotBResources = {
             "airborne": true,
             "fireDamage": 25
           },
+          "classicTile": "art/tilesets/classic/MONS_BALRUG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_BALRUG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 7
         },
@@ -16278,6 +27765,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SHADOW_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SHADOW_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 6,
           "y": 9
         },
@@ -16314,6 +27808,13 @@ window.CotBResources = {
           "traits": {
             "reachDamage": 15
           },
+          "classicTile": "art/tilesets/classic/MONS_ORANGE_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORANGE_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 9
         },
@@ -16356,6 +27857,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SPHINX_MARAUDER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SPHINX_MARAUDER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 8,
           "y": 9
         },
@@ -16390,6 +27898,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_JUGGERNAUT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_JUGGERNAUT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 10,
           "y": 7
         }
@@ -16446,6 +27961,300 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crypt-metal2.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood00.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood01.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_tomb.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_tomb.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_TOMB_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/tomb2.png",
+        "wall": "art/tilesets/classic/WALL_UNDEAD_0.png",
+        "sideWall": "art/tilesets/classic/WALL_UNDEAD_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_UNDEAD_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_UNDEAD_1.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_UNDEAD_2.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_UNDEAD_3.png",
+            "weight": 2
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_TOMB_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_TOMB_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_TOMB_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_TOMB_3.png",
+            "weight": 3
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "tomb_entry_simple_bobbens",
@@ -16742,6 +28551,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ROYAL_MUMMY_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ROYAL_MUMMY_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -16805,6 +28621,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_MUMMY_PRIEST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MUMMY_PRIEST_0.png",
+              "weight": 10
+            }
+          ],
           "x": 4,
           "y": 7
         },
@@ -16836,6 +28659,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GUARDIAN_MUMMY_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GUARDIAN_MUMMY_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 7
         },
@@ -16897,6 +28727,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_CURSE_SKULL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CURSE_SKULL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 1,
           "y": 5
         },
@@ -16954,6 +28791,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_CURSE_TOE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CURSE_TOE_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 1
         },
@@ -16985,6 +28829,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEATH_COB_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEATH_COB_0.png",
+              "weight": 8
+            }
+          ],
           "x": 7,
           "y": 6
         },
@@ -17008,6 +28859,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_GUARDIAN_SPHINX_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_GUARDIAN_SPHINX_0.png",
+              "weight": 10
+            }
+          ],
           "x": 7,
           "y": 2
         },
@@ -17040,6 +28898,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_MUMMY_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_MUMMY_0.png",
+              "weight": 10
+            }
+          ],
           "x": 2,
           "y": 1
         }
@@ -17096,6 +28961,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_gray2.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood01.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood02.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_crypt.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_crypt.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_SANDSTONE_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs2.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/catacombs5.png",
+        "wall": "art/tilesets/classic/WALL_SANDSTONE_0.png",
+        "sideWall": "art/tilesets/classic/WALL_SANDSTONE_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_0.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_1.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_2.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_3.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_4.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_SANDSTONE_9.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_0.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_1.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_2.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_3.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_4.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_5.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_SANDSTONE_9.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "enter_ossuary_4",
@@ -17242,6 +29449,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ZOMBIE_SMALL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ZOMBIE_SMALL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 5,
           "y": 2
         },
@@ -17275,6 +29489,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 8
           },
+          "classicTile": "art/tilesets/classic/MONS_WIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 3,
           "y": 3
         },
@@ -17310,6 +29531,13 @@ window.CotBResources = {
             "blinkDamage": 8,
             "blinkWith": true
           },
+          "classicTile": "art/tilesets/classic/MONS_PHANTOM_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_PHANTOM_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 5
         },
@@ -17341,6 +29569,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SKELETAL_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SKELETAL_WARRIOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 4
         },
@@ -17374,6 +29609,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 6
           },
+          "classicTile": "art/tilesets/classic/MONS_NECROPHAGE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_NECROPHAGE_0.png",
+              "weight": 8
+            }
+          ],
           "x": 2,
           "y": 4
         }
@@ -17430,6 +29672,276 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/ice_overlay_SE.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_w.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_e.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_cocytus2.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen3.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall1.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall3.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block1.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_wall0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "floor": [
+          {
+            "src": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/frozen3.png",
+            "weight": 1
+          }
+        ],
+        "wall": [
+          {
+            "src": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/ice_block1.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "portal_ice_cave_entry_pillars_1",
@@ -17580,6 +30092,13 @@ window.CotBResources = {
           "traits": {
             "coldDamage": 16
           },
+          "classicTile": "art/tilesets/classic/MONS_ICE_DEVIL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ICE_DEVIL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 3
         },
@@ -17626,6 +30145,13 @@ window.CotBResources = {
             "airborne": true,
             "coldDamage": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_WHITE_IMP_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WHITE_IMP_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 4
         },
@@ -17658,6 +30184,13 @@ window.CotBResources = {
             "cold": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SIMULACRUM_SMALL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SIMULACRUM_SMALL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 5,
           "y": 2
         },
@@ -17698,6 +30231,13 @@ window.CotBResources = {
             "airborne": true,
             "coldDamage": 16
           },
+          "classicTile": "art/tilesets/classic/MONS_FREEZING_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FREEZING_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 1,
           "y": 2
         },
@@ -17749,6 +30289,13 @@ window.CotBResources = {
             "airborne": true,
             "coldDamage": 25
           },
+          "classicTile": "art/tilesets/classic/MONS_ICE_FIEND_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ICE_FIEND_0.png",
+              "weight": 1
+            }
+          ],
           "x": 4,
           "y": 5
         }
@@ -17805,6 +30352,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown-vines2.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood04_e.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood05_w.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_arch_hell.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/brick_brown3.png",
+        "wall": "art/tilesets/classic/WALL_BRICK_BROWN_0.png",
+        "sideWall": "art/tilesets/classic/WALL_BRICK_BROWN_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_BRICK_BROWN_0.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_BRICK_BROWN_1.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_BRICK_BROWN_2.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_BRICK_BROWN_3.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_BRICK_BROWN_4.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_BRICK_BROWN_5.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_BRICK_BROWN_6.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_BRICK_BROWN_7.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_0.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_1.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_2.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_3.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_4.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_7.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_8.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_9.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_10.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_COBBLE_BLOOD_11.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "enter_bailey_6",
@@ -17962,6 +30851,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 4
         },
@@ -17991,6 +30887,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HOBGOBLIN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HOBGOBLIN_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 6
         },
@@ -18020,6 +30923,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_WARRIOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_WARRIOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 8,
           "y": 3
         },
@@ -18060,6 +30970,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ORC_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ORC_KNIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 1,
           "y": 4
         },
@@ -18091,6 +31008,13 @@ window.CotBResources = {
             "poison": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_WARG_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WARG_0.png",
+              "weight": 1
+            }
+          ],
           "x": 7,
           "y": 7
         }
@@ -18147,6 +31071,312 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/hell03.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood06_s.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood08_s.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/stone_arch_hell.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_ROUGH_RED_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/volcanic_wall1.png",
+        "wall": "art/tilesets/classic/WALL_VOLCANIC_0.png",
+        "sideWall": "art/tilesets/classic/WALL_VOLCANIC_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_VOLCANIC_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VOLCANIC_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VOLCANIC_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VOLCANIC_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VOLCANIC_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VOLCANIC_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/WALL_VOLCANIC_6.png",
+            "weight": 1
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_ROUGH_RED_0.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ROUGH_RED_1.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ROUGH_RED_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_ROUGH_RED_3.png",
+            "weight": 10
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "nicolae_volcano_entry_s_turn",
@@ -18310,6 +31540,13 @@ window.CotBResources = {
           "traits": {
             "fireDamage": 13
           },
+          "classicTile": "art/tilesets/classic/MONS_SALAMANDER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SALAMANDER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 4,
           "y": 6
         },
@@ -18365,6 +31602,13 @@ window.CotBResources = {
           "traits": {
             "fireDamage": 10
           },
+          "classicTile": "art/tilesets/classic/MONS_SALAMANDER_MYSTIC_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SALAMANDER_MYSTIC_0.png",
+              "weight": 10
+            }
+          ],
           "x": 6,
           "y": 4
         },
@@ -18426,6 +31670,13 @@ window.CotBResources = {
             "fire": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELL_KNIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELL_KNIGHT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 5,
           "y": 1
         },
@@ -18467,6 +31718,13 @@ window.CotBResources = {
             "fire": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_FIRE_GIANT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FIRE_GIANT_0.png",
+              "weight": 10
+            }
+          ],
           "x": 8,
           "y": 3
         },
@@ -18503,6 +31761,13 @@ window.CotBResources = {
             "airborne": true,
             "barbedTurns": 4
           },
+          "classicTile": "art/tilesets/classic/MONS_RED_DEVIL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_RED_DEVIL_0.png",
+              "weight": 1
+            }
+          ],
           "x": 10,
           "y": 4
         },
@@ -18540,6 +31805,13 @@ window.CotBResources = {
             "airborne": true,
             "fireDamage": 30
           },
+          "classicTile": "art/tilesets/classic/MONS_SUN_DEMON_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SUN_DEMON_0.png",
+              "weight": 1
+            }
+          ],
           "x": 13,
           "y": 6
         },
@@ -18583,6 +31855,13 @@ window.CotBResources = {
             "damnation": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_HELLION_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_HELLION_0.png",
+              "weight": 1
+            }
+          ],
           "x": 13,
           "y": 4
         }
@@ -18639,6 +31918,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/wall_clear_permarock_necropolis0.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood01.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_old_blood03.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/enter_crypt.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/exit_crypt.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_NECROPOLIS_SQUARES_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/metal_wall_necropolis_0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/metal_wall_necropolis_2.png",
+        "wall": "art/tilesets/classic/WALL_CATACOMBS_0.png",
+        "sideWall": "art/tilesets/classic/WALL_CATACOMBS_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_0.png",
+            "weight": 30
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_1.png",
+            "weight": 30
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_2.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_3.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_6.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_7.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_8.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_9.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_10.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_11.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_12.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_13.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_14.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/WALL_CATACOMBS_15.png",
+            "weight": 2
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_NECROPOLIS_SQUARES_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NECROPOLIS_SQUARES_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NECROPOLIS_SQUARES_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NECROPOLIS_SQUARES_3.png",
+            "weight": 3
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "index_necropolis_entry_arbor_square",
@@ -18791,6 +32412,13 @@ window.CotBResources = {
             "blinkDamage": 8,
             "blinkWith": true
           },
+          "classicTile": "art/tilesets/classic/MONS_PHANTOM_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_PHANTOM_0.png",
+              "weight": 8
+            }
+          ],
           "x": 5,
           "y": 4
         },
@@ -18824,6 +32452,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 8
           },
+          "classicTile": "art/tilesets/classic/MONS_WIGHT_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WIGHT_0.png",
+              "weight": 8
+            }
+          ],
           "x": 2,
           "y": 4
         },
@@ -18855,6 +32490,13 @@ window.CotBResources = {
             "cold": 2
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_ZOMBIE_SMALL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ZOMBIE_SMALL_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 3
         },
@@ -18888,6 +32530,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 2,
           "y": 5
         },
@@ -18919,6 +32568,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_SHADOW_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SHADOW_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 6,
           "y": 2
         },
@@ -18959,6 +32615,13 @@ window.CotBResources = {
             "airborne": true,
             "coldDamage": 16
           },
+          "classicTile": "art/tilesets/classic/MONS_FREEZING_WRAITH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_FREEZING_WRAITH_0.png",
+              "weight": 8
+            }
+          ],
           "x": 2,
           "y": 6
         },
@@ -19016,6 +32679,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_NECROMANCER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_NECROMANCER_0.png",
+              "weight": 10
+            }
+          ],
           "x": 7,
           "y": 2
         }
@@ -19072,6 +32742,276 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/endless_salt0.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood00_w.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_e.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/desolation_portal.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/desolation_exit.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/limestone0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall0.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall3.png",
+        "wall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall1.png",
+        "sideWall": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall2.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "floor": [
+          {
+            "src": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/limestone0.png",
+            "weight": 1
+          }
+        ],
+        "wall": [
+          {
+            "src": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/sandstone_wall1.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "portal_desolation_entry_holy_temple",
@@ -19241,6 +33181,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_SALTLING_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_SALTLING_0.png",
+              "weight": 1
+            }
+          ],
           "x": 9,
           "y": 8
         },
@@ -19301,6 +33248,13 @@ window.CotBResources = {
             "cold": 1
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_PEACEKEEPER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_PEACEKEEPER_0.png",
+              "weight": 1
+            }
+          ],
           "x": 5,
           "y": 10
         },
@@ -19351,6 +33305,13 @@ window.CotBResources = {
           "traits": {
             "airborne": true
           },
+          "classicTile": "art/tilesets/classic/MONS_ANGEL_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_ANGEL_0.png",
+              "weight": 10
+            }
+          ],
           "x": 10,
           "y": 13
         },
@@ -19395,6 +33356,13 @@ window.CotBResources = {
             "cold": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_CRYSTAL_GUARDIAN_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CRYSTAL_GUARDIAN_0.png",
+              "weight": 1
+            }
+          ],
           "x": 15,
           "y": 6
         },
@@ -19439,6 +33407,13 @@ window.CotBResources = {
             "cold": 3
           },
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_CRYSTAL_ECHIDNA_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_CRYSTAL_ECHIDNA_0.png",
+              "weight": 1
+            }
+          ],
           "x": 2,
           "y": 12
         }
@@ -19495,6 +33470,348 @@ window.CotBResources = {
         "wallPatch1": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_magenta.png",
         "wallStain0": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood01_n.png",
         "wallStain1": "vendor/crawl/crawl-ref/source/rltiles/misc/blood/wall_blood03_n.png"
+      },
+      "classicAssets": {
+        "door": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/closed_door.png",
+        "openDoor": "vendor/crawl/crawl-ref/source/rltiles/dngn/doors/open_door.png",
+        "stairsDown": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/starry_portal.png",
+        "stairsUp": "vendor/crawl/crawl-ref/source/rltiles/dngn/gateways/return_hell.png",
+        "fog": "art/tilesets/classic/CLOUD_GREY_SMOKE_0.png",
+        "poisonCloud": "art/tilesets/classic/CLOUD_POISON_0.png",
+        "petrifyCloud": "art/tilesets/classic/CLOUD_PETRIFY_0.png",
+        "effectMagicDart": "vendor/crawl/crawl-ref/source/rltiles/effect/magic_dart2.png",
+        "effectFlame": "vendor/crawl/crawl-ref/source/rltiles/effect/flame1.png",
+        "effectIce": "vendor/crawl/crawl-ref/source/rltiles/effect/iceblast0.png",
+        "effectImpact": "vendor/crawl/crawl-ref/source/rltiles/effect/bolt02.png",
+        "effectSmite": "vendor/crawl/crawl-ref/source/rltiles/effect/light_beam3.png",
+        "effectSilence": "vendor/crawl/crawl-ref/source/rltiles/effect/silenced.png",
+        "effectBlink": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_tloc_energy.png",
+        "effectFear": "vendor/crawl/crawl-ref/source/rltiles/effect/shadow_blast1.png",
+        "effectImmolation": "vendor/crawl/crawl-ref/source/rltiles/effect/frostfire1.png",
+        "effectPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "effectHalo": "vendor/crawl/crawl-ref/source/rltiles/effect/halo_range.png",
+        "effectOrb": "vendor/crawl/crawl-ref/source/rltiles/mon/nonliving/orb_of_destruction1.png",
+        "floorBlood": "art/tilesets/classic/BLOOD_0.png",
+        "floorScorch": "vendor/crawl/crawl-ref/source/rltiles/dngn/floor/lava00.png",
+        "floorPoison": "vendor/crawl/crawl-ref/source/rltiles/effect/fulsome_poison.png",
+        "floorIce": "vendor/crawl/crawl-ref/source/rltiles/effect/cloud_cold0.png",
+        "floor": "art/tilesets/classic/FLOOR_NORMAL_0.png",
+        "ceiling": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_lightblue.png",
+        "ceilingAlt0": "vendor/crawl/crawl-ref/source/rltiles/dngn/wall/crystal_wall_cyan.png",
+        "wall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "sideWall": "art/tilesets/classic/WALL_NORMAL_0.png",
+        "water": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+        "deepWater": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+        "lava": "art/tilesets/classic/DNGN_LAVA_0.png",
+        "flameCloud": "art/tilesets/classic/CLOUD_FIRE_0.png",
+        "iceCloud": "art/tilesets/classic/CLOUD_COLD_0.png",
+        "statusNet": "art/tilesets/classic/TRAP_NET_0.png",
+        "statusPoison": "art/tilesets/classic/POISON_0.png",
+        "statusFire": "art/tilesets/classic/INNER_FLAME_0.png",
+        "statusBurning": "art/tilesets/classic/STICKY_FLAME_0.png",
+        "statusFear": "art/tilesets/classic/FLEEING_0.png",
+        "statusHaste": "art/tilesets/classic/HASTED_0.png",
+        "statusSlow": "art/tilesets/classic/SLOWED_0.png",
+        "statusMight": "art/tilesets/classic/MIGHT_0.png",
+        "statusRage": "art/tilesets/classic/BERSERK_0.png",
+        "statusConfused": "art/tilesets/classic/CONFUSED_0.png",
+        "statusCorroded": "art/tilesets/classic/CORRODED_0.png",
+        "statusConstricted": "art/tilesets/classic/CONSTRICTED_0.png",
+        "statusResistance": "art/tilesets/classic/RESISTANCE_0.png"
+      },
+      "classicVariants": {
+        "wall": [
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_0.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_1.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_2.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_3.png",
+            "weight": 100
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_4.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_5.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_6.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_7.png",
+            "weight": 10
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_8.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_9.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_10.png",
+            "weight": 5
+          },
+          {
+            "src": "art/tilesets/classic/WALL_NORMAL_11.png",
+            "weight": 5
+          }
+        ],
+        "floor": [
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_0.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_1.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_2.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_3.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_4.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_5.png",
+            "weight": 6
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/FLOOR_NORMAL_7.png",
+            "weight": 1
+          }
+        ],
+        "water": [
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_SHALLOW_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "deepWater": [
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_0.png",
+            "weight": 2
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_DEEP_WATER_1.png",
+            "weight": 1
+          }
+        ],
+        "lava": [
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_0.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_1.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_2.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_3.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_4.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_5.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_6.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_7.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_8.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_9.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_10.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_11.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_12.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_13.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_14.png",
+            "weight": 1
+          },
+          {
+            "src": "art/tilesets/classic/DNGN_LAVA_15.png",
+            "weight": 1
+          }
+        ],
+        "floorBlood": [
+          {
+            "src": "art/tilesets/classic/BLOOD_0.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_1.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_2.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_3.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_4.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_5.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_6.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_7.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_8.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_9.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_10.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_11.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_12.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_13.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_14.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_15.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_16.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_17.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_18.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_19.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_20.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_21.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_22.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_23.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_24.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_25.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_26.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_27.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_28.png",
+            "weight": 3
+          },
+          {
+            "src": "art/tilesets/classic/BLOOD_29.png",
+            "weight": 3
+          }
+        ]
       },
       "map": {
         "name": "mu_enter_wizlab_2",
@@ -19696,6 +34013,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_FIRE_MAGE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_FIRE_MAGE_0.png",
+              "weight": 8
+            }
+          ],
           "x": 9,
           "y": 3
         },
@@ -19745,6 +34069,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_AIR_MAGE_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_AIR_MAGE_0.png",
+              "weight": 8
+            }
+          ],
           "x": 4,
           "y": 2
         },
@@ -19794,6 +34125,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_ANNIHILATOR_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_ANNIHILATOR_0.png",
+              "weight": 8
+            }
+          ],
           "x": 10,
           "y": 7
         },
@@ -19845,6 +34183,13 @@ window.CotBResources = {
           "summon": null,
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_SORCERER_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_SORCERER_0.png",
+              "weight": 8
+            }
+          ],
           "x": 9,
           "y": 9
         },
@@ -19904,6 +34249,13 @@ window.CotBResources = {
           },
           "resists": null,
           "traits": null,
+          "classicTile": "art/tilesets/classic/MONS_DEEP_ELF_DEMONOLOGIST_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DEEP_ELF_DEMONOLOGIST_0.png",
+              "weight": 8
+            }
+          ],
           "x": 9,
           "y": 10
         },
@@ -19957,6 +34309,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 15
           },
+          "classicTile": "art/tilesets/classic/MONS_LICH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_LICH_0.png",
+              "weight": 10
+            }
+          ],
           "x": 7,
           "y": 11
         },
@@ -20033,6 +34392,13 @@ window.CotBResources = {
           "traits": {
             "drainDamage": 20
           },
+          "classicTile": "art/tilesets/classic/MONS_DREAD_LICH_0.png",
+          "classicTiles": [
+            {
+              "src": "art/tilesets/classic/MONS_DREAD_LICH_0.png",
+              "weight": 10
+            }
+          ],
           "x": 14,
           "y": 8
         }

@@ -1,6 +1,7 @@
 (function () {
   window.CotBRuntime = window.CotBRuntime || {};
   window.CotBRuntime.installViewportRendering = function (context) {
+    window.CotBRuntime.installClassicGraphics(context);
     with (context) {
       let viewportRenderQueued = false;
       function scheduleViewportRender() {
@@ -116,7 +117,7 @@
       }
 
       function assetValues(prefix) {
-        const assets = currentAssets();
+        const assets = graphicsAssets();
         return Object.keys(assets)
           .filter((key) => key.startsWith(prefix))
           .sort()
@@ -124,21 +125,40 @@
           .filter(Boolean);
       }
 
+      function classicSurfaceTexture(key, cell, salt) {
+        const entries = state.tileset === "classic" && (key === "floor" ? classicFloorVariants(cell) : currentFloor().classicVariants?.[key]);
+        if (entries?.length) {
+          const total = entries.reduce((sum, entry) => sum + entry.weight, 0);
+          let roll = cellHash(cell.x, cell.y, salt) % total;
+          for (const entry of entries) {
+            roll -= entry.weight;
+            if (roll < 0) {
+              return entry.src;
+            } else {
+              continue;
+            }
+          }
+          throw new Error(`Cannot select Classic ${key} texture at ${cell.x},${cell.y}`);
+        } else {
+          return null;
+        }
+      }
+
       function themedAsset(baseKey, altPrefix, cell, salt = 0) {
-        const assets = currentAssets();
+        const assets = graphicsAssets();
         const base = environmentAsset(assets[baseKey]);
         const choices = [base, ...assetValues(altPrefix)].filter(Boolean);
         if (choices.length === 0) return null;
-        return choices[cellHash(cell.x, cell.y, salt) % choices.length] || base;
+        return classicSurfaceTexture(baseKey, cell, salt) || choices[cellHash(cell.x, cell.y, salt) % choices.length] || base;
       }
 
       function wallSurfaceTexture(cell) {
-        const assets = currentAssets();
+        const assets = graphicsAssets();
         const wall = environmentAsset(assets.wall);
         const sideWall = environmentAsset(assets.sideWall);
         const choices = [wall, ...assetValues("wallAlt"), sideWall, ...assetValues("sideWallAlt")].filter(Boolean);
         if (choices.length === 0) return null;
-        return choices[cellHash(cell.x, cell.y, 31) % choices.length] || wall || sideWall;
+        return classicSurfaceTexture("wall", cell, 31) || choices[cellHash(cell.x, cell.y, 31) % choices.length] || wall || sideWall;
       }
 
       const DCSS_WATER_DIR = "vendor/crawl/crawl-ref/source/rltiles/dngn/water";
@@ -809,7 +829,7 @@
         if (isHorizontalTrapezoid(points)) {
           const maxStrips = depth <= 1 ? 24 : depth <= 2 ? 16 : depth <= 4 ? 10 : 5;
           const tileSize = options.noRepeat ? 0 : geometryAt(depth).tile;
-          drawHorizontalTrapezoidStrips(context, entry.image, points, maxStrips, tileSize, options.waveShift || 0);
+          drawHorizontalTrapezoidStrips(context, options.quarterTurns ? orientFloorImage(entry.image, options.quarterTurns) : entry.image, points, maxStrips, tileSize, options.waveShift || 0);
         } else {
           context.drawImage(entry.image, bounds.x, bounds.y, Math.max(1, bounds.width), Math.max(1, bounds.height));
         }
@@ -850,15 +870,15 @@
         if (options.shadeTexture) context.filter = `brightness(${Math.max(0, Math.min(1, light))})`;
 
         if (isAxisAlignedRect(points)) {
-          context.drawImage(entry.image, bounds.x, bounds.y, bounds.width, bounds.height);
+          context.drawImage(options.quarterTurns ? orientFloorImage(entry.image, options.quarterTurns) : entry.image, bounds.x, bounds.y, bounds.width, bounds.height);
         } else if (isHorizontalTrapezoid(points)) {
           drawQuadPath(context, points);
           context.clip();
-          drawHorizontalTrapezoidStrips(context, entry.image, points, 8);
+          drawHorizontalTrapezoidStrips(context, options.quarterTurns ? orientFloorImage(entry.image, options.quarterTurns) : entry.image, points, 8);
         } else {
           drawQuadPath(context, points);
           context.clip();
-          context.drawImage(entry.image, bounds.x, bounds.y, bounds.width, bounds.height);
+          context.drawImage(options.quarterTurns ? orientFloorImage(entry.image, options.quarterTurns) : entry.image, bounds.x, bounds.y, bounds.width, bounds.height);
         }
 
         context.restore();
@@ -997,7 +1017,8 @@
       const NET_TILE = "vendor/crawl/crawl-ref/source/rltiles/dngn/traps/net.png";
 
       function monsterStatusOverlays(monster) {
-        const assets = currentAssets();
+        if (state.tileset === "classic") return classicMonsterStatusOverlays(monster);
+        const assets = graphicsAssets();
         return [
           (monster.rootedTurns || 0) > 0 && { kind: "net", texture: environmentAsset(NET_TILE), alpha: 0.88 },
           (monster.immolationTurns || 0) > 0 && { kind: "fire", texture: assets.effectFlame, alpha: 0.72, lower: true, composite: "lighter" },
@@ -1014,7 +1035,9 @@
           setTextureSmoothing(context, overlay.texture, entry);
           context.globalAlpha = overlay.alpha;
           if (overlay.composite) context.globalCompositeOperation = overlay.composite;
-          if (overlay.badge) {
+          if (overlay.classic) {
+            context.drawImage(entry.image, rect.x - rect.width * overlay.shift / 32, rect.y, rect.width, rect.height);
+          } else if (overlay.badge) {
             const size = Math.max(14, rect.width * 0.3);
             context.drawImage(entry.image, rect.x - size * 0.25, rect.y - size * 0.4, size, size);
           } else if (overlay.lower) {
@@ -1027,6 +1050,7 @@
       }
 
       function drawMonsterStatusCue(context, monster, rect) {
+        if (state.tileset === "classic") return;
         if (!monster.immolationTurns || monster.immolationTurns <= 0) return;
         const x = rect.x + rect.width * 0.82;
         const y = Math.max(12, rect.y + rect.height * 0.14);
@@ -1117,6 +1141,7 @@
       }
 
       function drawBranchAtmosphere(context, width, height) {
+        if (state.tileset === "classic") return ;
         const profile = branchAtmosphereProfile();
         if (!profile) return;
 
@@ -1154,7 +1179,8 @@
       // poison washes it green, engulfed drowns it blue. The same list drives
       // the VR visor overlay.
       function partyStatusOverlays() {
-        const assets = currentAssets();
+        if (state.tileset === "classic") return classicPartyStatusOverlays();
+        const assets = graphicsAssets();
         return [
           state.snaredTurns > 0 && { kind: "net", texture: environmentAsset(NET_TILE), alpha: 0.5, tile: 96 },
           state.burningTurns > 0 && { kind: "fire", texture: assets.effectFlame, color: [241, 107, 43], alpha: 0.22 },
@@ -1165,9 +1191,17 @@
       }
 
       function drawPartyStatusOverlays(context, width, height) {
-        for (const overlay of partyStatusOverlays()) {
+        for (const [index, overlay] of partyStatusOverlays().entries()) {
           context.save();
-          if (overlay.kind === "net") {
+          if (overlay.classic) {
+            const entry = imageEntry(overlay.texture);
+            if (entry.ready) {
+              context.imageSmoothingEnabled = false;
+              context.drawImage(entry.image, 16 + index * 48, height - 64, 48, 48);
+            } else {
+              context.fillText(overlay.kind, 16 + index * 48, height - 16);
+            }
+          } else if (overlay.kind === "net") {
             // A real net mesh over the whole view, not a smear: tile the art.
             const entry = imageEntry(overlay.texture);
             if (entry.ready) {
@@ -1361,7 +1395,7 @@
         // Plant the artwork's bottom (not the padded tile's) on the floor seam by
         // pushing the tile down past the seam by however much empty space sits
         // below the creature in its tile. Airborne creatures hover above it.
-        const content = tileContentBox(monster.tile);
+        const content = tileContentBox(monsterGraphic(monster));
         const belowContent = (1 - content.bottom) * size;
         const tileBottom = (monster.traits?.airborne ? floorSeam - cellHeight * 0.22 : floorSeam) + belowContent;
         return [center - size / 2, tileBottom - size, size, size];
@@ -1435,6 +1469,7 @@
       }
 
       function drawRoomFloorTheme(context, width, height, depth, offset, cell, floorQuad, data) {
+        if (state.tileset === "classic") return;
         if (typeof cellThemeAt !== "function") return;
         if (terrainAt(cell.x, cell.y) !== "floor") return;
         const zone = cellThemeAt(cell.x, cell.y);
@@ -1529,6 +1564,7 @@
       }
 
       function drawRoomCeilingTheme(context, width, height, depth, offset, cell, ceilingQuad, data) {
+        if (state.tileset === "classic") return;
         if (typeof cellThemeAt !== "function") return;
         const zone = cellThemeAt(cell.x, cell.y);
         if (!zone || zone.outdoor) return;
@@ -1564,6 +1600,7 @@
       }
 
       function drawRoomWallTrim(context, width, height, depth, offset, cell, surfacePoints, data, side = false) {
+        if (state.tileset === "classic") return;
         if (depth > 6 || typeof wallThemeAt !== "function") return;
         const wz = wallThemeAt(cell.x, cell.y);
         if (!wz || wz.outdoor) return;
@@ -1703,12 +1740,13 @@
         const floorFarLight = shoals ? Math.max(0.58, 1 - depth * 0.055) : Math.max(0.2, data.light - 0.05);
         const floorNearLight = shoals ? Math.max(0.58, 1 - Math.max(0, depth - 1) * 0.055) : Math.max(0.2, nearData.light - 0.05);
         const isWater = terrain === "water" || terrain === "deep-water";
-        const waveShift = shoals && isWater
+        const waveShift = state.tileset !== "classic" && shoals && isWater
           ? Math.sin((waterAnimFrame + (cell.x + cell.y) * 0.5) * (Math.PI / 6)) * 0.08
           : 0;
         drawHorizontalMappedQuad(context, floorTexture(cell), floorQuad, depth, floorFarLight, floorFallback(cell), {
           nearLight: floorNearLight,
-          noRepeat: shoals,
+          noRepeat: state.tileset === "classic" || shoals,
+          quarterTurns: state.tileset === "classic" ? state.dir : 0,
           waveShift
         });
         const isCurrentCell = depth < 1 || (cell && cell.x === state.x && cell.y === state.y);
@@ -1800,9 +1838,10 @@
       }
 
       function drawTerrainOverlay(context, width, height, depth, offset, cell) {
+        if (state.tileset === "classic") return ;
         const terrain = terrainAt(cell.x, cell.y);
         if (terrain === "floor") return;
-        const assets = currentAssets();
+        const assets = graphicsAssets();
         const hasWaterTile = (terrain === "water" && Boolean(assets.water)) || (terrain === "deep-water" && Boolean(assets.deepWater || assets.water));
         // When a branch already supplies real DCSS water tiles (Shoals, Swamp, Lair),
         // avoid washing them out with a heavy flat blue screen overlay.
@@ -1824,9 +1863,9 @@
       }
 
       function floorVeilForCell(cell) {
-        if (isShoalsFloor()) return null;
+        if (state.tileset === "classic" || isShoalsFloor()) return null;
         const terrain = terrainAt(cell.x, cell.y);
-        const assets = currentAssets();
+        const assets = graphicsAssets();
         if (terrain === "lava") return { texture: environmentAsset(assets.floorScorch || assets.effectFlame), fallback: "#cf4a1e", alpha: 0.3, composite: "lighter", salt: 197, rarity: 1 };
         if (terrain === "deep-water") return { texture: environmentAsset(assets.fog), fallback: "#b8d3d2", alpha: 0.18, composite: "screen", salt: 199, rarity: 1 };
         if (terrain === "water") return { texture: environmentAsset(assets.fog), fallback: "#b8d3d2", alpha: 0.14, composite: "screen", salt: 211, rarity: 2 };
@@ -1862,7 +1901,8 @@
       }
 
       function floorMarkTexture(mark) {
-        const assets = currentAssets();
+        if (state.tileset === "classic") return classicSurfaceTexture("floorBlood", mark, 743) || graphicsAssets().floorBlood;
+        const assets = graphicsAssets();
         if (mark.kind === "scorch") return environmentAsset(assets.floorScorch || assets.effectFlame);
         if (mark.kind === "poison") return environmentAsset(assets.floorPoison || assets.poisonCloud);
         if (mark.kind === "ice") return environmentAsset(assets.floorIce || assets.fog);
@@ -1879,7 +1919,7 @@
       function drawFloorMarks(context, width, height, depth, offset, cell) {
         if (Math.abs(offset) > 2) return;
         if (terrainAt(cell.x, cell.y) !== "floor") return;
-        const marks = floorMarksAt(cell.x, cell.y).slice(-2);
+        const marks = floorMarksAt(cell.x, cell.y).filter((mark) => state.tileset !== "classic" || mark.kind === "blood").slice(-2);
         if (marks.length === 0) return;
         const data = geometryAt(depth);
         for (let index = 0; index < marks.length; index += 1) {
@@ -1888,14 +1928,15 @@
           const footprint = index === 0
             ? { left: 0.18 - spread, top: 0.28 - spread, right: 0.82 + spread, bottom: 0.9 + spread }
             : { left: 0.34 - spread, top: 0.18, right: 0.72 + spread, bottom: 0.74 + spread };
-          const points = pctQuad(floorDecalPoints(depth, footprint, offset), width, height);
-          const alpha = Math.min(0.92, 0.46 + mark.intensity * 0.12);
-          drawImageMappedQuad(context, floorMarkTexture(mark), points, Math.min(1, data.light + 0.1), floorMarkFallback(mark), { alpha, shadow: false, allowClassicFallback: false });
+          const points = pctQuad(state.tileset === "classic" ? floorSegmentPoints(depth, offset) : floorDecalPoints(depth, footprint, offset), width, height);
+          const alpha = state.tileset === "classic" ? 1 : Math.min(0.92, 0.46 + mark.intensity * 0.12);
+          drawImageMappedQuad(context, floorMarkTexture(mark), points, Math.min(1, data.light + 0.1), floorMarkFallback(mark), { alpha, shadow: false, allowClassicFallback: false, quarterTurns: state.tileset === "classic" ? state.dir : 0 });
         }
       }
 
       function partyAuras() {
-        const assets = currentAssets();
+        if (state.tileset === "classic") return [];
+        const assets = graphicsAssets();
         return [
           state.hasteTurns > 0 && { kind: "haste", texture: assets.effectHalo, color: "rgba(118, 198, 255, 0.18)", fallback: "#4b9fd1" },
           state.mightTurns > 0 && { kind: "might", texture: assets.effectHalo, color: "rgba(255, 106, 68, 0.18)", fallback: "#c95038" },
@@ -2048,7 +2089,7 @@
       function drawFloorFeature(context, width, height, depth, offset, cell) {
         if (depth < 1 || (cell && cell.x === state.x && cell.y === state.y)) return;
         const data = geometryAt(depth);
-        const assets = currentAssets();
+        const assets = graphicsAssets();
         const openDoor = doorCellAt(cell.x, cell.y) && !closedDoorAt(cell.x, cell.y);
         if (openDoor) {
           const faceDepth = nearEdgeDepth(depth);
@@ -2434,7 +2475,7 @@
       }
 
       function effectTexture(kind) {
-        const assets = currentAssets();
+        const assets = graphicsAssets();
         return {
           magic: assets.effectMagicDart,
           flame: assets.effectFlame,
@@ -2567,8 +2608,12 @@
         const cloud = cloudAt(cell.x, cell.y);
         if (!cloud) return;
         const data = geometryAt(depth);
-        const assets = currentAssets();
-        const texture = cloud.kind === "poison" ? assets.poisonCloud : cloud.kind === "petrify" ? assets.petrifyCloud : cloud.kind === "flame" ? assets.effectFlame : assets.fog;
+        const assets = graphicsAssets();
+        const texture = cloud.kind === "poison" ? assets.poisonCloud : cloud.kind === "petrify" ? assets.petrifyCloud : cloud.kind === "flame" ? assets.flameCloud || assets.effectFlame : cloud.kind === "ice" ? assets.iceCloud || assets.fog : assets.fog;
+        if (state.tileset === "classic") {
+          drawSprite(context, texture, standingBounds(Math.max(1, depth), offset, 0.95, 0.9, 0.98), width, height);
+          return;
+        }
         const fallback = cloud.kind === "poison" ? "#83a95f" : cloud.kind === "petrify" ? "#c8c1a8" : cloud.kind === "flame" ? "#e87832" : "#c1b8a8";
         const cloudQuad = pctQuad(floorDecalPoints(depth, { left: 0.12, top: 0.1, right: 0.88, bottom: 0.96 }, offset), width, height);
         drawImageMappedQuad(context, texture, cloudQuad, Math.max(0.35, data.light), fallback);
@@ -2577,7 +2622,7 @@
       function drawActor(context, width, height, depth, offset, cell) {
         const monster = monsterAt(cell.x, cell.y);
         if (!monster) return;
-        const rect = drawSprite(context, monster.tile, actorTileBounds(monster, depth, offset), width, height);
+        const rect = drawSprite(context, monsterGraphic(monster), actorTileBounds(monster, depth, offset), width, height);
         if (!rect) return;
         drawMonsterStatusOverlays(context, monster, rect);
         drawRangedCue(context, monster, rect);
@@ -2614,7 +2659,7 @@
         if (kind === "floor") return;
         const faceDepth = nearEdgeDepth(depth);
         const data = geometryAt(faceDepth);
-        const assets = currentAssets();
+        const assets = graphicsAssets();
         const points = pctQuad(frontFacePoints(faceDepth, offset), width, height);
         if (wireframeEnabled()) {
           const glow = Math.max(0.26, Math.min(1, data.light + 0.16));

@@ -30,6 +30,7 @@
       function shortFloor(id, name, rows) {
         return {
           id, name, assets: clone(campaign[0].assets),
+          classicAssets: clone(campaign[0].classicAssets), classicVariants: clone(campaign[0].classicVariants),
           map: { name, width: rows[0].length, height: rows.length, rows: [...rows], source: "short-expedition-v1" },
           start: { x: 1, y: 4, dir: 1 }, doors: [], stairs: {},
           floorItems: [], traps: [], decor: [], encounters: []
@@ -64,7 +65,10 @@
           floor.stairs.up = { x: 1, y: 4, direction: "up", targetFloor: 0, landing: { x: branch.x, y: branch.y }, label: "The Four Ways", detail: "Return to this branch's entrance in the hub." };
           floor.stairs.down = null;
           if (index === 3) {
-            floor.assets = clone(campaign.find((template) => template.id === "Shoals:1").assets);
+            const shoals = campaign.find((template) => template.id === "Shoals:1");
+            floor.assets = clone(shoals.assets);
+            floor.classicAssets = clone(shoals.classicAssets);
+            floor.classicVariants = clone(shoals.classicVariants);
             floor.map.rows = [
               "xxxxxxxxxxxxx", "x...........x", "x...........x",
               "x...xxxxx...x", "x...wwwww...x", "x...xxxxx...x",
