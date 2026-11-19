@@ -1336,13 +1336,13 @@
       function drawFloorAccent(context, width, height, depth, offset, cell) {
         if (Math.abs(offset) > 2) return;
         if (terrainAt(cell.x, cell.y) !== "floor") return;
-        const texture = accentAsset("floorAccent", cell, 41, 6);
+        const texture = accentAsset("floorAccent", cell, 41, 24);
         if (!texture) return;
         const data = geometryAt(depth);
         const large = cellHash(cell.x, cell.y, 43) % 2 === 0;
-        const footprint = large ? { left: 0.1, top: 0.12, right: 0.9, bottom: 0.98 } : { left: 0.22, top: 0.28, right: 0.78, bottom: 0.92 };
+        const footprint = large ? { left: 0.14, top: 0.16, right: 0.86, bottom: 0.94 } : { left: 0.24, top: 0.3, right: 0.76, bottom: 0.9 };
         const points = pctQuad(floorDecalPoints(depth, footprint, offset), width, height);
-        drawImageMappedQuad(context, texture, points, Math.min(1, data.light + 0.08), "#5f5a43", { shadow: false, allowClassicFallback: false });
+        drawImageMappedQuad(context, texture, points, Math.min(1, data.light + 0.08), "#5f5a43", { alpha: 0.78, shadow: false, allowClassicFallback: false });
       }
 
       function floorMarkTexture(mark) {
@@ -1442,7 +1442,20 @@
       // angle: the front face and the side panels must roll the same salt and
       // rarity, or the decal you walked past vanishes when you turn to face
       // it. Footprints stay per-surface (the quads have different shapes).
-      const WALL_ACCENT_SPEC = { prefix: "wallAccent", salt: 59, rarity: 7, maxOffset: 2 };
+      // Keep decals genuinely sparse so hanging swords, skulls, and blood
+      // stains read as occasional landmarks rather than wallpapering every hall.
+      const WALL_ACCENT_SPEC = { prefix: "wallAccent", salt: 59, rarity: 41, maxOffset: 2 };
+      const WALL_STAIN_SPEC = { prefix: "wallStain", salt: 83, rarity: 37, maxOffset: 2 };
+      const WALL_PATCH_SPEC = { prefix: "wallPatch", salt: 109, rarity: 23, maxOffset: 2 };
+      const WALL_GLOW_SPEC = { prefix: "wallGlow", salt: 173, rarity: 29, maxOffset: 2 };
+
+      function wallHasAccent(cell) {
+        return Boolean(accentAsset(WALL_ACCENT_SPEC.prefix, cell, WALL_ACCENT_SPEC.salt, WALL_ACCENT_SPEC.rarity));
+      }
+
+      function wallHasStain(cell) {
+        return !wallHasAccent(cell) && Boolean(accentAsset(WALL_STAIN_SPEC.prefix, cell, WALL_STAIN_SPEC.salt, WALL_STAIN_SPEC.rarity));
+      }
 
       function drawWallAccent(context, width, height, depth, offset, cell) {
         drawSurfaceDecal(context, width, height, depth, offset, cell, frontFacePoints(depth, offset), {
@@ -1458,12 +1471,9 @@
 
       function drawWallGlow(context, width, height, depth, offset, cell, surfacePoints) {
         drawSurfaceDecal(context, width, height, depth, offset, cell, surfacePoints, {
-          prefix: "wallGlow",
-          salt: 173,
-          rarity: 13,
-          maxOffset: 2,
+          ...WALL_GLOW_SPEC,
           fallback: "#d8b05b",
-          alpha: 0.38,
+          alpha: 0.34,
           composite: "lighter",
           lightBoost: 0.2,
           noShade: true,
@@ -1476,11 +1486,10 @@
       }
 
       function drawWallStain(context, width, height, depth, offset, cell, surfacePoints) {
+        if (wallHasAccent(cell)) return;
         drawSurfaceDecal(context, width, height, depth, offset, cell, surfacePoints, {
-          prefix: "wallStain",
-          salt: 83,
-          rarity: 4,
-          maxOffset: 2,
+          ...WALL_STAIN_SPEC,
+          alpha: 0.72,
           fallback: "#442117",
           lightBoost: 0.02,
           footprints: [
@@ -1492,11 +1501,10 @@
       }
 
       function drawWallPatch(context, width, height, depth, offset, cell, surfacePoints) {
+        if (wallHasAccent(cell) || wallHasStain(cell)) return;
         drawSurfaceDecal(context, width, height, depth, offset, cell, surfacePoints, {
-          prefix: "wallPatch",
-          salt: 109,
-          rarity: 5,
-          maxOffset: 2,
+          ...WALL_PATCH_SPEC,
+          alpha: 0.65,
           fallback: "#4b4a34",
           lightBoost: 0.03,
           footprints: [
@@ -2351,6 +2359,10 @@
         partyAuras,
         drawPartyAura,
         drawSurfaceDecal,
+        WALL_ACCENT_SPEC,
+        WALL_STAIN_SPEC,
+        WALL_PATCH_SPEC,
+        WALL_GLOW_SPEC,
         drawWallAccent,
         drawWallGlow,
         drawWallStain,
