@@ -143,10 +143,31 @@
 
       const DCSS_WATER_DIR = "vendor/crawl/crawl-ref/source/rltiles/dngn/water";
       const DCSS_FLOOR_DIR = "vendor/crawl/crawl-ref/source/rltiles/dngn/floor";
-      const SHOALS_SAND_TILES = Array.from({ length: 8 }, (_, i) => `${DCSS_FLOOR_DIR}/sand${i + 1}.png`);
-      const SHOALS_SHALLOW_FRAMES = Array.from({ length: 12 }, (_, i) => `${DCSS_WATER_DIR}/shoals_shallow_water${i}.png`);
-      const SHOALS_DEEP_FRAMES = Array.from({ length: 12 }, (_, i) => `${DCSS_WATER_DIR}/shoals_deep_water${i}.png`);
-      const SHOALS_DISTURBANCE_FRAMES = [1, 2, 3].map((i) => `${DCSS_WATER_DIR}/shoals_shallow_water_disturbance${i}.png`);
+      // Match DCSS dc-floor.txt exact tile weights so sand & water are static,
+      // natural, and never strobe between rare variants.
+      function expandWeighted(entries) {
+        const out = [];
+        for (const [path, weight] of entries) {
+          for (let i = 0; i < weight; i += 1) out.push(path);
+        }
+        return out;
+      }
+      const SHOALS_SAND_TILES = expandWeighted([
+        ...[1, 2, 3, 4].map((i) => [`${DCSS_FLOOR_DIR}/sand${i}.png`, 5]),
+        ...[5, 6, 7, 8].map((i) => [`${DCSS_FLOOR_DIR}/sand${i}.png`, 2])
+      ]);
+      const SHOALS_SHALLOW_TILES = expandWeighted([
+        ...[0, 1, 2].map((i) => [`${DCSS_WATER_DIR}/shoals_shallow_water${i}.png`, 10]),
+        ...[3, 4, 5].map((i) => [`${DCSS_WATER_DIR}/shoals_shallow_water${i}.png`, 8]),
+        ...[6, 7, 8].map((i) => [`${DCSS_WATER_DIR}/shoals_shallow_water${i}.png`, 3]),
+        ...[9, 10, 11].map((i) => [`${DCSS_WATER_DIR}/shoals_shallow_water${i}.png`, 1])
+      ]);
+      const SHOALS_DEEP_TILES = expandWeighted([
+        ...[0, 1, 2].map((i) => [`${DCSS_WATER_DIR}/shoals_deep_water${i}.png`, 10]),
+        ...[3, 4, 5].map((i) => [`${DCSS_WATER_DIR}/shoals_deep_water${i}.png`, 8]),
+        ...[6, 7, 8].map((i) => [`${DCSS_WATER_DIR}/shoals_deep_water${i}.png`, 3]),
+        ...[9, 10, 11].map((i) => [`${DCSS_WATER_DIR}/shoals_deep_water${i}.png`, 1])
+      ]);
       const SHALLOW_WAVE_EDGES = {
         far: `${DCSS_WATER_DIR}/shallow_water_wave_N.png`,
         near: `${DCSS_WATER_DIR}/shallow_water_wave_S.png`,
@@ -211,12 +232,10 @@
         const terrain = terrainAt(cell.x, cell.y);
         if (isShoalsFloor()) {
           if (terrain === "deep-water") {
-            const idx = (cellHash(cell.x, cell.y, 37) + waterAnimFrame) % SHOALS_DEEP_FRAMES.length;
-            return environmentAsset(SHOALS_DEEP_FRAMES[idx]);
+            return environmentAsset(SHOALS_DEEP_TILES[cellHash(cell.x, cell.y, 37) % SHOALS_DEEP_TILES.length]);
           }
           if (terrain === "water") {
-            const idx = (cellHash(cell.x, cell.y, 29) + waterAnimFrame) % SHOALS_SHALLOW_FRAMES.length;
-            return environmentAsset(SHOALS_SHALLOW_FRAMES[idx]);
+            return environmentAsset(SHOALS_SHALLOW_TILES[cellHash(cell.x, cell.y, 29) % SHOALS_SHALLOW_TILES.length]);
           }
           if (terrain === "floor") {
             return environmentAsset(SHOALS_SAND_TILES[cellHash(cell.x, cell.y, 11) % SHOALS_SAND_TILES.length]);
@@ -480,6 +499,24 @@
         context.fill();
       }
 
+      function shadeHorizontalQuadGradient(context, points, farLight, nearLight) {
+        const yFar = points[0].y;
+        const yNear = points[3].y;
+        const farAlpha = Math.max(0, Math.min(1, 1 - farLight));
+        const nearAlpha = Math.max(0, Math.min(1, 1 - nearLight));
+        if (farAlpha < 0.004 && nearAlpha < 0.004) return;
+        drawQuadPath(context, points);
+        if (Math.abs(yNear - yFar) >= 1 && typeof context.createLinearGradient === "function") {
+          const grad = context.createLinearGradient(0, yFar, 0, yNear);
+          grad.addColorStop(0, `rgba(0, 0, 0, ${farAlpha})`);
+          grad.addColorStop(1, `rgba(0, 0, 0, ${nearAlpha})`);
+          context.fillStyle = grad;
+        } else {
+          context.fillStyle = `rgba(0, 0, 0, ${(farAlpha + nearAlpha) * 0.5})`;
+        }
+        context.fill();
+      }
+
       function fillQuad(context, points, color, light) {
         drawQuadPath(context, points);
         context.fillStyle = color;
@@ -629,7 +666,27 @@
         return canvas;
       }
 
-      function drawHorizontalTrapezoidStrips(context, img, points, maxStrips, tileSize = 0) {
+      const verticalWrapCache = new WeakMap();
+
+      function verticalWrappedSource(img) {
+        if (typeof document === "undefined" || typeof document.createElement !== "function") return img;
+        const cached = verticalWrapCache.get(img);
+        if (cached) return cached;
+        const w = img.width || img.naturalWidth || 32;
+        const h = img.height || img.naturalHeight || 32;
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h * 2;
+        const ctx = canvas.getContext ? canvas.getContext("2d") : null;
+        if (!ctx) return img;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.drawImage(img, 0, h, w, h);
+        verticalWrapCache.set(img, canvas);
+        return canvas;
+      }
+
+      function drawHorizontalTrapezoidStrips(context, img, points, maxStrips, tileSize = 0, waveShift = 0) {
         let y0 = points[0].y;
         let xT0 = Math.min(points[0].x, points[1].x);
         let xT1 = Math.max(points[0].x, points[1].x);
@@ -650,15 +707,20 @@
         if (visibleH < 0.5) return;
 
         let source = img;
+        let baseH = img.height || img.naturalHeight || 32;
         if (tileSize > 0) {
           const avgW = ((xT1 - xT0) + (xB1 - xB0)) * 0.5;
           const reps = Math.max(1, Math.min(5, Math.round(avgW / Math.max(48, tileSize))));
           source = horizontalTiledSource(img, reps);
+        } else if (waveShift) {
+          source = verticalWrappedSource(img);
         }
 
         const imgW = source.width || source.naturalWidth || 32;
-        const imgH = source.height || source.naturalHeight || 32;
-        const targetStripPx = tileSize > 0 ? 3 : 6;
+        const imgH = baseH;
+        const maxSrcH = source.height || source.naturalHeight || baseH;
+        const vOffset = waveShift ? (((waveShift % 1) + 1) % 1) * imgH : 0;
+        const targetStripPx = (tileSize > 0 || waveShift) ? 3 : 5;
         const strips = Math.min(maxStrips, Math.max(2, Math.ceil(visibleH / targetStripPx)));
         const step = visibleH / strips;
         const dxL = xB0 - xT0;
@@ -677,8 +739,8 @@
           const rightX = (rx0 > rx1 ? rx0 : rx1) + 1;
           const w = rightX - leftX;
           if (w < 0.5) continue;
-          const v0 = t0 * imgH;
-          const vH = Math.max(0.5, Math.min(imgH - v0, (t1 - t0) * imgH));
+          const v0 = vOffset + t0 * imgH;
+          const vH = Math.max(0.5, Math.min(maxSrcH - v0, (t1 - t0) * imgH));
           context.drawImage(source, 0, v0, imgW, vH, leftX, sy0, w, (sy1 - sy0) + 0.75);
         }
       }
@@ -729,7 +791,7 @@
         }
       }
 
-      function drawHorizontalMappedQuad(context, texture, points, depth, light, fallback) {
+      function drawHorizontalMappedQuad(context, texture, points, depth, light, fallback, options = {}) {
         const bounds = boundsForPoints(points);
         if (quadOutsideViewport(bounds)) return;
         const entry = imageEntry(texture);
@@ -746,13 +808,18 @@
 
         if (isHorizontalTrapezoid(points)) {
           const maxStrips = depth <= 1 ? 24 : depth <= 2 ? 16 : depth <= 4 ? 10 : 5;
-          drawHorizontalTrapezoidStrips(context, entry.image, points, maxStrips, geometryAt(depth).tile);
+          const tileSize = options.noRepeat ? 0 : geometryAt(depth).tile;
+          drawHorizontalTrapezoidStrips(context, entry.image, points, maxStrips, tileSize, options.waveShift || 0);
         } else {
           context.drawImage(entry.image, bounds.x, bounds.y, Math.max(1, bounds.width), Math.max(1, bounds.height));
         }
 
         context.restore();
-        shadeQuad(context, points, light);
+        if (options.nearLight !== undefined) {
+          shadeHorizontalQuadGradient(context, points, light, options.nearLight);
+        } else {
+          shadeQuad(context, points, light);
+        }
       }
 
       function drawImageMappedQuad(context, texture, points, light, fallback, options = {}) {
@@ -1626,7 +1693,19 @@
           drawHorizontalMappedQuad(context, themedAsset("ceiling", "ceilingAlt", cell, 5), ceilingQuad, depth, Math.max(0.2, data.light - 0.24), "#171513");
           drawRoomCeilingTheme(context, width, height, depth, offset, cell, ceilingQuad, data);
         }
-        drawHorizontalMappedQuad(context, floorTexture(cell), floorQuad, depth, Math.max(0.2, data.light - 0.05), floorFallback(cell));
+        const terrain = terrainAt(cell.x, cell.y);
+        const nearData = depth > 1 ? geometryAt(depth - 1) : { light: 1 };
+        const floorFarLight = shoals ? Math.max(0.58, 1 - depth * 0.055) : Math.max(0.2, data.light - 0.05);
+        const floorNearLight = shoals ? Math.max(0.58, 1 - Math.max(0, depth - 1) * 0.055) : Math.max(0.2, nearData.light - 0.05);
+        const isWater = terrain === "water" || terrain === "deep-water";
+        const waveShift = shoals && isWater
+          ? Math.sin((waterAnimFrame + (cell.x + cell.y) * 0.5) * (Math.PI / 6)) * 0.08
+          : 0;
+        drawHorizontalMappedQuad(context, floorTexture(cell), floorQuad, depth, floorFarLight, floorFallback(cell), {
+          nearLight: floorNearLight,
+          noRepeat: shoals,
+          waveShift
+        });
         drawWaterShoreline(context, width, height, depth, offset, cell, data);
         drawRoomFloorTheme(context, width, height, depth, offset, cell, floorQuad, data);
         drawTerrainOverlay(context, width, height, depth, offset, cell);
@@ -1661,7 +1740,7 @@
           { side: "right", terrain: terrainAt(cell.x + rt.x, cell.y + rt.y) }
         ];
 
-        const phase = (waterAnimFrame + cellHash(cell.x, cell.y, 71)) % 2;
+        const phase = Math.floor(waterAnimFrame / 4 + cellHash(cell.x, cell.y, 71)) % 2;
         const lap = Math.sin((waterAnimFrame + (cell.x + cell.y) * 1.3) * (Math.PI / 6)) * 0.04;
         const fullSurf = floorSegmentPoints(depth, offset);
 
@@ -1709,16 +1788,6 @@
               shadow: false
             });
           }
-          if (shoals && (cellHash(cell.x, cell.y, 193) + waterAnimFrame) % 7 === 0) {
-            const distTex = environmentAsset(SHOALS_DISTURBANCE_FRAMES[(cellHash(cell.x, cell.y, 197) + waterAnimFrame) % SHOALS_DISTURBANCE_FRAMES.length]);
-            const quad = pctQuad(quadDecalPoints(fullSurf, { left: 0.14, top: 0.14, right: 0.86, bottom: 0.86 }), width, height);
-            drawImageMappedQuad(context, distTex, quad, Math.min(1, data.light + 0.16), "#76d6e4", {
-              alpha: 0.42,
-              composite: "screen",
-              noShade: true,
-              shadow: false
-            });
-          }
         }
       }
 
@@ -1747,6 +1816,7 @@
       }
 
       function floorVeilForCell(cell) {
+        if (isShoalsFloor()) return null;
         const terrain = terrainAt(cell.x, cell.y);
         const assets = currentAssets();
         if (terrain === "lava") return { texture: environmentAsset(assets.floorScorch || assets.effectFlame), fallback: "#cf4a1e", alpha: 0.3, composite: "lighter", salt: 197, rarity: 1 };
