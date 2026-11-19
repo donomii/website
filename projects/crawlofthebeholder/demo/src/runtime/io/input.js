@@ -589,10 +589,7 @@
             if (endBtn && typeof handleAction === "function") handleAction("wait");
           });
         }
-        // First-launch flow: character creation supersedes the welcome screen.
-        if (!state.characterCreated && els.characterCreateModal) {
-          showModal("characterCreateModal");
-        }
+        // Never pop up a startup/party-picker modal; the game opens directly into the dungeon.
 
         window.addEventListener("keydown", (event) => {
           if (event.key === "Escape") {

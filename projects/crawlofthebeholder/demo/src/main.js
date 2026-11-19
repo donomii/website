@@ -109,16 +109,14 @@
       switchedModeFromUrl = true;
     }
   }
-  if (!resumed && startup.autostart && typeof context.beginRun === "function") {
-    // beginRun builds the world (curated or seeded), applies the party/difficulty
-    // and hides the character-create modal, so bindInput never shows it.
+  if (!resumed && typeof context.beginRun === "function") {
+    // Drop straight into the live dungeon with the default party — no startup modal.
     context.beginRun(startup);
   }
   context.bindInput();
   if (typeof context.bindMobile === "function") context.bindMobile();
-  if (!resumed && !startup.autostart) {
-    // Fresh run → play the hand-crafted DCSS campaign (descend to Zot:1, lift
-    // the Orb, escape). normalizeCampaign wires the win arc onto the baked world.
+  if (!resumed && !context.state.characterCreated) {
+    // Fallback if beginRun could not initialize the expedition.
     if (typeof context.normalizeCampaign === "function") context.normalizeCampaign();
     context.reveal();
   }

@@ -336,77 +336,6 @@
       </div>
     </div>
 
-    <div id="characterCreateModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="characterCreateTitle">
-      <div class="modal-card">
-        <h2 id="characterCreateTitle">Choose your party</h2>
-        <p>Classes fix both actions for the run. Use supplies to heal. Gamepad: up/down to move, left/right to choose, A / Cross to activate.</p>
-        <div id="characterCreateList" class="character-create-list"></div>
-        <div class="character-create-options">
-          <div class="character-create-row">
-            <label>
-              <strong>Game Mode</strong>
-              <select id="characterCreateGameMode" aria-describedby="gameModeHelp">
-                <option value="standard" selected>Standard Crawl</option>
-                <option value="sprint">Dungeon Sprint</option>
-                <option value="foresight">Foresight Tactics</option>
-                <option value="oldschool">Oldschool Wireframe</option>
-                <option value="tempo">Necro-Beat Tempo</option>
-                <option value="cardcrawl">Card &amp; AP Crawl</option>
-              </select>
-            </label>
-            <p id="gameModeHelp">Classic DCSS-inspired delve across curated branches or The Four Ways.</p>
-          </div>
-          <div class="character-create-row">
-            <label>
-              <strong>Expedition</strong>
-              <select id="characterCreateExpedition" aria-describedby="expeditionHelp">
-                <option value="campaign" selected>Full campaign</option>
-                <option value="short">Short expedition — The Four Ways</option>
-              </select>
-            </label>
-            <p id="expeditionHelp">Short run: collect three runes, take the Orb, and return. Daily seeds require Full campaign.</p>
-          </div>
-          <div class="character-create-row">
-            <label>
-              <strong>Difficulty</strong>
-              <select id="characterCreateDifficulty">
-                <option value="easy">Easy</option>
-                <option value="normal" selected>Normal</option>
-                <option value="hard">Hard</option>
-              </select>
-            </label>
-          </div>
-          <div class="character-create-row">
-            <label>
-              <strong>Patron deity</strong>
-              <select id="characterCreateDeity">
-                <option value="none" selected>No patron</option>
-                <option value="trog">Trog — rage; +party power (no magic)</option>
-                <option value="okawaru">Okawaru — battle; +power &amp; XP</option>
-                <option value="makhleb">Makhleb — carnage; +power</option>
-                <option value="kikubaaqudgha">Kikubaaqudgha — death; +power &amp; XP</option>
-                <option value="the_shining_one">The Shining One — vigour; +power</option>
-                <option value="elyvilon">Elyvilon — legacy healing patron; rest bonus inactive</option>
-                <option value="sif_muna">Sif Muna — lore; +XP</option>
-                <option value="gozag">Gozag — gold; +gold (no piety)</option>
-              </select>
-            </label>
-          </div>
-          <div class="character-create-row">
-            <label>
-              <input type="checkbox" id="characterCreateDaily">
-              <strong>Daily seed run</strong>
-            </label>
-          </div>
-        </div>
-        <div class="modal-actions">
-          <button type="button" id="characterCreateRandom">Randomize</button>
-          <button type="button" id="characterCreateStart">Begin</button>
-          <button type="button" data-action="confirmNewRun" title="Explicitly discard the current slot's saved expedition and reload party creation. Asks for confirmation.">Discard save</button>
-        </div>
-      </div>
-    </div>
-
     <div id="dialogueModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="dialogueTitle">
       <div class="modal-card">
         <button type="button" class="modal-close" data-modal-close="dialogueModal" aria-label="Close dialogue">&times;</button>
@@ -567,8 +496,8 @@
     <script src="src/runtime/systems/short_expedition.js?v=0.5.25"></script>
     <script src="src/runtime/systems/game_modes.js?v=0.5.39"></script>
     <script src="src/runtime/io/dev_options.js?v=0.5.38"></script>
-    <script src="src/runtime/io/input.js?v=0.5.39"></script>
-    <script src="src/main.js?v=0.5.44"></script>
+    <script src="src/runtime/io/input.js?v=0.5.45"></script>
+    <script src="src/main.js?v=0.5.45"></script>
     <script>
       // Register the service worker for offline play. Best-effort — game still
       // works without it.
