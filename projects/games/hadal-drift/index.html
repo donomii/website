@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05263b">
+  <title>Hadal Drift</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main id="ocean" aria-label="Hadal Drift underwater world"></main>
+  <button id="menu-toggle" aria-label="Dive menu" aria-controls="menu" aria-expanded="false" title="Dive menu">☰</button>
+  <button id="vr" hidden>Enter VR</button>
+  <section id="menu" aria-labelledby="title" hidden>
+    <h1 id="title">Hadal Drift</h1>
+    <p>Swim close to three amber beacons to log the dive.</p>
+    <details id="controls">
+      <summary>Controls</summary>
+      <p><b>Desktop</b> Drag to look. WASD swims. Space rises. C dives.</p>
+      <p><b>Touch</b> Drag the right side to look. Drag the left side to swim.</p>
+      <p><b>VR</b> Hold a grip and pull through the water, or use the left stick to swim where you look. Use the right stick to snap turn.</p>
+    </details>
+    <p id="log" aria-live="polite"></p>
+    <button id="restart">Restart dive</button>
+    <p id="status" role="status" hidden></p>
+  </section>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>

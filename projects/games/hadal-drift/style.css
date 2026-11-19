@@ -1,0 +1,63 @@
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; }
+body {
+  background: #05263b;
+  color: #e4f7f7;
+  font: 15px/1.5 system-ui, sans-serif;
+}
+#ocean, canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+#ocean { position: fixed; inset: 0; }
+button {
+  font: inherit;
+  cursor: pointer;
+  color: inherit;
+  background: #123847;
+  border: 1px solid #52818d;
+  border-radius: 6px;
+  padding: .45rem .7rem;
+}
+button:disabled { opacity: .65; cursor: default; }
+button:focus-visible { outline: 2px solid #aef9ed; outline-offset: 2px; }
+#menu-toggle {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  background: #082b3cd9;
+  width: 42px;
+  height: 42px;
+}
+#vr {
+  position: fixed;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  min-height: 48px;
+  padding: .55rem 1.5rem;
+  color: #102e34;
+  background: #ffda9e;
+  border-color: #fff0d0;
+  border-radius: 999px;
+  box-shadow: 0 4px 16px #001926a8;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+#vr:hover { background: #ffe9c1; }
+#controls { margin: .55rem 0; }
+#controls summary { cursor: pointer; }
+#menu {
+  position: fixed;
+  top: max(62px, calc(env(safe-area-inset-top) + 50px));
+  right: max(12px, env(safe-area-inset-right));
+  width: min(320px, calc(100% - 24px));
+  max-height: calc(100% - 76px);
+  overflow: auto;
+  padding: 1rem;
+  border: 1px solid #52818d;
+  border-radius: 8px;
+  background: #092937f5;
+}
+#menu h1 { font-size: 1.3rem; margin: 0; }
+#menu p { margin: .55rem 0; }
+#log { color: #ffd598; }
+#status { color: #ffc9a7; }
