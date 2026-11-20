@@ -30,6 +30,8 @@
   let touchFire = false;
   let dashQueue = false;
   let heldDash = false;
+  let heldStart = false;
+  let gamepadAllowed = true;
   let pendingDash = false;
 
   function worldPoint(e) {
@@ -128,6 +130,8 @@
     }
   });
   window.addEventListener("keyup",event=>keys.delete(event.code));
+  window.addEventListener("pointerdown",sound.unlock,{once:true});
+  window.addEventListener("keydown",sound.unlock,{once:true});
   window.addEventListener("blur",pause);
   document.addEventListener("visibilitychange",()=>{ if(document.hidden) pause(); });
 
@@ -175,21 +179,61 @@
     dashQueue=true;
   });
 
-  function axis(value) {
-    return Math.abs(value) < .19 ? 0 : Math.sign(value)*(Math.abs(value)-.19)/.81;
+  function stick(axes, offset, deadZone) {
+    const x = axes[offset] ?? 0;
+    const y = axes[offset+1] ?? 0;
+    const length = Math.hypot(x,y);
+    const scale = length > deadZone ? (Math.min(length,1)-deadZone)/((1-deadZone)*length) : 0;
+    return {x:x*scale, y:y*scale};
+  }
+
+  function readPad(pad) {
+    const standard = pad.mapping === "standard";
+    const pressed = index => Boolean(pad.buttons[index]?.pressed);
+    const move = stick(pad.axes,0,.18);
+    if (standard && !move.x && !move.y) {
+      move.x = Number(pressed(15))-Number(pressed(14));
+      move.y = Number(pressed(13))-Number(pressed(12));
+    }
+    const aim = standard || pad.axes.length === 4 ? stick(pad.axes,2,.25) : {x:0,y:0};
+    const aiming = Boolean(aim.x || aim.y);
+    return {...move, aim:aiming?Math.atan2(aim.y,aim.x):null,
+      fire:aiming || pressed(standard?7:1), dash:pressed(0), start:pressed(9)};
+  }
+
+  function pollPad() {
+    if (!gamepadAllowed || !navigator.getGamepads) return null;
+    try {
+      for (const pad of navigator.getGamepads()) {
+        if (!pad?.connected || (pad.mapping !== "standard" && (pad.mapping !== "" || pad.axes.length < 2))) continue;
+        const state = readPad(pad);
+        if (state.x || state.y || state.fire || state.dash || state.start) return state;
+      }
+      return null;
+    } catch (error) {
+      // An embedded page can be denied the API while keyboard and touch still work.
+      if (error.name !== "SecurityError") throw error;
+      gamepadAllowed = false;
+      return null;
+    }
   }
 
   function readInput() {
-    const pad=Array.from(navigator.getGamepads?.() ?? []).find(item=>item?.mapping==="standard");
-    const rightX=axis(pad?.axes[2] ?? 0), rightY=axis(pad?.axes[3] ?? 0);
-    const gamepadFire=Math.hypot(rightX,rightY)>0.15;
+    const pad = pollPad();
+    const start = Boolean(pad?.start);
+    const startPressed = start && !heldStart;
+    heldStart = start;
+    if (startPressed && !document.hidden) {
+      if (mode === "finished") restart();
+      else flightActionClick();
+    }
     const key=(a,b)=>Number(keys.has(a)||keys.has(b));
-    const x=key("KeyD","ArrowRight")-key("KeyA","ArrowLeft")+axis(pad?.axes[0] ?? 0)+(touch?clamp((touch.x-touch.originX)/37,-1,1):0);
-    const y=key("KeyS","ArrowDown")-key("KeyW","ArrowUp")+axis(pad?.axes[1] ?? 0)+(touch?clamp((touch.y-touch.originY)/37,-1,1):0);
+    const x=key("KeyD","ArrowRight")-key("KeyA","ArrowLeft")+(pad?.x ?? 0)+(touch?clamp((touch.x-touch.originX)/37,-1,1):0);
+    const y=key("KeyS","ArrowDown")-key("KeyW","ArrowUp")+(pad?.y ?? 0)+(touch?clamp((touch.y-touch.originY)/37,-1,1):0);
     const mouseAim=mouse && !touch && !touchFire && gap(mouse,game.dragons[0])>8;
-    const aim=gamepadFire ? Math.atan2(rightY,rightX) : mouseAim ? bearing(game.dragons[0],mouse) : null;
-    const fire=gamepadFire || mouseDown || touchFire || keys.has("Space");
-    const dash=Boolean(pad?.buttons[0]?.pressed || keys.has("ShiftLeft") || keys.has("ShiftRight") || dashQueue);
+    const aim=pad?.fire ? pad.aim : mouseAim ? bearing(game.dragons[0],mouse) : null;
+    const fire=Boolean(pad?.fire || mouseDown || touchFire || keys.has("Space"));
+    const dash=Boolean(pad?.dash || keys.has("ShiftLeft") || keys.has("ShiftRight") || dashQueue);
     dashQueue=false;
     if (mode==="ready" && (Math.abs(x)+Math.abs(y)>.1 || fire || dash)) begin();
     const dashPressed = dash && !heldDash;
