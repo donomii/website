@@ -163,6 +163,7 @@ h2 {
 
 .viewport {
   position: relative;
+  touch-action: none;
   overflow: hidden;
   min-height: 0;
   border: 1px solid #7d704b;

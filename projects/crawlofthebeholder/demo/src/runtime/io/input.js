@@ -3,7 +3,7 @@
   window.CotBRuntime.installInput = function (context) {
     with (context) {
       const gamepadActions = [[0, "interact"], [1, "wait"], [2, "attack"], [3, "pickup"],
-        [4, "signature"], [5, "ultimate"], [6, "recover"],
+        [4, "signature"], [5, "ultimate"], [6, "recover"], [7, "examine"], [10, "cycleFormation"],
         [12, "moveForward"], [13, "moveBack"], [14, "turnLeft"], [15, "turnRight"]];
       let gamepadState = null;
       let gamepadPack = null;
@@ -21,7 +21,7 @@
 
       function gamepadModal(modal, pressed) {
         const visibleControls = () => [...modal.querySelectorAll(
-          "button:not(:disabled), a[href], select:not([multiple]):not(:disabled), input[type=checkbox]:not(:disabled)"
+          "button:not(:disabled), a[href], summary, select:not([multiple]):not(:disabled), input[type=checkbox]:not(:disabled)"
         )]
           .filter(control => control.getClientRects().length);
         const controls = visibleControls();
@@ -125,6 +125,10 @@
           const guide = document.getElementById("gamepadHelp");
           if (guide) guide.open = true;
           toggleHelpModal();
+          return null;
+        } else if (!immersive && pressed(11)) {
+          dispatchUiAction("moreActions");
+          document.getElementById("moreActionsModal")?.querySelector("button")?.focus();
           return null;
         } else if (!immersive && gamepadInventory(pressed)) {
           return null;
@@ -232,7 +236,7 @@
       function bindInput() {
         bindSidebarAccordion();
         bindStandardGamepad();
-        document.querySelectorAll(".command-strip, .accordion-actions, .more-actions-grid, #settingsModal .modal-actions, #characterCreateModal .modal-actions").forEach((container) => {
+        document.querySelectorAll(".command-strip, .accordion-actions, #settingsModal .modal-actions, #characterCreateModal .modal-actions").forEach((container) => {
           container.addEventListener("click", (event) => {
             const button = event.target.closest("button[data-action]");
             if (!button) return;

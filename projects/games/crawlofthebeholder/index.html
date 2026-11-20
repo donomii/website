@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="icon.svg">
     <link rel="license" href="vendor/crawl/LICENSE" title="DCSS-derived generator code: GPL-2.0-or-later">
     <title>Crawl of the Beholder</title>
-    <link rel="stylesheet" href="styles.css?v=0.5.44">
+    <link rel="stylesheet" href="styles.css?v=0.5.51">
   </head>
   <body>
     <div class="app">
@@ -183,11 +183,17 @@
       <div class="modal-card">
         <button type="button" class="modal-close" data-modal-close="helpModal" aria-label="Close help">&times;</button>
         <h2 id="helpModalTitle">Controls</h2>
+        <details id="touchHelp">
+          <summary>Touch and mouse</summary>
+          <p>Swipe one finger left/right to turn, up/down to step forward/back. Swipe two fingers left/right to sidestep; tap with two fingers to wait. Tap the blank outer left/right edges of the dungeon view to turn. A centre tap attacks an adjacent enemy ahead or steps forward. Hold to examine; lifting after a hold does not move.</p>
+          <p>Tap or click labelled objects to interact. Open Commands for movement, turning, combat and More actions; the pack selects items, and Roster shows characters. Swiping across an object turns instead of also activating it.</p>
+        </details>
         <details id="gamepadHelp">
           <summary>Gamepad</summary>
           <p>Left stick steps and sidesteps. Right stick turns. The D-pad steps or turns. Center the sticks between moves.</p>
           <p>A / Cross interacts, X / Square attacks, B / Circle waits, and Y / Triangle picks up. The left and right bumpers use the primary and secondary actions.</p>
           <p>Left trigger / L2 uses a recovery potion when needed. View / Share opens the pack in browser play. Cycle items with the D-pad, use one with A / Cross, and close with B / Circle.</p>
+          <p>Right trigger / R2 examines. Click the left stick to change formation. Click the right stick for More actions, including Roster, Settings, abilities and other commands.</p>
           <p>Start / Options opens these controls during play. In dialogs, D-pad up/down moves focus and left/right changes choices. A / Cross activates buttons or toggles checkboxes. B / Circle closes dismissible dialogs.</p>
         </details>
         <div class="help-grid">
@@ -492,13 +498,13 @@
     <script src="src/runtime/systems/morale.js?v=0.5.25"></script>
     <script src="src/runtime/systems/constellations.js?v=0.5.25"></script>
     <script src="src/runtime/systems/charms.js?v=0.5.25"></script>
-    <script src="src/runtime/render/mobile.js?v=0.5.32"></script>
+    <script src="src/runtime/render/mobile.js?v=0.5.51"></script>
     <script src="src/runtime/render/vr_feedback.js?v=3"></script>
     <script src="src/runtime/render/vr.js?v=0.5.51"></script>
     <script src="src/runtime/systems/short_expedition.js?v=0.5.25"></script>
     <script src="src/runtime/systems/game_modes.js?v=0.5.39"></script>
     <script src="src/runtime/io/dev_options.js?v=0.5.38"></script>
-    <script src="src/runtime/io/input.js?v=0.5.45"></script>
+    <script src="src/runtime/io/input.js?v=0.5.51"></script>
     <script src="src/main.js?v=0.5.50"></script>
     <script>
       // Register the service worker for offline play. Best-effort — game still

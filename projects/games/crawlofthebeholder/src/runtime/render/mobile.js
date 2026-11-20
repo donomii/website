@@ -5,6 +5,7 @@
       const SWIPE_THRESHOLD = 36; // pixels
       const SWIPE_TIMEOUT_MS = 600;
       const LONG_PRESS_MS = 380;
+      const TOUCH_EDGE_FRACTION = 0.18; // outer 18% of the viewport turns on a tap
       const MOBILE_LAYOUT_QUERY = "(max-width: 720px), (max-width: 920px) and (orientation: landscape) and (max-height: 540px)";
 
       function isMobileLayout() {
@@ -29,82 +30,109 @@
         return !!event.target?.closest?.(".viewport-target");
       }
 
-      // Touch swipe detection on the viewport.
+      function touchCenter(touches) {
+        const points = Array.from(touches);
+        return { x: points.reduce((sum, point) => sum + point.clientX, 0) / points.length,
+          y: points.reduce((sum, point) => sum + point.clientY, 0) / points.length };
+      }
+
+      function viewportTouchAction(dx, dy, fingers, tapX) {
+        const absX = Math.abs(dx);
+        const absY = Math.abs(dy);
+        if (absX < SWIPE_THRESHOLD && absY < SWIPE_THRESHOLD) {
+          // Two-finger tap = wait.
+          if (fingers === 2) return "wait";
+          else if (tapX <= TOUCH_EDGE_FRACTION) return "turnLeft";
+          else if (tapX >= 1 - TOUCH_EDGE_FRACTION) return "turnRight";
+          else {
+            // Treated as a centre tap — attack if a monster is in front, otherwise step forward.
+            const forward = dirAt(0);
+            return monsterAt(state.x + forward.x, state.y + forward.y) ? "attack" : "moveForward";
+          }
+        } else if (absX > absY) {
+          return fingers === 2 ? (dx > 0 ? "moveRight" : "moveLeft") : (dx > 0 ? "turnRight" : "turnLeft");
+        } else {
+          // Vertical swipe up = forward, down = back.
+          return fingers === 1 ? (dy < 0 ? "moveForward" : "moveBack") : null;
+        }
+      }
+
+      // Touch swipe detection on the viewport. One finger turns; two sidestep.
       function bindViewportTouch() {
         const node = els.viewport;
         if (!node || typeof node.addEventListener !== "function") return;
-        let startX = 0;
-        let startY = 0;
-        let startTime = 0;
+        let gesture = null;
         let longPressTimer = 0;
-        let suppressed = false;
+        let blocked = false;
+        const clearTimer = () => {
+          window.clearTimeout(longPressTimer);
+          longPressTimer = 0;
+        };
 
         node.addEventListener("touchstart", (event) => {
-          if (isViewportInteractionEvent(event)) {
-            suppressed = true;
-            if (longPressTimer) { window.clearTimeout(longPressTimer); longPressTimer = 0; }
+          clearTimer();
+          if (blocked || event.touches.length > 2) {
+            gesture = null;
+            blocked = true;
             return;
+          } else if (event.touches.length === 0) {
+            return;
+          } else {
+            gesture = { ...touchCenter(event.touches), time: Date.now(), fingers: event.touches.length,
+              target: isViewportInteractionEvent(event) };
           }
-          if (event.touches.length !== 1) return;
-          const touch = event.touches[0];
-          startX = touch.clientX;
-          startY = touch.clientY;
-          startTime = Date.now();
-          suppressed = false;
-          if (typeof window.clearTimeout === "function") {
+          if (gesture.fingers === 1 && !gesture.target) {
             longPressTimer = window.setTimeout(() => {
-              suppressed = true;
+              longPressTimer = 0;
+              gesture = null;
+              blocked = true;
               if (typeof handleAction === "function") handleAction("examine");
             }, LONG_PRESS_MS);
+          } else {
+            longPressTimer = 0;
           }
         }, { passive: true });
 
         node.addEventListener("touchmove", (event) => {
-          if (suppressed || isViewportInteractionEvent(event)) return;
-          if (event.touches.length !== 1) return;
-          const touch = event.touches[0];
-          const dx = touch.clientX - startX;
-          const dy = touch.clientY - startY;
-          if (Math.abs(dx) > 12 || Math.abs(dy) > 12) {
-            if (longPressTimer) { window.clearTimeout(longPressTimer); longPressTimer = 0; }
-          }
-        }, { passive: true });
-
-        node.addEventListener("touchend", (event) => {
-          if (longPressTimer) { window.clearTimeout(longPressTimer); longPressTimer = 0; }
-          if (suppressed || isViewportInteractionEvent(event)) { suppressed = false; return; }
-          if (Date.now() - startTime > SWIPE_TIMEOUT_MS) return;
-          const touch = event.changedTouches[0];
-          if (!touch) return;
-          const dx = touch.clientX - startX;
-          const dy = touch.clientY - startY;
-          const absX = Math.abs(dx);
-          const absY = Math.abs(dy);
-
-          if (absX < SWIPE_THRESHOLD && absY < SWIPE_THRESHOLD) {
-            // Treated as a tap — attack if a monster is in front, otherwise step forward.
-            if (typeof handleAction === "function") {
-              const forward = dirAt(0);
-              const ahead = monsterAt(state.x + forward.x, state.y + forward.y);
-              handleAction(ahead ? "attack" : "moveForward");
-            }
+          if (!gesture || event.touches.length === 0) return;
+          const point = touchCenter(event.touches);
+          if (Math.abs(point.x - gesture.x) > 12 || Math.abs(point.y - gesture.y) > 12) {
+            clearTimer();
+          } else {
             return;
           }
-
-          if (absX > absY) {
-            // Horizontal swipe = sidestep.
-            handleAction(dx > 0 ? "moveRight" : "moveLeft");
-          } else {
-            // Vertical swipe up = forward, down = back.
-            handleAction(dy < 0 ? "moveForward" : "moveBack");
-          }
         }, { passive: true });
 
-        // Two-finger tap = wait.
         node.addEventListener("touchend", (event) => {
-          if (event.changedTouches.length === 2) {
-            handleAction("wait");
+          clearTimer();
+          if (blocked) {
+            blocked = event.touches.length > 0;
+            event.preventDefault();
+            return;
+          } else if (!gesture || event.changedTouches.length === 0) {
+            return;
+          } else {
+            const start = gesture;
+            gesture = null;
+            blocked = event.touches.length > 0;
+            const point = touchCenter([...event.changedTouches, ...event.touches]);
+            const dx = point.x - start.x;
+            const dy = point.y - start.y;
+            const tap = Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD;
+            if (start.fingers === 1 && start.target && tap) return;
+            event.preventDefault(); // consume the synthetic click after a handled gesture
+            if (Date.now() - start.time > SWIPE_TIMEOUT_MS) return;
+            const bounds = node.getBoundingClientRect();
+            const action = viewportTouchAction(dx, dy, start.fingers, (start.x - bounds.left) / bounds.width);
+            if (action) handleAction(action);
           }
+        }, { passive: false });
+
+        // Cancellation is not a release and must never issue a game command.
+        node.addEventListener("touchcancel", () => {
+          clearTimer();
+          gesture = null;
+          blocked = false;
         }, { passive: true });
       }
 
@@ -281,6 +309,8 @@
       Object.assign(context, {
         isMobileLayout,
         bindMobile,
+        bindViewportTouch,
+        viewportTouchAction,
         isViewportInteractionEvent,
         travelToCell,
         pulse,
