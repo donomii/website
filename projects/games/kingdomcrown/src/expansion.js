@@ -229,60 +229,42 @@ function makeStructureInteraction(state, structure, action, label, cost, detail,
 
 function recruitAcolyte(state, interaction) {
     const camp = state.camps.find((candidate) => candidate.id === interaction.targetId);
-    if (camp === undefined) {
-        throw new Error(`Outcast fire '${interaction.targetId}' was expected while recruiting an Acolyte, but it does not exist.`);
+    if (camp === undefined || !camp.available) {
+        throw new Error(`Outcast fire '${interaction.targetId}' has no recruit after a completed payment.`);
     } else {
-        if (camp.available && state.dread >= interaction.cost) {
-            state.dread -= interaction.cost;
-            camp.available = false;
-            camp.refreshTimer = EXPANSION_CONFIG.campRefreshTime;
-            const index = state.acolytes.length;
-            const acolyte = {
-                id: nextId(state, "acolyte"),
-                x: camp.x,
-                vx: 0,
-                facing: camp.x < state.heart.x ? 1 : -1,
-                hp: EXPANSION_CONFIG.acolyteHealth,
-                maxHp: EXPANSION_CONFIG.acolyteHealth,
-                assignmentId: null,
-                idleOffset: ((index % 7) - 3) * 24,
-                hitFlash: 0,
-            };
-            state.acolytes.push(acolyte);
-            assignAvailableAcolytes(state);
-            state.events.push({ type: "mark-acolyte", x: camp.x });
-            const destination = acolyte.assignmentId === null ? "waiting at the Heart" : "assigned to a structure";
-            setNotice(state, `Acolyte recruited · ${destination}`, 3.4);
-        } else {
-            explainFailedRecruitment(state, camp, interaction.cost);
-        }
-    }
-}
-
-function explainFailedRecruitment(state, camp, cost) {
-    if (!camp.available) {
-        setNotice(state, `Another outcast arrives in ${Math.ceil(camp.refreshTimer)} seconds.`, 2.8);
-    } else {
-        setNotice(state, `Need ${cost - state.dread} more Dread`, 2.8);
+        camp.available = false;
+        camp.refreshTimer = EXPANSION_CONFIG.campRefreshTime;
+        const index = state.acolytes.length;
+        const acolyte = {
+            id: nextId(state, "acolyte"),
+            x: camp.x,
+            vx: 0,
+            facing: camp.x < state.heart.x ? 1 : -1,
+            hp: EXPANSION_CONFIG.acolyteHealth,
+            maxHp: EXPANSION_CONFIG.acolyteHealth,
+            assignmentId: null,
+            idleOffset: ((index % 7) - 3) * 24,
+            hitFlash: 0,
+        };
+        state.acolytes.push(acolyte);
+        assignAvailableAcolytes(state);
+        state.events.push({ type: "mark-acolyte", x: camp.x });
+        const destination = acolyte.assignmentId === null ? "waiting at the Heart" : "assigned to a structure";
+        setNotice(state, `Acolyte recruited · ${destination}`, 3.4);
     }
 }
 
 function buyStructureLevel(state, interaction) {
     const structure = state.structures.find((candidate) => candidate.id === interaction.targetId);
     if (structure === undefined) {
-        throw new Error(`Fixed structure '${interaction.targetId}' was expected while buying a level, but it does not exist.`);
+        throw new Error(`Fixed structure '${interaction.targetId}' was expected while applying a completed purchase.`);
     } else {
-        if (state.dread >= interaction.cost) {
-            raiseStructure(state, structure, interaction.cost);
-        } else {
-            setNotice(state, `Need ${interaction.cost - state.dread} more Dread`, 2.8);
-        }
+        raiseStructure(state, structure);
     }
 }
 
-function raiseStructure(state, structure, cost) {
+function raiseStructure(state, structure) {
     const definition = structureDefinition(structure.type);
-    state.dread -= cost;
     structure.level += 1;
     structure.maxHp = definition.health[structure.level];
     structure.hp = structure.maxHp;

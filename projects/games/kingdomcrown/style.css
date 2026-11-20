@@ -89,6 +89,15 @@ summary:focus-visible {
     color: var(--dread);
 }
 
+#purse-coin {
+    align-self: center;
+    width: 9px;
+    height: 9px;
+    border: 1px solid #f9df9b;
+    border-radius: 50%;
+    background: #d8a453;
+}
+
 #wave-value.raid-warning {
     color: #ffab7c;
 }
@@ -241,6 +250,8 @@ summary:focus-visible {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
+    touch-action: none;
+    user-select: none;
 }
 
 .interaction:hover {

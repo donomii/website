@@ -2,6 +2,7 @@ import { CONFIG, activeSiteCount, assaultDirection, canSelectInteraction, create
 import { workforceCounts } from "./expansion.js";
 import { createControls } from "./controls.js";
 import { createRenderer } from "./render.js";
+import { COIN_FLIGHT_TIME } from "./purchases.js";
 import { createSoundController } from "./sound.js";
 
 const canvas = requireElement("world");
@@ -21,6 +22,7 @@ const ui = Object.freeze({
     menuStatus: requireElement("menu-status"),
     pauseButton: requireElement("pause-button"),
     dread: requireElement("dread-value"),
+    purse: requireElement("purse-coin"),
     veil: requireElement("veil-value"),
     veilMeter: requireElement("veil-meter"),
     stamina: requireElement("stamina-value"),
@@ -39,7 +41,7 @@ const ui = Object.freeze({
     restartButton: requireElement("restart-button"),
 });
 
-const controls = createControls(CONFIG.worldWidth);
+const controls = createControls();
 
 bindControls();
 updateUi();
@@ -64,52 +66,72 @@ function bindControls() {
     requireElement("pause-help-button").addEventListener("click", openHelp);
     requireElement("close-help-button").addEventListener("click", closeHelp);
     requireElement("sound-button").addEventListener("click", () => sound.toggle());
-    canvas.addEventListener("click", selectWorldPoint);
-    ui.interaction.addEventListener("click", selectNearbyAction);
+    bindPress(canvas, pressWorld);
+    bindPress(ui.interaction, (event) => {
+        const interaction = availableAction();
+        return interaction !== null && controls.pressPurchase(event.pointerId, interaction.targetId);
+    });
+    ui.interaction.addEventListener("click", (event) => {
+        const interaction = availableAction();
+        if (event.detail === 0 && interaction !== null) {
+            controls.tapPurchase(interaction.targetId);
+        } else {
+            return;
+        }
+    });
     window.addEventListener("blur", pauseOnFocusLoss);
     window.addEventListener("resize", () => renderer.resize());
     document.addEventListener("visibilitychange", pauseWhenHidden);
 }
 
-function selectWorldPoint(event) {
+function bindPress(element, press) {
+    element.addEventListener("pointerdown", (event) => {
+        if (event.button === 0 && press(event)) {
+            element.setPointerCapture(event.pointerId);
+            event.preventDefault();
+        } else {
+            return;
+        }
+    });
+    element.addEventListener("pointerup", (event) => controls.release(event.pointerId));
+    element.addEventListener("pointercancel", (event) => controls.release(event.pointerId, true));
+    element.addEventListener("lostpointercapture", (event) => controls.release(event.pointerId, true));
+}
+
+function pressWorld(event) {
     if (state.status !== "playing" || state.player.reformTimer > 0) {
-        return;
+        return false;
     } else {
         const point = renderer.worldPoint(event.clientX, event.clientY);
         const interaction = actionAt(point);
-        if (interaction !== null) {
-            controls.interactWith(interaction.targetId);
-        } else {
-            controls.rideTo(point.x);
-        }
         ui.options.open = false;
+        return interaction !== null
+            ? controls.pressPurchase(event.pointerId, interaction.targetId)
+            : controls.pressRide(event.pointerId, Math.sign(point.x - state.player.x));
     }
 }
 
 function actionAt(point) {
-    if (point.onMap || point.aboveTrail < -24 || point.aboveTrail > 200) {
+    if (point.aboveTrail < -14 || point.aboveTrail > 204) {
         return null;
     } else {
         const candidates = getInteractions(state).filter(canSelectInteraction).filter((action) => {
-            const reach = action.kind === "heart" ? 118 : 45;
-            return Math.abs(point.x - action.x) <= reach;
+            const target = renderer.landmarkBounds(state, action);
+            return point.aboveTrail <= target.height + 12 && Math.abs(point.x - target.x) <= target.halfWidth;
         });
         candidates.sort((left, right) => Math.abs(left.x - point.x) - Math.abs(right.x - point.x));
         return candidates[0] ?? null;
     }
 }
 
-function selectNearbyAction() {
-    const interaction = availableAction();
-    if (interaction !== null) {
-        controls.interactWith(interaction.targetId);
-    } else {
-        return;
-    }
-}
-
 function availableAction() {
-    return state.status === "playing" ? getInteractions(state).find(canSelectInteraction) ?? null : null;
+    if (state.status !== "playing") {
+        return null;
+    } else {
+        const actions = getInteractions(state).filter(canSelectInteraction);
+        const pending = actions.find((action) => action.targetId === state.purchase?.targetId);
+        return pending ?? actions[0] ?? null;
+    }
 }
 
 function startGame() {
@@ -184,16 +206,18 @@ function pauseOnFocusLoss() {
 function animationFrame(now) {
     const elapsed = Math.min(0.05, Math.max(0, (now - lastFrame) / 1000));
     lastFrame = now;
-    const input = controls.read(state.player);
+    const input = controls.read(state.player, elapsed);
     stepGame(state, input, elapsed);
     renderer.consumeEvents(state.events);
     sound.consumeEvents(state.events);
     if (state.player.reformTimer > 0 || state.status !== "playing") {
         controls.clear();
     } else {
-        controls.finishFrame();
+        const finished = state.events.find((event) => event.type === "purchase-complete" || event.type === "purchase-cancelled");
+        controls.finishFrame(finished?.targetId ?? null);
     }
-    renderer.render(state, elapsed, controls.destination);
+    const purse = state.purchase === null ? null : ui.purse.getBoundingClientRect();
+    renderer.render(state, elapsed, purse === null ? null : { x: purse.x + purse.width / 2, y: purse.y + purse.height / 2 });
     updateUi();
     requestAnimationFrame(animationFrame);
 }
@@ -236,9 +260,12 @@ function updateInteraction() {
         ui.interaction.classList.add("is-hidden");
     } else {
         ui.interactionLabel.textContent = interaction.label;
-        ui.interactionCost.textContent = `${interaction.cost} Dread`;
-        ui.interaction.title = interaction.detail;
-        ui.interaction.classList.toggle("cannot-afford", !interaction.affordable);
+        const coins = state.purchase?.targetId === interaction.targetId ? state.purchase.coins : [];
+        const arrived = coins.filter((time) => state.time >= time + COIN_FLIGHT_TIME).length;
+        ui.interactionCost.textContent = coins.length === 0
+            ? `${interaction.cost} Dread` : `${arrived} / ${interaction.cost}`;
+        ui.interaction.title = `Tap for one coin. Hold to keep paying. ${interaction.detail}`;
+        ui.interaction.classList.toggle("cannot-afford", state.dread + coins.length < interaction.cost);
         ui.interaction.classList.remove("is-hidden");
     }
 }
@@ -282,8 +309,8 @@ function objectiveText() {
     } else if (dormant > 0) {
         return `Awaken ${dormant} remaining Brood${dormant === 1 ? "" : "s"}`;
     } else {
-        if (state.dread < CONFIG.finalRitualCost) {
-            return `Gather ${CONFIG.finalRitualCost - state.dread} more Dread for the final ritual`;
+        if (state.dread + (state.purchase?.targetId === state.heart.id ? state.purchase.coins.length : 0) < CONFIG.finalRitualCost) {
+            return "Gather more Dread for the final ritual";
         } else {
             return "Return to the central Heart and select the ritual";
         }
