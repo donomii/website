@@ -1,6 +1,7 @@
 import { CONFIG, activeSiteCount, assaultDirection, canSelectInteraction, createGame, getInteractions, restartGame, stepGame, togglePause } from "./core.js";
 import { workforceCounts } from "./expansion.js";
 import { createControls } from "./controls.js";
+import { NO_BUTTONS, createButtonInput, readStandardGamepad } from "./button-input.js";
 import { createRenderer } from "./render.js";
 import { COIN_FLIGHT_TIME } from "./purchases.js";
 import { createSoundController } from "./sound.js";
@@ -42,6 +43,11 @@ const ui = Object.freeze({
 });
 
 const controls = createControls();
+const keys = new Set();
+const nearestTarget = () => availableAction()?.targetId ?? null;
+const keyboard = createButtonInput(controls, nearestTarget);
+const gamepad = createButtonInput(controls, nearestTarget, activateGame, toggleGamePause);
+let waitForNeutralGamepad = false;
 
 bindControls();
 updateUi();
@@ -80,8 +86,110 @@ function bindControls() {
         }
     });
     window.addEventListener("blur", pauseOnFocusLoss);
+    window.addEventListener("keydown", pressKey);
+    window.addEventListener("keyup", releaseKey);
     window.addEventListener("resize", () => renderer.resize());
     document.addEventListener("visibilitychange", pauseWhenHidden);
+}
+
+function pressKey(event) {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.defaultPrevented) {
+        return;
+    } else if (event.key === "Escape" && !event.repeat && toggleGamePause()) {
+        event.preventDefault();
+    } else if (event.key === "Enter" && !event.repeat && !event.target.closest?.("button, summary") && activateGame()) {
+        event.preventDefault();
+    } else if (canPlay() && ["ArrowLeft", "ArrowRight", "ArrowUp"].includes(event.key)) {
+        event.preventDefault();
+        if (!event.repeat) {
+            keys.add(event.key);
+            updateKeyboard();
+        } else {
+            return;
+        }
+    } else {
+        return;
+    }
+}
+
+function releaseKey(event) {
+    if (keys.delete(event.key)) {
+        updateKeyboard();
+    } else {
+        return;
+    }
+}
+
+function updateKeyboard() {
+    const direction = Number(keys.has("ArrowRight")) - Number(keys.has("ArrowLeft"));
+    keyboard.update({ direction, pay: keys.has("ArrowUp"), pause: false }, canPlay());
+}
+
+function updateGamepad() {
+    if (document.hidden || !document.hasFocus()) {
+        return;
+    } else {
+        const buttons = readStandardGamepad(browserGamepads());
+        if (waitForNeutralGamepad) {
+            waitForNeutralGamepad = buttons.direction !== 0 || buttons.pay || buttons.pause;
+        } else {
+            gamepad.update(buttons, canPlay());
+        }
+    }
+}
+
+function browserGamepads() {
+    try {
+        return navigator.getGamepads?.() ?? [];
+    } catch (error) {
+        if (error.name === "SecurityError") {
+            return [];
+        } else {
+            throw error;
+        }
+    }
+}
+
+function canPlay() {
+    return state.status === "playing" && state.player.reformTimer === 0;
+}
+
+function toggleGamePause() {
+    if (!ui.helpOverlay.classList.contains("is-hidden")) {
+        closeHelp();
+        return true;
+    } else if (state.status === "playing" || state.status === "paused") {
+        changePause();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function activateGame() {
+    if (!ui.helpOverlay.classList.contains("is-hidden")) {
+        closeHelp();
+        return true;
+    } else if (state.status === "title") {
+        startGame();
+        return true;
+    } else if (state.status === "paused") {
+        changePause();
+        return true;
+    } else if (state.status === "victory" || state.status === "defeat") {
+        restartCurrentGame();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function clearInput() {
+    keys.clear();
+    controls.clear();
+    keyboard.update(NO_BUTTONS, false);
+    gamepad.update(NO_BUTTONS, false);
+    waitForNeutralGamepad = true;
 }
 
 function bindPress(element, press) {
@@ -99,7 +207,7 @@ function bindPress(element, press) {
 }
 
 function pressWorld(event) {
-    if (state.status !== "playing" || state.player.reformTimer > 0) {
+    if (!canPlay()) {
         return false;
     } else {
         const point = renderer.worldPoint(event.clientX, event.clientY);
@@ -136,7 +244,7 @@ function availableAction() {
 
 function startGame() {
     sound.ensure();
-    controls.clear();
+    clearInput();
     state.status = "playing";
     ui.options.open = false;
     ui.titleOverlay.classList.add("is-hidden");
@@ -155,7 +263,7 @@ function restartCurrentGame() {
 }
 
 function changePause() {
-    controls.clear();
+    clearInput();
     ui.options.open = false;
     togglePause(state);
     if (state.status === "paused") {
@@ -167,7 +275,7 @@ function changePause() {
 }
 
 function openHelp() {
-    controls.clear();
+    clearInput();
     ui.options.open = false;
     helpReturnStatus = state.status;
     state.status = state.status === "playing" ? "paused" : state.status;
@@ -175,7 +283,7 @@ function openHelp() {
 }
 
 function closeHelp() {
-    controls.clear();
+    clearInput();
     ui.helpOverlay.classList.add("is-hidden");
     state.status = helpReturnStatus;
     if (state.status === "paused") {
@@ -195,26 +303,30 @@ function pauseWhenHidden() {
 }
 
 function pauseOnFocusLoss() {
-    controls.clear();
     if (state.status === "playing") {
         changePause();
     } else {
-        return;
+        clearInput();
     }
 }
 
 function animationFrame(now) {
     const elapsed = Math.min(0.05, Math.max(0, (now - lastFrame) / 1000));
     lastFrame = now;
+    updateKeyboard();
+    updateGamepad();
+    const wasAbleToPlay = canPlay();
     const input = controls.read(state.player, elapsed);
     stepGame(state, input, elapsed);
     renderer.consumeEvents(state.events);
     sound.consumeEvents(state.events);
-    if (state.player.reformTimer > 0 || state.status !== "playing") {
-        controls.clear();
-    } else {
+    if (wasAbleToPlay && !canPlay()) {
+        clearInput();
+    } else if (canPlay()) {
         const finished = state.events.find((event) => event.type === "purchase-complete" || event.type === "purchase-cancelled");
         controls.finishFrame(finished?.targetId ?? null);
+    } else {
+        controls.finishFrame();
     }
     const purse = state.purchase === null ? null : ui.purse.getBoundingClientRect();
     renderer.render(state, elapsed, purse === null ? null : { x: purse.x + purse.width / 2, y: purse.y + purse.height / 2 });
@@ -294,7 +406,6 @@ function updateOverlays() {
 }
 
 function showEnd(title, message, buttonLabel) {
-    controls.clear();
     ui.endOverlay.dataset.outcome = state.status;
     ui.endTitle.textContent = title;
     ui.endMessage.textContent = message;

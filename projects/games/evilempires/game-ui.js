@@ -39,6 +39,10 @@
   };
 
   let state = game.createGame();
+  let selectedChoiceIndex = 0;
+  let gamepadActive = false;
+  let previousGamepadButtons = new Array(16).fill(false);
+  let previousGamepadAxis = 0;
 
   function romanYear(number) {
     return ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"][number];
@@ -71,7 +75,19 @@
 
   function selectChoice(choiceIndex) {
     state = game.applyChoice(state, choiceIndex);
+    selectedChoiceIndex = 0;
     render();
+  }
+
+  function choiceButtons() {
+    return Array.from(elements.choices.querySelectorAll(".choice-button"));
+  }
+
+  function updateGamepadSelection() {
+    choiceButtons().forEach(function markSelectedChoice(button, choiceIndex) {
+      button.classList.toggle("gamepad-selected", gamepadActive && choiceIndex === selectedChoiceIndex);
+    });
+    elements.restartButton.classList.toggle("gamepad-selected", gamepadActive && state.ended);
   }
 
   function renderChoices(decree) {
@@ -90,8 +106,13 @@
       button.addEventListener("click", function choosePolicy() {
         selectChoice(choiceIndex);
       });
+      button.addEventListener("focus", function rememberFocusedPolicy() {
+        selectedChoiceIndex = choiceIndex;
+        updateGamepadSelection();
+      });
       elements.choices.appendChild(button);
     });
+    updateGamepadSelection();
   }
 
   function renderDecree() {
@@ -122,6 +143,7 @@
 
   function restart() {
     state = game.createGame();
+    selectedChoiceIndex = 0;
     render();
     elements.decreeCard.scrollIntoView({ block: "start" });
   }
@@ -131,6 +153,86 @@
     elements.menuBackdrop.hidden = !open;
     elements.menuButton.setAttribute("aria-expanded", String(open));
     (open ? elements.closeMenuButton : elements.menuButton).focus();
+  }
+
+  function currentGamepad() {
+    if (typeof navigator.getGamepads === "function") {
+      return Array.from(navigator.getGamepads()).find(function connectedGamepad(gamepadDevice) {
+        return gamepadDevice !== null;
+      }) || null;
+    } else {
+      return null;
+    }
+  }
+
+  function buttonBecamePressed(gamepadDevice, buttonIndex) {
+    return Boolean(
+      gamepadDevice.buttons[buttonIndex] &&
+      gamepadDevice.buttons[buttonIndex].pressed &&
+      previousGamepadButtons[buttonIndex] === false
+    );
+  }
+
+  function moveGamepadSelection(direction) {
+    const buttons = choiceButtons();
+    if (buttons.length === 0) {
+      selectedChoiceIndex = 0;
+    } else {
+      selectedChoiceIndex = (selectedChoiceIndex + direction + buttons.length) % buttons.length;
+      buttons[selectedChoiceIndex].focus();
+    }
+    updateGamepadSelection();
+  }
+
+  function activateGamepadSelection() {
+    if (state.ended) {
+      elements.restartButton.click();
+    } else {
+      const buttons = choiceButtons();
+      if (buttons[selectedChoiceIndex]) {
+        buttons[selectedChoiceIndex].click();
+      } else {
+        throw new Error("Cannot enact gamepad policy: the selected policy button is missing from the current decree.");
+      }
+    }
+  }
+
+  function pollGamepad() {
+    const gamepadDevice = currentGamepad();
+    if (gamepadDevice === null) {
+      gamepadActive = false;
+      previousGamepadButtons = new Array(16).fill(false);
+      previousGamepadAxis = 0;
+      updateGamepadSelection();
+    } else {
+      const axisY = gamepadDevice.axes.length > 1 ? gamepadDevice.axes[1] : 0;
+      const moveUp = buttonBecamePressed(gamepadDevice, 12) || (axisY <= -0.6 && previousGamepadAxis > -0.6);
+      const moveDown = buttonBecamePressed(gamepadDevice, 13) || (axisY >= 0.6 && previousGamepadAxis < 0.6);
+      const confirm = buttonBecamePressed(gamepadDevice, 0);
+      const back = buttonBecamePressed(gamepadDevice, 1);
+      const menu = buttonBecamePressed(gamepadDevice, 9);
+      gamepadActive = true;
+      if (menu) {
+        setMenu(elements.menu.hidden);
+      } else if (!elements.menu.hidden && back) {
+        setMenu(false);
+      } else if (!elements.menu.hidden) {
+        updateGamepadSelection();
+      } else if (moveUp) {
+        moveGamepadSelection(-1);
+      } else if (moveDown) {
+        moveGamepadSelection(1);
+      } else if (confirm) {
+        activateGamepadSelection();
+      } else {
+        updateGamepadSelection();
+      }
+      previousGamepadButtons = gamepadDevice.buttons.map(function rememberButton(button) {
+        return button.pressed;
+      });
+      previousGamepadAxis = axisY;
+    }
+    window.requestAnimationFrame(pollGamepad);
   }
 
   elements.restartButton.addEventListener("click", restart);
@@ -144,4 +246,5 @@
     setMenu(false);
   });
   render();
+  window.requestAnimationFrame(pollGamepad);
 }(document, EvilEmpires));

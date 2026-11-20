@@ -230,7 +230,12 @@ blockquote {
 }
 
 .choice-button:hover,
-.choice-button:focus-visible {
+.choice-button:focus-visible,
+.choice-button.gamepad-selected,
+.restart-button:focus-visible,
+.restart-button.gamepad-selected,
+.menu-button:focus-visible,
+.menu-heading button:focus-visible {
   border-color: var(--gold);
   outline: none;
   background: #30251b;
@@ -371,6 +376,10 @@ blockquote {
   padding-top: 14px;
   border-top: 1px solid var(--line);
   font-size: 13px;
+}
+
+.menu-note + .menu-note {
+  margin-top: 14px;
 }
 
 .menu-backdrop {
