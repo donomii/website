@@ -1,4 +1,4 @@
-import { EXPANSION_CONFIG, addHumanCorpse, createExpansionState, getExpansionInteraction, performExpansionInteraction, resolveExpansionCasualties, updateExpansion } from "./expansion.js";
+import { EXPANSION_CONFIG, addHumanCorpse, createExpansionState, getExpansionInteractions, performExpansionInteraction, resolveExpansionCasualties, updateExpansion } from "./expansion.js";
 import { MOVEMENT_CONFIG, updateRidingPlayer } from "./movement.js";
 
 export const CONFIG = Object.freeze({
@@ -12,6 +12,7 @@ export const CONFIG = Object.freeze({
     interactionRange: 112,
     finalRitualCost: 16,
     finalAssaultDistance: 780,
+    finalReserveDelay: 7,
     sitePositions: Object.freeze([615, 1500, 2700, 3585]),
     grovePositions: Object.freeze([260, 770, 1060, 1320, 1840, 2360, 2880, 3140, 3430, 3940]),
     siteCosts: Object.freeze([8, 14, 22]),
@@ -61,6 +62,7 @@ export function createGame(seed = 0x51ee9) {
         waveWarning: false,
         wispTimer: 3.5,
         ritualStarted: false,
+        siegeReserveTimer: null,
         nextId: 1,
         player: {
             x: CONFIG.playerStartX,
@@ -118,24 +120,34 @@ export function assaultDirection(wave) {
     return sides.length === 2 ? "Both flanks" : sides[0] < 0 ? "West" : "East";
 }
 
-export function getInteraction(state) {
+export function getInteractions(state) {
     const player = state.player;
     if (player.reformTimer > 0) {
-        return null;
+        return [];
     } else {
-        const siteCandidates = state.sites
-            .map((site) => ({ ...describeSiteInteraction(state, site), x: site.x, distance: Math.abs(site.x - player.x) }))
-            .filter((candidate) => candidate.distance <= CONFIG.interactionRange);
-        const heartDistance = Math.abs(state.heart.x - player.x);
-        const heartCandidate = heartDistance <= CONFIG.interactionRange + 20
-            ? { ...describeHeartInteraction(state), x: state.heart.x, distance: heartDistance }
-            : null;
-        const expansionCandidate = getExpansionInteraction(state);
-        const candidates = [...siteCandidates, heartCandidate, expansionCandidate]
-            .filter((candidate) => candidate !== null)
-            .sort((left, right) => left.distance - right.distance);
-        return candidates[0] ?? null;
+        const landmarks = [...state.sites, state.heart];
+        const nearby = landmarks.flatMap((landmark) => {
+            const distance = Math.abs(landmark.x - player.x);
+            const isHeart = landmark === state.heart;
+            const range = CONFIG.interactionRange + (isHeart ? 20 : 0);
+            if (distance > range) {
+                return [];
+            } else {
+                const action = isHeart ? describeHeartInteraction(state) : describeSiteInteraction(state, landmark);
+                return [{ ...action, x: landmark.x, distance }];
+            }
+        });
+        return [...nearby, ...getExpansionInteractions(state)].sort((left, right) => left.distance - right.distance);
     }
+}
+
+export function getInteraction(state, targetId = null) {
+    const interactions = getInteractions(state);
+    return targetId === null ? interactions[0] ?? null : interactions.find((action) => action.targetId === targetId) ?? null;
+}
+
+export function canSelectInteraction(interaction) {
+    return interaction !== null && interaction.action !== "blocked" && interaction.action !== "maxed";
 }
 
 export function togglePause(state) {
@@ -244,7 +256,7 @@ function updateReformingPlayer(state, dt) {
         player.gaitPhase = 0;
         player.invulnerable = 2.5;
         state.events.push({ type: "reform", x: player.x });
-        setNotice(state, "The Heart weaves your Veil anew.", 3.2);
+        setNotice(state, "Veil restored at the Heart", 3.2);
     } else {
         player.x = state.heart.x;
     }
@@ -268,11 +280,9 @@ function processInteraction(state, input) {
     if (!input.interactPressed) {
         return;
     } else {
-        const interaction = getInteraction(state);
+        const interaction = getInteraction(state, input.interactTargetId);
         if (interaction === null) {
-            setNotice(state, "No buried thing answers here.", 2.2);
-        } else if (input.interactTargetId !== null && interaction.targetId !== input.interactTargetId) {
-            return;
+            setNotice(state, "Ride closer to use this site.", 2.2);
         } else {
             performInteraction(state, interaction);
         }
@@ -314,11 +324,11 @@ function buySiteLevel(state, interaction) {
             site.hp = site.maxHp;
             site.spawnTimer = 1.1;
             state.events.push({ type: "awaken", x: site.x, level: site.level });
-            setNotice(state, site.level === 1 ? "A Brood stirs beneath the soil." : `The Brood deepens to level ${site.level}.`, 3.2);
+            setNotice(state, site.level === 1 ? "Brood awakened" : `Brood upgraded to level ${site.level}`, 2.4);
         }
     } else {
         const missing = interaction.cost - state.dread;
-        setNotice(state, `The rite needs ${missing} more Dread.`, 2.8);
+        setNotice(state, `Need ${missing} more Dread`, 2.8);
     }
 }
 
@@ -327,14 +337,12 @@ function completeFinalRitual(state, interaction) {
     if (!state.ritualStarted && allActive && state.dread >= interaction.cost) {
         state.dread -= interaction.cost;
         state.ritualStarted = true;
+        state.siegeReserveTimer = CONFIG.finalReserveDelay;
         state.events.push({ type: "finale", x: state.heart.x });
-        for (const side of [-1, 1]) {
-            const entry = state.heart.x + side * CONFIG.finalAssaultDistance;
-            spawnRaid(state, side, entry, ["soldier", "torchbearer", "archer", "soldier", "torchbearer", "soldier"]);
-        }
-        setNotice(state, "Defend the Heart", 4);
+        spawnSiegeGroup(state, ["soldier", "archer", "soldier"]);
+        setNotice(state, "Siege begins", 3);
     } else {
-        const detail = allActive ? `The Sleeper needs ${interaction.cost - state.dread} more Dread.` : "Every Brood must be awake at once.";
+        const detail = allActive ? `Need ${interaction.cost - state.dread} more Dread` : "Awaken all four Broods first.";
         setNotice(state, detail, 3.2);
     }
 }
@@ -345,7 +353,7 @@ function describeSiteInteraction(state, site) {
     } else {
         if (site.level < 3) {
             const cost = CONFIG.siteCosts[site.level];
-            return makeInteraction(state, site, "upgrade", `DEEPEN TO LEVEL ${site.level + 1}`, cost, "Higher levels gain health and summon horrors more quickly.");
+            return makeInteraction(state, site, "upgrade", `UPGRADE BROOD TO LEVEL ${site.level + 1}`, cost, "Higher levels gain health and summon horrors more quickly.");
         } else {
             return {
                 kind: "site",
@@ -391,8 +399,8 @@ function describeHeartInteraction(state) {
             kind: "heart",
             targetId: state.heart.id,
             action: "finale",
-            label: "CALL THE SLEEPER BELOW",
-            detail: "Spend Dread to start the final ritual, then defend the Heart until the crusaders fall.",
+            label: "START FINAL SIEGE",
+            detail: "Spend Dread to begin the ritual. Prepare for attacks from both sides and a second wave seven seconds later.",
             cost: CONFIG.finalRitualCost,
             affordable: state.dread >= CONFIG.finalRitualCost,
         };
@@ -473,7 +481,7 @@ function huntHuman(state, horror, human, dt) {
             human.hp -= stats.damage;
             human.hitFlash = 0.16;
             horror.attackCooldown = stats.cooldown;
-            state.events.push({ type: "horror-strike", x: human.x, creature: horror.type });
+            state.events.push({ type: "horror-strike", x: human.x, fromX: horror.x, actorId: horror.id, creature: horror.type });
         } else {
             horror.facing = Math.sign(human.x - horror.x) || horror.facing;
         }
@@ -504,20 +512,24 @@ function updateHumans(state, dt) {
 
 function chooseHumanTarget(state, human) {
     const horror = closestLiving(state.horrors, human.x, 285);
-    const barricade = closestLiving(state.structures.filter((structure) => structure.type === "barricade" && structure.level > 0), human.x, 150);
     const acolyte = closestLiving(state.acolytes, human.x, 220);
     const playerClose = state.player.reformTimer === 0 && Math.abs(state.player.x - human.x) <= 190;
     const nearbyTarget = horror !== null
         ? { kind: "horror", object: horror, x: horror.x }
-        : barricade !== null
-            ? { kind: "structure", object: barricade, x: barricade.x }
-            : acolyte !== null
-                ? { kind: "acolyte", object: acolyte, x: acolyte.x }
-                : playerClose
-                    ? { kind: "player", object: state.player, x: state.player.x }
-                    : null;
+        : acolyte !== null
+            ? { kind: "acolyte", object: acolyte, x: acolyte.x }
+            : playerClose
+                ? { kind: "player", object: state.player, x: state.player.x }
+                : null;
     if (nearbyTarget !== null) {
-        return nearbyTarget;
+        const direction = Math.sign(nearbyTarget.x - human.x);
+        const distance = Math.abs(nearbyTarget.x - human.x);
+        const walls = state.structures.filter((structure) => {
+            const ahead = (structure.x - human.x) * direction;
+            return structure.type === "barricade" && structure.level > 0 && ahead >= 0 && ahead < distance;
+        });
+        const wall = closestLiving(walls, human.x, distance);
+        return wall === null ? nearbyTarget : { kind: "structure", object: wall, x: wall.x };
     } else {
         const structures = state.sites
             .filter((site) => site.level > 0)
@@ -549,17 +561,17 @@ function damageHumanTarget(state, human, target, stats) {
         case "acolyte":
             target.object.hp -= stats.damage;
             target.object.hitFlash = 0.16;
-            state.events.push({ type: human.type === "archer" ? "arrow" : "human-strike", x: target.x, fromX: human.x });
+            state.events.push({ type: human.type === "archer" ? "arrow" : "human-strike", x: target.x, fromX: human.x, actorId: human.id });
             break;
         case "structure":
             target.object.hp -= stats.damage * structureBonus;
             target.object.hitFlash = 0.16;
-            state.events.push({ type: human.type === "archer" ? "arrow" : "torch-strike", x: target.x, fromX: human.x });
+            state.events.push({ type: human.type === "archer" ? "arrow" : "torch-strike", x: target.x, fromX: human.x, actorId: human.id });
             break;
         case "site":
         case "heart":
             target.object.hp -= stats.damage * structureBonus;
-            state.events.push({ type: human.type === "archer" ? "arrow" : "torch-strike", x: target.x, fromX: human.x });
+            state.events.push({ type: human.type === "archer" ? "arrow" : "torch-strike", x: target.x, fromX: human.x, actorId: human.id });
             break;
         default:
             throw new Error(`Unknown human target kind '${target.kind}' while applying attack damage.`);
@@ -571,7 +583,7 @@ function damagePlayer(state, human, damage) {
     if (player.invulnerable === 0) {
         player.veil -= damage;
         player.invulnerable = 0.32;
-        state.events.push({ type: human.type === "archer" ? "arrow" : "player-hit", x: player.x, fromX: human.x });
+        state.events.push({ type: human.type === "archer" ? "arrow" : "player-hit", x: player.x, fromX: human.x, actorId: human.id });
     } else {
         state.events.push({ type: "veil-deflect", x: player.x });
     }
@@ -612,7 +624,7 @@ function beginReformWhenNeeded(state, random) {
         player.veil = 0;
         player.reformTimer = 3.4;
         state.events.push({ type: "dissolve", x: player.x, value: lostDread });
-        setNotice(state, `Your Veil ruptures. ${lostDread} Dread spills free.`, 3.4);
+        setNotice(state, `Veil broken · ${lostDread} Dread dropped`, 3.4);
     } else {
         player.veil = Math.max(0, player.veil);
     }
@@ -644,7 +656,7 @@ function collapseSite(state, site) {
     site.maxHp = 0;
     site.spawnTimer = 0;
     state.events.push({ type: "site-collapse", x: site.x });
-    setNotice(state, "The crusade has silenced a Brood.", 3.4);
+    setNotice(state, "Brood destroyed", 3.4);
 }
 
 function healSafeSite(state, site, dt) {
@@ -675,6 +687,7 @@ function updateNaturalWisps(state, dt, random) {
 function updateAssaults(state, dt) {
     if (state.ritualStarted) {
         state.waveWarning = false;
+        updateSiegeReserve(state, dt);
     } else {
         state.waveTimer -= dt;
         if (state.waveTimer <= 0) {
@@ -701,6 +714,29 @@ function spawnHumanWave(state) {
     }
     state.events.push({ type: "wave", x: state.heart.x, wave: state.wave });
     setNotice(state, `Raid ${state.wave} · ${assaultDirection(state.wave)}`, 3);
+}
+
+function updateSiegeReserve(state, dt) {
+    if (state.siegeReserveTimer === null) {
+        return;
+    } else {
+        state.siegeReserveTimer = Math.max(0, state.siegeReserveTimer - dt);
+        if (state.siegeReserveTimer === 0) {
+            state.siegeReserveTimer = null;
+            spawnSiegeGroup(state, ["torchbearer", "soldier", "torchbearer"]);
+            state.events.push({ type: "siege-reserve", x: state.heart.x });
+            setNotice(state, "Reinforcements arriving", 3);
+        } else {
+            return;
+        }
+    }
+}
+
+function spawnSiegeGroup(state, types) {
+    for (const side of [-1, 1]) {
+        const entry = state.heart.x + side * CONFIG.finalAssaultDistance;
+        spawnRaid(state, side, entry, types);
+    }
 }
 
 function spawnRaid(state, side, entry, types) {
@@ -742,8 +778,9 @@ function resolveEndState(state) {
         state.status = "defeat";
         state.events.push({ type: "defeat", x: state.heart.x });
     } else {
-        if (state.ritualStarted && state.humans.length === 0) {
+        if (state.ritualStarted && state.siegeReserveTimer === null && state.humans.length === 0) {
             state.status = "victory";
+            state.events.push({ type: "victory", x: state.heart.x });
         } else {
             state.status = "playing";
         }

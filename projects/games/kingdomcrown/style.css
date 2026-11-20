@@ -320,11 +320,10 @@ summary:focus-visible {
     border-bottom: 1px solid var(--dread-dim);
 }
 
-.eyebrow {
-    margin: 0 0 14px;
-    color: var(--dread-dim);
-    font: 600 10px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
-    letter-spacing: 0.28em;
+#end-overlay[data-outcome="victory"] {
+    align-items: end;
+    background: linear-gradient(transparent 45%, rgba(6, 10, 13, 0.75));
+    backdrop-filter: none;
 }
 
 h2,

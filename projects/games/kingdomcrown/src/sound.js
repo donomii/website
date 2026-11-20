@@ -135,7 +135,18 @@ class SoundController {
                 this.tone(event.type === "wave" ? 82 : 110, 0.55, "square", 0.13, 55);
                 break;
             case "finale":
-                this.tone(54, 2.2, "sawtooth", 0.3, 220);
+                this.tone(55, 1.65, "triangle", 0.24, 39);
+                this.tone(82.4, 0.95, "sine", 0.16, 62, 0.3);
+                this.tone(110, 1.4, "sine", 0.13, 94, 0.58);
+                break;
+            case "siege-reserve":
+                this.tone(62, 0.7, "triangle", 0.23, 33);
+                this.tone(62, 1, "triangle", 0.2, 35, 0.27);
+                break;
+            case "victory":
+                this.tone(130.8, 1.9, "sine", 0.15);
+                this.tone(196, 1.8, "sine", 0.13, 196, 0.13);
+                this.tone(261.6, 2.0, "triangle", 0.1, 261.6, 0.29);
                 break;
             case "defeat":
                 this.tone(92, 1.4, "triangle", 0.24, 35);
@@ -145,23 +156,24 @@ class SoundController {
         }
     }
 
-    tone(frequency, duration, type, volume, endingFrequency = frequency) {
+    tone(frequency, duration, type, volume, endingFrequency = frequency, delay = 0) {
         const context = this.context;
         if (context === null || this.master === null) {
             return;
         } else {
             const oscillator = context.createOscillator();
             const gain = context.createGain();
+            const start = context.currentTime + delay;
             oscillator.type = type;
-            oscillator.frequency.setValueAtTime(frequency, context.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(Math.max(1, endingFrequency), context.currentTime + duration);
-            gain.gain.setValueAtTime(0.0001, context.currentTime);
-            gain.gain.exponentialRampToValueAtTime(volume, context.currentTime + 0.018);
-            gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + duration);
+            oscillator.frequency.setValueAtTime(frequency, start);
+            oscillator.frequency.exponentialRampToValueAtTime(Math.max(1, endingFrequency), start + duration);
+            gain.gain.setValueAtTime(0.0001, start);
+            gain.gain.exponentialRampToValueAtTime(volume, start + 0.018);
+            gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
             oscillator.connect(gain);
             gain.connect(this.master);
-            oscillator.start();
-            oscillator.stop(context.currentTime + duration + 0.03);
+            oscillator.start(start);
+            oscillator.stop(start + duration + 0.03);
         }
     }
 }

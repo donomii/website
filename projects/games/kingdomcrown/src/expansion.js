@@ -23,11 +23,11 @@ export const EXPANSION_CONFIG = Object.freeze({
         pasture: Object.freeze({
             name: "Nightmare Pasture",
             role: "Reaper",
-            detail: "A Reaper grows collectible Dread at this Pasture.",
+            detail: "A staffed Pasture adds Dread to your balance wherever you are.",
             costs: Object.freeze([10, 18, 28]),
             health: Object.freeze([0, 100, 165, 245]),
-            intervals: Object.freeze([0, 12, 8, 5.5]),
-            yields: Object.freeze([0, 2, 3, 4]),
+            intervals: Object.freeze([0, 8, 6, 4.5]),
+            yields: Object.freeze([0, 3, 5, 7]),
         }),
         spire: Object.freeze({
             name: "Watcher Spire",
@@ -84,16 +84,14 @@ export function createExpansionState() {
     };
 }
 
-export function getExpansionInteraction(state) {
+export function getExpansionInteractions(state) {
     if (state.player.reformTimer > 0) {
-        return null;
+        return [];
     } else {
         const campInteractions = state.camps.map((camp) => ({ ...describeCampInteraction(state, camp), x: camp.x }));
         const structureInteractions = state.structures.map((structure) => ({ ...describeStructureInteraction(state, structure), x: structure.x }));
-        const candidates = [...campInteractions, ...structureInteractions]
-            .filter((interaction) => interaction.distance <= EXPANSION_CONFIG.interactionRange)
-            .sort((left, right) => left.distance - right.distance);
-        return candidates[0] ?? null;
+        return [...campInteractions, ...structureInteractions]
+            .filter((interaction) => interaction.distance <= EXPANSION_CONFIG.interactionRange);
     }
 }
 
@@ -136,7 +134,7 @@ export function resolveExpansionCasualties(state) {
         if (acolyte.hp <= 0) {
             vacateWorkerJob(state, acolyte);
             state.events.push({ type: "acolyte-fall", x: acolyte.x });
-            setNotice(state, "A Marked Acolyte has been reclaimed by death.", 3.2);
+            setNotice(state, "Acolyte lost", 3.2);
         } else {
             livingAcolytes.push(acolyte);
         }
@@ -171,7 +169,7 @@ function describeCampInteraction(state, camp) {
             kind: "camp",
             targetId: camp.id,
             action: "recruit-acolyte",
-            label: "MARK THE OUTCAST",
+            label: "RECRUIT ACOLYTE",
             detail: "Spend Dread to recruit an Acolyte who will take an available structure job.",
             cost: EXPANSION_CONFIG.recruitCost,
             affordable: state.dread >= EXPANSION_CONFIG.recruitCost,
@@ -196,11 +194,11 @@ function describeStructureInteraction(state, structure) {
     const distance = Math.abs(structure.x - state.player.x);
     const staffing = structure.workerId === null ? " Its worker job is vacant." : " An Acolyte holds its worker job.";
     if (structure.level === 0) {
-        return makeStructureInteraction(state, structure, "build-structure", `RAISE ${definition.name.toUpperCase()}`, definition.costs[0], definition.detail + staffing, distance);
+        return makeStructureInteraction(state, structure, "build-structure", `BUILD ${definition.name.toUpperCase()}`, definition.costs[0], definition.detail + staffing, distance);
     } else {
         if (structure.level < 3) {
             const cost = definition.costs[structure.level];
-            return makeStructureInteraction(state, structure, "upgrade-structure", `GROW ${definition.name.toUpperCase()} TO ${structure.level + 1}`, cost, definition.detail + staffing, distance);
+            return makeStructureInteraction(state, structure, "upgrade-structure", `UPGRADE ${definition.name.toUpperCase()} TO ${structure.level + 1}`, cost, definition.detail + staffing, distance);
         } else {
             return {
                 kind: "structure",
@@ -253,8 +251,8 @@ function recruitAcolyte(state, interaction) {
             state.acolytes.push(acolyte);
             assignAvailableAcolytes(state);
             state.events.push({ type: "mark-acolyte", x: camp.x });
-            const destination = acolyte.assignmentId === null ? "walks toward the Heart" : "has answered a vacant job";
-            setNotice(state, `An outcast bears the Mark and ${destination}.`, 3.4);
+            const destination = acolyte.assignmentId === null ? "waiting at the Heart" : "assigned to a structure";
+            setNotice(state, `Acolyte recruited · ${destination}`, 3.4);
         } else {
             explainFailedRecruitment(state, camp, interaction.cost);
         }
@@ -265,7 +263,7 @@ function explainFailedRecruitment(state, camp, cost) {
     if (!camp.available) {
         setNotice(state, `Another outcast arrives in ${Math.ceil(camp.refreshTimer)} seconds.`, 2.8);
     } else {
-        setNotice(state, `The Mark needs ${cost - state.dread} more Dread.`, 2.8);
+        setNotice(state, `Need ${cost - state.dread} more Dread`, 2.8);
     }
 }
 
@@ -277,7 +275,7 @@ function buyStructureLevel(state, interaction) {
         if (state.dread >= interaction.cost) {
             raiseStructure(state, structure, interaction.cost);
         } else {
-            setNotice(state, `This growth needs ${interaction.cost - state.dread} more Dread.`, 2.8);
+            setNotice(state, `Need ${interaction.cost - state.dread} more Dread`, 2.8);
         }
     }
 }
@@ -393,7 +391,7 @@ function updateFixedStructures(state, dt, random) {
 function runStaffedStructure(state, structure, dt, random) {
     switch (structure.type) {
         case "pasture":
-            updatePasture(state, structure, dt, random);
+            updatePasture(state, structure, dt);
             break;
         case "spire":
             updateSpire(state, structure, dt);
@@ -409,12 +407,12 @@ function runStaffedStructure(state, structure, dt, random) {
     }
 }
 
-function updatePasture(state, structure, dt, random) {
+function updatePasture(state, structure, dt) {
     const definition = structureDefinition(structure.type);
     structure.productionTimer -= dt;
     if (structure.productionTimer <= 0) {
         const value = definition.yields[structure.level];
-        addWisp(state, structure.x, value, random());
+        state.dread += value;
         structure.productionTimer += definition.intervals[structure.level];
         state.events.push({ type: "pasture-yield", x: structure.x, value });
     } else {
@@ -431,7 +429,7 @@ function updateSpire(state, structure, dt) {
         target.hp -= definition.damage[structure.level];
         target.hitFlash = 0.16;
         structure.attackCooldown = definition.cooldowns[structure.level];
-        state.events.push({ type: "spire-shot", x: target.x, fromX: structure.x });
+        state.events.push({ type: "spire-shot", x: target.x, fromX: structure.x, level: structure.level });
     } else {
         structure.attackCooldown = structure.attackCooldown;
     }
@@ -497,7 +495,7 @@ function collapseFixedStructure(state, structure) {
     structure.productionTimer = 0;
     structure.attackCooldown = 0;
     state.events.push({ type: "structure-collapse", x: structure.x, structure: structure.type });
-    setNotice(state, `The crusade has torn down a ${definition.name}.`, 3.4);
+    setNotice(state, `${definition.name} destroyed`, 3.4);
 }
 
 function closestLiving(entities, originX, maximumDistance) {

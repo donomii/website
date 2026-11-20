@@ -1,4 +1,5 @@
-import { CONFIG, activeSiteCount, assaultSides, getInteraction } from "./core.js";
+import { CONFIG, activeSiteCount, assaultSides, canSelectInteraction, getInteractions } from "./core.js";
+import { createCombatEffects } from "./combat-effects.js";
 import { structureWorkerReady } from "./expansion.js";
 import { drawFootShadow, drawLandmark, drawLocalLight, drawSelectionHalo, trail } from "./foreground-art.js";
 import { HORROR_HEIGHT, HUMAN_HEIGHT, drawHorrorActor, drawHumanActor, drawMountedPlayer, drawReformingHerald } from "./render-actors.js";
@@ -30,6 +31,8 @@ class WorldRenderer {
         this.rings = [];
         this.shake = 0;
         this.flash = 0;
+        this.skyMood = 0;
+        this.combat = createCombatEffects();
         this.resize();
     }
 
@@ -43,6 +46,16 @@ class WorldRenderer {
         this.context.setTransform(this.ratio, 0, 0, this.ratio, 0, 0);
     }
 
+    reset() {
+        this.cameraX = CONFIG.playerStartX;
+        this.particles.length = 0;
+        this.rings.length = 0;
+        this.shake = 0;
+        this.flash = 0;
+        this.skyMood = 0;
+        this.combat.clear();
+    }
+
     consumeEvents(events) {
         for (const event of events) {
             this.consumeEvent(event);
@@ -50,6 +63,7 @@ class WorldRenderer {
     }
 
     consumeEvent(event) {
+        this.combat.add(event, this.visualTime);
         switch (event.type) {
             case "collect":
                 this.burst(event.x, -58, COLORS.dread, 9, 65);
@@ -98,8 +112,12 @@ class WorldRenderer {
                 break;
             case "wave-warning":
             case "wave":
+            case "siege-reserve":
                 this.flash = Math.max(this.flash, event.type === "wave" ? 0.42 : 0.22);
                 this.shake = Math.max(this.shake, event.type === "wave" ? 8 : 3);
+                break;
+            case "victory":
+                this.burst(event.x, -90, COLORS.gold, 26, 83);
                 break;
             case "finale":
             case "defeat":
@@ -137,6 +155,8 @@ class WorldRenderer {
     render(state, elapsed, destination = null) {
         const dt = Math.min(0.05, Math.max(0, elapsed));
         this.visualTime += dt;
+        const mood = state.status === "victory" ? 1 : state.ritualStarted ? -1 : 0;
+        this.skyMood += (mood - this.skyMood) * Math.min(1, dt * 0.8);
         this.updateCamera(state, dt);
         this.updateEffects(dt);
         const context = this.context;
@@ -154,6 +174,7 @@ class WorldRenderer {
         this.drawCorpses(state);
         this.drawWisps(state);
         this.drawEntities(state);
+        this.combat.draw(context, this.groundY(), this.visualTime, (x) => this.visible(x));
         this.drawEffects();
         context.restore();
         switch (state.status) {
@@ -251,7 +272,8 @@ class WorldRenderer {
             context.fill();
         }
 
-        const warning = state.ritualStarted ? 0.3 : clamp((5 - state.waveTimer) / 5, 0, 1) * 0.24;
+        const siege = Math.max(0, -this.skyMood);
+        const warning = state.ritualStarted ? siege * 0.48 : clamp((5 - state.waveTimer) / 5, 0, 1) * 0.24;
         const sides = state.ritualStarted ? [-1, 1] : assaultSides(state.wave + 1);
         for (const side of sides) {
             const edge = side < 0 ? 0 : this.width;
@@ -262,6 +284,13 @@ class WorldRenderer {
             context.fillRect(-10, 0, this.width + 20, ground);
         }
         this.drawMist(ground);
+        const dawn = Math.max(0, this.skyMood);
+        const light = context.createLinearGradient(0, 0, 0, ground);
+        light.addColorStop(0, `rgba(17, 22, 47, ${siege * 0.46})`);
+        light.addColorStop(0.67, `rgba(245, 164, 87, ${dawn * 0.29})`);
+        light.addColorStop(1, `rgba(251, 213, 154, ${dawn * 0.17})`);
+        context.fillStyle = light;
+        context.fillRect(0, 0, this.width, ground);
     }
 
     drawMist(ground) {
@@ -317,17 +346,17 @@ class WorldRenderer {
     drawWorldStructures(state) {
         this.drawKeep(48, 1);
         this.drawKeep(CONFIG.worldWidth - 48, -1);
-        const interaction = state.status === "playing" ? getInteraction(state) : null;
-        const selectedId = interaction !== null && interaction.action !== "blocked" && interaction.action !== "maxed"
-            ? interaction.targetId : null;
+        const nearby = state.status === "playing"
+            ? new Set(getInteractions(state).filter(canSelectInteraction).map((action) => action.targetId))
+            : new Set();
         for (const camp of state.camps.filter((candidate) => this.visible(candidate.x, 120))) {
-            drawOutcastFire(this.context, camp, this.groundY(), this.visualTime, selectedId === camp.id);
+            drawOutcastFire(this.context, camp, this.groundY(), this.visualTime, nearby.has(camp.id));
         }
         for (const structure of state.structures.filter((candidate) => this.visible(candidate.x, 170))) {
-            drawFixedStructure(this.context, structure, this.groundY(), this.visualTime, selectedId === structure.id, structureWorkerReady(state, structure));
+            drawFixedStructure(this.context, structure, this.groundY(), this.visualTime, nearby.has(structure.id), structureWorkerReady(state, structure));
         }
         for (const site of state.sites.filter((candidate) => this.visible(candidate.x, 180))) {
-            this.drawSite(site, selectedId === site.id);
+            this.drawSite(site, nearby.has(site.id));
         }
         this.drawHeart(state);
     }
@@ -448,14 +477,14 @@ class WorldRenderer {
     drawHorror(horror) {
         const context = this.context;
         const ground = this.groundY();
-        drawHorrorActor(context, horror, ground, this.visualTime);
+        drawHorrorActor(context, horror, ground, this.visualTime, this.combat.lunge(horror, this.visualTime));
         this.drawHealthBar(horror.x, ground - HORROR_HEIGHT[horror.type] - 5, horror.hp, horror.maxHp, horror.type === "brute" ? 50 : 36, "#6ed3b8");
     }
 
     drawHuman(human) {
         const context = this.context;
         const ground = this.groundY();
-        drawHumanActor(context, human, ground, this.visualTime);
+        drawHumanActor(context, human, ground, this.visualTime, this.combat.lunge(human, this.visualTime));
         this.drawHealthBar(human.x, ground - HUMAN_HEIGHT[human.type] - 5, human.hp, human.maxHp, 32, human.type === "torchbearer" ? "#d56b55" : "#d0b878");
     }
 

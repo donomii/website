@@ -1,4 +1,4 @@
-import { CONFIG, activeSiteCount, assaultDirection, createGame, getInteraction, restartGame, stepGame, togglePause } from "./core.js";
+import { CONFIG, activeSiteCount, assaultDirection, canSelectInteraction, createGame, getInteractions, restartGame, stepGame, togglePause } from "./core.js";
 import { workforceCounts } from "./expansion.js";
 import { createControls } from "./controls.js";
 import { createRenderer } from "./render.js";
@@ -34,7 +34,6 @@ const ui = Object.freeze({
     interaction: requireElement("interaction"),
     interactionLabel: requireElement("interaction-label"),
     interactionCost: requireElement("interaction-cost"),
-    endEyebrow: requireElement("end-eyebrow"),
     endTitle: requireElement("end-title"),
     endMessage: requireElement("end-message"),
     restartButton: requireElement("restart-button"),
@@ -77,15 +76,26 @@ function selectWorldPoint(event) {
         return;
     } else {
         const point = renderer.worldPoint(event.clientX, event.clientY);
-        const interaction = availableAction();
-        const hitRadius = interaction?.kind === "heart" ? 118 : 45;
-        if (!point.onMap && interaction !== null && Math.abs(point.x - interaction.x) <= hitRadius
-            && point.aboveTrail >= -24 && point.aboveTrail <= 200) {
+        const interaction = actionAt(point);
+        if (interaction !== null) {
             controls.interactWith(interaction.targetId);
         } else {
             controls.rideTo(point.x);
         }
         ui.options.open = false;
+    }
+}
+
+function actionAt(point) {
+    if (point.onMap || point.aboveTrail < -24 || point.aboveTrail > 200) {
+        return null;
+    } else {
+        const candidates = getInteractions(state).filter(canSelectInteraction).filter((action) => {
+            const reach = action.kind === "heart" ? 118 : 45;
+            return Math.abs(point.x - action.x) <= reach;
+        });
+        candidates.sort((left, right) => Math.abs(left.x - point.x) - Math.abs(right.x - point.x));
+        return candidates[0] ?? null;
     }
 }
 
@@ -99,8 +109,7 @@ function selectNearbyAction() {
 }
 
 function availableAction() {
-    const interaction = state.status === "playing" ? getInteraction(state) : null;
-    return interaction !== null && interaction.action !== "blocked" && interaction.action !== "maxed" ? interaction : null;
+    return state.status === "playing" ? getInteractions(state).find(canSelectInteraction) ?? null : null;
 }
 
 function startGame() {
@@ -119,7 +128,7 @@ function startGame() {
 
 function restartCurrentGame() {
     state = restartGame();
-    renderer.cameraX = CONFIG.playerStartX;
+    renderer.reset();
     startGame();
 }
 
@@ -201,7 +210,7 @@ function updateUi() {
     ui.staminaMeter.classList.toggle("is-exhausted", player.exhausted);
     ui.broods.textContent = `${activeSiteCount(state)} / ${state.sites.length}`;
     ui.wave.textContent = state.ritualStarted
-        ? `${state.humans.length} left`
+        ? state.siegeReserveTimer === null ? `${state.humans.length} left` : `Reserve · ${Math.ceil(state.siegeReserveTimer)}s`
         : `${assaultDirection(state.wave + 1)} · ${Math.max(0, Math.ceil(state.waveTimer))}s`;
     ui.wave.classList.toggle("raid-warning", state.waveWarning || state.ritualStarted);
     ui.acolytes.textContent = `${workforce.free} free · ${workforce.staffed} working`;
@@ -237,10 +246,10 @@ function updateInteraction() {
 function updateOverlays() {
     switch (state.status) {
         case "victory":
-            showEnd("THE EARTH OPENS", "The Sleeper Rises", `All ${state.sites.length} Broods answered. The human crown is a small and temporary thing.`, "Haunt again");
+            showEnd("Siege repelled", `The Heart held with ${Math.ceil(state.heart.hp)} health.`, "Play again");
             break;
         case "defeat":
-            showEnd("THE TORCHES REACH THE HEART", "The Haunting Ends", `The Heart fell during assault ${state.wave}. What was buried can be buried again.`, "Rise again");
+            showEnd("The Heart fell", state.ritualStarted ? "The final siege broke your defenses." : `Your defenses fell during raid ${state.wave}.`, "Try again");
             break;
         case "paused":
             if (ui.helpOverlay.classList.contains("is-hidden")) {
@@ -257,9 +266,9 @@ function updateOverlays() {
     }
 }
 
-function showEnd(eyebrow, title, message, buttonLabel) {
+function showEnd(title, message, buttonLabel) {
     controls.clear();
-    ui.endEyebrow.textContent = eyebrow;
+    ui.endOverlay.dataset.outcome = state.status;
     ui.endTitle.textContent = title;
     ui.endMessage.textContent = message;
     ui.restartButton.textContent = buttonLabel;

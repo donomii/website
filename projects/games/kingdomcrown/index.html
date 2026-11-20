@@ -20,7 +20,7 @@
                 <span class="readout-label">Heart</span>
                 <strong id="heart-value">320</strong>
             </div>
-            <div class="readout raid-readout" title="Shows the next raid's direction and arrival time, or the enemies remaining in the final assault.">
+            <div class="readout raid-readout" title="Shows the next raid's direction and arrival time. During the siege it shows the reserve countdown, then remaining enemies.">
                 <span class="readout-label">Raid</span>
                 <strong id="wave-value">West · 8s</strong>
             </div>
@@ -65,13 +65,12 @@
         </button>
 
         <div id="title-overlay" class="start-control">
-            <button id="start-button" class="primary-button" type="button" title="Begin playing The Crown Below.">Begin the haunting</button>
+            <button id="start-button" class="primary-button" type="button" title="Start a new run.">Play</button>
         </div>
 
         <section id="help-overlay" class="overlay is-hidden" aria-label="How to play">
             <div class="guide-panel panel">
-                <p class="eyebrow">FIELD NOTES FOR THE UNBURIED</p>
-                <h2>How to haunt a kingdom</h2>
+                <h2>How to play</h2>
                 <div class="guide-grid">
                     <article>
                         <h3>Ride and gather</h3>
@@ -82,40 +81,38 @@
                         <p>Ride through glowing wisps to collect Dread. Click a nearby standing stone or its action button to awaken it for 8 Dread. The same action upgrades it for 14 and then 22 Dread.</p>
                     </article>
                     <article>
-                        <h3>Feed the Broods</h3>
+                        <h3>Broods</h3>
                         <p>Active Broods automatically hatch crawlers. Higher levels are tougher, hatch faster, and eventually call brutes. Their small bars appear only after taking damage.</p>
                     </article>
                     <article>
-                        <h3>Mark the outcasts</h3>
-                        <p>Select the action at a nearby roadside fire and spend 3 Dread to Mark its outcast. New Acolytes walk to open structure jobs. Empty fires attract another outcast after 22 seconds.</p>
+                        <h3>Recruit workers</h3>
+                        <p>Recruit an Acolyte for 3 Dread at a roadside fire. Acolytes walk to open structure jobs. Empty fires attract another outcast after 22 seconds.</p>
                     </article>
                     <article>
-                        <h3>Raise staffed growths</h3>
-                        <p>Click a nearby foundation or its action button to build or upgrade. Pastures make Dread, Spires attack, Barricades block and repair, and Charnel Yards turn human remains into bonus Dread. A growth works only after its Acolyte arrives.</p>
+                        <h3>Build</h3>
+                        <p>Click any highlighted site to build or upgrade it. Staffed Pastures pay Dread directly, Spires attack, Barricades repair, and Charnel Yards harvest remains.</p>
                     </article>
                     <article>
-                        <h3>Break the crusade</h3>
-                        <p>Broods and staffed Spires fight for you. Use Barricades to slow the attackers. Archers fire at range and torchbearers do extra damage to structures.</p>
+                        <h3>Defend</h3>
+                        <p>Broods and staffed Spires attack automatically. Barricades shield allies behind them, even from archers. Torchbearers do extra damage to structures.</p>
                     </article>
                     <article>
                         <h3>Guard the Heart</h3>
                         <p>Heart is base health. Zero ends the run. The violet bar under the rider is Veil. Recover it near an unthreatened Heart. At zero Veil, you spill Dread and reform at the Heart.</p>
                     </article>
                     <article>
-                        <h3>Complete the rite</h3>
-                        <p>Raid shows where the next attack will enter and when. Orange marks on the map track crusaders. With all four Broods awake, click the ritual at the Heart to spend 16 Dread, then hold off the final assault.</p>
+                        <h3>Final siege</h3>
+                        <p>Awaken four Broods and spend 16 Dread at the Heart to start the siege. Defend both sides and watch the Raid readout for reinforcements.</p>
                     </article>
                 </div>
                 <p class="pause-note">Click the bottom map to ride farther. It shows your position, the Heart, Broods, fires, and structures. A structure's job mark is red when vacant, gold while its worker travels, and teal when staffed. Use Menu to pause or change sound. Leaving the window also pauses and clears your destination.</p>
-                <button id="close-help-button" class="primary-button" type="button">Return to the night</button>
+                <button id="close-help-button" class="primary-button" type="button">Close</button>
             </div>
         </section>
 
         <section id="pause-overlay" class="overlay is-hidden" aria-label="Game paused">
             <div class="small-panel panel">
-                <p class="eyebrow">THE NIGHT HOLDS ITS BREATH</p>
                 <h2>Paused</h2>
-                <p>Movement, attacks, spawning, and the next human assault are stopped.</p>
                 <button id="resume-button" class="primary-button" type="button">Resume</button>
                 <button id="pause-help-button" class="quiet-button" type="button" title="Open the complete controls and readout guide while the game remains paused.">How to play</button>
             </div>
@@ -123,10 +120,9 @@
 
         <section id="end-overlay" class="overlay is-hidden" aria-live="assertive">
             <div class="small-panel panel">
-                <p id="end-eyebrow" class="eyebrow">THE EARTH OPENS</p>
-                <h2 id="end-title">The Sleeper Rises</h2>
-                <p id="end-message">The human crown is a small and temporary thing.</p>
-                <button id="restart-button" class="primary-button" type="button">Haunt again</button>
+                <h2 id="end-title">Siege repelled</h2>
+                <p id="end-message"></p>
+                <button id="restart-button" class="primary-button" type="button">Play again</button>
             </div>
         </section>
 
