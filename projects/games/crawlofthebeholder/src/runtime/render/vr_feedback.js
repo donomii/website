@@ -47,6 +47,7 @@
           && c.state.turnCount - song.turn < song.duration && c.state.slowedTurns > 0) {
         return song;
       } else {
+        song = null;
         return null;
       }
     }

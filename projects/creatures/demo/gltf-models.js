@@ -76,6 +76,122 @@ const MODEL_DEFINITIONS = [
         file: 'Squidle.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.0, collisionRadius: 0.7
     },
     {
+        id: 'quaternius-monkroose', label: 'Quaternius Monkroose', assetRoot: QUATERNIUS_ROOT,
+        file: 'big/Monkroose.gltf', walk: 'Run', idle: 'Idle', height: 1.4, collisionRadius: 0.75
+    },
+    {
+        id: 'quaternius-big-ninja', label: 'Quaternius Big Ninja', assetRoot: QUATERNIUS_ROOT,
+        file: 'big/Ninja.gltf', walk: 'Run', idle: 'Idle', height: 1.55, collisionRadius: 0.75
+    },
+    {
+        id: 'quaternius-skull-orc', label: 'Quaternius Skull Orc', assetRoot: QUATERNIUS_ROOT,
+        file: 'big/Orc_Skull.gltf', walk: 'Run', idle: 'Idle', height: 1.8, collisionRadius: 0.85
+    },
+    {
+        id: 'quaternius-orc', label: 'Quaternius Orc', assetRoot: QUATERNIUS_ROOT,
+        file: 'big/Orc.gltf', walk: 'Run', idle: 'Idle', height: 1.8, collisionRadius: 0.85
+    },
+    {
+        id: 'quaternius-big-tribal', label: 'Quaternius Big Tribal', assetRoot: QUATERNIUS_ROOT,
+        file: 'big/Tribal.gltf', walk: 'Run', idle: 'Idle', height: 1.65, collisionRadius: 0.8
+    },
+    {
+        id: 'quaternius-blob-alien', label: 'Quaternius Blob Alien', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Alien.gltf', walk: 'Walk', idle: 'Idle', height: 0.95, collisionRadius: 0.65
+    },
+    {
+        id: 'quaternius-blob-birb', label: 'Quaternius Blob Birb', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Birb.gltf', walk: 'Walk', idle: 'Idle', height: 0.75, collisionRadius: 0.55
+    },
+    {
+        id: 'quaternius-blob-cactoro', label: 'Quaternius Blob Cactoro', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Cactoro.gltf', walk: 'Walk', idle: 'Idle', height: 1.1, collisionRadius: 0.65
+    },
+    {
+        id: 'quaternius-blob-fish', label: 'Quaternius Blob Fish', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Fish.gltf', walk: 'Walk', idle: 'Idle', height: 0.75, collisionRadius: 0.55
+    },
+    {
+        id: 'quaternius-green-spiky-blob', label: 'Quaternius Green Spiky Blob', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/GreenSpikyBlob.gltf', walk: 'Walk', idle: 'Idle', height: 0.85, collisionRadius: 0.65
+    },
+    {
+        id: 'quaternius-mushnub', label: 'Quaternius Mushnub', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Mushnub.gltf', walk: 'Walk', idle: 'Idle', height: 0.95, collisionRadius: 0.65
+    },
+    {
+        id: 'quaternius-blob-ninja', label: 'Quaternius Blob Ninja', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Ninja.gltf', walk: 'Walk', idle: 'Idle', height: 1.05, collisionRadius: 0.65
+    },
+    {
+        id: 'quaternius-blob-orc', label: 'Quaternius Blob Orc', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Orc.gltf', walk: 'Walk', idle: 'Idle', height: 1.1, collisionRadius: 0.7
+    },
+    {
+        id: 'quaternius-blob-pigeon', label: 'Quaternius Blob Pigeon', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Pigeon.gltf', walk: 'Walk', idle: 'Idle', height: 0.75, collisionRadius: 0.55
+    },
+    {
+        id: 'quaternius-pink-blob', label: 'Quaternius Pink Blob', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/PinkBlob.gltf', walk: 'Walk', idle: 'Idle', height: 0.8, collisionRadius: 0.65
+    },
+    {
+        id: 'quaternius-blob-yeti', label: 'Quaternius Blob Yeti', assetRoot: QUATERNIUS_ROOT,
+        file: 'blob/Yeti.gltf', walk: 'Walk', idle: 'Idle', height: 1.25, collisionRadius: 0.7
+    },
+    {
+        id: 'quaternius-alpaking', label: 'Quaternius Alpaking', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Alpaking.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.1, collisionRadius: 0.7
+    },
+    {
+        id: 'quaternius-evolved-alpaking', label: 'Quaternius Evolved Alpaking', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Alpaking_Evolved.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.3, collisionRadius: 0.75
+    },
+    {
+        id: 'quaternius-armabee', label: 'Quaternius Armabee', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Armabee.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 0.95, collisionRadius: 0.65
+    },
+    {
+        id: 'quaternius-evolved-dragon', label: 'Quaternius Evolved Dragon', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Dragon_Evolved.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.6, collisionRadius: 0.9
+    },
+    {
+        id: 'quaternius-ghost', label: 'Quaternius Ghost', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Ghost.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.2, collisionRadius: 0.7
+    },
+    {
+        id: 'quaternius-skull-ghost', label: 'Quaternius Skull Ghost', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Ghost_Skull.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.1, collisionRadius: 0.7
+    },
+    {
+        id: 'quaternius-glub', label: 'Quaternius Glub', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Glub.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 0.9, collisionRadius: 0.65
+    },
+    {
+        id: 'quaternius-evolved-glub', label: 'Quaternius Evolved Glub', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Glub_Evolved.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.1, collisionRadius: 0.7
+    },
+    {
+        id: 'quaternius-goleling', label: 'Quaternius Goleling', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Goleling.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.1, collisionRadius: 0.7
+    },
+    {
+        id: 'quaternius-evolved-goleling', label: 'Quaternius Evolved Goleling', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Goleling_Evolved.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.3, collisionRadius: 0.75
+    },
+    {
+        id: 'quaternius-hywirl', label: 'Quaternius Hywirl', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Hywirl.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.0, collisionRadius: 0.7
+    },
+    {
+        id: 'quaternius-flying-pigeon', label: 'Quaternius Flying Pigeon', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Pigeon.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 0.8, collisionRadius: 0.55
+    },
+    {
+        id: 'quaternius-flying-tribal', label: 'Quaternius Flying Tribal', assetRoot: QUATERNIUS_ROOT,
+        file: 'flying/Tribal.gltf', walk: 'Fast_Flying', idle: 'Flying_Idle', height: 1.1, collisionRadius: 0.7
+    },
+    {
         id: 'khronos-fox', label: 'Khronos Fox', assetRoot: KHRONOS_ROOT,
         file: 'Fox.glb', walk: 'Run', idle: 'Survey', height: 0.8, collisionRadius: 0.65
     },

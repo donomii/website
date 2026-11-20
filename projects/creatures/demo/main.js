@@ -1,8 +1,13 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/webxr/VRButton.js';
-import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js?v=20261004-3';
-import { RTSCameraControls } from './rts-camera-controls.js?v=20261004-3';
-import { loadScenery, SCENERY_MODEL_COUNT, SCENERY_PLACEMENT_COUNT } from './scenery.js?v=20261004-3';
+import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js?v=20261120-1';
+import { RTSCameraControls } from './rts-camera-controls.js?v=20261120-1';
+import { loadScenery, SCENERY_MODEL_COUNT, SCENERY_PLACEMENT_COUNT } from './scenery.js?v=20261120-1';
+
+const WORLD_SIZE = 140;
+const WORLD_HALF_EXTENT = WORLD_SIZE / 2;
+const CAMERA_MAP_LIMIT = WORLD_HALF_EXTENT - 2;
+const MAX_CAMERA_DISTANCE = 170;
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -11,7 +16,7 @@ scene.background = new THREE.Color(0x87ceeb);
 // Camera setup - isometric view
 const aspect = window.innerWidth / window.innerHeight;
 const camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
-camera.position.set(30, 30, 30);
+camera.position.set(45, 45, 45);
 camera.lookAt(0, 0, 0);
 
 // Renderer setup
@@ -22,7 +27,10 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.xr.enabled = true;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-const cameraControls = new RTSCameraControls(camera, renderer.domElement);
+const cameraControls = new RTSCameraControls(camera, renderer.domElement, {
+    mapLimit: CAMERA_MAP_LIMIT,
+    maxDistance: MAX_CAMERA_DISTANCE
+});
 const cameraTarget = cameraControls.target;
 renderer.xr.addEventListener('sessionstart', () => cameraControls.setEnabled(false));
 renderer.xr.addEventListener('sessionend', () => cameraControls.setEnabled(true));
@@ -39,14 +47,14 @@ directionalLight.position.set(20, 40, 10);
 directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.width = 2048;
 directionalLight.shadow.mapSize.height = 2048;
-directionalLight.shadow.camera.left = -50;
-directionalLight.shadow.camera.right = 50;
-directionalLight.shadow.camera.top = 50;
-directionalLight.shadow.camera.bottom = -50;
+directionalLight.shadow.camera.left = -WORLD_HALF_EXTENT;
+directionalLight.shadow.camera.right = WORLD_HALF_EXTENT;
+directionalLight.shadow.camera.top = WORLD_HALF_EXTENT;
+directionalLight.shadow.camera.bottom = -WORLD_HALF_EXTENT;
 scene.add(directionalLight);
 
 // Ground plane
-const groundGeometry = new THREE.PlaneGeometry(100, 100);
+const groundGeometry = new THREE.PlaneGeometry(WORLD_SIZE, WORLD_SIZE);
 const groundMaterial = new THREE.MeshStandardMaterial({
     color: 0x4a7c4a,
     roughness: 0.8
@@ -57,7 +65,7 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 // Grid helper for reference
-const gridHelper = new THREE.GridHelper(100, 50, 0x888888, 0x888888);
+const gridHelper = new THREE.GridHelper(WORLD_SIZE, 70, 0x888888, 0x888888);
 gridHelper.material.opacity = 0.2;
 gridHelper.material.transparent = true;
 scene.add(gridHelper);
@@ -552,7 +560,7 @@ class BlockEmitter {
 
 // Create multiple movable blocks
 const blocks = [];
-const initialBlockCount = 3;
+const initialBlockCount = 8;
 
 for (let i = 0; i < initialBlockCount; i++) {
     const x = (Math.random() - 0.5) * 30;

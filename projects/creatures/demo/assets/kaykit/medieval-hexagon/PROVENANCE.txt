@@ -5,8 +5,10 @@ Downloaded archive: https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexago
 Archive SHA-256: cfa7faff403c93fb90e8eeb448c78e6192782802a532bebed0bdb853b39f7028
 License: Creative Commons Zero 1.0 (see LICENSE.txt)
 
-The web copies are unchanged files from:
-addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/blue/
+The web copies are unchanged files from the blue, red, and neutral directories under:
+addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/
+
+Expanded selection copied: 2026-11-20
 
 Included models:
 building_archeryrange_blue.gltf and .bin
@@ -23,4 +25,15 @@ building_tavern_blue.gltf and .bin
 building_watermill_blue.gltf and .bin
 building_well_blue.gltf and .bin
 building_windmill_blue.gltf and .bin
+building_tower_A_blue.gltf and .bin
+building_tower_B_blue.gltf and .bin
+building_tower_base_blue.gltf and .bin
+building_tower_catapult_blue.gltf and .bin
+all eighteen red building variants, including the four tower models
+building_bridge_A.gltf and .bin
+building_bridge_B.gltf and .bin
+building_destroyed.gltf and .bin
+building_grain.gltf and .bin
+building_scaffolding.gltf and .bin
+building_stage_A.gltf and .bin
 hexagons_medieval.png
