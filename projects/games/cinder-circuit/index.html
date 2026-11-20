@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c21">
+  <title>Cinder Circuit</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="game.js"></script>
+  <script defer src="art.js"></script>
+  <script defer src="sound.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="rail">
+      <h1>Cinder <span>Circuit</span></h1>
+      <div class="scoreboard" aria-label="Banked gold">
+        <div class="score player" title="Your banked gold"><i></i><output id="player-score" aria-label="Your gold">0</output></div>
+        <div class="clock" title="Time remaining"><output id="clock" aria-label="Time remaining">4:00</output></div>
+        <div class="score rival" title="Rival's banked gold"><i></i><output id="rival-score" aria-label="Rival gold">0</output></div>
+      </div>
+    </header>
+    <div class="arena">
+      <canvas id="board" width="1200" height="700" tabindex="-1" aria-label="The Copper Reach dragon raiding map"></canvas>
+      <dialog id="round-end" aria-labelledby="winner">
+        <h2 id="winner"></h2>
+        <p id="result"></p>
+        <button id="play-again" type="button">Play again</button>
+      </dialog>
+    </div>
+    <footer class="rail instruments">
+      <div class="meter scales" title="Dragon health"><span>Scales</span><meter id="health" min="0" max="100" value="100" aria-label="Dragon health"></meter></div>
+      <div class="meter breath" title="Fire breath remaining"><span>Breath</span><meter id="breath" min="0" max="1" value="1" aria-label="Fire breath remaining"></meter></div>
+      <div class="cargo" title="Unbanked gold and deposit bonus">
+        <span>Cargo</span><output id="cargo" aria-label="Carried gold">0 / 155</output><b id="bonus" hidden></b><b id="royal" title="Princess aboard" hidden>♛</b>
+      </div>
+      <div class="flight">
+        <button id="flight-action" type="button">Fly</button>
+        <button id="restart" type="button" hidden>Restart</button>
+        <button id="sound" type="button" aria-label="Game sound" aria-pressed="true" hidden>Sound on</button>
+        <button id="fire" type="button" aria-label="Breathe fire">Fire</button>
+        <button id="dash" type="button">Dash</button>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
