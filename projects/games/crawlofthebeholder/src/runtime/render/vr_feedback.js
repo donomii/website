@@ -73,25 +73,96 @@
     function vrSwampTreeAt(x, y) {
       const floor = c.currentFloor();
       const inside = x > 0 && y > 0 && x < floor.map.width - 1 && y < floor.map.height - 1;
-      if (/^swamp:/i.test(floor.id) && inside && c.cellAt(x, y) === "x"
-          && c.dirs.some((dir) => !c.solidAt(x + dir.x, y + dir.y))) {
+      if (!inside || c.cellAt(x, y) !== "x") return null;
+      if (!c.dirs.some((dir) => !c.solidAt(x + dir.x, y + dir.y))) return null;
+      if (/^swamp:/i.test(floor.id)) {
         const tile = `vendor/crawl/crawl-ref/source/rltiles/dngn/trees/mangrove${1 + c.cellHash(x, y, 219) % 3}.png`;
         return { name: "mangrove", texture: c.environmentAsset(tile) };
-      } else {
-        return null;
       }
+      if (/^lair:/i.test(floor.id) && c.cellHash(x, y, 223) % 3 === 0) {
+        const lairTrees = [
+          "vendor/crawl/crawl-ref/source/rltiles/dngn/trees/tree4.png",
+          "vendor/crawl/crawl-ref/source/rltiles/dngn/trees/tree12.png",
+          "vendor/crawl/crawl-ref/source/rltiles/dngn/trees/tree_petrified1.png"
+        ];
+        return { name: "cavern tree", texture: c.environmentAsset(lairTrees[c.cellHash(x, y, 227) % lairTrees.length]) };
+      }
+      return null;
     }
 
-    function vrShoreSurfaces(x, y) {
-      if (/^swamp:/i.test(c.currentFloor().id) && c.terrainAt(x, y) === "floor") {
+    function vrShoreSurfaces(x, y, nowMs = 0) {
+      const floor = c.currentFloor();
+      const id = String(floor?.id || "");
+      const biome = String(floor?.biome || "").toLowerCase();
+      const swamp = /^swamp:/i.test(id) || biome === "swamp";
+      const shoals = /^shoals:/i.test(id) || biome === "shoals";
+      const terrain = c.terrainAt(x, y);
+      const waterDir = "vendor/crawl/crawl-ref/source/rltiles/dngn/water";
+
+      if (swamp && terrain === "floor") {
         const edges = [[0, -1, "top"], [1, 0, "rgt"], [0, 1, "btm"], [-1, 0, "lft"]];
         return edges.filter(([dx, dy]) => ["water", "deep-water"].includes(c.terrainAt(x + dx, y + dy)))
           .map(([, , side]) => ({ kind: "decal", x, y,
-            texture: c.environmentAsset(`vendor/crawl/crawl-ref/source/rltiles/dngn/water/murky_bord_${side}.png`),
+            texture: c.environmentAsset(`${waterDir}/murky_bord_${side}.png`),
             inset: 0, lift: 0.008, alpha: 0.85 }));
-      } else {
-        return [];
       }
+
+      if (terrain !== "floor" && terrain !== "water") return [];
+      const phase = nowMs > 0 ? Math.floor(nowMs / 1040 + c.cellHash(x, y, 71)) % 2 + 1 : 1;
+      const lap = nowMs > 0 ? Math.sin(nowMs / 500 + (x + y) * 1.3) * 0.04 : 0;
+      const cardinal = [
+        [0, -1, "N"],
+        [1, 0, "E"],
+        [0, 1, "S"],
+        [-1, 0, "W"]
+      ];
+      const out = [];
+      for (const [dx, dy, dir] of cardinal) {
+        const nt = c.terrainAt(x + dx, y + dy);
+        if (terrain === "floor" && (nt === "water" || nt === "deep-water")) {
+          const tex = nt === "deep-water"
+            ? `${waterDir}/deep_water_wave_${dir}${phase}.png`
+            : `${waterDir}/shallow_water_wave_${dir}.png`;
+          out.push({
+            kind: "decal",
+            x,
+            y,
+            texture: c.environmentAsset(tex),
+            inset: 0,
+            lift: 0.009,
+            alpha: shoals ? 0.92 : 0.78,
+            offsetX: -dx * lap,
+            offsetZ: -dy * lap,
+            animatedShore: shoals
+          });
+        } else if (terrain === "water" && nt === "deep-water") {
+          out.push({
+            kind: "decal",
+            x,
+            y,
+            texture: c.environmentAsset(`${waterDir}/deep_water_wave_${dir}${phase}.png`),
+            inset: 0,
+            lift: 0.009,
+            alpha: 0.85,
+            offsetX: -dx * lap,
+            offsetZ: -dy * lap,
+            animatedShore: shoals
+          });
+        }
+      }
+      return out;
+    }
+
+    function vrClearColorForFloor(floor = c.currentFloor()) {
+      const id = String(floor?.id || "").toLowerCase();
+      const biome = String(floor?.biome || "").toLowerCase();
+      if (id.startsWith("shoals:") || biome === "shoals") return [0.043, 0.133, 0.220, 1];
+      if (id.startsWith("swamp:") || biome === "swamp") return [0.024, 0.052, 0.036, 1];
+      if (id.startsWith("lair:") || biome === "lair") return [0.028, 0.042, 0.032, 1];
+      if (id.startsWith("gehenna:") || id.startsWith("volcano:")) return [0.075, 0.026, 0.018, 1];
+      if (id.startsWith("cocytus:") || id.startsWith("icecave:")) return [0.032, 0.058, 0.088, 1];
+      if (id.startsWith("zot:") || id.startsWith("abyss:") || id.startsWith("pan:") || id.startsWith("wizlab:")) return [0.042, 0.022, 0.064, 1];
+      return [0.028, 0.024, 0.02, 1];
     }
 
     function vrCloudGraphic(cloud) {
@@ -209,6 +280,6 @@
     }
 
     Object.assign(c, { vrStatusInfo, noteVrRangedStatus, vrActiveSong, vrBoardLabels,
-      vrSwampTreeAt, vrShoreSurfaces, vrCloudGraphic, vrInspectCell, drawVrInspection });
+      vrSwampTreeAt, vrShoreSurfaces, vrClearColorForFloor, vrCloudGraphic, vrInspectCell, drawVrInspection });
   };
 })();

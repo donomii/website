@@ -354,18 +354,40 @@
               const floorTexturePath = wireframe
                 ? (terrain === "lava" ? "wireframe:lava" : (terrain === "water" || terrain === "deep-water") ? "wireframe:water" : "wireframe:floor")
                 : vrRenderedTile(floorTexture({ x, y }));
-              surfaces.push({ kind: "floor", x, y, texture: floorTexturePath, normal: wireframe ? null : vrNormalPath(floorTexturePath), shade: wireframe ? 1 : VR_SHADE.floor });
-              surfaces.push(...(wireframe ? [] : vrShoreSurfaces(x, y)));
+              let floorShade = wireframe ? 1 : VR_SHADE.floor;
+              let floorTint = null;
+              if (!wireframe && vrArtStyle() !== "classic" && typeof cellThemeAt === "function") {
+                const zone = cellThemeAt(x, y);
+                if (zone && !zone.outdoor) {
+                  if (zone.kind === "corridor") {
+                    floorShade = Math.max(0.68, floorShade * 0.84);
+                  } else if (zone.theme?.ambientColor) {
+                    const [ar, ag, ab] = zone.theme.ambientColor;
+                    floorTint = {
+                      r: 0.86 + (ar / 255) * 0.22,
+                      g: 0.86 + (ag / 255) * 0.22,
+                      b: 0.86 + (ab / 255) * 0.22
+                    };
+                  }
+                }
+              }
+              surfaces.push({ kind: "floor", x, y, texture: floorTexturePath, normal: wireframe ? null : vrNormalPath(floorTexturePath), shade: floorShade, ...(floorTint ? { tint: floorTint } : {}) });
+              if (!wireframe) {
+                const shores = vrShoreSurfaces(x, y, 0);
+                for (const shore of shores) {
+                  if (!shore.animatedShore) surfaces.push(shore);
+                }
+              }
               const openDoor = doorCellAt(x, y) && !closedDoorAt(x, y);
               if (openDoor) {
                 const texture = wireframe ? "wireframe:open-door" : vrRenderedTile(assets.openDoor);
                 surfaces.push({ kind: "decal", x, y, texture, normal: wireframe ? null : vrNormalPath(texture), inset: 0.06, lift: 0.012, alpha: 1 });
               }
               const stairs = stairsAt(x, y);
-              if (stairs) {
+              if (stairs && (wireframe || !stairs.tile)) {
                 const texture = wireframe
                   ? (stairs.direction === "down" ? "wireframe:stairs-down" : "wireframe:stairs-up")
-                  : vrRenderedTile(stairs.tile || (stairs.direction === "down" ? assets.stairsDown : assets.stairsUp));
+                  : vrRenderedTile(stairs.direction === "down" ? assets.stairsDown : assets.stairsUp);
                 surfaces.push({ kind: "decal", x, y, texture, normal: wireframe ? null : vrNormalPath(texture), inset: 0.1, lift: 0.014, alpha: 1 });
               }
               const decor = decorAt(x, y);
@@ -419,10 +441,21 @@
       // Per-turn floor decals — items, armed traps, marks, markers, clouds,
       // spell effects. Driven by the game's own lists (a few dozen entries),
       // not a grid walk, so re-emitting every frame costs nothing.
-      function vrDynamicDecalSurfaces() {
+      function vrDynamicDecalSurfaces(nowMs = 0) {
+        const floor = currentFloor();
         const floorState = currentFloorState();
         const surfaces = [];
         const seen = (x, y) => vrCellDiscovered(floorState, x, y);
+        const isShoals = /^shoals:/i.test(String(floor?.id || "")) || String(floor?.biome || "").toLowerCase() === "shoals";
+        if (isShoals && !vrWireframeEnabled()) {
+          for (const key of floorState.discovered) {
+            const [sx, sy] = key.split(",").map(Number);
+            if (!mapContains(sx, sy) || solidAt(sx, sy)) continue;
+            for (const shore of vrShoreSurfaces(sx, sy, nowMs)) {
+              if (shore.animatedShore) surfaces.push(shore);
+            }
+          }
+        }
         for (const trap of floorState.traps) {
           if (trap.armed && seen(trap.x, trap.y)) {
             const texture = vrRenderedTile(trap.tile);
@@ -566,6 +599,29 @@
             } else {
               continue;
             }
+          }
+        }
+        if (!vrWireframeEnabled() && floor.stairs) {
+          const seenPortal = new Set();
+          for (const stair of Object.values(floor.stairs)) {
+            if (!stair || !stair.tile) continue;
+            const pk = `${stair.x},${stair.y}`;
+            if (seenPortal.has(pk) || !vrCellDiscovered(floorState, stair.x, stair.y)) continue;
+            seenPortal.add(pk);
+            const texture = vrRenderedTile(stair.tile);
+            dolls.push({
+              kind: "portal",
+              id: `portal:${pk}`,
+              x: stair.x,
+              y: stair.y,
+              w: 0.88,
+              h: 1.05,
+              texture,
+              normal: vrNormalPath(texture),
+              facing: 0,
+              alpha: 1,
+              tint: null
+            });
           }
         }
         for (const decor of floor.decor || []) {
@@ -1399,7 +1455,7 @@
           const uv = surface.glyph ? vrGlyphUv(surface.glyph, surface.color || "#f1d07a") : vrTileUv(surface.texture, surface.normal);
           const hasNormal = !surface.glyph && !!surface.normal && vrTileHasNormal(surface.texture);
           if (surface.kind === "floor") {
-            vrPushQuad(solid, [[x0, 0, z0], [x1, 0, z0], [x1, 0, z1], [x0, 0, z1]], uv, shade, shade, shade, 1, hasNormal);
+            vrPushQuad(solid, [[x0, 0, z0], [x1, 0, z0], [x1, 0, z1], [x0, 0, z1]], uv, tint.r * shade, tint.g * shade, tint.b * shade, 1, hasNormal);
           } else if (surface.kind === "wall-top") {
             vrPushQuad(solid, [[x0, H, z0], [x1, H, z0], [x1, H, z1], [x0, H, z1]], uv, shade, shade, shade, 1, hasNormal);
           } else if (surface.kind === "wall-face" || surface.kind === "door-face") {
@@ -1417,7 +1473,7 @@
             const prevLift = decalLiftByCell.get(cellKey);
             const lift = prevLift !== undefined && rawLift <= prevLift + 0.005 ? prevLift + 0.006 : rawLift;
             decalLiftByCell.set(cellKey, lift);
-            const corners = vrRotatedFloorCorners(x0 + 0.5, z0 + 0.5, half, lift, surface.rot || 0);
+            const corners = vrRotatedFloorCorners(x0 + 0.5 + (surface.offsetX || 0), z0 + 0.5 + (surface.offsetZ || 0), half, lift, surface.rot || 0);
             const target = alpha < 1 || surface.tint ? translucent : solid;
             vrPushQuad(target, corners, uv, tint.r * shade, tint.g * shade, tint.b * shade, alpha, hasNormal);
           }
@@ -1428,7 +1484,7 @@
       // Same solid/translucent split as the architecture: a see-through doll
       // (spent decor) or the party's floor arrow must not write depth, or the
       // dolls drawn after them vanish behind their transparent pixels.
-      const VR_DOLL_Z_PRIORITY = { party: 0, monster: 1, ally: 2, item: 3, decor: 4, furniture: 5 };
+      const VR_DOLL_Z_PRIORITY = { party: 0, monster: 1, ally: 2, item: 3, portal: 3.5, decor: 4, furniture: 5 };
 
       function vrEmitDolls(model, headModel, mode, nowMs = 0) {
         const solid = [];
@@ -4164,7 +4220,7 @@
         if ((state.damageTaken || 0) > vrLastDamageTaken) vrPartyHitAt = time;
         vrLastDamageTaken = state.damageTaken || 0;
         const dolls = vrEmitDolls(vrDollModel(), headModel, vrDollMode(), time);
-        const decals = vrEmitArchitecture({ ...vrStructureDims(), surfaces: vrDynamicDecalSurfaces() });
+        const decals = vrEmitArchitecture({ ...vrStructureDims(), surfaces: vrDynamicDecalSurfaces(time) });
         glState.dollCount = vrUploadBuffer(glState.dollBuffer, dolls.solid.concat(decals.solid));
         glState.dollTransCount = vrUploadBuffer(glState.dollTransBuffer, dolls.translucent.concat(decals.translucent));
         glState.hudCount = vrUploadBuffer(glState.hudBuffer, vrEmitHud(head));
@@ -4202,7 +4258,10 @@
         // AR composites the camera feed wherever we leave alpha at zero; VR
         // paints its own void.
         if (vrSession.environmentBlendMode && vrSession.environmentBlendMode !== "opaque") gl.clearColor(0, 0, 0, 0);
-        else gl.clearColor(0.028, 0.024, 0.02, 1);
+        else {
+          const [cr, cg, cb, ca] = typeof vrClearColorForFloor === "function" ? vrClearColorForFloor() : [0.028, 0.024, 0.02, 1];
+          gl.clearColor(cr, cg, cb, ca);
+        }
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.enable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE); // paper dolls are visible from both sides
