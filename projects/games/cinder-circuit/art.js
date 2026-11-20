@@ -212,7 +212,8 @@
       ellipse(ctx,x+(i%3-1)*7,y+Math.floor(i/3)*5-1,4,2.7,drake.id===0?"#f4c46a":"#a3d8c5");
     }
     ctx.beginPath();
-    ctx.ellipse(x,y,49,38,0,-PI/2,-PI/2+PI*2*(drake.bank?Math.min(1,drake.bank/RULES.bankTime):.11+.035*Math.sin(time*3)));
+    const ring = drake.bank ? RULES.lairRadius : 52;
+    ctx.ellipse(x,y,ring,drake.bank?ring:39,0,-PI/2,-PI/2+PI*2*(drake.bank?Math.min(1,drake.bank/RULES.bankTime):.11+.035*Math.sin(time*3)));
     ctx.strokeStyle=color;
     ctx.lineWidth=2.5;
     ctx.stroke();
@@ -255,13 +256,18 @@
 
   function wagon(ctx,w,time) {
     ellipse(ctx,w.x,w.y+3,12,6,"#1d302a91");
-    if (w.royal) glow(ctx,w.x,w.y,26,"#fba3cf73");
+    if (w.royal) {
+      glow(ctx,w.x,w.y,26,"#fba3cf73");
+    } else if (w.rich) {
+      glow(ctx,w.x,w.y,19,"#ffcf5b58");
+    }
     ctx.save();
     ctx.translate(w.x,w.y);
     ctx.rotate(w.angle);
     ctx.lineWidth=1;
     polygon(ctx,[[-10,-6],[5,-6],[5,6],[-10,6]],w.royal?"#af5a91":"#92744d","#403c34");
-    polygon(ctx,[[-9,-5],[4,-5],[4,1],[-9,1]],w.royal?"#f2aecd":"#d5a76b");
+    polygon(ctx,[[-9,-5],[4,-5],[4,1],[-9,1]],w.royal?"#f2aecd":w.rich?"#ffe19b":"#d5a76b");
+    if (w.rich) line(ctx,[[-5,-5],[-5,2]],"#b56d28",1.2);
     for(const x of [-7,2]) for(const y of [-6,6]) ellipse(ctx,x,y,2.7,1.6,"#332c2a");
     line(ctx,[[5,0],[11,0]],"#e4b98c",1.4);
     ellipse(ctx,12,0,3.7,2.9,w.royal?"#ead8be":"#513e32");
@@ -275,6 +281,8 @@
     const dark=d.id===0?"#7b382e":"#29575a";
     const light=d.id===0?"#dc7747":"#59aaa4";
     const beat=0.78+Math.sin(time*(Math.abs(d.vx)+Math.abs(d.vy)>40?15:9)+d.id)*0.21;
+    const lateralSpeed = -d.vx*Math.sin(d.angle)+d.vy*Math.cos(d.angle);
+    const bank = Cinder.clamp(lateralSpeed/RULES.speed,-1,1)*0.18;
     const lift=10+beat*4;
     const tail=Math.sin(time*7+d.id)*3;
     ctx.save();
@@ -284,7 +292,7 @@
     ctx.rotate(d.angle);
     ctx.lineWidth=1.25;
     for (const side of [-1,1]) {
-      const y=s=>s*beat*side;
+      const y=s=>s*beat*side*(1+bank*side);
       polygon(ctx,[[8,y(4)],[10,y(15)],[1,y(28)],[-15,y(36)],[-11,y(25)],[-22,y(24)],[-15,y(15)],[-24,y(13)],[-6,y(3)]],dark,"#1b2728");
       polygon(ctx,[[7,y(5)],[8,y(14)],[-13,y(33)],[-9,y(23)],[-20,y(22)],[-11,y(15)],[-21,y(13)],[-5,y(5)]],light);
       line(ctx,[[7,y(6)],[-4,y(14)],[-13,y(33)]],color,1.1);
@@ -332,7 +340,15 @@
     for (const town of game.towns) {
       for (const b of [...town.buildings].sort((a,b)=>a.y-b.y)) building(ctx,b,town,time);
       if (town.launch>0) {
-        const b=town.buildings[3], t=1-town.launch/.51;
+        const b=town.buildings[3], t=1-town.launch/RULES.towerWindup;
+        if (town.target===0) {
+          const locked=town.launch<=RULES.towerLock;
+          const length=158+game.phase*23;
+          const dx=Math.cos(town.shotAngle), dy=Math.sin(town.shotAngle);
+          ctx.setLineDash(locked?[]:[5,7]);
+          line(ctx,[[b.x,b.y],[b.x+dx*length,b.y+dy*length]],locked?"#ffa285d9":"#ffa28572",locked?1.7:1.25);
+          ctx.setLineDash([]);
+        }
         glow(ctx,b.x,b.y-15,19+t*13,"#ff7968cc");
         ctx.lineWidth=1.5;
         ellipse(ctx,b.x,b.y,11+t*18,7+t*12,null,"#ffb084");

@@ -25,7 +25,6 @@
   let last = performance.now();
   let accumulator = 0;
   let mouse = null;
-  let mouseAt = -Infinity;
   let mouseDown = false;
   let touch = null;
   let touchFire = false;
@@ -135,11 +134,13 @@
   canvas.addEventListener("pointermove",event=>{
     if (event.pointerType === "mouse") {
       mouse=worldPoint(event);
-      mouseAt=performance.now();
     } else if (touch?.id===event.pointerId) {
       touch.x=event.clientX;
       touch.y=event.clientY;
     }
+  });
+  canvas.addEventListener("pointerleave",event=>{
+    if (event.pointerType === "mouse" && !mouseDown) mouse = null;
   });
   canvas.addEventListener("pointerdown",event=>{
     if(event.button!==0 || mode==="paused" || mode==="finished") return;
@@ -147,7 +148,6 @@
     begin();
     if (event.pointerType === "mouse") {
       mouse=worldPoint(event);
-      mouseAt=performance.now();
       mouseDown=true;
     } else if(!touch) {
       touch={id:event.pointerId,originX:event.clientX,originY:event.clientY,x:event.clientX,y:event.clientY};
@@ -179,14 +179,14 @@
     return Math.abs(value) < .19 ? 0 : Math.sign(value)*(Math.abs(value)-.19)/.81;
   }
 
-  function inputAt(time) {
+  function readInput() {
     const pad=Array.from(navigator.getGamepads?.() ?? []).find(item=>item?.mapping==="standard");
     const rightX=axis(pad?.axes[2] ?? 0), rightY=axis(pad?.axes[3] ?? 0);
     const gamepadFire=Math.hypot(rightX,rightY)>0.15;
     const key=(a,b)=>Number(keys.has(a)||keys.has(b));
     const x=key("KeyD","ArrowRight")-key("KeyA","ArrowLeft")+axis(pad?.axes[0] ?? 0)+(touch?clamp((touch.x-touch.originX)/37,-1,1):0);
     const y=key("KeyS","ArrowDown")-key("KeyW","ArrowUp")+axis(pad?.axes[1] ?? 0)+(touch?clamp((touch.y-touch.originY)/37,-1,1):0);
-    const mouseAim=mouse && !touch && (mouseDown || time-mouseAt<2000) && gap(mouse,game.dragons[0])>8;
+    const mouseAim=mouse && !touch && !touchFire && gap(mouse,game.dragons[0])>8;
     const aim=gamepadFire ? Math.atan2(rightY,rightX) : mouseAim ? bearing(game.dragons[0],mouse) : null;
     const fire=gamepadFire || mouseDown || touchFire || keys.has("Space");
     const dash=Boolean(pad?.buttons[0]?.pressed || keys.has("ShiftLeft") || keys.has("ShiftRight") || dashQueue);
@@ -250,7 +250,7 @@
   function frame(time) {
     const elapsed=clamp((time-last)/1000,0,.25);
     last=time;
-    const controls=inputAt(time);
+    const controls=readInput();
     if (mode==="playing") {
       accumulator+=elapsed;
       // A button edge survives even when a display frame contains no physics step.

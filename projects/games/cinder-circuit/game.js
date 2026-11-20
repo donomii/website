@@ -4,11 +4,13 @@
   const WIDTH = 1200;
   const HEIGHT = 700;
   const RULES = Object.freeze({
-    duration: 240, phases: [60, 150], firstRoyal: 28, royalInterval: 38,
-    speed: 239, breathRange: 144, capacity: 155, maxHealth: 100, dashCooldown: 2.1,
-    lairRadius: 48, bankTime: 0.36, lootLifetime: 19, royalValue: 145,
-    rivalStart: 0.85, rivalRest: 1.9,
-    upgradeScores: [320, 850], upgradeNames: ["Deep pockets", "Hotter breath"]
+    duration: 240, phases: [60, 150], royalDepartures: [26, 65, 103, 138, 170, 198, 222],
+    speed: 220, breathRange: 144, capacity: 155, maxHealth: 100, dashCooldown: 2.5,
+    lairRadius: 54, bankTime: 0.34, pickupRadius: 39, lootLifetime: 19, royalValue: 165,
+    rivalStart: 0.85, rivalRest: 0.90,
+    upgradeScores: [450, 1500], upgradeNames: ["Deep pockets", "Hotter breath"],
+    towerWindup: 0.54, towerLock: 0.17, boltSpeed: 380,
+    towerInterval: [2.60, 1.65, 1.16], towerDamage: [21, 32, 40]
   });
   const LAIRS = [{x: 148, y: 486, name: "Cinder Crag"}, {x: 1045, y: 182, name: "Blue Roost"}];
   const TOWNS = [
@@ -24,7 +26,7 @@
     [[724,143],[659,137],[601,168],[561,214],[488,225],[405,205],[353,258],[315,299],[299,378],[333,451]],
     [[883,311],[829,267],[786,225],[740,175],[724,143],[659,137],[601,168],[561,214],[488,225],[405,205]]
   ];
-  const plots = [[-25,-12,"house",0.48,36],[17,-21,"hall",0.73,49],[-11,24,"house",0.48,36],[27,17,"tower",0.88,56]];
+  const plots = [[-25,-12,"house",0.48,26],[17,-21,"hall",0.73,38],[-11,24,"house",0.48,26],[27,17,"tower",1.22,41]];
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(n, hi));
   const gap = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
   const bearing = (a, b) => Math.atan2(b.y - a.y, b.x - a.x);
@@ -60,10 +62,10 @@
 
   function createGame() {
     return {
-      time: 0, phase: 0, ended: false, seed: 75643, nextRoyal: RULES.firstRoyal, royalCount: 0,
+      time: 0, phase: 0, ended: false, seed: 75643, royalCount: 0,
       dragons: [dragon(0), dragon(1)], events: [], bolts: [], loot: [],
       wagons: [makeWagon(0, false, 21), makeWagon(4, false, 54)],
-      towns: TOWNS.map((town,id) => ({...town, id, attention: 0, guard: 1 + id*0.24, launch: 0,
+      towns: TOWNS.map((town,id) => ({...town, id, attention: 0, prosperity: 0, guard: 1 + id*0.24, launch: 0,
         nextWagon: 5 + id*2.8, buildings: plots.map(([x,y,type,health,value]) => ({
           x: town.x+x, y: town.y+y, type, health, maxHealth: health, value, rebuild: 0, burning: 0
         }))
@@ -77,11 +79,12 @@
     return game.seed / 4294967296;
   }
 
-  function makeWagon(town, royal, progress = 0, ordinal = 0, wealth = 1) {
+  function makeWagon(town, royal, progress = 0, ordinal = 0, trade = 48) {
     const road = royal ? ROYAL_ROUTES[ordinal % ROYAL_ROUTES.length] : TOWNS[town].road;
     const position = pointOnRoad(road, progress);
-    return {...position, town, royal, road, progress, health: royal ? 0.66 : 0.31,
-      value: royal ? RULES.royalValue : Math.round(24 + wealth*24), burning: 0};
+    const rich = !royal && trade >= 72;
+    return {...position, town, royal, rich, road, progress, health: royal ? 0.66 : rich ? 0.40 : 0.31,
+      value: royal ? RULES.royalValue : trade, burning: 0, underAttack: false};
   }
 
   function event(game, type, x, y, amount = 0, actor = 0) {
@@ -113,8 +116,8 @@
     if (game.time < rival.readyAt) return steerTo(rival, home);
     const available = game.loot.filter(item => item.royal ? !rival.royal : rival.carry < capacity(rival));
     const prize = available.reduce((best,item) => !best || gap(rival,item)-(item.royal?100:0) < gap(rival,best)-(best.royal?100:0) ? item : best, null);
-    if (rival.health < 43 || (rival.returning && rival.health < 83) || rival.royal || rival.carry >= capacity(rival)*0.73 ||
-        (RULES.duration-game.time < gap(rival,home)/135+1 && rival.carry > 0)) {
+    if (rival.health < 50 || (rival.returning && rival.health < 80) || rival.royal || rival.carry >= capacity(rival)*0.73 ||
+        (RULES.duration-game.time < gap(rival,home)/(RULES.speed*.8)+1 && rival.carry > 0)) {
       rival.returning = true;
       return steerTo(rival, home);
     }
@@ -125,11 +128,14 @@
     const options = game.towns.flatMap(town => town.buildings.filter(building => !building.rebuild));
     options.push(...game.wagons);
     const target = options.reduce((best,item) => {
-      const cost = object => gap(rival,object) + (gap(player,object)<120 ? 66 : 0) - (object.royal ? 125 : 0);
+      const cost = object => gap(rival,object) + (gap(player,object)<120 && !object.royal && !object.rich ? 60 : 0)
+        - (object.royal ? 170 : object.rich ? 52 : 0);
       return !best || cost(item) < cost(best) ? item : best;
     }, null);
     if (target) {
-      return steerTo(rival, target, gap(rival,target)<135, rival.breath > 0.13);
+      const distance = gap(rival,target);
+      const range = RULES.breathRange+(rival.rank >= 2 ? 20 : 0);
+      return steerTo(rival,target,distance<range-6,distance<range-6 && rival.breath>0.13);
     }
     return steerTo(rival, home);
   }
@@ -151,36 +157,39 @@
     const x = input.x/magnitude;
     const y = input.y/magnitude;
     const moving = Math.hypot(x,y)>0.07;
-    const aim = input.aim ?? (moving ? Math.atan2(y,x) : drake.angle);
+    const heading = moving ? Math.atan2(y,x) : drake.angle;
+    if (!input.fire) drake.winded = false;
+    drake.firing = Boolean(input.fire && !drake.winded);
+    const aim = drake.firing ? input.aim ?? heading : heading;
     const dash = input.dash && !drake.lastDash && drake.dash === 0;
     drake.lastDash = input.dash;
-    drake.angle += angleDelta(drake.angle, aim)*(1-Math.exp(-24*dt));
+    drake.angle += angleDelta(drake.angle, aim)*(1-Math.exp(-(drake.firing ? 34 : 22)*dt));
     if (dash) {
-      const direction = moving ? Math.atan2(y,x) : drake.angle;
+      const direction = moving ? heading : input.aim ?? drake.angle;
+      if (!moving && !drake.firing) drake.angle = direction;
       drake.dash = RULES.dashCooldown;
-      drake.vx = Math.cos(direction)*565;
-      drake.vy = Math.sin(direction)*565;
+      drake.vx = Math.cos(direction)*585;
+      drake.vy = Math.sin(direction)*585;
       event(game, "dash", drake.x, drake.y, 0, drake.id);
     }
     const atHome = gap(drake, LAIRS[drake.id]) < RULES.lairRadius;
-    const speed = (drake.id === 0 ? RULES.speed : 157) * (drake.royal?0.87:1) * (input.fire?0.89:1);
-    const damping = 1-Math.exp(-(drake.dash > RULES.dashCooldown-0.16 ? 3 : moving ? 9 : 13)*dt);
+    const burden = drake.royal ? 0.80 : 1-0.14*(drake.carry/capacity(drake));
+    const speed = RULES.speed * burden * (drake.firing?0.90:1);
+    const damping = 1-Math.exp(-(drake.dash > RULES.dashCooldown-0.15 ? 3 : moving ? 13 : 15)*dt);
     drake.vx += (x*speed-drake.vx)*damping;
     drake.vy += (y*speed-drake.vy)*damping;
     drake.x = clamp(drake.x+drake.vx*dt, 26, WIDTH-26);
     drake.y = clamp(drake.y+drake.vy*dt, 27, HEIGHT-33);
-    if (!input.fire) drake.winded = false;
-    drake.firing = Boolean(input.fire && !drake.winded);
     drake.breath = clamp(drake.breath + (drake.firing ? -0.46 : atHome ? 1.42 : 0.63)*dt,0,1);
     if (drake.breath === 0) drake.winded = true;
     if (atHome) {
-      drake.health = Math.min(RULES.maxHealth, drake.health+49*dt);
+      drake.health = Math.min(RULES.maxHealth, drake.health+32*dt);
     }
   }
 
   function raid(game, drake, dt) {
     if (!drake.firing) return;
-    const heat = dt*(drake.rank >= 2 ? 1.38 : 1)*(drake.id === 1 ? 0.76 : 1);
+    const heat = dt*(drake.rank >= 2 ? 1.38 : 1);
     for (const town of game.towns) {
       if (gap(drake,town) > 215) continue;
       for (const building of town.buildings) {
@@ -189,7 +198,7 @@
         building.burning = 1.1;
         town.attention = Math.min(1,town.attention+dt*0.7);
         if (building.health <= 0) {
-          building.rebuild = 24+random(game)*10;
+          building.rebuild = 31+random(game)*10;
           scatter(game, building.x, building.y, building.value, town.id);
           event(game, "burn", building.x, building.y, 0, drake.id);
           game.stats.burns += drake.id === 0 ? 1 : 0;
@@ -200,6 +209,7 @@
       if (wagon.health <= 0 || !inCone(drake,wagon)) continue;
       wagon.health -= heat;
       wagon.burning = 0.8;
+      if (wagon.royal) wagon.underAttack = true;
       if (wagon.health <= 0) {
         scatter(game, wagon.x, wagon.y, wagon.value, wagon.town, wagon.royal);
         event(game, wagon.royal ? "royalOpen" : "burn", wagon.x, wagon.y, 0, drake.id);
@@ -210,7 +220,7 @@
   function collectAndBank(game, drake, dt) {
     if (drake.recover > 0) return;
     for (const item of game.loot) {
-      if (item.life <= 0 || gap(drake,item)>30) continue;
+      if (item.life <= 0 || gap(drake,item)>RULES.pickupRadius) continue;
       if (item.royal && !drake.royal) {
         drake.royal = true;
         item.life = 0;
@@ -269,29 +279,37 @@
   }
 
   function guardShot(game, town, tower, dt) {
-    town.guard = Math.max(0,town.guard-dt);
-    const range = 148+game.phase*23;
-    const enemy = game.dragons.filter(drake => drake.recover === 0 && gap(drake,tower)<range)
-      .sort((a,b) => gap(a,tower)-gap(b,tower))[0];
     if (town.launch > 0) {
-      town.launch -= dt;
-      if (town.launch <= 0) {
-        const target = game.dragons[town.target];
-        const aim = {x: target.x+target.vx*0.17, y: target.y+target.vy*0.17};
-        const direction = bearing(tower,aim);
-        game.bolts.push({x:tower.x,y:tower.y,angle:direction,age:0});
+      const target = game.dragons[town.target];
+      // Freeze the aiming line before release so a turn can clear the shot.
+      if (town.launch > RULES.towerLock) town.shotAngle = towerAim(tower,target);
+      town.launch = Math.max(0,town.launch-dt);
+      if (town.launch === 0) {
+        game.bolts.push({x:tower.x,y:tower.y,angle:town.shotAngle,age:0});
         event(game,"bolt",tower.x,tower.y);
       }
-    } else if (!town.guard && enemy && (town.attention>0.12 || game.phase>0)) {
-      town.target = enemy.id;
-      town.launch = 0.51;
-      town.guard = 2.45-game.phase*0.48;
+    } else {
+      const range = 148+game.phase*23;
+      const enemy = game.dragons.filter(drake => drake.recover === 0 && gap(drake,tower)<range)
+        .sort((a,b) => gap(a,tower)-gap(b,tower))[0];
+      if (!town.guard && enemy && (town.attention>0.12 || game.phase>0)) {
+        town.target = enemy.id;
+        town.shotAngle = towerAim(tower,enemy);
+        town.launch = RULES.towerWindup;
+        town.guard = RULES.towerInterval[game.phase];
+      }
     }
+  }
+
+  function towerAim(tower,target) {
+    const lead = Math.min(0.53,gap(tower,target)/RULES.boltSpeed+RULES.towerLock);
+    return bearing(tower,{x:target.x+target.vx*lead,y:target.y+target.vy*lead});
   }
 
   function updateKingdom(game, dt) {
     for (const town of game.towns) {
       town.attention = Math.max(0,town.attention-dt*0.065);
+      town.guard = Math.max(0,town.guard-dt);
       let intact = 0;
       for (const building of town.buildings) {
         if (building.rebuild > 0) {
@@ -308,33 +326,35 @@
       } else {
         town.launch = 0;
       }
+      const change = intact === 4 ? dt/18 : -dt/5;
+      town.prosperity = clamp(town.prosperity+change,0,1);
       if (game.time >= town.nextWagon) {
-        if (intact >= 2) game.wagons.push(makeWagon(town.id,false,0,0,intact/4));
-        town.nextWagon += 14+(4-intact)*3+random(game)*4;
+        const value = Math.round(32+intact*6+33*town.prosperity);
+        if (intact >= 2) game.wagons.push(makeWagon(town.id,false,0,0,value));
+        town.nextWagon += 14+(4-intact)*3+random(game)*4-2*town.prosperity;
       }
     }
-    if (game.time >= game.nextRoyal) {
+    if (game.time >= (RULES.royalDepartures[game.royalCount] ?? Infinity)) {
       const district = [2,5,4][game.royalCount%3];
       const wagon = makeWagon(district,true,0,game.royalCount);
       game.wagons.push(wagon);
       event(game,"royalDeparture",wagon.x,wagon.y);
       game.royalCount += 1;
-      game.nextRoyal += RULES.royalInterval;
     }
     for (const wagon of game.wagons) {
-      wagon.progress += dt*(wagon.royal ? 46 : 32);
+      wagon.progress += dt*(wagon.royal ? (wagon.underAttack ? 56 : 46) : 32);
       Object.assign(wagon,pointOnRoad(wagon.road,wagon.progress));
       wagon.burning = Math.max(0,wagon.burning-dt);
     }
     game.wagons = game.wagons.filter(wagon => wagon.health>0 && !wagon.arrived);
     for (const bolt of game.bolts) {
       bolt.age += dt;
-      bolt.x += Math.cos(bolt.angle)*365*dt;
-      bolt.y += Math.sin(bolt.angle)*365*dt;
-      const victim = game.dragons.find(drake => gap(drake,bolt)<14 && drake.recover === 0 &&
+      bolt.x += Math.cos(bolt.angle)*RULES.boltSpeed*dt;
+      bolt.y += Math.sin(bolt.angle)*RULES.boltSpeed*dt;
+      const victim = game.dragons.find(drake => gap(drake,bolt)<16 && drake.recover === 0 &&
         drake.invulnerable === 0 && gap(drake,LAIRS[drake.id])>RULES.lairRadius);
       if (victim) {
-        damage(game,victim,21+game.phase*4);
+        damage(game,victim,RULES.towerDamage[game.phase]);
         bolt.age = 2;
       }
     }
