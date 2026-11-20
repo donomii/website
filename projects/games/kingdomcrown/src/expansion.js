@@ -1,23 +1,23 @@
 export const EXPANSION_CONFIG = Object.freeze({
-    worldWidth: 6200,
+    worldWidth: 4200,
     interactionRange: 112,
     recruitCost: 3,
     campRefreshTime: 22,
     acolyteHealth: 45,
-    acolyteSpeed: 78,
-    corpseDecayTime: 7,
-    campPositions: Object.freeze([420, 2350, 3850, 5820]),
+    acolyteSpeed: 132,
+    corpseDecayTime: 3,
+    campPositions: Object.freeze([370, 1675, 2525, 3830]),
     structures: Object.freeze([
-        Object.freeze({ id: "spire-1", type: "spire", x: 720 }),
-        Object.freeze({ id: "charnel-1", type: "charnel", x: 1160 }),
-        Object.freeze({ id: "pasture-1", type: "pasture", x: 1480 }),
-        Object.freeze({ id: "barricade-1", type: "barricade", x: 1860 }),
-        Object.freeze({ id: "spire-2", type: "spire", x: 2640 }),
-        Object.freeze({ id: "spire-3", type: "spire", x: 3560 }),
-        Object.freeze({ id: "barricade-2", type: "barricade", x: 4340 }),
-        Object.freeze({ id: "pasture-2", type: "pasture", x: 4720 }),
-        Object.freeze({ id: "charnel-2", type: "charnel", x: 5040 }),
-        Object.freeze({ id: "spire-4", type: "spire", x: 5480 }),
+        Object.freeze({ id: "spire-1", type: "spire", x: 780 }),
+        Object.freeze({ id: "charnel-1", type: "charnel", x: 960 }),
+        Object.freeze({ id: "pasture-1", type: "pasture", x: 1140 }),
+        Object.freeze({ id: "barricade-1", type: "barricade", x: 1320 }),
+        Object.freeze({ id: "spire-2", type: "spire", x: 1860 }),
+        Object.freeze({ id: "spire-3", type: "spire", x: 2340 }),
+        Object.freeze({ id: "barricade-2", type: "barricade", x: 2880 }),
+        Object.freeze({ id: "pasture-2", type: "pasture", x: 3060 }),
+        Object.freeze({ id: "charnel-2", type: "charnel", x: 3240 }),
+        Object.freeze({ id: "spire-4", type: "spire", x: 3420 }),
     ]),
     types: Object.freeze({
         pasture: Object.freeze({
@@ -88,8 +88,8 @@ export function getExpansionInteraction(state) {
     if (state.player.reformTimer > 0) {
         return null;
     } else {
-        const campInteractions = state.camps.map((camp) => describeCampInteraction(state, camp));
-        const structureInteractions = state.structures.map((structure) => describeStructureInteraction(state, structure));
+        const campInteractions = state.camps.map((camp) => ({ ...describeCampInteraction(state, camp), x: camp.x }));
+        const structureInteractions = state.structures.map((structure) => ({ ...describeStructureInteraction(state, structure), x: structure.x }));
         const candidates = [...campInteractions, ...structureInteractions]
             .filter((interaction) => interaction.distance <= EXPANSION_CONFIG.interactionRange)
             .sort((left, right) => left.distance - right.distance);

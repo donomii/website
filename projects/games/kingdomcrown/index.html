@@ -10,83 +10,63 @@
 </head>
 <body>
     <main id="game-shell" aria-label="The Crown Below game">
-        <canvas id="world" aria-label="Side-scrolling game world. Use the controls described in How to play."></canvas>
-        <div class="film-grain" aria-hidden="true"></div>
-
-        <section id="hud" class="hud" aria-label="Game status">
-            <div class="hud-left">
-                <div class="readout dread-readout" title="Dread is currency. Collect glowing wisps and spend Dread at ritual sites.">
-                    <span class="readout-label">Dread</span>
-                    <span id="dread-value" class="readout-value">12</span>
-                </div>
-                <div class="meter-readout" title="Veil is your mounted herald's health. At zero you temporarily dissolve and reform at the Heart.">
-                    <span class="readout-label">Veil</span>
-                    <span class="meter-track"><span id="veil-meter" class="meter-fill veil-fill"></span></span>
-                    <span id="veil-value" class="meter-number">100</span>
-                </div>
-                <div class="meter-readout" title="Steed is gallop stamina. Hold Shift or Gallop to sprint. A purple bar means exhaustion: release Gallop and recover at least 25 stamina to sprint again.">
-                    <span class="readout-label">Steed</span>
-                    <span class="meter-track"><span id="stamina-meter" class="meter-fill stamina-fill"></span></span>
-                    <span id="stamina-value" class="meter-number">100</span>
-                </div>
-                <div class="meter-readout" title="Heart is base health. The run ends if human attackers reduce it to zero.">
-                    <span class="readout-label">Heart</span>
-                    <span class="meter-track"><span id="heart-meter" class="meter-fill heart-fill"></span></span>
-                    <span id="heart-value" class="meter-number">320</span>
-                </div>
+        <canvas id="world" aria-label="Click the trail to ride or select a nearby structure."></canvas>
+        <section id="hud" class="hud is-hidden" aria-label="Game status">
+            <div class="readout" title="Dread is currency. Ride through wisps to collect it and click the action by a nearby site to spend it.">
+                <span class="readout-label">Dread</span>
+                <strong id="dread-value">12</strong>
             </div>
-
-            <div class="hud-center">
-                <div class="status-line" title="Broods are active ritual sites. Keep all four awake to unlock the final ritual.">
-                    <span>Broods</span>
-                    <strong id="brood-value">0 / 4</strong>
-                </div>
-                <div class="status-line" title="Assault shows the number of human waves already sent and the time before the next wave.">
-                    <span>Assault</span>
-                    <strong id="wave-value">0 · 28s</strong>
-                </div>
-                <div class="status-line" title="Tendril shows whether the Space-key attack is ready or cooling down.">
-                    <span>Tendril</span>
-                    <strong id="attack-value">Ready</strong>
-                </div>
-                <div class="status-line" title="Acolytes shows recruits waiting at the Heart and workers assigned to fixed structures. Traveling workers count as assigned.">
-                    <span>Acolytes</span>
-                    <strong id="acolyte-value">0 free · 0 working</strong>
-                </div>
+            <div class="readout" title="Heart is base health. Zero ends the run.">
+                <span class="readout-label">Heart</span>
+                <strong id="heart-value">320</strong>
             </div>
-
-            <nav class="hud-actions" aria-label="Game options">
-                <button id="pause-button" class="text-button" type="button" title="Pause the simulation. Escape or P performs the same action.">Pause</button>
-                <button id="help-button" class="text-button" type="button" title="Open the complete controls and readout guide. The game pauses while it is open.">How to play</button>
-                <button id="sound-button" class="text-button" type="button" title="Turn generated ambient and feedback sounds off or on.">Sound on</button>
-            </nav>
+            <div class="readout raid-readout" title="Shows the next raid's direction and arrival time, or the enemies remaining in the final assault.">
+                <span class="readout-label">Raid</span>
+                <strong id="wave-value">West · 8s</strong>
+            </div>
         </section>
 
-        <div id="objective" class="objective" title="Objective names the next requirement for completing the final ritual.">Awaken the four buried Broods</div>
+        <details id="options" class="options">
+            <summary class="text-button" title="Open controls and detailed game status">Menu</summary>
+            <section class="menu-panel" aria-label="Controls and status">
+                <div id="menu-status" class="menu-status is-hidden">
+                    <div class="meter-readout" title="Veil is your health. Recover near the Heart when enemies are away.">
+                        <span>Veil</span>
+                        <span class="meter-track"><span id="veil-meter" class="meter-fill veil-fill"></span></span>
+                        <strong id="veil-value">100</strong>
+                    </div>
+                    <div class="meter-readout" title="Steed measures gallop stamina. Stamina recovers automatically while riding slowly or resting.">
+                        <span>Steed</span>
+                        <span class="meter-track"><span id="stamina-meter" class="meter-fill stamina-fill"></span></span>
+                        <strong id="stamina-value">100</strong>
+                    </div>
+                    <div class="status-line" title="Keep all four Broods active to begin the final ritual.">
+                        <span>Broods</span>
+                        <strong id="brood-value">0 / 4</strong>
+                    </div>
+                    <div class="status-line" title="Free Acolytes take vacant jobs automatically. Traveling workers count as assigned.">
+                        <span>Acolytes</span>
+                        <strong id="acolyte-value">0 free · 0 working</strong>
+                    </div>
+                    <p id="objective" class="objective">Awaken the four buried Broods</p>
+                </div>
+                <nav class="hud-actions" aria-label="Game options">
+                    <button id="pause-button" class="text-button" type="button" title="Pause the simulation." hidden>Pause</button>
+                    <button id="help-button" class="text-button" type="button" title="Open the controls and readout guide.">How to play</button>
+                    <button id="sound-button" class="text-button" type="button" title="Turn ambient and feedback sounds off or on.">Sound on</button>
+                </nav>
+            </section>
+        </details>
+
         <div id="notice" class="notice is-hidden" role="status" aria-live="polite"></div>
-        <div id="interaction" class="interaction is-hidden" aria-live="polite">
-            <span class="keycap">E</span>
+        <button id="interaction" type="button" class="interaction is-hidden">
             <span id="interaction-label">Awaken Brood</span>
             <span id="interaction-cost" class="interaction-cost">8 Dread</span>
-        </div>
+        </button>
 
-        <section id="title-overlay" class="overlay">
-            <div class="title-panel panel">
-                <p class="eyebrow">A REVERSE KINGDOM TALE</p>
-                <h1>The Crown<br><span>Below</span></h1>
-                <p class="premise">Ride beneath a dying moon. Gather Dread. Seed horrors in the earth while torch-bearing humanity tries to burn every impossible thing you call forth.</p>
-                <div class="title-rule"></div>
-                <p class="goal"><strong>Your rite:</strong> awaken all four Broods, keep them alive, then return to the buried Heart with 30 Dread.</p>
-                <div class="quick-controls" aria-label="Quick controls">
-                    <span><kbd>A</kbd><kbd>D</kbd> Ride</span>
-                    <span><kbd>Shift</kbd> Gallop</span>
-                    <span><kbd>Space</kbd> Tendril</span>
-                    <span><kbd>E</kbd> Ritual</span>
-                </div>
-                <button id="start-button" class="primary-button" type="button">Begin the haunting</button>
-                <button id="title-help-button" class="quiet-button" type="button">Read the full guide</button>
-            </div>
-        </section>
+        <div id="title-overlay" class="start-control">
+            <button id="start-button" class="primary-button" type="button" title="Begin playing The Crown Below.">Begin the haunting</button>
+        </div>
 
         <section id="help-overlay" class="overlay is-hidden" aria-label="How to play">
             <div class="guide-panel panel">
@@ -95,11 +75,11 @@
                 <div class="guide-grid">
                     <article>
                         <h3>Ride and gather</h3>
-                        <p><kbd>A</kbd> <kbd>D</kbd> or the arrow keys ride left and right. Hold <kbd>Shift</kbd> or the touch Gallop button to sprint. At zero Steed, the bar turns purple: release Gallop and recover 25 stamina to sprint again.</p>
+                        <p>Click or tap the scene to ride to that point. The steed gallops toward distant points and slows as it approaches or needs to recover. The gold bar shows stamina and turns purple while the steed recovers from exhaustion.</p>
                     </article>
                     <article>
                         <h3>Spend Dread</h3>
-                        <p>Ride through glowing wisps to collect Dread. Near a stone sigil, press <kbd>E</kbd> to awaken it for 8 Dread or deepen it for 14 and then 22 Dread.</p>
+                        <p>Ride through glowing wisps to collect Dread. Click a nearby standing stone or its action button to awaken it for 8 Dread. The same action upgrades it for 14 and then 22 Dread.</p>
                     </article>
                     <article>
                         <h3>Feed the Broods</h3>
@@ -107,26 +87,26 @@
                     </article>
                     <article>
                         <h3>Mark the outcasts</h3>
-                        <p>At a lonely fire, press <kbd>E</kbd> and spend 3 Dread to Mark its outcast. New Acolytes automatically walk to open structure jobs; empty fires attract another outcast after 22 seconds.</p>
+                        <p>Select the action at a nearby roadside fire and spend 3 Dread to Mark its outcast. New Acolytes walk to open structure jobs. Empty fires attract another outcast after 22 seconds.</p>
                     </article>
                     <article>
                         <h3>Raise staffed growths</h3>
-                        <p>Build at fixed foundations with <kbd>E</kbd>. Pastures make Dread, Spires attack, Barricades block and repair, and Charnel Yards turn human remains into bonus Dread. A growth works only after its Acolyte arrives.</p>
+                        <p>Click a nearby foundation or its action button to build or upgrade. Pastures make Dread, Spires attack, Barricades block and repair, and Charnel Yards turn human remains into bonus Dread. A growth works only after its Acolyte arrives.</p>
                     </article>
                     <article>
                         <h3>Break the crusade</h3>
-                        <p>Press <kbd>Space</kbd> when Tendril reads Ready to strike nearby humans. Soldiers close in, archers fire at range, and torchbearers deal extra damage to structures.</p>
+                        <p>Broods and staffed Spires fight for you. Use Barricades to slow the attackers. Archers fire at range and torchbearers do extra damage to structures.</p>
                     </article>
                     <article>
                         <h3>Guard the Heart</h3>
-                        <p>Heart is base health; zero ends the run. Veil is your health; zero only dissolves you briefly and spills some Dread. Steed is gallop stamina.</p>
+                        <p>Heart is base health. Zero ends the run. The violet bar under the rider is Veil. Recover it near an unthreatened Heart. At zero Veil, you spill Dread and reform at the Heart.</p>
                     </article>
                     <article>
                         <h3>Complete the rite</h3>
-                        <p>Broods shows how many sites are active. Assault counts waves and the next arrival. When all four Broods live, return to the central Heart with 30 Dread and press <kbd>E</kbd>.</p>
+                        <p>Raid shows where the next attack will enter and when. Orange marks on the map track crusaders. With all four Broods awake, click the ritual at the Heart to spend 16 Dread, then hold off the final assault.</p>
                     </article>
                 </div>
-                <p class="pause-note"><kbd>Esc</kbd> or <kbd>P</kbd> pauses. Leaving the game window also pauses and releases all controls. Touch controls provide the same actions. The thin strip at the bottom maps your position, the Heart, Broods, outcast fires, and fixed structures. A structure's hanging job mark glows when its worker is present.</p>
+                <p class="pause-note">Click the bottom map to ride farther. It shows your position, the Heart, Broods, fires, and structures. A structure's job mark is red when vacant, gold while its worker travels, and teal when staffed. Use Menu to pause or change sound. Leaving the window also pauses and clears your destination.</p>
                 <button id="close-help-button" class="primary-button" type="button">Return to the night</button>
             </div>
         </section>
@@ -150,17 +130,6 @@
             </div>
         </section>
 
-        <div id="touch-controls" class="touch-controls" aria-label="Touch game controls">
-            <div class="touch-cluster">
-                <button type="button" data-action="left" aria-label="Ride left">◀</button>
-                <button type="button" data-action="right" aria-label="Ride right">▶</button>
-                <button type="button" data-action="gallop" aria-label="Hold to gallop">Gallop</button>
-            </div>
-            <div class="touch-cluster touch-actions">
-                <button type="button" data-action="attack" aria-label="Release tendril attack">Tendril</button>
-                <button type="button" data-action="interact" aria-label="Perform nearby ritual action">Ritual</button>
-            </div>
-        </div>
     </main>
     <script type="module" src="src/game.js"></script>
 </body>

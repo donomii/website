@@ -103,9 +103,6 @@ class SoundController {
             case "collect":
                 this.tone(410 + event.value * 35, 0.13, "sine", 0.18);
                 break;
-            case "tendril":
-                this.tone(86, 0.36, "sawtooth", 0.24, 42);
-                break;
             case "awaken":
                 this.tone(72 + event.level * 18, 0.7, "triangle", 0.23, 180);
                 break;

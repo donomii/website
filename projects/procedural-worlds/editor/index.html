@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102f32">
+  <title>Procedural Worlds</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Procedural Worlds">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <div>
+          <strong>PROCEDURAL</strong>
+          <span>WORLDS</span>
+        </div>
+      </div>
+      <nav class="file-actions" aria-label="Scene file actions">
+        <button id="new-world" class="chrome-button" type="button" title="Create another deterministic procedural island">New World</button>
+        <button id="open-scene" class="chrome-button" type="button" title="Open a validated .world.json scene file">Open Scene</button>
+        <button id="save-scene" class="chrome-button" type="button" title="Save all world and camera settings as .world.json">Save Scene</button>
+        <input id="scene-file" type="file" accept=".json,.world.json,application/json" hidden>
+      </nav>
+      <div class="topbar-actions">
+        <button id="reset-camera" class="icon-button" type="button" title="Restore the default island viewpoint" aria-label="Reset camera">⌾</button>
+        <button id="fullscreen" class="icon-button" type="button" title="Enter or leave full-screen viewport mode" aria-label="Toggle full screen">⛶</button>
+      </div>
+    </header>
+
+    <main class="studio">
+      <aside class="create-palette" aria-label="World presets">
+        <div class="palette-title">CREATE</div>
+        <button class="preset-button active" type="button" data-preset="island" title="Create a green ocean island with a central mountain">
+          <span class="preset-icon" aria-hidden="true">▲</span>
+          <span>Island</span>
+        </button>
+        <button class="preset-button" type="button" data-preset="alpine" title="Create a taller, colder, sharply eroded alpine island">
+          <span class="preset-icon snowy" aria-hidden="true">△</span>
+          <span>Alpine</span>
+        </button>
+        <button class="preset-button" type="button" data-preset="volcanic" title="Create a dark volcanic world with warm atmosphere">
+          <span class="preset-icon volcanic" aria-hidden="true">◆</span>
+          <span>Volcanic</span>
+        </button>
+        <div class="palette-rule"></div>
+        <button id="export-png" class="preset-button" type="button" title="Download the current viewport as a PNG image">
+          <span class="preset-icon" aria-hidden="true">▣</span>
+          <span>Render</span>
+        </button>
+      </aside>
+
+      <section id="viewport-shell" class="viewport-shell" aria-label="Procedural island viewport">
+        <canvas id="viewport" tabindex="0" aria-label="Ray-marched three-dimensional island. Drag to orbit and scroll to zoom."></canvas>
+        <div class="viewport-readout top-left">
+          <span class="live-dot"></span>
+          <strong>CAMERA 01</strong>
+          <span id="quality-readout">BALANCED · 132 STEPS</span>
+        </div>
+        <div class="viewport-readout top-right">
+          <span id="resolution-readout">— × —</span>
+          <span id="fps-readout">FIRST FRAME</span>
+        </div>
+        <div class="navigation-hint">
+          <span>DRAG</span> orbit
+          <span>SCROLL</span> zoom
+          <span>ARROWS</span> nudge
+        </div>
+        <div id="render-error" class="render-error" hidden>
+          <strong>Renderer unavailable</strong>
+          <p id="render-error-message"></p>
+        </div>
+      </section>
+
+      <aside class="inspector" aria-label="World controls">
+        <div class="inspector-heading">
+          <div>
+            <span>WORLD OBJECT</span>
+            <strong>Mountain Island</strong>
+          </div>
+          <span class="object-chip">SDF</span>
+        </div>
+
+        <section class="panel seed-panel">
+          <div class="panel-title"><span>World Seed</span><span>DETERMINISTIC</span></div>
+          <div class="seed-row">
+            <input id="seed" type="number" min="0" max="999999" step="1" aria-label="World seed">
+            <button id="randomize-seed" class="small-button" type="button">Randomize</button>
+          </div>
+          <p class="control-help">The same whole-number seed recreates the same coast, ridges, channels, and rock detail.</p>
+          <canvas id="height-preview" width="288" height="112" aria-label="Top-down grayscale preview of the current terrain height field"></canvas>
+          <div class="preview-caption"><span>HEIGHT FIELD</span><span>WHITE = HIGH</span></div>
+        </section>
+
+        <div id="generated-controls"></div>
+
+        <section class="panel">
+          <div class="panel-title"><span>Material Lab</span><span>PROCEDURAL</span></div>
+          <label class="select-control" for="palette">
+            <span>World palette</span>
+            <select id="palette">
+              <option value="temperate">Temperate coast</option>
+              <option value="alpine">Alpine snow</option>
+              <option value="volcanic">Volcanic dusk</option>
+            </select>
+          </label>
+          <p class="control-help">Changes terrain, sky, and light colors without loading texture images.</p>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title"><span>Render Lab</span><span>WEBGL2</span></div>
+          <label class="select-control" for="quality">
+            <span>Render quality</span>
+            <select id="quality">
+              <option value="preview">Preview · fastest</option>
+              <option value="balanced">Balanced · default</option>
+              <option value="final">Final · sharpest</option>
+            </select>
+          </label>
+          <p class="control-help">Sets ray-march steps and viewport resolution. Final gives cleaner silhouettes but uses more GPU time.</p>
+          <label class="toggle-control" for="animate">
+            <input id="animate" type="checkbox">
+            <span class="toggle-track" aria-hidden="true"></span>
+            <span>
+              <strong>Animate world</strong>
+              <small>Moves sky and summit clouds, rain, foliage, river currents, shore breakers, lightning, and a slow presentation orbit. Turn off to hold the current frame for a render; turn on to resume.</small>
+            </span>
+          </label>
+        </section>
+
+        <section class="panel export-panel">
+          <div class="panel-title"><span>Export</span><span>LOCAL FILES</span></div>
+          <div class="export-grid">
+            <button id="export-obj" class="export-button" type="button"><strong>OBJ model</strong><span>144 × 144 terrain mesh for 3D tools</span></button>
+            <button id="export-heightmap" class="export-button" type="button"><strong>Heightmap</strong><span>1024 px grayscale PNG for terrain tools</span></button>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <div id="status-message" role="status">Preparing procedural world…</div>
+      <div class="technique-list"><span>SIGNED DISTANCE BOUNDS</span><span>RIVER FLOW</span><span>IRREGULAR BREAKERS</span><span>SUMMIT CLOUDS</span><span>SOFT SHADOWS</span><span>AO</span></div>
+    </footer>
+  </div>
+  <script type="module" src="./src/main.js?v=5.2"></script>
+</body>
+</html>

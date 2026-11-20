@@ -1,24 +1,25 @@
-import { addHumanCorpse, createExpansionState, getExpansionInteraction, performExpansionInteraction, resolveExpansionCasualties, updateExpansion } from "./expansion.js";
+import { EXPANSION_CONFIG, addHumanCorpse, createExpansionState, getExpansionInteraction, performExpansionInteraction, resolveExpansionCasualties, updateExpansion } from "./expansion.js";
 import { MOVEMENT_CONFIG, updateRidingPlayer } from "./movement.js";
 
 export const CONFIG = Object.freeze({
-    worldWidth: 6200,
-    playerStartX: 3100,
+    worldWidth: EXPANSION_CONFIG.worldWidth,
+    playerStartX: EXPANSION_CONFIG.worldWidth / 2,
     playerMaxVeil: 100,
     playerMaxStamina: 100,
     ...MOVEMENT_CONFIG,
-    playerAttackRadius: 145,
-    playerAttackDamage: 42,
-    playerAttackCooldown: 1.15,
+    heartVeilRecovery: 24,
     heartMaxHealth: 320,
     interactionRange: 112,
-    finalRitualCost: 30,
-    sitePositions: Object.freeze([940, 2180, 4020, 5260]),
-    grovePositions: Object.freeze([430, 720, 1420, 1840, 2700, 3500, 4480, 4880, 5600, 5900]),
+    finalRitualCost: 16,
+    finalAssaultDistance: 780,
+    sitePositions: Object.freeze([615, 1500, 2700, 3585]),
+    grovePositions: Object.freeze([260, 770, 1060, 1320, 1840, 2360, 2880, 3140, 3430, 3940]),
     siteCosts: Object.freeze([8, 14, 22]),
-    siteHealth: Object.freeze([0, 105, 165, 245]),
-    siteSpawnIntervals: Object.freeze([0, 8.2, 6.2, 4.6]),
-    firstWaveDelay: 28,
+    siteHealth: Object.freeze([0, 145, 215, 300]),
+    siteSpawnIntervals: Object.freeze([0, 5.5, 4.4, 3.5]),
+    siteHorrorLimits: Object.freeze([0, 2, 3, 4]),
+    firstWaveDelay: 8,
+    waveEntryMargin: 285,
     wispLimit: 18,
 });
 
@@ -29,7 +30,7 @@ const HUMAN_STATS = Object.freeze({
 });
 
 const HORROR_STATS = Object.freeze({
-    crawler: Object.freeze({ health: 54, speed: 82, damage: 15, range: 31, cooldown: 0.9 }),
+    crawler: Object.freeze({ health: 64, speed: 82, damage: 18, range: 31, cooldown: 0.9 }),
     brute: Object.freeze({ health: 135, speed: 44, damage: 30, range: 45, cooldown: 1.45 }),
 });
 
@@ -37,8 +38,8 @@ const NO_INPUT = Object.freeze({
     left: false,
     right: false,
     gallop: false,
-    attackPressed: false,
     interactPressed: false,
+    interactTargetId: null,
 });
 
 export function seededRandom(seed = 0x51ee9) {
@@ -58,8 +59,8 @@ export function createGame(seed = 0x51ee9) {
         wave: 0,
         waveTimer: CONFIG.firstWaveDelay,
         waveWarning: false,
-        wispTimer: 5,
-        ritualComplete: false,
+        wispTimer: 3.5,
+        ritualStarted: false,
         nextId: 1,
         player: {
             x: CONFIG.playerStartX,
@@ -71,7 +72,6 @@ export function createGame(seed = 0x51ee9) {
             maxStamina: CONFIG.playerMaxStamina,
             exhausted: false,
             gaitPhase: 0,
-            attackCooldown: 0,
             reformTimer: 0,
             invulnerable: 0,
         },
@@ -95,7 +95,7 @@ export function createGame(seed = 0x51ee9) {
         horrors: [],
         wisps: [],
         events: [],
-        notice: { text: "Gather Dread. Awaken the buried broods.", ttl: 6 },
+        notice: { text: "", ttl: 0 },
     };
     seedInitialWisps(state, random);
     return state;
@@ -109,16 +109,27 @@ export function activeSiteCount(state) {
     return state.sites.filter((site) => site.level > 0).length;
 }
 
+export function assaultSides(wave) {
+    return wave % 3 === 0 ? [-1, 1] : [wave % 2 === 1 ? -1 : 1];
+}
+
+export function assaultDirection(wave) {
+    const sides = assaultSides(wave);
+    return sides.length === 2 ? "Both flanks" : sides[0] < 0 ? "West" : "East";
+}
+
 export function getInteraction(state) {
     const player = state.player;
     if (player.reformTimer > 0) {
         return null;
     } else {
         const siteCandidates = state.sites
-            .map((site) => ({ ...describeSiteInteraction(state, site), distance: Math.abs(site.x - player.x) }))
+            .map((site) => ({ ...describeSiteInteraction(state, site), x: site.x, distance: Math.abs(site.x - player.x) }))
             .filter((candidate) => candidate.distance <= CONFIG.interactionRange);
         const heartDistance = Math.abs(state.heart.x - player.x);
-        const heartCandidate = heartDistance <= CONFIG.interactionRange + 20 ? { ...describeHeartInteraction(state), distance: heartDistance } : null;
+        const heartCandidate = heartDistance <= CONFIG.interactionRange + 20
+            ? { ...describeHeartInteraction(state), x: state.heart.x, distance: heartDistance }
+            : null;
         const expansionCandidate = getExpansionInteraction(state);
         const candidates = [...siteCandidates, heartCandidate, expansionCandidate]
             .filter((candidate) => candidate !== null)
@@ -150,10 +161,9 @@ export function stepGame(state, suppliedInput = NO_INPUT, elapsed = 0, random = 
     } else {
         state.time += dt;
         updateNotice(state, dt);
+        processInteraction(state, input);
         updatePlayer(state, input, dt);
         collectWisps(state);
-        processAttack(state, input);
-        processInteraction(state, input);
         updateSites(state, dt);
         updateExpansion(state, dt, random);
         updateHorrors(state, dt);
@@ -169,9 +179,9 @@ export function stepGame(state, suppliedInput = NO_INPUT, elapsed = 0, random = 
 }
 
 function seedInitialWisps(state, random) {
-    const positions = [520, 760, 1510, 2760, 3440, 4550, 5500, 5820];
+    const positions = [490, 930, 1340, 1950, 2250, 2860, 3270, 3710];
     for (const x of positions) {
-        addWisp(state, x + (random() - 0.5) * 45, 2, random());
+        addWisp(state, x + (random() - 0.5) * 45, 3, random());
     }
 }
 
@@ -204,14 +214,18 @@ function setNotice(state, text, ttl = 2.8) {
 
 function updatePlayer(state, input, dt) {
     const player = state.player;
-    player.attackCooldown = Math.max(0, player.attackCooldown - dt);
     player.invulnerable = Math.max(0, player.invulnerable - dt);
     if (player.reformTimer > 0) {
         updateReformingPlayer(state, dt);
     } else {
+        const atHeart = Math.abs(player.x - state.heart.x) <= CONFIG.interactionRange;
+        const threatened = state.humans.some((human) => human.hp > 0 && Math.abs(human.x - state.heart.x) <= CONFIG.interactionRange * 2);
+        player.veil = player.veil > 0 && atHeart && !threatened
+            ? Math.min(player.maxVeil, player.veil + CONFIG.heartVeilRecovery * dt)
+            : player.veil;
         const becameExhausted = updateRidingPlayer(player, input, dt, CONFIG.worldWidth);
         if (becameExhausted) {
-            setNotice(state, `Your steed tires. Release Gallop and recover ${CONFIG.playerGallopRecovery} Steed to sprint again.`, 4);
+            setNotice(state, "Your steed slows to recover stamina.", 3);
         } else {
             return;
         }
@@ -239,7 +253,7 @@ function updateReformingPlayer(state, dt) {
 function collectWisps(state) {
     const remaining = [];
     for (const wisp of state.wisps) {
-        const collected = state.player.reformTimer === 0 && Math.abs(wisp.x - state.player.x) < 54;
+        const collected = state.player.reformTimer === 0 && Math.abs(wisp.x - state.player.x) < 68;
         if (collected) {
             state.dread += wisp.value;
             state.events.push({ type: "collect", x: wisp.x, value: wisp.value });
@@ -250,23 +264,6 @@ function collectWisps(state) {
     state.wisps = remaining;
 }
 
-function processAttack(state, input) {
-    const player = state.player;
-    const canAttack = input.attackPressed && player.reformTimer === 0 && player.attackCooldown === 0;
-    if (canAttack) {
-        player.attackCooldown = CONFIG.playerAttackCooldown;
-        state.events.push({ type: "tendril", x: player.x, facing: player.facing });
-        for (const human of state.humans) {
-            const distance = Math.abs(human.x - player.x);
-            const damage = distance <= CONFIG.playerAttackRadius ? CONFIG.playerAttackDamage : 0;
-            human.hp -= damage;
-            human.hitFlash = damage > 0 ? 0.16 : human.hitFlash;
-        }
-    } else {
-        player.attackCooldown = Math.max(0, player.attackCooldown);
-    }
-}
-
 function processInteraction(state, input) {
     if (!input.interactPressed) {
         return;
@@ -274,6 +271,8 @@ function processInteraction(state, input) {
         const interaction = getInteraction(state);
         if (interaction === null) {
             setNotice(state, "No buried thing answers here.", 2.2);
+        } else if (input.interactTargetId !== null && interaction.targetId !== input.interactTargetId) {
+            return;
         } else {
             performInteraction(state, interaction);
         }
@@ -325,10 +324,15 @@ function buySiteLevel(state, interaction) {
 
 function completeFinalRitual(state, interaction) {
     const allActive = activeSiteCount(state) === state.sites.length;
-    if (allActive && state.dread >= interaction.cost) {
+    if (!state.ritualStarted && allActive && state.dread >= interaction.cost) {
         state.dread -= interaction.cost;
-        state.ritualComplete = true;
+        state.ritualStarted = true;
         state.events.push({ type: "finale", x: state.heart.x });
+        for (const side of [-1, 1]) {
+            const entry = state.heart.x + side * CONFIG.finalAssaultDistance;
+            spawnRaid(state, side, entry, ["soldier", "torchbearer", "archer", "soldier", "torchbearer", "soldier"]);
+        }
+        setNotice(state, "Defend the Heart", 4);
     } else {
         const detail = allActive ? `The Sleeper needs ${interaction.cost - state.dread} more Dread.` : "Every Brood must be awake at once.";
         setNotice(state, detail, 3.2);
@@ -370,13 +374,15 @@ function makeInteraction(state, site, action, label, cost, detail) {
 
 function describeHeartInteraction(state) {
     const dormant = state.sites.length - activeSiteCount(state);
-    if (dormant > 0) {
+    if (state.ritualStarted || dormant > 0) {
         return {
             kind: "heart",
             targetId: state.heart.id,
             action: "blocked",
-            label: `${dormant} BROOD${dormant === 1 ? "" : "S"} STILL DORMANT`,
-            detail: "Awaken every buried Brood, then return to the Heart.",
+            label: state.ritualStarted ? "RITUAL IN PROGRESS" : `${dormant} BROOD${dormant === 1 ? "" : "S"} STILL DORMANT`,
+            detail: state.ritualStarted
+                ? "Defeat the remaining crusaders to complete the ritual."
+                : "Awaken every buried Brood, then return to the Heart.",
             cost: 0,
             affordable: false,
         };
@@ -386,7 +392,7 @@ function describeHeartInteraction(state) {
             targetId: state.heart.id,
             action: "finale",
             label: "CALL THE SLEEPER BELOW",
-            detail: "Spend Dread at the Heart to complete the final ritual.",
+            detail: "Spend Dread to start the final ritual, then defend the Heart until the crusaders fall.",
             cost: CONFIG.finalRitualCost,
             affordable: state.dread >= CONFIG.finalRitualCost,
         };
@@ -396,13 +402,14 @@ function describeHeartInteraction(state) {
 function updateSites(state, dt) {
     for (const site of state.sites) {
         if (site.level > 0) {
-            site.spawnTimer -= dt;
-            if (site.spawnTimer <= 0) {
+            site.spawnTimer = Math.max(0, site.spawnTimer - dt);
+            const living = state.horrors.filter((horror) => horror.sourceId === site.id && horror.hp > 0).length;
+            if (site.spawnTimer === 0 && living < CONFIG.siteHorrorLimits[site.level]) {
                 spawnHorror(state, site);
                 site.spawnCount += 1;
-                site.spawnTimer += CONFIG.siteSpawnIntervals[site.level];
+                site.spawnTimer = CONFIG.siteSpawnIntervals[site.level];
             } else {
-                site.spawnTimer = Math.max(Number.EPSILON, site.spawnTimer);
+                continue;
             }
         } else {
             site.spawnTimer = 0;
@@ -659,23 +666,24 @@ function updateNaturalWisps(state, dt, random) {
         } else {
             state.wisps = state.wisps.slice(0, CONFIG.wispLimit);
         }
-        state.wispTimer = 4.5 + random() * 3.5;
+        state.wispTimer = 3.5 + random() * 2;
     } else {
         state.wispTimer = Math.max(Number.EPSILON, state.wispTimer);
     }
 }
 
 function updateAssaults(state, dt) {
-    state.waveTimer -= dt;
-    if (state.waveTimer <= 0) {
-        spawnHumanWave(state);
-        state.waveTimer = Math.max(24, 39 - state.wave * 1.4);
+    if (state.ritualStarted) {
         state.waveWarning = false;
     } else {
-        if (state.waveTimer <= 5 && !state.waveWarning) {
+        state.waveTimer -= dt;
+        if (state.waveTimer <= 0) {
+            spawnHumanWave(state);
+            state.waveTimer = Math.max(14, 19 - state.wave * 1.25);
+            state.waveWarning = false;
+        } else if (state.waveTimer <= 5 && !state.waveWarning) {
             state.waveWarning = true;
             state.events.push({ type: "wave-warning", x: state.heart.x });
-            setNotice(state, "TORCHES AT BOTH HORIZONS", 4.5);
         } else {
             return;
         }
@@ -684,24 +692,28 @@ function updateAssaults(state, dt) {
 
 function spawnHumanWave(state) {
     state.wave += 1;
-    const countPerSide = Math.min(7, 2 + Math.floor(state.wave * 0.8));
-    for (const side of [-1, 1]) {
-        for (let index = 0; index < countPerSide; index += 1) {
-            const type = humanTypeForWave(state.wave, index);
-            const edge = side < 0 ? 75 : CONFIG.worldWidth - 75;
-            const inwardSpacing = side < 0 ? index * 22 : index * -22;
-            spawnHuman(state, type, edge + inwardSpacing, -side);
-        }
+    const sides = assaultSides(state.wave);
+    const count = Math.min(6, 3 + Math.floor(state.wave / 2));
+    const types = Array.from({ length: count }, (_, index) => humanTypeForWave(state.wave, index));
+    for (const side of sides) {
+        const entry = side < 0 ? CONFIG.waveEntryMargin : CONFIG.worldWidth - CONFIG.waveEntryMargin;
+        spawnRaid(state, side, entry, types);
     }
     state.events.push({ type: "wave", x: state.heart.x, wave: state.wave });
-    setNotice(state, `HUMAN ASSAULT ${state.wave} — ${countPerSide * 2} CRUSADERS`, 4.2);
+    setNotice(state, `Raid ${state.wave} · ${assaultDirection(state.wave)}`, 3);
+}
+
+function spawnRaid(state, side, entry, types) {
+    for (const [index, type] of types.entries()) {
+        spawnHuman(state, type, entry + side * index * 48, -side);
+    }
 }
 
 function humanTypeForWave(wave, index) {
-    if (wave >= 3 && index % 5 === 4) {
+    if (wave >= 2 && index % 4 === 2) {
         return "torchbearer";
     } else {
-        if (wave >= 2 && index % 4 === 3) {
+        if (index % 4 === 1) {
             return "archer";
         } else {
             return "soldier";
@@ -730,7 +742,7 @@ function resolveEndState(state) {
         state.status = "defeat";
         state.events.push({ type: "defeat", x: state.heart.x });
     } else {
-        if (state.ritualComplete) {
+        if (state.ritualStarted && state.humans.length === 0) {
             state.status = "victory";
         } else {
             state.status = "playing";

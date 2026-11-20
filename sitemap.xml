@@ -1309,8 +1309,12 @@
     <lastmod>2026-11-20</lastmod>
   </url>
   <url>
+    <loc>/projects/games/kingdomcrown/art/index.html</loc>
+    <lastmod>2026-11-20</lastmod>
+  </url>
+  <url>
     <loc>/projects/games/kingdomcrown/src/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-20</lastmod>
   </url>
   <url>
     <loc>/projects/games/moon-patrol/assets/index.html</loc>
@@ -1334,7 +1338,7 @@
   </url>
   <url>
     <loc>/projects/index.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-20</lastmod>
   </url>
   <url>
     <loc>/projects/javascriptraymarcher/Gallery-2.15.2/img/index.html</loc>
@@ -1451,6 +1455,14 @@
   <url>
     <loc>/projects/oldphone/privacypolicy.html</loc>
     <lastmod>2026-01-26</lastmod>
+  </url>
+  <url>
+    <loc>/projects/procedural-worlds/editor/src/index.html</loc>
+    <lastmod>2026-11-20</lastmod>
+  </url>
+  <url>
+    <loc>/projects/procedural-worlds/index.html</loc>
+    <lastmod>2026-11-20</lastmod>
   </url>
   <url>
     <loc>/projects/starsandships/images/index.html</loc>

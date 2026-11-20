@@ -1,6 +1,7 @@
-import { CONFIG, activeSiteCount, getInteraction } from "./core.js";
-import { EXPANSION_CONFIG, structureWorkerReady } from "./expansion.js";
-import { drawHorrorActor, drawHumanActor, drawMountedPlayer, drawReformingHerald } from "./render-actors.js";
+import { CONFIG, activeSiteCount, assaultSides, getInteraction } from "./core.js";
+import { structureWorkerReady } from "./expansion.js";
+import { drawFootShadow, drawLandmark, drawLocalLight, drawSelectionHalo, trail } from "./foreground-art.js";
+import { HORROR_HEIGHT, HUMAN_HEIGHT, drawHorrorActor, drawHumanActor, drawMountedPlayer, drawReformingHerald } from "./render-actors.js";
 import { drawAcolyteActor, drawCorpse, drawFixedStructure, drawOutcastFire } from "./render-expansion.js";
 
 const COLORS = Object.freeze({
@@ -18,6 +19,8 @@ class WorldRenderer {
     constructor(canvas) {
         this.canvas = canvas;
         this.context = canvas.getContext("2d", { alpha: false });
+        this.landscape = new Image();
+        this.landscape.src = new URL("../lake-of-the-crown.webp", import.meta.url).href;
         this.width = 1;
         this.height = 1;
         this.ratio = 1;
@@ -50,11 +53,6 @@ class WorldRenderer {
         switch (event.type) {
             case "collect":
                 this.burst(event.x, -58, COLORS.dread, 9, 65);
-                break;
-            case "tendril":
-                this.rings.push({ x: event.x, radius: 12, maximum: CONFIG.playerAttackRadius, life: 0.42, maxLife: 0.42, color: COLORS.violet });
-                this.burst(event.x, -22, COLORS.violet, 18, 125);
-                this.shake = Math.max(this.shake, 4);
                 break;
             case "awaken":
             case "spawn-horror":
@@ -136,7 +134,7 @@ class WorldRenderer {
         }
     }
 
-    render(state, elapsed) {
+    render(state, elapsed, destination = null) {
         const dt = Math.min(0.05, Math.max(0, elapsed));
         this.visualTime += dt;
         this.updateCamera(state, dt);
@@ -147,18 +145,23 @@ class WorldRenderer {
         const shakeY = (Math.random() - 0.5) * this.shake * 0.45;
         context.save();
         context.translate(shakeX, shakeY);
-        this.drawSky(state);
-        this.drawFarKingdom(state);
+        this.drawLandscape(state);
         context.save();
         context.translate(this.width / 2 - this.cameraX, 0);
-        this.drawGround(state);
+        this.drawGround();
+        this.drawDestination(destination);
         this.drawWorldStructures(state);
         this.drawCorpses(state);
         this.drawWisps(state);
         this.drawEntities(state);
         this.drawEffects();
         context.restore();
-        this.drawOverview(state);
+        switch (state.status) {
+            case "title":
+                break;
+            default:
+                this.drawOverview(state);
+        }
         this.drawVignette(state);
         context.restore();
     }
@@ -190,187 +193,133 @@ class WorldRenderer {
         this.flash = Math.max(0, this.flash - dt * 1.4);
     }
 
+    worldPoint(clientX, clientY) {
+        const bounds = this.canvas.getBoundingClientRect();
+        const screenX = (clientX - bounds.left) * this.width / bounds.width;
+        const screenY = (clientY - bounds.top) * this.height / bounds.height;
+        const map = this.overviewPosition();
+        const onMap = Math.abs(screenY - map.y) <= 12 && screenX >= map.x && screenX <= map.x + map.width;
+        return {
+            x: onMap ? (screenX - map.x) / map.width * CONFIG.worldWidth : this.cameraX + screenX - this.width / 2,
+            aboveTrail: this.groundY() - screenY,
+            onMap,
+        };
+    }
+
+    drawDestination(x) {
+        if (x === null || !this.visible(x)) {
+            return;
+        } else {
+            const context = this.context;
+            const ground = this.groundY();
+            context.strokeStyle = "rgba(237, 201, 134, 0.82)";
+            context.lineWidth = 1;
+            context.beginPath();
+            context.ellipse(x, ground + 2, 12, 4, 0, 0, Math.PI * 2);
+            context.stroke();
+        }
+    }
+
     groundY() {
-        return Math.min(this.height - 118, Math.max(315, this.height * 0.73));
+        return Math.min(this.height - 126, this.height * 0.8);
     }
 
     visible(x, margin = 140) {
         return Math.abs(x - this.cameraX) <= this.width / 2 + margin;
     }
 
-    drawSky(state) {
+    drawLandscape(state) {
         const context = this.context;
-        const warningLight = clamp((6 - state.waveTimer) / 6, 0, 1);
-        const gradient = context.createLinearGradient(0, 0, 0, this.groundY() + 80);
-        gradient.addColorStop(0, mix("#060510", "#38202a", warningLight * 0.62));
-        gradient.addColorStop(0.56, mix("#152737", "#a75843", warningLight * 0.48));
-        gradient.addColorStop(1, mix("#385050", "#d28d62", warningLight * 0.3));
-        context.fillStyle = gradient;
-        context.fillRect(-20, -20, this.width + 40, this.height + 40);
-        this.drawStars(warningLight);
-        this.drawMoon(warningLight);
-        this.drawClouds(state);
-    }
-
-    drawStars(warningLight) {
-        const context = this.context;
-        context.save();
-        context.globalAlpha = 0.82 * (1 - warningLight * 0.72);
-        for (let index = 0; index < 84; index += 1) {
-            const x = hash(index * 17.1) * this.width;
-            const y = 18 + hash(index * 31.7) * this.groundY() * 0.66;
-            const pulse = 0.45 + Math.sin(this.visualTime * 1.7 + index) * 0.28;
-            context.fillStyle = index % 8 === 0 ? COLORS.dread : `rgba(226, 231, 219, ${pulse})`;
-            context.fillRect(x, y, index % 11 === 0 ? 2 : 1, index % 11 === 0 ? 2 : 1);
-        }
-        context.restore();
-    }
-
-    drawMoon(warningLight) {
-        const context = this.context;
-        const x = this.width * 0.76 - this.cameraX * 0.015;
-        const y = 92;
-        const glow = context.createRadialGradient(x, y, 4, x, y, 85);
-        glow.addColorStop(0, `rgba(184, 245, 222, ${0.32 * (1 - warningLight)})`);
-        glow.addColorStop(1, "rgba(100, 208, 187, 0)");
-        context.fillStyle = glow;
-        context.beginPath();
-        context.arc(x, y, 85, 0, Math.PI * 2);
-        context.fill();
-        context.fillStyle = mix("#c9e6d7", "#f0b178", warningLight * 0.65);
-        context.beginPath();
-        context.arc(x, y, 26, 0, Math.PI * 2);
-        context.fill();
-        context.fillStyle = mix("#15202e", "#51303a", warningLight * 0.5);
-        context.beginPath();
-        context.arc(x + 10, y - 7, 24, 0, Math.PI * 2);
-        context.fill();
-    }
-
-    drawClouds(state) {
-        const context = this.context;
-        context.save();
-        context.globalAlpha = 0.18;
-        context.fillStyle = "#b7c6bd";
-        for (let index = 0; index < 7; index += 1) {
-            const travel = (state.time * (4 + index * 0.3) + index * 280 - this.cameraX * 0.04) % (this.width + 420);
-            const x = travel - 210;
-            const y = 95 + (index % 4) * 42;
+        const ground = this.groundY();
+        const image = this.landscape;
+        const fallback = context.createLinearGradient(0, 0, 0, ground);
+        fallback.addColorStop(0, "#182537");
+        fallback.addColorStop(1, "#526867");
+        context.fillStyle = fallback;
+        context.fillRect(-10, -10, this.width + 20, this.height + 20);
+        if (image.naturalWidth > 0) {
+            const scale = Math.max((ground + 65) / image.height, (this.width + 110) / image.width);
+            const width = image.width * scale;
+            const height = image.height * scale;
+            const pan = clamp(this.cameraX / CONFIG.worldWidth, 0, 1);
+            const x = -8 - (width - this.width - 16) * pan;
+            context.drawImage(image, x, ground + 24 - height, width, height);
+        } else {
+            context.fillStyle = "#ddd9b4";
             context.beginPath();
-            context.ellipse(x, y, 100 + index * 5, 14 + index % 3 * 5, 0, 0, Math.PI * 2);
+            context.arc(this.width * 0.61, ground * 0.26, 30, 0, Math.PI * 2);
             context.fill();
         }
-        context.restore();
-    }
 
-    drawFarKingdom(state) {
-        const context = this.context;
-        const ground = this.groundY();
-        context.save();
-        context.translate(-this.cameraX * 0.08, 0);
-        context.fillStyle = "rgba(10, 22, 27, 0.46)";
-        context.beginPath();
-        context.moveTo(-this.width, ground);
-        for (let x = -this.width; x <= this.width * 2; x += 80) {
-            const y = ground - 92 - Math.sin(x * 0.006) * 38 - Math.sin(x * 0.017) * 18;
-            context.lineTo(x, y);
+        const warning = state.ritualStarted ? 0.3 : clamp((5 - state.waveTimer) / 5, 0, 1) * 0.24;
+        const sides = state.ritualStarted ? [-1, 1] : assaultSides(state.wave + 1);
+        for (const side of sides) {
+            const edge = side < 0 ? 0 : this.width;
+            const light = context.createLinearGradient(edge, 0, edge - side * this.width * 0.65, 0);
+            light.addColorStop(0, `rgba(219, 97, 52, ${warning})`);
+            light.addColorStop(1, "rgba(219, 97, 52, 0)");
+            context.fillStyle = light;
+            context.fillRect(-10, 0, this.width + 20, ground);
         }
-        context.lineTo(this.width * 2, ground);
-        context.closePath();
-        context.fill();
-        context.restore();
-        this.drawDistantVillage(state);
+        this.drawMist(ground);
     }
 
-    drawDistantVillage(state) {
+    drawMist(ground) {
         const context = this.context;
-        const ground = this.groundY();
-        context.save();
-        context.translate(this.width / 2 - this.cameraX * 0.22, 0);
-        for (let index = 0; index < 24; index += 1) {
-            const x = index * 270 - 1000;
-            const height = 25 + hash(index * 9.3) * 34;
-            context.fillStyle = "rgba(9, 16, 19, 0.7)";
-            context.fillRect(x, ground - height - 42, 62, height + 42);
-            context.beginPath();
-            context.moveTo(x - 8, ground - height - 42);
-            context.lineTo(x + 31, ground - height - 70);
-            context.lineTo(x + 70, ground - height - 42);
-            context.fill();
-            context.fillStyle = "rgba(229, 164, 83, 0.3)";
-            context.fillRect(x + 17, ground - 29, 8, 11);
-        }
-        context.restore();
-    }
-
-    drawGround(state) {
-        const context = this.context;
-        const ground = this.groundY();
-        const gradient = context.createLinearGradient(0, ground - 20, 0, this.height + 30);
-        gradient.addColorStop(0, "#1b3532");
-        gradient.addColorStop(0.12, "#102624");
-        gradient.addColorStop(1, "#080d10");
-        context.fillStyle = gradient;
-        context.fillRect(-100, ground, CONFIG.worldWidth + 200, this.height - ground + 80);
-        context.strokeStyle = "rgba(93, 133, 105, 0.45)";
-        context.lineWidth = 2;
-        context.beginPath();
-        context.moveTo(0, ground);
-        for (let x = 0; x <= CONFIG.worldWidth; x += 34) {
-            context.lineTo(x, ground + Math.sin(x * 0.021) * 3);
-        }
-        context.stroke();
-        this.drawGrass();
-        this.drawGroves(state);
-    }
-
-    drawGrass() {
-        const context = this.context;
-        const ground = this.groundY();
-        const start = Math.max(0, Math.floor((this.cameraX - this.width / 2 - 60) / 24) * 24);
-        const end = Math.min(CONFIG.worldWidth, this.cameraX + this.width / 2 + 60);
-        context.strokeStyle = "rgba(80, 125, 91, 0.48)";
-        context.lineWidth = 1;
-        context.beginPath();
-        for (let x = start; x < end; x += 24) {
-            const height = 5 + hash(x * 0.7) * 12;
-            context.moveTo(x, ground + 2);
-            context.quadraticCurveTo(x - 3, ground - height * 0.5, x + hash(x) * 7 - 3, ground - height);
-        }
-        context.stroke();
-    }
-
-    drawGroves(state) {
-        const context = this.context;
-        const ground = this.groundY();
-        const groves = CONFIG.grovePositions.filter((x) => this.visible(x, 220));
-        for (const groveX of groves) {
+        const width = this.width + 360;
+        for (let index = 0; index < 4; index += 1) {
+            const drift = this.visualTime * (9 + index * 4) - this.cameraX * 0.14;
+            const x = ((drift + index * width / 4) % width + width) % width - 180;
+            const y = ground - 26 - index * 31;
             context.save();
-            context.translate(groveX, ground);
-            for (let index = -2; index <= 2; index += 1) {
-                const x = index * 30 + hash(groveX + index) * 14;
-                const height = 72 + hash(groveX * (index + 4)) * 75;
-                context.strokeStyle = "#0b1718";
-                context.lineWidth = 7;
-                context.beginPath();
-                context.moveTo(x, 0);
-                context.quadraticCurveTo(x - 8, -height * 0.5, x + 2, -height);
-                context.stroke();
-                context.fillStyle = "rgba(10, 25, 25, 0.9)";
-                context.beginPath();
-                context.arc(x + 1, -height + 9, 25 + index % 2 * 5, 0, Math.PI * 2);
-                context.arc(x - 15, -height + 26, 22, 0, Math.PI * 2);
-                context.arc(x + 18, -height + 29, 24, 0, Math.PI * 2);
-                context.fill();
-            }
+            context.translate(x, y);
+            context.scale(1, 0.12);
+            const fog = context.createRadialGradient(0, 0, 0, 0, 0, 220);
+            fog.addColorStop(0, "rgba(169, 196, 196, 0.2)");
+            fog.addColorStop(1, "rgba(169, 196, 196, 0)");
+            context.fillStyle = fog;
+            context.fillRect(-220, -220, 440, 440);
             context.restore();
         }
     }
 
+    drawGround() {
+        const context = this.context;
+        const ground = this.groundY();
+        const left = this.cameraX - this.width / 2 - 28;
+        const right = this.cameraX + this.width / 2 + 28;
+        context.fillStyle = "#0b141b";
+        context.fillRect(left, ground + 8, right - left, this.height - ground + 20);
+
+        if (trail.naturalWidth === 0) {
+            return;
+        } else {
+            const tileWidth = CONFIG.worldWidth / 2;
+            const tileOrigin = -tileWidth / 2;
+            const sourceTop = 350;
+            const footLine = 447;
+            const belowFeet = trail.naturalHeight - footLine;
+            const verticalScale = Math.max(0.66, (this.height - ground + 24) / belowFeet);
+            const top = ground - (footLine - sourceTop) * verticalScale;
+            const paintedHeight = (trail.naturalHeight - sourceTop) * verticalScale;
+            for (let tile = Math.floor((left - tileOrigin) / tileWidth); tileOrigin + tile * tileWidth < right; tile += 1) {
+                const mirrored = tile % 2 !== 0;
+                context.save();
+                context.translate(tileOrigin + (tile + Number(mirrored)) * tileWidth, top);
+                context.scale(mirrored ? -1 : 1, 1);
+                context.drawImage(trail, 0, sourceTop, trail.naturalWidth, trail.naturalHeight - sourceTop,
+                    0, 0, tileWidth, paintedHeight);
+                context.restore();
+            }
+        }
+    }
+
     drawWorldStructures(state) {
-        this.drawKeep(40, 1, state.wave);
-        this.drawKeep(CONFIG.worldWidth - 40, -1, state.wave);
-        const selectedId = getInteraction(state)?.targetId ?? null;
+        this.drawKeep(48, 1);
+        this.drawKeep(CONFIG.worldWidth - 48, -1);
+        const interaction = state.status === "playing" ? getInteraction(state) : null;
+        const selectedId = interaction !== null && interaction.action !== "blocked" && interaction.action !== "maxed"
+            ? interaction.targetId : null;
         for (const camp of state.camps.filter((candidate) => this.visible(candidate.x, 120))) {
             drawOutcastFire(this.context, camp, this.groundY(), this.visualTime, selectedId === camp.id);
         }
@@ -378,168 +327,71 @@ class WorldRenderer {
             drawFixedStructure(this.context, structure, this.groundY(), this.visualTime, selectedId === structure.id, structureWorkerReady(state, structure));
         }
         for (const site of state.sites.filter((candidate) => this.visible(candidate.x, 180))) {
-            this.drawSite(site, state);
+            this.drawSite(site, selectedId === site.id);
         }
         this.drawHeart(state);
     }
 
-    drawKeep(x, facing, wave) {
-        const context = this.context;
-        const ground = this.groundY();
-        context.save();
-        context.translate(x, ground);
-        context.scale(facing, 1);
-        context.fillStyle = "#11191b";
-        context.fillRect(-65, -158, 105, 158);
-        context.fillRect(-79, -182, 34, 182);
-        context.fillRect(20, -195, 38, 195);
-        for (let index = 0; index < 5; index += 1) {
-            context.fillRect(-79 + index * 34, -205 + index % 2 * 18, 18, 31);
+    drawKeep(x, facing) {
+        if (!this.visible(x, 220)) {
+            return;
+        } else {
+            const context = this.context;
+            context.save();
+            context.translate(x, this.groundY());
+            context.scale(facing, 1);
+            drawLandmark(context, "keep", 199);
+            context.restore();
         }
-        context.fillStyle = "rgba(239, 160, 70, 0.75)";
-        for (let index = 0; index < Math.min(5, wave + 1); index += 1) {
-            context.fillRect(-49 + (index % 3) * 32, -137 + Math.floor(index / 3) * 42, 8, 17);
-        }
-        context.fillStyle = "#853f35";
-        context.beginPath();
-        context.moveTo(55, -183);
-        context.lineTo(108, -165);
-        context.lineTo(55, -148);
-        context.closePath();
-        context.fill();
-        context.restore();
     }
 
     drawHeart(state) {
         const heart = state.heart;
-        const context = this.context;
-        const ground = this.groundY();
-        const pulse = 1 + Math.sin(this.visualTime * 2.6) * 0.045;
-        context.save();
-        context.translate(heart.x, ground);
-        context.scale(pulse, pulse);
-        const glow = context.createRadialGradient(0, -54, 6, 0, -54, 105);
-        glow.addColorStop(0, "rgba(105, 255, 220, 0.24)");
-        glow.addColorStop(1, "rgba(78, 179, 156, 0)");
-        context.fillStyle = glow;
-        context.beginPath();
-        context.arc(0, -54, 105, 0, Math.PI * 2);
-        context.fill();
-        context.strokeStyle = "#0a1114";
-        context.lineWidth = 12;
-        for (let arm = -2; arm <= 2; arm += 1) {
-            context.beginPath();
-            context.moveTo(arm * 9, -18);
-            context.bezierCurveTo(arm * 31, 4, arm * 50, -8, arm * 62, 4);
-            context.stroke();
+        if (!this.visible(heart.x, 185)) {
+            return;
+        } else {
+            const context = this.context;
+            const ground = this.groundY();
+            const height = 191;
+            const shrineX = heart.x - 74;
+            const pulse = Math.sin(this.visualTime * 2.6) * 0.045;
+            drawFootShadow(context, shrineX, ground, 115);
+            drawLocalLight(context, shrineX, ground - height * 0.52, 134, "88, 220, 202", 0.16 + pulse);
+            context.save();
+            context.translate(shrineX, ground);
+            drawLandmark(context, "heart", height);
+            context.restore();
+            this.drawHealthBar(shrineX, ground - height - 4, heart.hp, heart.maxHp, 86, "#69d7be");
         }
-        context.fillStyle = "#10171d";
-        context.beginPath();
-        context.ellipse(0, -55, 38, 51, 0, 0, Math.PI * 2);
-        context.fill();
-        context.strokeStyle = COLORS.dread;
-        context.lineWidth = 2;
-        context.beginPath();
-        context.ellipse(0, -57, 14, 23, 0, 0, Math.PI * 2);
-        context.stroke();
-        context.fillStyle = "rgba(125, 246, 220, 0.75)";
-        context.beginPath();
-        context.ellipse(0, -58, 5, 12, 0, 0, Math.PI * 2);
-        context.fill();
-        context.restore();
-        this.drawHealthBar(heart.x, ground - 124, heart.hp, heart.maxHp, 86, "#69d7be");
     }
 
-    drawSite(site, state) {
+    drawSite(site, selected) {
         const context = this.context;
         const ground = this.groundY();
-        const selected = getInteraction(state)?.targetId === site.id;
+        const active = site.level > 0;
+        const height = active ? 84 + site.level * 14 : 66;
+        if (selected) {
+            drawSelectionHalo(context, site.x, ground, 51 + site.level * 6);
+        } else {
+            drawFootShadow(context, site.x, ground, 39 + site.level * 7);
+        }
+
+        if (active) {
+            const pulse = Math.sin(this.visualTime * 2.3 + site.x) * 0.06;
+            drawLocalLight(context, site.x, ground - height * 0.35, 78, "84, 225, 202", 0.2 + pulse);
+        } else {
+            drawLocalLight(context, site.x, ground - height * 0.6, 25, "84, 186, 173", 0.1);
+        }
         context.save();
         context.translate(site.x, ground);
-        context.strokeStyle = selected ? COLORS.dread : "rgba(91, 127, 113, 0.65)";
-        context.lineWidth = selected ? 3 : 2;
-        context.beginPath();
-        context.ellipse(0, 0, 56, 13, 0, 0, Math.PI * 2);
-        context.stroke();
-        this.drawRune(context, site.level);
-        if (site.level === 0) {
-            this.drawDormantSite(context);
-        } else {
-            this.drawActiveSite(context, site);
-        }
+        drawLandmark(context, active ? "brood" : "dormant", height);
         context.restore();
-        if (site.level > 0) {
-            this.drawHealthBar(site.x, ground - 99 - site.level * 4, site.hp, site.maxHp, 64, "#6dd6b9");
+
+        if (active) {
+            this.drawHealthBar(site.x, ground - height - 5, site.hp, site.maxHp, 64, "#6dd6b9");
         } else {
-            this.drawSiteNumber(site, ground);
+            return;
         }
-    }
-
-    drawRune(context, level) {
-        context.strokeStyle = level > 0 ? "rgba(125, 246, 220, 0.56)" : "rgba(96, 120, 109, 0.45)";
-        context.lineWidth = 1.5;
-        context.beginPath();
-        context.moveTo(-36, -2);
-        context.lineTo(-17, -10);
-        context.lineTo(0, 1);
-        context.lineTo(19, -10);
-        context.lineTo(39, -1);
-        context.moveTo(-23, 5);
-        context.lineTo(0, -8);
-        context.lineTo(24, 5);
-        context.stroke();
-    }
-
-    drawDormantSite(context) {
-        context.fillStyle = "#101a19";
-        context.fillRect(-6, -36, 12, 31);
-        context.beginPath();
-        context.moveTo(-12, -34);
-        context.lineTo(0, -57);
-        context.lineTo(12, -34);
-        context.closePath();
-        context.fill();
-        context.fillStyle = "rgba(116, 152, 133, 0.45)";
-        context.fillRect(-2, -46, 4, 10);
-    }
-
-    drawActiveSite(context, site) {
-        const pulse = Math.sin(this.visualTime * 2.3 + site.x) * 3;
-        context.strokeStyle = "#0b1317";
-        context.lineWidth = 8;
-        for (let arm = 0; arm < 3 + site.level; arm += 1) {
-            const side = arm % 2 === 0 ? -1 : 1;
-            context.beginPath();
-            context.moveTo(side * 11, -14);
-            context.quadraticCurveTo(side * (28 + arm * 4), -31 - arm * 3, side * (39 + arm * 5), -6);
-            context.stroke();
-        }
-        context.fillStyle = "#111820";
-        context.beginPath();
-        context.ellipse(0, -38, 31 + site.level * 5 + pulse, 37 + site.level * 8, 0, 0, Math.PI * 2);
-        context.fill();
-        for (let eye = 0; eye < site.level; eye += 1) {
-            const x = (eye - (site.level - 1) / 2) * 16;
-            context.fillStyle = COLORS.dread;
-            context.beginPath();
-            context.ellipse(x, -42 - eye % 2 * 9, 4, 8, 0, 0, Math.PI * 2);
-            context.fill();
-        }
-        context.strokeStyle = "rgba(112, 225, 199, 0.45)";
-        context.lineWidth = 2;
-        context.beginPath();
-        context.arc(0, -38, 19 + site.level * 7, Math.PI * 0.12, Math.PI * 0.88);
-        context.stroke();
-    }
-
-    drawSiteNumber(site, ground) {
-        const context = this.context;
-        context.save();
-        context.font = "10px ui-monospace, monospace";
-        context.textAlign = "center";
-        context.fillStyle = "rgba(159, 181, 166, 0.68)";
-        context.fillText(site.id.replace("site-", "SIGIL "), site.x, ground - 68);
-        context.restore();
     }
 
     drawWisps(state) {
@@ -580,7 +432,7 @@ class WorldRenderer {
                     this.drawHuman(item.entity);
                     break;
                 case "acolyte":
-                    this.drawAcolyte(item.entity, state);
+                    drawAcolyteActor(this.context, item.entity, this.groundY(), this.visualTime);
                     break;
                 default:
                     throw new Error(`Unknown actor family '${item.family}' while drawing game entities.`);
@@ -597,20 +449,14 @@ class WorldRenderer {
         const context = this.context;
         const ground = this.groundY();
         drawHorrorActor(context, horror, ground, this.visualTime);
-        this.drawHealthBar(horror.x, ground - (horror.type === "brute" ? 78 : 49), horror.hp, horror.maxHp, horror.type === "brute" ? 50 : 36, "#6ed3b8");
+        this.drawHealthBar(horror.x, ground - HORROR_HEIGHT[horror.type] - 5, horror.hp, horror.maxHp, horror.type === "brute" ? 50 : 36, "#6ed3b8");
     }
 
     drawHuman(human) {
         const context = this.context;
         const ground = this.groundY();
         drawHumanActor(context, human, ground, this.visualTime);
-        this.drawHealthBar(human.x, ground - 74, human.hp, human.maxHp, 32, human.type === "torchbearer" ? "#d56b55" : "#d0b878");
-    }
-
-    drawAcolyte(acolyte, state) {
-        const structure = state.structures.find((candidate) => candidate.id === acolyte.assignmentId);
-        const role = structure === undefined ? null : EXPANSION_CONFIG.types[structure.type].role;
-        drawAcolyteActor(this.context, acolyte, this.groundY(), this.visualTime, role);
+        this.drawHealthBar(human.x, ground - HUMAN_HEIGHT[human.type] - 5, human.hp, human.maxHp, 32, human.type === "torchbearer" ? "#d56b55" : "#d0b878");
     }
 
     drawCorpses(state) {
@@ -621,6 +467,9 @@ class WorldRenderer {
 
     drawPlayer(player) {
         drawMountedPlayer(this.context, player, this.groundY(), this.visualTime);
+        const ground = this.groundY();
+        this.drawHealthBar(player.x, ground + 11, player.veil, player.maxVeil, 42, "#b093ec");
+        this.drawHealthBar(player.x, ground + 17, player.stamina, player.maxStamina, 42, player.exhausted ? COLORS.violet : COLORS.gold);
     }
 
     drawReformingPlayer(state) {
@@ -663,11 +512,14 @@ class WorldRenderer {
         }
     }
 
+    overviewPosition() {
+        const width = Math.min(420, this.width - 110);
+        return { x: (this.width - width) / 2, y: this.height - 34, width };
+    }
+
     drawOverview(state) {
         const context = this.context;
-        const width = Math.min(420, this.width - 110);
-        const x = (this.width - width) / 2;
-        const y = this.height - 34;
+        const { x, y, width } = this.overviewPosition();
         context.save();
         context.fillStyle = "rgba(2, 8, 10, 0.62)";
         context.fillRect(x - 12, y - 12, width + 24, 24);
@@ -693,6 +545,11 @@ class WorldRenderer {
             context.fillStyle = camp.available ? "#e58b45" : "#55483b";
             context.fillRect(markerX - 1, y + 5, 2, 3);
         }
+        context.fillStyle = "#ff9a68";
+        for (const human of state.humans) {
+            const markerX = x + human.x / CONFIG.worldWidth * width;
+            context.fillRect(markerX - 1.5, y + 5, 3, 4);
+        }
         context.fillStyle = "#d3a55f";
         context.fillRect(x + state.heart.x / CONFIG.worldWidth * width - 2, y - 5, 4, 10);
         context.fillStyle = "#f2eee0";
@@ -709,7 +566,7 @@ class WorldRenderer {
         const context = this.context;
         const gradient = context.createRadialGradient(this.width / 2, this.height * 0.52, Math.min(this.width, this.height) * 0.22, this.width / 2, this.height * 0.52, Math.max(this.width, this.height) * 0.72);
         gradient.addColorStop(0, "rgba(0, 0, 0, 0)");
-        gradient.addColorStop(1, "rgba(0, 2, 4, 0.72)");
+        gradient.addColorStop(1, "rgba(0, 2, 4, 0.39)");
         context.fillStyle = gradient;
         context.fillRect(0, 0, this.width, this.height);
         const danger = 1 - state.heart.hp / state.heart.maxHp;
@@ -725,31 +582,10 @@ class WorldRenderer {
     }
 }
 
-function hash(value) {
-    const sine = Math.sin(value * 12.9898) * 43758.5453;
-    return sine - Math.floor(sine);
-}
-
 function easeOut(value) {
     return 1 - Math.pow(1 - clamp(value, 0, 1), 3);
 }
 
 function clamp(value, minimum, maximum) {
     return Math.min(maximum, Math.max(minimum, value));
-}
-
-function mix(left, right, amount) {
-    const leftValues = hexValues(left);
-    const rightValues = hexValues(right);
-    const ratio = clamp(amount, 0, 1);
-    const values = leftValues.map((value, index) => Math.round(value + (rightValues[index] - value) * ratio));
-    return `rgb(${values[0]}, ${values[1]}, ${values[2]})`;
-}
-
-function hexValues(color) {
-    return [
-        Number.parseInt(color.slice(1, 3), 16),
-        Number.parseInt(color.slice(3, 5), 16),
-        Number.parseInt(color.slice(5, 7), 16),
-    ];
 }

@@ -1,4 +1,4 @@
-import { CONFIG, activeSiteCount, createGame, getInteraction, restartGame, stepGame, togglePause } from "./core.js";
+import { CONFIG, activeSiteCount, assaultDirection, createGame, getInteraction, restartGame, stepGame, togglePause } from "./core.js";
 import { workforceCounts } from "./expansion.js";
 import { createControls } from "./controls.js";
 import { createRenderer } from "./render.js";
@@ -16,16 +16,18 @@ const ui = Object.freeze({
     helpOverlay: requireElement("help-overlay"),
     pauseOverlay: requireElement("pause-overlay"),
     endOverlay: requireElement("end-overlay"),
+    options: requireElement("options"),
+    hud: requireElement("hud"),
+    menuStatus: requireElement("menu-status"),
+    pauseButton: requireElement("pause-button"),
     dread: requireElement("dread-value"),
     veil: requireElement("veil-value"),
     veilMeter: requireElement("veil-meter"),
     stamina: requireElement("stamina-value"),
     staminaMeter: requireElement("stamina-meter"),
     heart: requireElement("heart-value"),
-    heartMeter: requireElement("heart-meter"),
     broods: requireElement("brood-value"),
     wave: requireElement("wave-value"),
-    attack: requireElement("attack-value"),
     acolytes: requireElement("acolyte-value"),
     objective: requireElement("objective"),
     notice: requireElement("notice"),
@@ -38,12 +40,7 @@ const ui = Object.freeze({
     restartButton: requireElement("restart-button"),
 });
 
-const controls = createControls(window, document.querySelectorAll("[data-action]"), {
-    isPlaying: () => state.status === "playing",
-    onSpecialKey: handleSpecialKey,
-    onBlur: pauseOnFocusLoss,
-    onTouch: () => sound.ensure(),
-});
+const controls = createControls(CONFIG.worldWidth);
 
 bindControls();
 updateUi();
@@ -62,72 +59,59 @@ function requireElement(id) {
 function bindControls() {
     requireElement("start-button").addEventListener("click", startGame);
     requireElement("restart-button").addEventListener("click", restartCurrentGame);
-    requireElement("pause-button").addEventListener("click", changePause);
+    ui.pauseButton.addEventListener("click", changePause);
     requireElement("resume-button").addEventListener("click", changePause);
     requireElement("help-button").addEventListener("click", openHelp);
-    requireElement("title-help-button").addEventListener("click", openHelp);
     requireElement("pause-help-button").addEventListener("click", openHelp);
     requireElement("close-help-button").addEventListener("click", closeHelp);
     requireElement("sound-button").addEventListener("click", () => sound.toggle());
+    canvas.addEventListener("click", selectWorldPoint);
+    ui.interaction.addEventListener("click", selectNearbyAction);
+    window.addEventListener("blur", pauseOnFocusLoss);
     window.addEventListener("resize", () => renderer.resize());
     document.addEventListener("visibilitychange", pauseWhenHidden);
 }
 
-function handleSpecialKey(event) {
-    if (event.repeat) {
-        event.preventDefault();
+function selectWorldPoint(event) {
+    if (state.status !== "playing" || state.player.reformTimer > 0) {
         return;
     } else {
-        performSpecialKey(event);
+        const point = renderer.worldPoint(event.clientX, event.clientY);
+        const interaction = availableAction();
+        const hitRadius = interaction?.kind === "heart" ? 118 : 45;
+        if (!point.onMap && interaction !== null && Math.abs(point.x - interaction.x) <= hitRadius
+            && point.aboveTrail >= -24 && point.aboveTrail <= 200) {
+            controls.interactWith(interaction.targetId);
+        } else {
+            controls.rideTo(point.x);
+        }
+        ui.options.open = false;
     }
 }
 
-function performSpecialKey(event) {
-    switch (event.code) {
-        case "Escape":
-        case "KeyP":
-            event.preventDefault();
-            if (ui.helpOverlay.classList.contains("is-hidden")) {
-                changePause();
-            } else {
-                closeHelp();
-            }
-            break;
-        case "Enter":
-            event.preventDefault();
-            handleEnter();
-            break;
-        default:
-            return;
+function selectNearbyAction() {
+    const interaction = availableAction();
+    if (interaction !== null) {
+        controls.interactWith(interaction.targetId);
+    } else {
+        return;
     }
 }
 
-function handleEnter() {
-    switch (state.status) {
-        case "title":
-            startGame();
-            break;
-        case "paused":
-            if (ui.helpOverlay.classList.contains("is-hidden")) {
-                changePause();
-            } else {
-                closeHelp();
-            }
-            break;
-        case "victory":
-        case "defeat":
-            restartCurrentGame();
-            break;
-        default:
-            return;
-    }
+function availableAction() {
+    const interaction = state.status === "playing" ? getInteraction(state) : null;
+    return interaction !== null && interaction.action !== "blocked" && interaction.action !== "maxed" ? interaction : null;
 }
 
 function startGame() {
     sound.ensure();
     controls.clear();
     state.status = "playing";
+    ui.options.open = false;
     ui.titleOverlay.classList.add("is-hidden");
+    ui.hud.classList.remove("is-hidden");
+    ui.menuStatus.classList.remove("is-hidden");
+    ui.pauseButton.hidden = false;
     ui.endOverlay.classList.add("is-hidden");
     ui.pauseOverlay.classList.add("is-hidden");
     lastFrame = performance.now();
@@ -135,18 +119,13 @@ function startGame() {
 
 function restartCurrentGame() {
     state = restartGame();
-    state.status = "playing";
-    controls.clear();
     renderer.cameraX = CONFIG.playerStartX;
-    ui.endOverlay.classList.add("is-hidden");
-    ui.titleOverlay.classList.add("is-hidden");
-    ui.pauseOverlay.classList.add("is-hidden");
-    sound.ensure();
-    lastFrame = performance.now();
+    startGame();
 }
 
 function changePause() {
     controls.clear();
+    ui.options.open = false;
     togglePause(state);
     if (state.status === "paused") {
         ui.pauseOverlay.classList.remove("is-hidden");
@@ -158,6 +137,7 @@ function changePause() {
 
 function openHelp() {
     controls.clear();
+    ui.options.open = false;
     helpReturnStatus = state.status;
     state.status = state.status === "playing" ? "paused" : state.status;
     ui.helpOverlay.classList.remove("is-hidden");
@@ -195,13 +175,17 @@ function pauseOnFocusLoss() {
 function animationFrame(now) {
     const elapsed = Math.min(0.05, Math.max(0, (now - lastFrame) / 1000));
     lastFrame = now;
-    const input = controls.read();
+    const input = controls.read(state.player);
     stepGame(state, input, elapsed);
     renderer.consumeEvents(state.events);
     sound.consumeEvents(state.events);
-    renderer.render(state, elapsed);
+    if (state.player.reformTimer > 0 || state.status !== "playing") {
+        controls.clear();
+    } else {
+        controls.finishFrame();
+    }
+    renderer.render(state, elapsed, controls.destination);
     updateUi();
-    controls.finishFrame();
     requestAnimationFrame(animationFrame);
 }
 
@@ -215,10 +199,11 @@ function updateUi() {
     ui.veilMeter.style.transform = `scaleX(${ratio(player.veil, player.maxVeil)})`;
     ui.staminaMeter.style.transform = `scaleX(${ratio(player.stamina, player.maxStamina)})`;
     ui.staminaMeter.classList.toggle("is-exhausted", player.exhausted);
-    ui.heartMeter.style.transform = `scaleX(${ratio(state.heart.hp, state.heart.maxHp)})`;
     ui.broods.textContent = `${activeSiteCount(state)} / ${state.sites.length}`;
-    ui.wave.textContent = `${state.wave} · ${Math.max(0, Math.ceil(state.waveTimer))}s`;
-    ui.attack.textContent = player.attackCooldown === 0 ? "Ready" : `${player.attackCooldown.toFixed(1)}s`;
+    ui.wave.textContent = state.ritualStarted
+        ? `${state.humans.length} left`
+        : `${assaultDirection(state.wave + 1)} · ${Math.max(0, Math.ceil(state.waveTimer))}s`;
+    ui.wave.classList.toggle("raid-warning", state.waveWarning || state.ritualStarted);
     ui.acolytes.textContent = `${workforce.free} free · ${workforce.staffed} working`;
     ui.objective.textContent = objectiveText();
     updateNotice();
@@ -237,12 +222,12 @@ function updateNotice() {
 }
 
 function updateInteraction() {
-    const interaction = state.status === "playing" ? getInteraction(state) : null;
+    const interaction = availableAction();
     if (interaction === null) {
         ui.interaction.classList.add("is-hidden");
     } else {
         ui.interactionLabel.textContent = interaction.label;
-        ui.interactionCost.textContent = interaction.cost > 0 ? `${interaction.cost} Dread` : interaction.action === "maxed" ? "Complete" : "Locked";
+        ui.interactionCost.textContent = `${interaction.cost} Dread`;
         ui.interaction.title = interaction.detail;
         ui.interaction.classList.toggle("cannot-afford", !interaction.affordable);
         ui.interaction.classList.remove("is-hidden");
@@ -283,13 +268,15 @@ function showEnd(eyebrow, title, message, buttonLabel) {
 
 function objectiveText() {
     const dormant = state.sites.length - activeSiteCount(state);
-    if (dormant > 0) {
+    if (state.ritualStarted) {
+        return "Defend the Heart until every crusader falls";
+    } else if (dormant > 0) {
         return `Awaken ${dormant} remaining Brood${dormant === 1 ? "" : "s"}`;
     } else {
         if (state.dread < CONFIG.finalRitualCost) {
             return `Gather ${CONFIG.finalRitualCost - state.dread} more Dread for the final ritual`;
         } else {
-            return "Return to the central Heart and press E";
+            return "Return to the central Heart and select the ritual";
         }
     }
 }
