@@ -4,6 +4,10 @@
   if (root.GreenWaveAutomaton) {
     const { ForestAutomatonModel, STATUS } = root.GreenWaveAutomaton;
     const model = new ForestAutomatonModel();
+    const GAMEPAD = Object.freeze({
+      plant: 0, restart: 9, up: 12, down: 13, left: 14, right: 15,
+      stickThreshold: 0.5, initialRepeatMs: 300, repeatMs: 100
+    });
 
     function requiredElement(identifier) {
       const element = document.getElementById(identifier);
@@ -30,6 +34,10 @@
     const frontierReadout = requiredElement("automaton-frontier");
     let nextSeed = 0x464f5245;
     let pulseCells = [];
+    const gamepadCursor = {
+      x: Math.floor(model.settings.columns / 2), y: Math.floor(model.settings.rows / 2),
+      visible: false, dx: 0, dy: 0, nextMoveAt: 0, plantHeld: false, restartHeld: false
+    };
 
     function resizeCanvas() {
       const pixelRatio = Math.min(root.devicePixelRatio || 1, 2);
@@ -80,7 +88,8 @@
       context.strokeRect(pixelX, pixelY, width, height);
     }
 
-    function render() {
+    function render(timestamp) {
+      pollGamepad(timestamp);
       const width = canvas.width / model.settings.columns;
       const height = canvas.height / model.settings.rows;
       context.clearRect(0, 0, canvas.width, canvas.height);
@@ -99,6 +108,7 @@
         context.arc((pulse.x + 0.5) * width, (pulse.y + 0.5) * height, width * (1.4 - pulse.life * 0.7), 0, Math.PI * 2);
         context.stroke();
       });
+      drawGamepadCursor(width, height);
       root.requestAnimationFrame(render);
     }
 
@@ -138,12 +148,19 @@
       updateInterface();
     }
 
+    function boundedTile(x, y) {
+      return {
+        x: Math.max(0, Math.min(model.settings.columns - 1, x)),
+        y: Math.max(0, Math.min(model.settings.rows - 1, y))
+      };
+    }
+
     function canvasPosition(event) {
       const bounds = canvas.getBoundingClientRect();
-      return {
-        x: Math.max(0, Math.min(model.settings.columns - 1, Math.floor((event.clientX - bounds.left) / bounds.width * model.settings.columns))),
-        y: Math.max(0, Math.min(model.settings.rows - 1, Math.floor((event.clientY - bounds.top) / bounds.height * model.settings.rows)))
-      };
+      return boundedTile(
+        Math.floor((event.clientX - bounds.left) / bounds.width * model.settings.columns),
+        Math.floor((event.clientY - bounds.top) / bounds.height * model.settings.rows)
+      );
     }
 
     function advanceGeneration() {
@@ -152,15 +169,97 @@
       processEvents();
       updateInterface();
     }
+    function drawGamepadCursor(width, height) {
+      if (!gamepadCursor.visible) {
+        return;
+      } else {
+        const bounds = [gamepadCursor.x * width + 1, gamepadCursor.y * height + 1, width - 2, height - 2];
+        context.strokeStyle = "#172a25";
+        context.lineWidth = 4;
+        context.strokeRect(...bounds);
+        context.strokeStyle = "#f5e57d";
+        context.lineWidth = 2;
+        context.strokeRect(...bounds);
+      }
+    }
 
-    canvas.addEventListener("click", (event) => {
+    function connectedGamepad() {
+      try {
+        return Array.from(root.navigator.getGamepads?.() ?? [])
+          .find(pad => pad?.connected && pad.mapping === "standard");
+      } catch (error) {
+        if (error.name === "SecurityError") {
+          return undefined;
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    function updateGamepadCursor(pad, timestamp) {
+      const pressed = button => Number(Boolean(pad.buttons[button]?.pressed));
+      const stick = axis => Math.abs(axis) >= GAMEPAD.stickThreshold ? Math.sign(axis) : 0;
+      const horizontal = pressed(GAMEPAD.right) - pressed(GAMEPAD.left);
+      const vertical = pressed(GAMEPAD.down) - pressed(GAMEPAD.up);
+      const usingDpad = horizontal !== 0 || vertical !== 0;
+      const dx = usingDpad ? horizontal : stick(pad.axes[0]);
+      const dy = usingDpad ? vertical : stick(pad.axes[1]);
+      const sameDirection = dx === gamepadCursor.dx && dy === gamepadCursor.dy;
+      gamepadCursor.dx = dx;
+      gamepadCursor.dy = dy;
+      if ((dx || dy) && (!sameDirection || timestamp >= gamepadCursor.nextMoveAt)) {
+        const point = boundedTile(gamepadCursor.x + dx, gamepadCursor.y + dy);
+        gamepadCursor.x = point.x;
+        gamepadCursor.y = point.y;
+        gamepadCursor.visible = true;
+        gamepadCursor.nextMoveAt = timestamp + (sameDirection ? GAMEPAD.repeatMs : GAMEPAD.initialRepeatMs);
+      } else {
+        // A neutral stick or a direction waiting for its repeat delay leaves the tile selected.
+        return;
+      }
+    }
+
+    function pollGamepad(timestamp) {
+      const pad = connectedGamepad();
+      const plantHeld = Boolean(pad?.buttons[GAMEPAD.plant]?.pressed);
+      const restartHeld = Boolean(pad?.buttons[GAMEPAD.restart]?.pressed);
+      const plant = plantHeld && !gamepadCursor.plantHeld;
+      const restart = restartHeld && !gamepadCursor.restartHeld;
+      gamepadCursor.plantHeld = plantHeld;
+      gamepadCursor.restartHeld = restartHeld;
+      if (!pad || !document.hasFocus()) {
+        gamepadCursor.visible = false;
+        gamepadCursor.dx = 0;
+        gamepadCursor.dy = 0;
+      } else {
+        updateGamepadCursor(pad, timestamp);
+        if (restart && model.status === STATUS.complete) {
+          resetModel();
+        } else if (plant) {
+          gamepadCursor.visible = true;
+          plantTile(gamepadCursor);
+        } else {
+          // Holding either action button consumes no further turns.
+          return;
+        }
+      }
+    }
+
+    function plantTile(point) {
       if (model.status === STATUS.complete) {
         message.textContent = "The forest is established. Reset the starting grove to play again.";
       } else {
-        const point = canvasPosition(event);
         model.seedCluster(point.x, point.y);
         advanceGeneration();
       }
+    }
+
+    canvas.addEventListener("click", (event) => {
+      const point = canvasPosition(event);
+      gamepadCursor.x = point.x;
+      gamepadCursor.y = point.y;
+      gamepadCursor.visible = false;
+      plantTile(point);
     });
 
     stepButton.addEventListener("click", advanceGeneration);
