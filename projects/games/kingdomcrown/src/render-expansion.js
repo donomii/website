@@ -40,7 +40,7 @@ export function drawOutcastFire(context, camp, ground, visualTime, selected) {
 
 export function drawFixedStructure(context, structure, ground, visualTime, selected, staffed) {
     const { x, level, type } = structure;
-    const height = level === 0 ? 13 : STRUCTURE_HEIGHT[type] + (level - 1) * 14;
+    const height = structureHeight(structure);
     if (selected) {
         drawSelectionHalo(context, x, ground, 42 + level * 6);
     } else {
@@ -62,6 +62,10 @@ export function drawFixedStructure(context, structure, ground, visualTime, selec
     } else {
         drawLocalLight(context, x, ground - 8, 10, FOUNDATION_LIGHT[type], 0.34);
     }
+}
+
+export function structureHeight(structure) {
+    return structure.level === 0 ? 13 : STRUCTURE_HEIGHT[structure.type] + (structure.level - 1) * 14;
 }
 
 function drawStaffingMark(context, structure, ground, height, staffed) {

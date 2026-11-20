@@ -10,10 +10,11 @@
 </head>
 <body>
     <main id="game-shell" aria-label="The Crown Below game">
-        <canvas id="world" aria-label="Click the trail to ride or select a nearby structure."></canvas>
+        <canvas id="world" aria-label="Hold left or right to ride. Tap or hold a highlighted landmark to pay."></canvas>
         <section id="hud" class="hud is-hidden" aria-label="Game status">
-            <div class="readout" title="Dread is currency. Ride through wisps to collect it and click the action by a nearby site to spend it.">
+            <div class="readout" title="Dread purse. Ride through wisps to collect it. Tap or hold at a site to pay one coin at a time.">
                 <span class="readout-label">Dread</span>
+                <span id="purse-coin" aria-hidden="true"></span>
                 <strong id="dread-value">12</strong>
             </div>
             <div class="readout" title="Heart is base health. Zero ends the run.">
@@ -74,11 +75,11 @@
                 <div class="guide-grid">
                     <article>
                         <h3>Ride and gather</h3>
-                        <p>Click or tap the scene to ride to that point. The steed gallops toward distant points and slows as it approaches or needs to recover. The gold bar shows stamina and turns purple while the steed recovers from exhaustion.</p>
+                        <p>Hold the mouse button or your finger to either side of the rider. Release to stop. A longer hold starts a gallop. The gold stamina bar turns purple when the steed needs to rest.</p>
                     </article>
                     <article>
                         <h3>Spend Dread</h3>
-                        <p>Ride through glowing wisps to collect Dread. Click a nearby standing stone or its action button to awaken it for 8 Dread. The same action upgrades it for 14 and then 22 Dread.</p>
+                        <p>Ride through wisps to refill your purse. Tap a highlighted site or its button to send one coin. Hold to send more. The purchase completes when every slot fills. Ride away to get unfinished payments back.</p>
                     </article>
                     <article>
                         <h3>Broods</h3>
@@ -90,7 +91,7 @@
                     </article>
                     <article>
                         <h3>Build</h3>
-                        <p>Click any highlighted site to build or upgrade it. Staffed Pastures pay Dread directly, Spires attack, Barricades repair, and Charnel Yards harvest remains.</p>
+                        <p>Pay at any highlighted site to build or upgrade it. Staffed Pastures pay Dread directly, Spires attack, Barricades repair, and Charnel Yards harvest remains.</p>
                     </article>
                     <article>
                         <h3>Defend</h3>
@@ -105,7 +106,7 @@
                         <p>Awaken four Broods and spend 16 Dread at the Heart to start the siege. Defend both sides and watch the Raid readout for reinforcements.</p>
                     </article>
                 </div>
-                <p class="pause-note">Click the bottom map to ride farther. It shows your position, the Heart, Broods, fires, and structures. A structure's job mark is red when vacant, gold while its worker travels, and teal when staffed. Use Menu to pause or change sound. Leaving the window also pauses and clears your destination.</p>
+                <p class="pause-note">The bottom map shows your position, the Heart, Broods, fires, and structures. Job marks are red when vacant, gold while a worker travels, and teal when staffed. Use Menu to pause or change sound.</p>
                 <button id="close-help-button" class="primary-button" type="button">Close</button>
             </div>
         </section>

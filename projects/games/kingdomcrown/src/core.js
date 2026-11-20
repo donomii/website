@@ -1,5 +1,6 @@
 import { EXPANSION_CONFIG, addHumanCorpse, createExpansionState, getExpansionInteractions, performExpansionInteraction, resolveExpansionCasualties, updateExpansion } from "./expansion.js";
 import { MOVEMENT_CONFIG, updateRidingPlayer } from "./movement.js";
+import { advancePurchase, returnCoins } from "./purchases.js";
 
 export const CONFIG = Object.freeze({
     worldWidth: EXPANSION_CONFIG.worldWidth,
@@ -38,8 +39,10 @@ const HORROR_STATS = Object.freeze({
 const NO_INPUT = Object.freeze({
     left: false,
     right: false,
+    stop: false,
     gallop: false,
     interactPressed: false,
+    interactHeld: false,
     interactTargetId: null,
 });
 
@@ -62,6 +65,7 @@ export function createGame(seed = 0x51ee9) {
         waveWarning: false,
         wispTimer: 3.5,
         ritualStarted: false,
+        purchase: null,
         siegeReserveTimer: null,
         nextId: 1,
         player: {
@@ -173,7 +177,7 @@ export function stepGame(state, suppliedInput = NO_INPUT, elapsed = 0, random = 
     } else {
         state.time += dt;
         updateNotice(state, dt);
-        processInteraction(state, input);
+        advancePurchase(state, input, (targetId) => getInteraction(state, targetId), (action) => performInteraction(state, action));
         updatePlayer(state, input, dt);
         collectWisps(state);
         updateSites(state, dt);
@@ -235,6 +239,7 @@ function updatePlayer(state, input, dt) {
         player.veil = player.veil > 0 && atHeart && !threatened
             ? Math.min(player.maxVeil, player.veil + CONFIG.heartVeilRecovery * dt)
             : player.veil;
+        player.vx = input.stop ? 0 : player.vx;
         const becameExhausted = updateRidingPlayer(player, input, dt, CONFIG.worldWidth);
         if (becameExhausted) {
             setNotice(state, "Your steed slows to recover stamina.", 3);
@@ -276,19 +281,6 @@ function collectWisps(state) {
     state.wisps = remaining;
 }
 
-function processInteraction(state, input) {
-    if (!input.interactPressed) {
-        return;
-    } else {
-        const interaction = getInteraction(state, input.interactTargetId);
-        if (interaction === null) {
-            setNotice(state, "Ride closer to use this site.", 2.2);
-        } else {
-            performInteraction(state, interaction);
-        }
-    }
-}
-
 function performInteraction(state, interaction) {
     switch (interaction.action) {
         case "awaken":
@@ -301,7 +293,7 @@ function performInteraction(state, interaction) {
             performExpansionInteraction(state, interaction);
             break;
         case "finale":
-            completeFinalRitual(state, interaction);
+            completeFinalRitual(state);
             break;
         case "blocked":
         case "maxed":
@@ -313,38 +305,25 @@ function performInteraction(state, interaction) {
 }
 
 function buySiteLevel(state, interaction) {
-    if (state.dread >= interaction.cost) {
-        const site = state.sites.find((candidate) => candidate.id === interaction.targetId);
-        if (site === undefined) {
-            throw new Error(`Ritual site '${interaction.targetId}' was expected while buying a site level, but it does not exist.`);
-        } else {
-            state.dread -= interaction.cost;
-            site.level += 1;
-            site.maxHp = CONFIG.siteHealth[site.level];
-            site.hp = site.maxHp;
-            site.spawnTimer = 1.1;
-            state.events.push({ type: "awaken", x: site.x, level: site.level });
-            setNotice(state, site.level === 1 ? "Brood awakened" : `Brood upgraded to level ${site.level}`, 2.4);
-        }
+    const site = state.sites.find((candidate) => candidate.id === interaction.targetId);
+    if (site === undefined) {
+        throw new Error(`Ritual site '${interaction.targetId}' was expected while buying a site level, but it does not exist.`);
     } else {
-        const missing = interaction.cost - state.dread;
-        setNotice(state, `Need ${missing} more Dread`, 2.8);
+        site.level += 1;
+        site.maxHp = CONFIG.siteHealth[site.level];
+        site.hp = site.maxHp;
+        site.spawnTimer = 1.1;
+        state.events.push({ type: "awaken", x: site.x, level: site.level });
+        setNotice(state, site.level === 1 ? "Brood awakened" : `Brood upgraded to level ${site.level}`, 2.4);
     }
 }
 
-function completeFinalRitual(state, interaction) {
-    const allActive = activeSiteCount(state) === state.sites.length;
-    if (!state.ritualStarted && allActive && state.dread >= interaction.cost) {
-        state.dread -= interaction.cost;
-        state.ritualStarted = true;
-        state.siegeReserveTimer = CONFIG.finalReserveDelay;
-        state.events.push({ type: "finale", x: state.heart.x });
-        spawnSiegeGroup(state, ["soldier", "archer", "soldier"]);
-        setNotice(state, "Siege begins", 3);
-    } else {
-        const detail = allActive ? `Need ${interaction.cost - state.dread} more Dread` : "Awaken all four Broods first.";
-        setNotice(state, detail, 3.2);
-    }
+function completeFinalRitual(state) {
+    state.ritualStarted = true;
+    state.siegeReserveTimer = CONFIG.finalReserveDelay;
+    state.events.push({ type: "finale", x: state.heart.x });
+    spawnSiegeGroup(state, ["soldier", "archer", "soldier"]);
+    setNotice(state, "Siege begins", 3);
 }
 
 function describeSiteInteraction(state, site) {
@@ -616,6 +595,7 @@ function resolveDefeatedEntities(state, random) {
 function beginReformWhenNeeded(state, random) {
     const player = state.player;
     if (player.veil <= 0 && player.reformTimer === 0) {
+        returnCoins(state);
         const lostDread = Math.min(state.dread, Math.max(2, Math.floor(state.dread * 0.25)));
         state.dread -= lostDread;
         for (let index = 0; index < lostDread; index += 1) {

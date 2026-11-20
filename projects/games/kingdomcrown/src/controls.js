@@ -1,59 +1,74 @@
-import { MOVEMENT_CONFIG } from "./movement.js";
+const GALLOP_AFTER = 0.6;
 
-const ARRIVAL_TOLERANCE = 9;
-const GALLOP_DISTANCE = 190;
-
-export function createControls(worldWidth) {
-    const margin = MOVEMENT_CONFIG.playerWorldMargin;
-    let destination = null;
-    let interactionId = null;
+export function createControls() {
+    let held = null;
+    let taps = [];
+    let seconds = 0;
 
     return {
-        get destination() {
-            return destination;
+        pressRide(pointerId, direction) {
+            if (held !== null) {
+                return false;
+            } else {
+                held = { pointerId, direction, targetId: null, tap: null };
+                seconds = 0;
+                return true;
+            }
         },
-        rideTo(x) {
-            destination = Math.max(margin, Math.min(worldWidth - margin, x));
-            interactionId = null;
+        pressPurchase(pointerId, targetId) {
+            if (held !== null) {
+                return false;
+            } else {
+                const tap = { targetId };
+                held = { pointerId, direction: 0, targetId, tap };
+                seconds = 0;
+                taps.push(tap);
+                return true;
+            }
         },
-        interactWith(id) {
-            destination = null;
-            interactionId = id;
+        tapPurchase(targetId) {
+            if (held === null) {
+                taps.push({ targetId });
+            } else {
+                return;
+            }
         },
-        read(player) {
-            const moving = directionFor(player);
+        release(pointerId, cancelled = false) {
+            if (held?.pointerId === pointerId) {
+                // A normal release still counts the down event of a quick tap.
+                taps = cancelled ? taps.filter((tap) => tap !== held.tap) : taps;
+                held = null;
+            } else {
+                return;
+            }
+        },
+        read(player, elapsed) {
+            seconds = held === null ? 0 : seconds + elapsed;
+            const direction = held?.direction ?? 0;
+            const tap = taps[0] ?? null;
+            const targetId = tap?.targetId ?? held?.targetId ?? null;
             return {
-                left: moving < 0,
-                right: moving > 0,
-                gallop: moving !== 0 && !player.exhausted && Math.abs(destination - player.x) >= GALLOP_DISTANCE,
-                interactPressed: interactionId !== null,
-                interactTargetId: interactionId,
+                left: direction < 0,
+                right: direction > 0,
+                stop: direction === 0,
+                gallop: direction !== 0 && !player.exhausted && seconds >= GALLOP_AFTER,
+                interactPressed: tap !== null,
+                interactHeld: held?.targetId === targetId && targetId !== null,
+                interactTargetId: targetId,
             };
         },
-        finishFrame() {
-            interactionId = null;
+        finishFrame(completedTargetId = null) {
+            taps.shift();
+            taps = completedTargetId === null ? taps : taps.filter((tap) => tap.targetId !== completedTargetId);
+            if (held?.targetId === completedTargetId && completedTargetId !== null) {
+                held.targetId = null;
+            } else {
+                return;
+            }
         },
         clear() {
-            destination = null;
-            interactionId = null;
+            held = null;
+            taps = [];
         },
     };
-
-    function directionFor(player) {
-        if (destination === null || player.reformTimer > 0) {
-            return 0;
-        } else {
-            const distance = destination - player.x;
-            const speed = Math.abs(player.vx);
-            if (Math.abs(distance) <= ARRIVAL_TOLERANCE && speed <= MOVEMENT_CONFIG.playerStopSpeed) {
-                destination = null;
-                return 0;
-            } else {
-                const direction = Math.sign(distance);
-                const brakingDistance = Math.max(0, player.vx * direction) / MOVEMENT_CONFIG.playerBraking;
-                // Coast into the target with the same braking rate used by the riding simulation.
-                return Math.abs(distance) <= ARRIVAL_TOLERANCE / 2 + brakingDistance ? 0 : direction;
-            }
-        }
-    }
 }

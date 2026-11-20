@@ -1,9 +1,10 @@
-import { CONFIG, activeSiteCount, assaultSides, canSelectInteraction, getInteractions } from "./core.js";
+import { CONFIG, activeSiteCount, assaultSides, canSelectInteraction, getInteraction, getInteractions } from "./core.js";
 import { createCombatEffects } from "./combat-effects.js";
 import { structureWorkerReady } from "./expansion.js";
 import { drawFootShadow, drawLandmark, drawLocalLight, drawSelectionHalo, trail } from "./foreground-art.js";
 import { HORROR_HEIGHT, HUMAN_HEIGHT, drawHorrorActor, drawHumanActor, drawMountedPlayer, drawReformingHerald } from "./render-actors.js";
-import { drawAcolyteActor, drawCorpse, drawFixedStructure, drawOutcastFire } from "./render-expansion.js";
+import { drawAcolyteActor, drawCorpse, drawFixedStructure, drawOutcastFire, structureHeight } from "./render-expansion.js";
+import { drawPurchaseCoins } from "./render-purchases.js";
 
 const COLORS = Object.freeze({
     dread: "#7df6dc",
@@ -152,7 +153,7 @@ class WorldRenderer {
         }
     }
 
-    render(state, elapsed, destination = null) {
+    render(state, elapsed, purse = null) {
         const dt = Math.min(0.05, Math.max(0, elapsed));
         this.visualTime += dt;
         const mood = state.status === "victory" ? 1 : state.ritualStarted ? -1 : 0;
@@ -169,13 +170,13 @@ class WorldRenderer {
         context.save();
         context.translate(this.width / 2 - this.cameraX, 0);
         this.drawGround();
-        this.drawDestination(destination);
         this.drawWorldStructures(state);
         this.drawCorpses(state);
         this.drawWisps(state);
         this.drawEntities(state);
         this.combat.draw(context, this.groundY(), this.visualTime, (x) => this.visible(x));
         this.drawEffects();
+        this.drawPayment(state, purse);
         context.restore();
         switch (state.status) {
             case "title":
@@ -218,26 +219,40 @@ class WorldRenderer {
         const bounds = this.canvas.getBoundingClientRect();
         const screenX = (clientX - bounds.left) * this.width / bounds.width;
         const screenY = (clientY - bounds.top) * this.height / bounds.height;
-        const map = this.overviewPosition();
-        const onMap = Math.abs(screenY - map.y) <= 12 && screenX >= map.x && screenX <= map.x + map.width;
-        return {
-            x: onMap ? (screenX - map.x) / map.width * CONFIG.worldWidth : this.cameraX + screenX - this.width / 2,
-            aboveTrail: this.groundY() - screenY,
-            onMap,
-        };
+        return { x: this.cameraX + screenX - this.width / 2, aboveTrail: this.groundY() - screenY };
     }
 
-    drawDestination(x) {
-        if (x === null || !this.visible(x)) {
+    landmarkBounds(state, action) {
+        switch (action.kind) {
+            case "heart":
+                return { x: action.x - 74, height: 191, halfWidth: 118 };
+            case "camp":
+                return { x: action.x - 10, height: 72, halfWidth: 56 };
+            case "site": {
+                const site = state.sites.find((item) => item.id === action.targetId);
+                return { x: action.x, height: siteHeight(site), halfWidth: site.level === 0 ? 45 : 69 };
+            }
+            case "structure": {
+                const structure = state.structures.find((item) => item.id === action.targetId);
+                return { x: action.x, height: structureHeight(structure), halfWidth: 44 + structure.level * 6 };
+            }
+            default:
+                throw new Error(`Unknown landmark '${action.kind}' when drawing a purchase.`);
+        }
+    }
+
+    drawPayment(state, purse) {
+        const payment = state.purchase;
+        if (payment === null || purse === null) {
             return;
         } else {
-            const context = this.context;
-            const ground = this.groundY();
-            context.strokeStyle = "rgba(237, 201, 134, 0.82)";
-            context.lineWidth = 1;
-            context.beginPath();
-            context.ellipse(x, ground + 2, 12, 4, 0, 0, Math.PI * 2);
-            context.stroke();
+            const action = getInteraction(state, payment.targetId);
+            if (action === null) {
+                return;
+            } else {
+                drawPurchaseCoins(this.context, payment, state.time, this.landmarkBounds(state, action),
+                    this.worldPoint(purse.x, purse.y), this.groundY());
+            }
         }
     }
 
@@ -398,7 +413,7 @@ class WorldRenderer {
         const context = this.context;
         const ground = this.groundY();
         const active = site.level > 0;
-        const height = active ? 84 + site.level * 14 : 66;
+        const height = siteHeight(site);
         if (selected) {
             drawSelectionHalo(context, site.x, ground, 51 + site.level * 6);
         } else {
@@ -609,6 +624,10 @@ class WorldRenderer {
         context.fillStyle = `rgba(75, 234, 200, ${awake * 0.007})`;
         context.fillRect(0, 0, this.width, this.height);
     }
+}
+
+function siteHeight(site) {
+    return site.level > 0 ? 84 + site.level * 14 : 66;
 }
 
 function easeOut(value) {
