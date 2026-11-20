@@ -96,39 +96,38 @@ function drawHeightPreview(canvas, pixels) {
 }
 
 function bindCamera(canvas, scene, onChange) {
-  let dragging = false;
-  let previousX = 0;
-  let previousY = 0;
+  const pointers = new Map();
+  function separation() {
+    const [a, b] = pointers.values();
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
   canvas.addEventListener("pointerdown", (event) => {
-    dragging = true;
-    previousX = event.clientX;
-    previousY = event.clientY;
-    canvas.setPointerCapture(event.pointerId);
+    if (event.button === 0 && pointers.size < 2) {
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      canvas.setPointerCapture(event.pointerId);
+    }
   });
   canvas.addEventListener("pointermove", (event) => {
-    if (dragging) {
-      const deltaX = event.clientX - previousX;
-      const deltaY = event.clientY - previousY;
+    const previous = pointers.get(event.pointerId);
+    if (!previous) return;
+    const before = pointers.size === 2 ? separation() : 0;
+    pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointers.size === 2) {
+      const after = separation();
+      if (before < 1 || after < 1) return;
+      scene.camera.distance = Math.min(18, Math.max(4.5, scene.camera.distance * before / after));
+    } else {
+      const deltaX = event.clientX - previous.x;
+      const deltaY = event.clientY - previous.y;
       scene.camera.yaw = wrapYaw(scene.camera.yaw - deltaX * 0.006);
       scene.camera.pitch = Math.min(1.25, Math.max(0.02, scene.camera.pitch + deltaY * 0.005));
-      previousX = event.clientX;
-      previousY = event.clientY;
-      onChange(true);
-    } else {
-      canvas.style.cursor = "grab";
     }
+    onChange(true);
   });
-  const finishDrag = (event) => {
-    if (dragging) {
-      dragging = false;
-      canvas.releasePointerCapture(event.pointerId);
-      onChange(true);
-    } else {
-      canvas.style.cursor = "grab";
-    }
-  };
+  const finishDrag = (event) => pointers.delete(event.pointerId);
   canvas.addEventListener("pointerup", finishDrag);
   canvas.addEventListener("pointercancel", finishDrag);
+  canvas.addEventListener("lostpointercapture", finishDrag);
   canvas.addEventListener("wheel", (event) => {
     event.preventDefault();
     scene.camera.distance = Math.min(18, Math.max(4.5, scene.camera.distance + event.deltaY * 0.008));
@@ -153,6 +152,12 @@ function bindCamera(canvas, scene, onChange) {
 
 export function setupInterface(scene, handlers) {
   const canvas = requiredElement("viewport");
+  const controls = requiredElement("toggle-controls");
+  controls.addEventListener("click", () => {
+    const open = requiredElement("world-controls").parentElement.classList.toggle("inspector-open");
+    controls.setAttribute("aria-expanded", String(open));
+  });
+  requiredElement("exit-fullscreen").addEventListener("click", handlers.fullscreen);
   const seed = requiredElement("seed");
   const palette = requiredElement("palette");
   const quality = requiredElement("quality");

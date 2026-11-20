@@ -116,15 +116,18 @@ float riverWaterMask(vec2 point) {
   return water * river.w * u_riverFlow;
 }
 
-float terrainHeight(vec2 point) {
+float baseTerrainHeight(vec2 point) {
+  float outerRadius = u_islandRadius * 1.08 * 1.08;
+  if (dot(point, point) > outerRadius * outerRadius) return -0.72;
   float seed = u_seed * 0.013;
+  float coastNoise = fbm(point * 0.44 + vec2(7.1, -4.3), seed + 3.9);
+  vec2 radii = vec2(u_islandRadius * (0.84 + coastNoise * 0.22), u_islandRadius * 1.08);
+  float radius = length(point / radii);
+  if (radius >= 1.08) return -0.72;
   float qx = fbm(point * 0.38, seed + 1.7);
   float qz = fbm(point * 0.38 + vec2(5.2, -3.1), seed + 8.3);
   float warp = 1.1 + u_ruggedness * 1.35;
   vec2 warped = point + (vec2(qx, qz) - 0.5) * warp;
-  float coastNoise = fbm(point * 0.44 + vec2(7.1, -4.3), seed + 3.9);
-  vec2 radii = vec2(u_islandRadius * (0.84 + coastNoise * 0.22), u_islandRadius * 1.08);
-  float radius = length(point / radii);
   float island = 1.0 - smoothstep(0.12, 1.08, radius);
   float dome = pow(max(0.0, island), 0.92);
   float beachShelfMask = 1.0 - smoothstep(0.88, 1.08, radius);
@@ -145,7 +148,11 @@ float terrainHeight(vec2 point) {
   float detailStrength = mix(0.14, 1.0, mountainMask);
   float surfaceDetail = dome * detailNoise * u_detail * u_ruggedness * 0.72 * detailStrength;
   float erosionCut = dome * mountainMask * channels * u_erosion * 0.46;
-  float baseHeight = -0.72 + beachShelfHeight + lowlandShelfHeight + centralPeak + ridgeHeight + surfaceDetail - erosionCut;
+  return -0.72 + beachShelfHeight + lowlandShelfHeight + centralPeak + ridgeHeight + surfaceDetail - erosionCut;
+}
+
+float terrainHeight(vec2 point) {
+  float baseHeight = baseTerrainHeight(point);
   if (u_riverFlow <= 0.0 || point.y < u_islandRadius * 0.05 - 0.14 || point.y > u_islandRadius * 1.10 + 0.20) {
     return baseHeight;
   } else {
@@ -330,32 +337,15 @@ float shadowSceneField(vec3 point) {
   return min(ground.x, treeShadowField(point, ground.x));
 }
 
-vec2 marchScene(vec3 rayOrigin, vec3 rayDirection) {
+vec2 marchScene(vec3 rayOrigin, vec3 rayDirection, float limit) {
   float distanceAlongRay = 0.02;
-  float material = 0.0;
-  float hit = 0.0;
-  bool marching = true;
-  for (int stepIndex = 0; stepIndex < 196; stepIndex += 1) {
-    if (marching && stepIndex < u_steps) {
-      vec2 field = sceneField(rayOrigin + rayDirection * distanceAlongRay);
-      float epsilon = 0.0012 + distanceAlongRay * 0.00045;
-      if (field.x < epsilon) {
-        material = field.y;
-        hit = 1.0;
-        marching = false;
-      } else {
-        distanceAlongRay += clamp(field.x * 0.82, 0.006, 0.55);
-        if (distanceAlongRay > FAR_DISTANCE) {
-          marching = false;
-        } else {
-          marching = true;
-        }
-      }
-    } else {
-      marching = false;
-    }
+  for (int stepIndex = 0; stepIndex < u_steps && distanceAlongRay < limit; stepIndex += 1) {
+    vec2 field = sceneField(rayOrigin + rayDirection * distanceAlongRay);
+    float epsilon = 0.0012 + distanceAlongRay * 0.00045;
+    if (field.x < epsilon) return vec2(distanceAlongRay, field.y);
+    distanceAlongRay += clamp(field.x * 0.82, 0.006, 0.55);
   }
-  return vec2(mix(FAR_DISTANCE, distanceAlongRay, hit), material);
+  return vec2(FAR_DISTANCE, 0.0);
 }
 
 vec3 surfaceNormal(vec3 point) {
@@ -693,14 +683,14 @@ float rainAmount(vec2 pixel) {
 }
 
 void main() {
-  vec2 pixel = (gl_FragCoord.xy * 2.0 - u_resolution) / u_resolution.y;
+  vec2 pixel = (gl_FragCoord.xy * 2.0 - u_resolution) / min(u_resolution.x, u_resolution.y);
   vec3 target = vec3(0.0, 1.05, 0.0);
   vec3 orbit = vec3(cos(u_pitch) * sin(u_yaw), sin(u_pitch), cos(u_pitch) * cos(u_yaw));
   vec3 rayOrigin = target + orbit * u_distance;
   vec3 rayDirection = normalize(cameraBasis(rayOrigin, target) * vec3(pixel, 1.72));
-  vec2 hit = marchScene(rayOrigin, rayDirection);
   float waterDistance = (u_seaLevel - rayOrigin.y) / rayDirection.y;
   bool waterVisible = rayDirection.y < -0.0001 && waterDistance > 0.0 && waterDistance < FAR_DISTANCE;
+  vec2 hit = marchScene(rayOrigin, rayDirection, waterVisible ? waterDistance : FAR_DISTANCE);
   bool terrainVisible = hit.y > 0.0 && hit.x < FAR_DISTANCE;
   vec3 color;
   float surfaceDistance = FAR_DISTANCE;

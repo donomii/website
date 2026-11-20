@@ -1,4 +1,4 @@
-import { FRAGMENT_SHADER, VERTEX_SHADER } from "./shaders.js?v=5.2";
+import { FRAGMENT_SHADER, VERTEX_SHADER } from "./shaders.js?v=5.3";
 import { PLANT_SLOT_COUNT, QUALITY_LEVELS, TREE_SLOT_COUNT } from "./types.js";
 import { createPlantInstances, createTreeInstances, getRiverRoute } from "./terrain.js";
 

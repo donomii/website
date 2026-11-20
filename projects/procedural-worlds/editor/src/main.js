@@ -1,9 +1,9 @@
 import { parseSceneDocument, resetCamera, serializeSceneDocument, wrapYaw } from "./config.js";
-import { IslandRenderer } from "./renderer.js?v=5.2";
+import { IslandRenderer } from "./renderer.js?v=5.3";
 import { createTerrainObj } from "./terrain.js";
 import { createHeightSampler } from "./height-sampler.js";
 import { cloneDefaultScene, PRESETS, SCENE_VERSION } from "./types.js";
-import { setupInterface } from "./ui.js";
+import { setupInterface } from "./ui.js?v=5.3";
 
 let scene = cloneDefaultScene();
 let renderer;
@@ -20,7 +20,7 @@ const HEIGHT_FIELD_KEYS = new Set(["seed", "islandRadius", "mountainHeight", "lo
 function markChanged(cameraOnly, changedKey) {
   dirty = true;
   if (cameraOnly) {
-    interfaceApi.setStatus("Viewpoint updated. Drag to orbit or scroll to zoom.", false);
+    interfaceApi.setStatus("Viewpoint updated.", false);
   } else {
     lastFrameTime = changedKey === "animate" ? performance.now() : lastFrameTime;
     const updateHeightPreview = changedKey === undefined || HEIGHT_FIELD_KEYS.has(changedKey);
@@ -227,9 +227,10 @@ function renderFrame(timestamp) {
   window.requestAnimationFrame(renderFrame);
 }
 
-window.addEventListener("resize", () => {
+new ResizeObserver(() => {
   dirty = true;
-});
+}).observe(interfaceApi.canvas);
+window.addEventListener("resize", () => { dirty = true; });
 
 window.__PROCEDURAL_WORLDS_READY__ = Object.freeze({
   version: SCENE_VERSION,

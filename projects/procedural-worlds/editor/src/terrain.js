@@ -64,16 +64,20 @@ export function fbm(x, z, seed, octaves = 6) {
 }
 
 function baseTerrainHeight(x, z, settings) {
+  // Even the widest noisy coast ends inside this radius. The river is carved separately.
+  const outerRadius = settings.islandRadius * 1.08 * 1.08;
+  if (x * x + z * z > outerRadius * outerRadius) return -0.72;
   const seed = settings.seed * 0.013;
+  const coastNoise = fbm(x * 0.44 + 7.1, z * 0.44 - 4.3, seed + 3.9, 6);
+  const radiusX = settings.islandRadius * (0.84 + coastNoise * 0.22);
+  const radiusZ = settings.islandRadius * 1.08;
+  const radius = Math.hypot(x / radiusX, z / radiusZ);
+  if (radius >= 1.08) return -0.72;
   const qx = fbm(x * 0.38, z * 0.38, seed + 1.7, 6);
   const qz = fbm(x * 0.38 + 5.2, z * 0.38 - 3.1, seed + 8.3, 6);
   const warp = 1.1 + settings.ruggedness * 1.35;
   const wx = x + (qx - 0.5) * warp;
   const wz = z + (qz - 0.5) * warp;
-  const coastNoise = fbm(x * 0.44 + 7.1, z * 0.44 - 4.3, seed + 3.9, 6);
-  const radiusX = settings.islandRadius * (0.84 + coastNoise * 0.22);
-  const radiusZ = settings.islandRadius * 1.08;
-  const radius = Math.hypot(x / radiusX, z / radiusZ);
   const island = 1 - smoothstep(0.12, 1.08, radius);
   const dome = Math.pow(Math.max(0, island), 0.92);
   const beachShelfMask = 1 - smoothstep(0.88, 1.08, radius);

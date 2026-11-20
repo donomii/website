@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#102f32">
   <title>Procedural Worlds</title>
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=5.3">
 </head>
 <body>
   <div class="app-shell">
@@ -24,6 +24,7 @@
         <input id="scene-file" type="file" accept=".json,.world.json,application/json" hidden>
       </nav>
       <div class="topbar-actions">
+        <button id="toggle-controls" class="chrome-button" type="button" aria-controls="world-controls" aria-expanded="false" title="Show or hide the world controls below the island">Controls</button>
         <button id="reset-camera" class="icon-button" type="button" title="Restore the default island viewpoint" aria-label="Reset camera">⌾</button>
         <button id="fullscreen" class="icon-button" type="button" title="Enter or leave full-screen viewport mode" aria-label="Toggle full screen">⛶</button>
       </div>
@@ -52,28 +53,24 @@
       </aside>
 
       <section id="viewport-shell" class="viewport-shell" aria-label="Procedural island viewport">
-        <canvas id="viewport" tabindex="0" aria-label="Ray-marched three-dimensional island. Drag to orbit and scroll to zoom."></canvas>
-        <div class="viewport-readout top-left">
-          <span class="live-dot"></span>
-          <strong>CAMERA 01</strong>
-          <span id="quality-readout">BALANCED · 132 STEPS</span>
-        </div>
-        <div class="viewport-readout top-right">
-          <span id="resolution-readout">— × —</span>
-          <span id="fps-readout">FIRST FRAME</span>
-        </div>
-        <div class="navigation-hint">
-          <span>DRAG</span> orbit
-          <span>SCROLL</span> zoom
-          <span>ARROWS</span> nudge
-        </div>
+        <canvas id="viewport" tabindex="0" aria-label="Three-dimensional island. Drag to orbit. Pinch or scroll to zoom. Use arrow keys to nudge the camera."></canvas>
+        <details class="view-info">
+          <summary title="Show camera gestures and renderer information">View info</summary>
+          <p>Drag to orbit. Pinch or scroll to zoom. Use the arrow keys to nudge the camera.</p>
+          <dl>
+            <dt>Render quality</dt><dd id="quality-readout">BALANCED · 132 STEPS</dd>
+            <dt>Canvas pixels</dt><dd id="resolution-readout">— × —</dd>
+            <dt>Frame rate</dt><dd id="fps-readout">FIRST FRAME</dd>
+          </dl>
+        </details>
+        <button id="exit-fullscreen" class="chrome-button" type="button" title="Return to the editor">Exit full screen</button>
         <div id="render-error" class="render-error" hidden>
           <strong>Renderer unavailable</strong>
           <p id="render-error-message"></p>
         </div>
       </section>
 
-      <aside class="inspector" aria-label="World controls">
+      <aside id="world-controls" class="inspector" aria-label="World controls">
         <div class="inspector-heading">
           <div>
             <span>WORLD OBJECT</span>
@@ -144,6 +141,6 @@
       <div class="technique-list"><span>SIGNED DISTANCE BOUNDS</span><span>RIVER FLOW</span><span>IRREGULAR BREAKERS</span><span>SUMMIT CLOUDS</span><span>SOFT SHADOWS</span><span>AO</span></div>
     </footer>
   </div>
-  <script type="module" src="./src/main.js?v=5.2"></script>
+  <script type="module" src="./src/main.js?v=5.3"></script>
 </body>
 </html>
