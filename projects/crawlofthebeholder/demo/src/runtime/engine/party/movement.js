@@ -301,6 +301,16 @@
       }
 
 
+      function saveStairTraversal(nextFloorIndex, direction, landing = null) {
+        changeFloor(nextFloorIndex, direction, landing);
+        // Stairs cost no turn, so the usual end-of-turn autosave does not run.
+        if (!saveGame()) {
+          setMessage(`${state.message} Stair travel could not be saved. Keep this page open; reloading may return to the previous floor.`);
+        } else {
+          return true;
+        }
+      }
+
       function useStairs() {
         if (state.victory || state.defeated) return;
         const stairs = stairsAt(state.x, state.y);
@@ -323,7 +333,7 @@
                 label: currentFloor().id
               };
             }
-            changeFloor(stairs.targetFloor, stairs.direction, stairs.landing);
+            saveStairTraversal(stairs.targetFloor, stairs.direction, stairs.landing);
           }
           return;
         }
@@ -336,13 +346,13 @@
             setMessage(runeGateMessage());
             return;
           }
-          changeFloor(state.floorIndex + 1, "down");
+          saveStairTraversal(state.floorIndex + 1, "down");
           return;
         }
         if (state.branchReturns && state.branchReturns[state.floorIndex]) {
           const ret = state.branchReturns[state.floorIndex];
           delete state.branchReturns[state.floorIndex];
-          changeFloor(ret.targetFloor, "up", ret.landing);
+          saveStairTraversal(ret.targetFloor, "up", ret.landing);
           return;
         }
         if (state.floorIndex === 0) {
@@ -360,7 +370,7 @@
           setMessage("The exit is behind you, but the prize is still below.");
           return;
         }
-        changeFloor(state.floorIndex - 1, "up");
+        saveStairTraversal(state.floorIndex - 1, "up");
       }
 
       Object.assign(context, {

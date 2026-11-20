@@ -19,6 +19,9 @@
       zot: { width: 24, height: 18, family: "basic" }
     };
     const steps = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+    // Maximum dry steps from entry to exit: small expedition, campaign, broad branch.
+    const ROUTE_STEPS = { short: 18, campaign: 24, broad: 48 };
+    const layoutRouteLimit = (width) => width > 24 ? ROUTE_STEPS.broad : width <= 18 ? ROUTE_STEPS.short : ROUTE_STEPS.campaign;
     const key = (p) => `${p.x},${p.y}`;
     const integer = (rng, lo, hi) => lo + Math.floor(rng() * (hi - lo + 1));
     const gridOf = (w, h, fill) => Array.from({ length: h }, () => Array(w).fill(fill));
@@ -283,6 +286,6 @@
       }
     }
 
-    Object.assign(context, { DCSS_LAYOUT_PROFILES: PROFILES, generateDcssLayout, layoutDistances, connectVaultEntry });
+    Object.assign(context, { DCSS_LAYOUT_PROFILES: PROFILES, generateDcssLayout, layoutDistances, layoutRouteLimit, connectVaultEntry });
   };
 }());
