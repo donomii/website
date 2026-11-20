@@ -56,6 +56,7 @@
 
       function applyRangedStatus(ranged, hit, monster = null) {
         const notes = [];
+        context.noteVrRangedStatus?.(ranged, monster);
         if (ranged.poisonTurns && hit.damage > 0 && !poisonAdapted()) {
           state.poisonedTurns = Math.max(state.poisonedTurns, ranged.poisonTurns);
           notes.push("Poison spreads.");

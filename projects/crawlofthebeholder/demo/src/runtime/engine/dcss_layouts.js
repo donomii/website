@@ -193,9 +193,11 @@
       const swamp = cfg.family === "swamp";
       const heights = gridOf(cfg.width, cfg.height, swamp ? -19 : -33);
       if (swamp) {
-        for (let y = 3; y < cfg.height - 3; y += 3) for (let x = 3; x < cfg.width - 3; x += 3) {
-          const centre = { x: x + integer(rng, -1, 1), y: y + integer(rng, -1, 1) };
-          heightPatch(heights, centre, 3, 24, [8, 22], rng);
+        // DCSS varies patch centres, radii and point counts. A full-strength
+        // patch at every regular grid point erased the interior mangrove groves.
+        for (let y = 3; y < cfg.height - 3; y += 4) for (let x = 3; x < cfg.width - 3; x += 4) {
+          const centre = { x: x + integer(rng, -3, 3), y: y + integer(rng, -3, 3) };
+          heightPatch(heights, centre, integer(rng, 2, 4), integer(rng, 5, 25), [8, 22], rng);
         }
       } else {
         const count = Math.max(2, Math.ceil(cfg.width * cfg.height / 240));

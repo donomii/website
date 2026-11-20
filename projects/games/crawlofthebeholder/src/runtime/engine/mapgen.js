@@ -351,7 +351,8 @@
         const upCell = index > 0 ? { x: startRoom.x, y: startRoom.y } : null;
 
         if (opts.vaults && opts.vaults.length) embedVault(layout, pick(opts.vaults), 0, rng);
-        const far = [...context.layoutDistances(layout.rows, start)].filter(([cell]) => !layout.vaultCells?.has(cell) && cell !== `${start.x},${start.y}`).sort((a, b) => b[1] - a[1])[0];
+        const routeLimit = context.layoutRouteLimit(layout.width);
+        const far = [...context.layoutDistances(layout.rows, start)].filter(([cell, distance]) => distance <= routeLimit && !layout.vaultCells?.has(cell) && cell !== `${start.x},${start.y}`).sort((a, b) => b[1] - a[1])[0];
         if (far) {
           const [x, y] = far[0].split(",").map(Number);
           downCell = { x, y };

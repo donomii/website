@@ -91,7 +91,7 @@
         ["slow", subject.slowedTurns, "statusSlow", 6],
         ["might", subject.mightTurns, "statusMight", 6],
         ["rage", subject.rageTurns, "statusRage", 0],
-        ["confused", subject.dazedTurns, "statusConfused", 6],
+        ["confused", Math.max(subject.dazedTurns || 0, subject.confusedTurns || 0), "statusConfused", 6],
         ["corroded", subject.corrodedTurns, "statusCorroded", 6],
         ["constricted", subject.engulfedTurns, "statusConstricted", 11],
         ["resistance", subject.resistanceTurns, "statusResistance", 8]

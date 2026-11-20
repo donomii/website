@@ -19,6 +19,9 @@
       zot: { width: 24, height: 18, family: "basic" }
     };
     const steps = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+    // Maximum dry steps from entry to exit: small expedition, campaign, broad branch.
+    const ROUTE_STEPS = { short: 18, campaign: 24, broad: 48 };
+    const layoutRouteLimit = (width) => width > 24 ? ROUTE_STEPS.broad : width <= 18 ? ROUTE_STEPS.short : ROUTE_STEPS.campaign;
     const key = (p) => `${p.x},${p.y}`;
     const integer = (rng, lo, hi) => lo + Math.floor(rng() * (hi - lo + 1));
     const gridOf = (w, h, fill) => Array.from({ length: h }, () => Array(w).fill(fill));
@@ -190,9 +193,11 @@
       const swamp = cfg.family === "swamp";
       const heights = gridOf(cfg.width, cfg.height, swamp ? -19 : -33);
       if (swamp) {
-        for (let y = 3; y < cfg.height - 3; y += 3) for (let x = 3; x < cfg.width - 3; x += 3) {
-          const centre = { x: x + integer(rng, -1, 1), y: y + integer(rng, -1, 1) };
-          heightPatch(heights, centre, 3, 24, [8, 22], rng);
+        // DCSS varies patch centres, radii and point counts. A full-strength
+        // patch at every regular grid point erased the interior mangrove groves.
+        for (let y = 3; y < cfg.height - 3; y += 4) for (let x = 3; x < cfg.width - 3; x += 4) {
+          const centre = { x: x + integer(rng, -3, 3), y: y + integer(rng, -3, 3) };
+          heightPatch(heights, centre, integer(rng, 2, 4), integer(rng, 5, 25), [8, 22], rng);
         }
       } else {
         const count = Math.max(2, Math.ceil(cfg.width * cfg.height / 240));
@@ -283,6 +288,6 @@
       }
     }
 
-    Object.assign(context, { DCSS_LAYOUT_PROFILES: PROFILES, generateDcssLayout, layoutDistances, connectVaultEntry });
+    Object.assign(context, { DCSS_LAYOUT_PROFILES: PROFILES, generateDcssLayout, layoutDistances, layoutRouteLimit, connectVaultEntry });
   };
 }());

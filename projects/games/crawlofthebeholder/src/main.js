@@ -89,6 +89,7 @@
   runtime.installArtefacts(context);
   runtime.installCharms(context);
   runtime.installMobile(context);
+  runtime.installVrFeedback(context);
   runtime.installVr(context);
   runtime.installShortExpedition(context);
   runtime.installGameModes(context);

@@ -64,6 +64,7 @@
       let vrVrOk = false;
       let vrArOk = false;
       let vrHover = null;         // { pane, index } under the pointer, or null
+      let vrBoardHover = null;    // discovered cell inspected without spending a turn
       let vrPaletteDrawnHover = -2; // hover baked into each pane's canvas
       let vrPartyDrawnSig = null;
       let vrInvDrawnSig = null;
@@ -329,11 +330,7 @@
       }
 
       function vrCloudTexture(cloud) {
-        const assets = graphicsAssets();
-        if (cloud.kind === "poison") return assets.poisonCloud;
-        if (cloud.kind === "petrify") return assets.petrifyCloud;
-        if (cloud.kind === "flame") return assets.effectFlame;
-        return assets.fog;
+        return vrCloudGraphic(cloud);
       }
 
       // Static dungeon structure: floors, walls, doors, stairs, floor decor.
@@ -358,6 +355,7 @@
                 ? (terrain === "lava" ? "wireframe:lava" : (terrain === "water" || terrain === "deep-water") ? "wireframe:water" : "wireframe:floor")
                 : vrRenderedTile(floorTexture({ x, y }));
               surfaces.push({ kind: "floor", x, y, texture: floorTexturePath, normal: wireframe ? null : vrNormalPath(floorTexturePath), shade: wireframe ? 1 : VR_SHADE.floor });
+              surfaces.push(...(wireframe ? [] : vrShoreSurfaces(x, y)));
               const openDoor = doorCellAt(x, y) && !closedDoorAt(x, y);
               if (openDoor) {
                 const texture = wireframe ? "wireframe:open-door" : vrRenderedTile(assets.openDoor);
@@ -382,6 +380,10 @@
             if (!solid || !vrWallVisible(floorState, x, y)) continue;
             const door = inMap && closedDoorAt(x, y);
             const cell = { x, y };
+            if (!wireframe && vrSwampTreeAt(x, y)) {
+              surfaces.push({ kind: "floor", x, y, texture: vrRenderedTile(floorTexture(cell)), shade: 1 });
+              continue;
+            }
             let anyFace = false;
             for (const dir of dirs) {
               const nx = x + dir.x;
@@ -432,7 +434,7 @@
         for (const key of markCells) {
           const [x, y] = key.split(",").map(Number);
           if (!seen(x, y)) continue;
-          for (const mark of floorMarksAt(x, y).slice(-2)) {
+          for (const mark of floorMarksAt(x, y).filter((entry) => vrArtStyle() !== "classic" || entry.kind === "blood").slice(-2)) {
             const texture = vrRenderedTile(floorMarkTexture(mark));
             surfaces.push({ kind: "decal", x, y, texture, normal: vrNormalPath(texture), inset: 0.14, lift: 0.01, alpha: Math.min(0.8, 0.4 + mark.intensity * 0.1) });
           }
@@ -442,14 +444,8 @@
             surfaces.push({ kind: "decal", x: marker.x, y: marker.y, glyph: "◆", color: VR_MARKER_COLORS[marker.kind] || "#f1d07a", inset: 0.34, lift: 0.022, alpha: 0.9 });
           }
         }
-        for (const cloud of floorState.clouds) {
-          if (cloud.turns > 0 && seen(cloud.x, cloud.y)) surfaces.push({ kind: "decal", x: cloud.x, y: cloud.y, texture: vrCloudTexture(cloud), inset: 0.05, lift: 0.34, alpha: 0.55 });
-        }
-        for (const effect of state.effects) {
-          for (const cell of effect.cells) {
-            if (seen(cell.x, cell.y)) surfaces.push({ kind: "decal", x: cell.x, y: cell.y, texture: effectTexture(effect.kind), inset: 0.16, lift: 0.38, alpha: 0.78, tint: vrEffectTint(effect.kind) });
-          }
-        }
+        // Clouds stand up with the dolls; only their underlying terrain is flat.
+        // Spell artwork is also emitted upright, with the affected cell's dolls.
         // Mode 2 (Foresight): project enemy attack threats and intended steps onto the VR tabletop tiles.
         if (typeof isGameMode === "function" && isGameMode("foresight") && typeof foresightThreatCells === "function") {
           const { attacks, steps } = foresightThreatCells();
@@ -544,6 +540,34 @@
         const floor = currentFloor();
         const floorState = currentFloorState();
         const dolls = [];
+        for (const key of floorState.discovered) {
+          const [x, y] = key.split(",").map(Number);
+          const tree = !vrWireframeEnabled() && vrSwampTreeAt(x, y);
+          if (tree) {
+            dolls.push({ kind: "tree", id: `tree:${key}`, x, y, w: 1.1, h: 1.5, texture: tree.texture, facing: 0, alpha: 1 });
+          } else {
+            continue;
+          }
+        }
+        for (const [index, cloud] of floorState.clouds.entries()) {
+          if (cloud.turns > 0 && vrCellDiscovered(floorState, cloud.x, cloud.y)) {
+            dolls.push({ kind: "cloud", id: `cloud:${index}`, x: cloud.x, y: cloud.y, w: 1, h: 0.9,
+              texture: vrCloudTexture(cloud), facing: 0, alpha: 0.65 });
+          } else {
+            continue;
+          }
+        }
+        for (const [index, effect] of state.effects.entries()) {
+          for (const cell of effect.cells) {
+            if (vrCellDiscovered(floorState, cell.x, cell.y)) {
+              dolls.push({ kind: "effect", id: `effect:${index}:${cell.x},${cell.y}`, x: cell.x, y: cell.y,
+                w: 0.8, h: 0.8, texture: effectTexture(effect.kind), facing: 0, alpha: 0.78,
+                tint: vrArtStyle() === "classic" ? null : vrEffectTint(effect.kind) });
+            } else {
+              continue;
+            }
+          }
+        }
         for (const decor of floor.decor || []) {
           if (decor.kind === "floor") continue;
           if (!vrCellDiscovered(floorState, decor.x, decor.y)) continue;
@@ -607,7 +631,8 @@
           dolls.push({ kind: "ally", id: ally.id, x: ally.x, y: ally.y, w: 0.8, h: 0.8, glyph: ally.name[0].toLowerCase(), color: "#7fd08a", facing: 0, hp: ally.hp, maxHp: ally.maxHp, hpFrac: Math.max(0, Math.min(1, ally.hp / ally.maxHp)), alpha: 1 });
         }
         const partyHp = state.party.reduce((sum, member) => sum + Math.max(0, member.hp), 0);
-        dolls.push({ kind: "party", id: "party", x: state.x, y: state.y, w: 0.9, h: 0.9, glyph: "@", color: "#f1d07a", facing: vrDirYaw(state.dir), hp: partyHp, maxHp: 1, alpha: 1 });
+        dolls.push({ kind: "party", id: "party", x: state.x, y: state.y, w: 0.9, h: 0.9, glyph: "@", color: "#f1d07a", facing: vrDirYaw(state.dir), hp: partyHp, maxHp: 1, alpha: 1,
+          statuses: partyStatusOverlays().filter((overlay) => overlay.texture) });
         return { width: floor.map.width, height: floor.map.height, dolls };
       }
 
@@ -708,6 +733,8 @@
           party: state.party.map((member) => ({ name: member.name, hp: Math.max(0, member.hp), maxHp: member.maxHp })),
           mode: vrDollMode(),
           gameMode: state.gameMode || "standard",
+          inspection: vrBoardHover ? vrInspectCell(vrBoardHover.x, vrBoardHover.y) : null,
+          statuses: vrStatusInfo(state),
           hints: "Grab & place party piece to move · Drop on enemy to attack, door to open, in place to wait · Twist piece or stick turns · Drop potion on piece to heal"
         };
       }
@@ -1536,6 +1563,7 @@
           }
         }
         vrEmitFloaters(model, headModel, nowMs, translucent);
+        vrEmitBoardLabels(model, headModel, translucent);
         vrEmitTableProps(headModel, solid, translucent, nowMs);
         return { solid, translucent };
       }
@@ -1545,6 +1573,32 @@
       // miniature and status HUD instead.
       function vrEmitPartyOverlay() {
         return [];
+      }
+
+      // Short condition names stay with the miniature; explanations appear on aim.
+      function vrEmitBoardLabels(model, headModel, vertices) {
+        for (const label of vrBoardLabels()) {
+          const lines = vrWrapText(label.text, 26);
+          const x = label.x + 0.5 - model.width / 2;
+          const z = label.y + 0.5 - model.height / 2;
+          const size = 0.25;
+          const axes = vrBillboardAxes(x, 1.3, z, headModel, "billboard");
+          lines.forEach((text, row) => {
+            const lift = 1.12 + (lines.length - row - 1) * 0.3;
+            [...text].forEach((letter, index) => {
+              const off = (index - (text.length - 1) / 2) * size * 0.6;
+              const cx = x + axes.rx * off;
+              const cz = z + axes.rz * off;
+              const { rx, rz, ux, uy, uz } = axes;
+              vrPushQuad(vertices, [
+                [cx - rx * size / 2 + ux * (lift + size), uy * (lift + size), cz - rz * size / 2 + uz * (lift + size)],
+                [cx + rx * size / 2 + ux * (lift + size), uy * (lift + size), cz + rz * size / 2 + uz * (lift + size)],
+                [cx + rx * size / 2 + ux * lift, uy * lift, cz + rz * size / 2 + uz * lift],
+                [cx - rx * size / 2 + ux * lift, uy * lift, cz - rz * size / 2 + uz * lift]
+              ], vrGlyphUv(letter, "#ffe2a0"), 1, 1, 1, 1);
+            });
+          });
+        }
       }
 
       // ---------------------------------------------------------------------
@@ -1580,6 +1634,12 @@
         const w = vrHud.width;
         const h = vrHud.height;
         ctx.clearRect(0, 0, w, h);
+        if (model.inspection) {
+          drawVrInspection(ctx, w, h, model.inspection);
+          return true;
+        } else {
+          ctx.fillStyle = "#e8ddc8";
+        }
         ctx.fillStyle = "rgba(14, 12, 10, 0.86)";
         ctx.fillRect(0, 0, w, h);
         ctx.strokeStyle = "rgba(238, 193, 101, 0.4)";
@@ -1612,7 +1672,7 @@
 
         ctx.fillStyle = "#b7d2df";
         ctx.font = "26px system-ui, sans-serif";
-        ctx.fillText(`paper dolls: ${model.mode === "billboard" ? "face the player" : "rotate with the dungeon"}`, 28, 452);
+        ctx.fillText(model.statuses.length ? model.statuses.map((status) => `${status.label} ${status.turns}t`).join(" · ") : `paper dolls: ${model.mode === "billboard" ? "face the player" : "rotate with the dungeon"}`, 28, 452);
         ctx.fillStyle = "#8a8172";
         ctx.font = "20px system-ui, sans-serif";
         ctx.fillText(model.hints, 28, 486);
@@ -2118,6 +2178,38 @@
       }
 
       // The walkable, discovered tile the laser lands on (point-to-move).
+      // Dolls are raised above the tile: aiming at their artwork must inspect
+      // their own square, rather than the floor several squares behind them.
+      function vrRayBoardHit(origin, dir, head) {
+        let best = vrRayDungeonHit(origin, dir);
+        const s = vrTableTileMetres();
+        const inverse = vrQConj(vrTable.q);
+        const o = vrQRotate(inverse, [origin.x - vrTable.x, origin.y - vrTable.y, origin.z - vrTable.z]).map((v) => v / s);
+        const d = vrQRotate(inverse, [dir.x, dir.y, dir.z]).map((v) => v / s);
+        const model = vrDollModel();
+        const headModel = vrHeadToModel(head);
+        for (const doll of model.dolls.filter((doll) => !["cloud", "effect"].includes(doll.kind))) {
+          const x = doll.x + 0.5 - model.width / 2;
+          const z = doll.y + 0.5 - model.height / 2;
+          const axes = vrBillboardAxes(x, doll.h / 2, z, headModel, vrDollMode(), doll.facing || 0);
+          const normal = [-axes.rz * axes.uy, axes.rz * axes.ux - axes.rx * axes.uz, axes.rx * axes.uy];
+          const denominator = d[0] * normal[0] + d[1] * normal[1] + d[2] * normal[2];
+          if (Math.abs(denominator) < 1e-8) continue;
+          const t = ((x - o[0]) * normal[0] - o[1] * normal[1] + (z - o[2]) * normal[2]) / denominator;
+          if (t < 0.02 || (best && t >= best.t)) continue;
+          const hit = [o[0] + d[0] * t - x, o[1] + d[1] * t, o[2] + d[2] * t - z];
+          const across = hit[0] * axes.rx + hit[2] * axes.rz;
+          const up = hit[0] * axes.ux + hit[1] * axes.uy + hit[2] * axes.uz;
+          if (Math.abs(across) <= doll.w / 2 && up >= 0 && up <= doll.h) {
+            const solid = solidAt(doll.x, doll.y);
+            best = { kind: solid ? "wall" : "floor", x: doll.x, y: doll.y, t, walkable: !solid, objectId: doll.id };
+          } else {
+            continue;
+          }
+        }
+        return best;
+      }
+
       function vrAimTileForRay(origin, dir) {
         const hit = vrRayDungeonHit(origin, dir);
         return hit && hit.kind === "floor" && hit.walkable ? { x: hit.x, y: hit.y, t: hit.t } : null;
@@ -2417,13 +2509,14 @@
         const hh = frame.height / 2;
         const c = frame.center;
         const r = frame.right;
+        const up = frame.up;
         const verts = [];
         const uv = { u0: 0, v0: 0, u1: extent ? extent.u : 1, v1: extent ? extent.v : 1 };
         vrPushQuad(verts, [
-          [c.x - r.x * hw, c.y + hh, c.z - r.z * hw],
-          [c.x + r.x * hw, c.y + hh, c.z + r.z * hw],
-          [c.x + r.x * hw, c.y - hh, c.z + r.z * hw],
-          [c.x - r.x * hw, c.y - hh, c.z - r.z * hw]
+          [c.x - r.x * hw + up.x * hh, c.y + up.y * hh, c.z - r.z * hw + up.z * hh],
+          [c.x + r.x * hw + up.x * hh, c.y + up.y * hh, c.z + r.z * hw + up.z * hh],
+          [c.x + r.x * hw - up.x * hh, c.y - up.y * hh, c.z + r.z * hw - up.z * hh],
+          [c.x - r.x * hw - up.x * hh, c.y - up.y * hh, c.z - r.z * hw - up.z * hh]
         ], uv, 1, 1, 1, 1);
         return verts;
       }
@@ -2512,7 +2605,19 @@
       }
 
       function vrHudFrame(head) {
-        return vrPaneFrame("hud", head);
+        if (vrBoardHover && vrInspectCell(vrBoardHover.x, vrBoardHover.y)) {
+          const floor = currentFloor();
+          const s = vrTableTileMetres();
+          const local = vrQRotate(vrTable.q, [(vrBoardHover.x + 0.5 - floor.map.width / 2) * s,
+            1.65 * s, (vrBoardHover.y + 0.5 - floor.map.height / 2) * s]);
+          const center = { x: vrTable.x + local[0], y: vrTable.y + local[1] + 0.14, z: vrTable.z + local[2] };
+          const frame = vrBillboardFrame(center, 0.56, 0.28, head);
+          const axes = vrBillboardAxes(center.x, center.y, center.z, head, "billboard");
+          frame.up = { x: axes.ux, y: axes.uy, z: axes.uz };
+          return frame;
+        } else {
+          return vrPaneFrame("hud", head);
+        }
       }
 
       function vrControlPanelFrame(head) {
@@ -3193,12 +3298,13 @@
       function vrHandleTapRay(origin, dir, head) {
         let best = null;
         for (const key of VR_PANE_KEYS) {
+          if (key === "hud") continue;
           const hit = vrRayPanelHit(origin, dir, vrPaneFrame(key, head));
           if (!hit || hit.u < 0 || hit.u > 1 || hit.v < 0 || hit.v > 1) continue;
           if (!best || hit.t < best.t) best = { key, hit, t: hit.t };
         }
         const prop = vrRayTablePropHit(origin, dir);
-        const dungeon = vrRayDungeonHit(origin, dir);
+        const dungeon = vrRayBoardHit(origin, dir, head);
         if (prop && (!best || prop.t < best.t) && (!dungeon || prop.t <= dungeon.t)) {
           if (prop.kind === "modeTotem") return { kind: "modeTotem", modeKey: prop.modeKey };
           if (prop.kind === "tableCard") return { kind: "tableCard", cardIndex: prop.cardIndex };
@@ -3209,6 +3315,7 @@
           if (best.key === "inventory") return vrPackOperation(best.hit.index);
           return { kind: "click", pane: best.key, index: best.hit.index };
         }
+        vrBoardHover = dungeon ? { x: dungeon.x, y: dungeon.y } : null;
         return vrFloorOperation(dungeon);
       }
 
@@ -3629,6 +3736,7 @@
         vrDragGhosts = [];
         vrPieceGhosts = [];
         vrAimTiles.clear();
+        vrBoardHover = null;
         // While the Quest system menu is up (visible-blurred) the browser
         // zeroes gamepad state but keeps delivering frames — processing that
         // would read a held button as a release and fire a phantom action.
@@ -3638,7 +3746,7 @@
           vrHover = null;
           return;
         }
-        const paneFrames = VR_PANE_KEYS.map((key) => vrPaneFrame(key, head));
+        const paneFrames = VR_PANE_KEYS.filter((key) => key !== "hud").map((key) => vrPaneFrame(key, head));
         const results = { rotate: 0, scaleRate: 0, resetView: false, toggleDolls: false, ops: [], clicks: [], hover: null };
         const present = new Set();
         // One hand per PANE/item grab per frame; two hands may drag two
@@ -3706,7 +3814,7 @@
               if (!best || hit.t < best.hit.t) best = { pane: paneFrame.pane, hit };
             }
             const prop = vrRayTablePropHit(ray.origin, ray.dir);
-            const dungeon = vrRayDungeonHit(ray.origin, ray.dir);
+            const dungeon = vrRayBoardHit(ray.origin, ray.dir, head);
             if (prop && (!best || prop.t < best.hit.t) && (!dungeon || prop.t <= dungeon.t)) {
               laserEnd = prop.point;
               input.pointerBlocked = true;
@@ -3727,6 +3835,7 @@
                 laserBright = true;
               }
             } else if (dungeon) {
+              vrBoardHover = vrBoardHover || { x: dungeon.x, y: dungeon.y };
               laserEnd = { x: ray.origin.x + ray.dir.x * dungeon.t, y: ray.origin.y + ray.dir.y * dungeon.t, z: ray.origin.z + ray.dir.z * dungeon.t };
               input.pointerBlocked = true;
               if (dungeon.x === state.x && dungeon.y === state.y) {
@@ -4150,6 +4259,7 @@
         vrSupported,
         arSupported,
         vrHandleTapRay,
+        vrRayBoardHit,
         vrUsesSelectEvent,
         vrDollMode,
         vrSetDollMode,

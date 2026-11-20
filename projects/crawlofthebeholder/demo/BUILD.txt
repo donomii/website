@@ -1,7 +1,7 @@
 Crawl of the Beholder
 version: 0.3.105
 entrypoint: index.html
-app files: 108
+app files: 109
 metadata files: 3
 assets: 2084
 

@@ -19,7 +19,12 @@
         const [x, y] = cell.split(",").map(Number);
         return { x, y, distance };
       }).sort((a, b) => b.distance - a.distance);
-      const down = { x: cells[0].x, y: cells[0].y };
+      // Keep mandatory travel bounded; distant terrain remains an optional detour.
+      const routeLimit = context.layoutRouteLimit(layout.width);
+      const exit = cells.find((cell) => cell.distance <= routeLimit);
+      const down = { x: exit.x, y: exit.y };
+      const toExit = context.layoutDistances(layout.rows, down);
+      const onRoute = (cell, detour) => cell.distance + toExit.get(key(cell)) <= exit.distance + detour;
       const used = new Set([key(start), key(down)]);
       const doors = context.placeLayoutDoors(layout, rng, layout.family === "basic" ? 0.35 : 0, used);
       const floor = {
@@ -31,7 +36,8 @@
         encounters: [], floorItems: [], traps: [], decor: []
       };
       for (const field of ["floorItems", "encounters", "traps", "decor"]) {
-        for (const entity of template[field] || []) {
+        const entities = template[field] || [];
+        for (const [index, entity] of entities.entries()) {
           const water = field === "encounters" && ["water", "deep_water"].includes(entity.habitat);
           const lava = field === "encounters" && entity.habitat === "lava";
           const candidates = water || lava ? liquidCells(layout.rows, water ? "wW" : "l") : cells;
@@ -39,7 +45,23 @@
           if (!available.length) {
             throw new Error(`Cannot place ${entity.name || entity.kind} on ${template.id}: no unoccupied ${water ? "water" : lava ? "lava" : "dry"} cell away from the entrance.`);
           } else {
-            const cell = entity.kind === "quest" ? available[0] : available[Math.floor(rng() * available.length)];
+            let preferred;
+            if (entity.kind === "quest") {
+              const nearest = Math.min(...available.map((cell) => toExit.get(key(cell))));
+              preferred = available.filter((cell) => toExit.get(key(cell)) === nearest);
+            } else if (field === "floorItems" && entity.kind === "healing") {
+              preferred = available.filter((cell) => onRoute(cell, 4));
+            } else if (field === "encounters" && !water && !lava) {
+              const targetDistance = exit.distance * (index + 1) / (entities.length + 1);
+              const routeCells = available.filter((cell) => onRoute(cell, 6));
+              const error = Math.min(...routeCells.map((cell) => Math.abs(cell.distance - targetDistance)));
+              preferred = routeCells.filter((cell) => Math.abs(cell.distance - targetDistance) <= error + 2);
+            } else {
+              preferred = available;
+            }
+            // Preferred pacing is not a reason to lose required content on a crowded floor.
+            const choices = preferred.length ? preferred : available;
+            const cell = choices[Math.floor(rng() * choices.length)];
             floor[field].push({ ...clone(entity), x: cell.x, y: cell.y });
             used.add(key(cell));
           }

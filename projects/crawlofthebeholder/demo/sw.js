@@ -4,7 +4,7 @@
 // served stale until CACHE_VERSION was bumped by hand, which looked like fixes
 // "breaking again". Network-first means a reload always picks up new code.)
 
-const CACHE_VERSION = "cotb-v62-compact-route-pacing";
+const CACHE_VERSION = "cotb-v63-vr-board-feedback";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -105,6 +105,7 @@ const APP_SHELL = [
   "./src/runtime/systems/constellations.js",
   "./src/runtime/systems/charms.js",
   "./src/runtime/render/mobile.js",
+  "./src/runtime/render/vr_feedback.js",
   "./src/runtime/render/vr.js",
   "./src/runtime/systems/short_expedition.js",
   "./src/runtime/systems/game_modes.js",

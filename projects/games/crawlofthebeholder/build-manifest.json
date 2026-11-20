@@ -46,6 +46,7 @@
     "src/runtime/render/sound.js",
     "src/runtime/render/ui_chrome.js",
     "src/runtime/render/viewport_rendering.js",
+    "src/runtime/render/vr_feedback.js",
     "src/runtime/render/vr.js",
     "src/runtime/systems/alchemy.js",
     "src/runtime/systems/allies.js",

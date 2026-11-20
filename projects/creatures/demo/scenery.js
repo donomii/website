@@ -68,6 +68,118 @@ const BUILDING_DEFINITIONS = [
     {
         id: 'kaykit-well', label: 'KayKit Well', file: 'building_well_blue.gltf', height: 2.4,
         placements: [placement(-18, 30, 0)]
+    },
+    {
+        id: 'kaykit-tower-a', label: 'KayKit Tower A', file: 'building_tower_A_blue.gltf', height: 7.5,
+        placements: [placement(-18, 61, 180)]
+    },
+    {
+        id: 'kaykit-tower-b', label: 'KayKit Tower B', file: 'building_tower_B_blue.gltf', height: 6.8,
+        placements: [placement(-34, 59, 175)]
+    },
+    {
+        id: 'kaykit-tower-base', label: 'KayKit Tower Base', file: 'building_tower_base_blue.gltf', height: 4.2,
+        placements: [placement(-49, 53, 145)]
+    },
+    {
+        id: 'kaykit-catapult-tower', label: 'KayKit Catapult Tower', file: 'building_tower_catapult_blue.gltf', height: 7.2,
+        placements: [placement(-59, 40, 110)]
+    },
+    {
+        id: 'kaykit-red-castle', label: 'KayKit Red Castle', file: 'building_castle_red.gltf', height: 10,
+        placements: [placement(-58, -55, 25)]
+    },
+    {
+        id: 'kaykit-red-church', label: 'KayKit Red Church', file: 'building_church_red.gltf', height: 7,
+        placements: [placement(-43, -60, 0)]
+    },
+    {
+        id: 'kaykit-red-tavern', label: 'KayKit Red Tavern', file: 'building_tavern_red.gltf', height: 6,
+        placements: [placement(-29, -61, 0)]
+    },
+    {
+        id: 'kaykit-red-home-a', label: 'KayKit Red Home A', file: 'building_home_A_red.gltf', height: 4.8,
+        placements: [placement(-16, -62, 0)]
+    },
+    {
+        id: 'kaykit-red-home-b', label: 'KayKit Red Home B', file: 'building_home_B_red.gltf', height: 5.7,
+        placements: [placement(-4, -61, 0)]
+    },
+    {
+        id: 'kaykit-red-market', label: 'KayKit Red Market', file: 'building_market_red.gltf', height: 4.6,
+        placements: [placement(9, -61, 0)]
+    },
+    {
+        id: 'kaykit-red-blacksmith', label: 'KayKit Red Blacksmith', file: 'building_blacksmith_red.gltf', height: 5,
+        placements: [placement(23, -60, 0)]
+    },
+    {
+        id: 'kaykit-red-barracks', label: 'KayKit Red Barracks', file: 'building_barracks_red.gltf', height: 6.2,
+        placements: [placement(37, -58, -10)]
+    },
+    {
+        id: 'kaykit-red-archery-range', label: 'KayKit Red Archery Range', file: 'building_archeryrange_red.gltf', height: 5.2,
+        placements: [placement(52, -53, -45)]
+    },
+    {
+        id: 'kaykit-red-lumbermill', label: 'KayKit Red Lumbermill', file: 'building_lumbermill_red.gltf', height: 6.8,
+        placements: [placement(59, -40, -90)]
+    },
+    {
+        id: 'kaykit-red-windmill', label: 'KayKit Red Windmill', file: 'building_windmill_red.gltf', height: 7.5,
+        placements: [placement(61, -25, -90)]
+    },
+    {
+        id: 'kaykit-red-watermill', label: 'KayKit Red Watermill', file: 'building_watermill_red.gltf', height: 6.8,
+        placements: [placement(61, -9, -90)]
+    },
+    {
+        id: 'kaykit-red-mine', label: 'KayKit Red Mine', file: 'building_mine_red.gltf', height: 5.1,
+        placements: [placement(62, 7, -90)]
+    },
+    {
+        id: 'kaykit-red-well', label: 'KayKit Red Well', file: 'building_well_red.gltf', height: 2.4,
+        placements: [placement(60, 20, -90)]
+    },
+    {
+        id: 'kaykit-red-tower-a', label: 'KayKit Red Tower A', file: 'building_tower_A_red.gltf', height: 7.5,
+        placements: [placement(58, 35, -120)]
+    },
+    {
+        id: 'kaykit-red-tower-b', label: 'KayKit Red Tower B', file: 'building_tower_B_red.gltf', height: 6.8,
+        placements: [placement(51, 49, -145)]
+    },
+    {
+        id: 'kaykit-red-tower-base', label: 'KayKit Red Tower Base', file: 'building_tower_base_red.gltf', height: 4.2,
+        placements: [placement(37, 58, 180)]
+    },
+    {
+        id: 'kaykit-red-catapult-tower', label: 'KayKit Red Catapult Tower', file: 'building_tower_catapult_red.gltf', height: 7.2,
+        placements: [placement(20, 61, 180)]
+    },
+    {
+        id: 'kaykit-bridge-a', label: 'KayKit Bridge A', file: 'building_bridge_A.gltf', height: 1.2,
+        placements: [placement(4, 58, 180)]
+    },
+    {
+        id: 'kaykit-bridge-b', label: 'KayKit Bridge B', file: 'building_bridge_B.gltf', height: 1.3,
+        placements: [placement(-2, -52, 0)]
+    },
+    {
+        id: 'kaykit-destroyed-building', label: 'KayKit Destroyed Building', file: 'building_destroyed.gltf', height: 2.8,
+        placements: [placement(-61, -24, 90)]
+    },
+    {
+        id: 'kaykit-grain-store', label: 'KayKit Grain Store', file: 'building_grain.gltf', height: 2.2,
+        placements: [placement(-60, -8, 90)]
+    },
+    {
+        id: 'kaykit-scaffolding', label: 'KayKit Scaffolding', file: 'building_scaffolding.gltf', height: 5.5,
+        placements: [placement(-61, 10, 90)]
+    },
+    {
+        id: 'kaykit-stage', label: 'KayKit Stage', file: 'building_stage_A.gltf', height: 2.2,
+        placements: [placement(-57, 25, 90)]
     }
 ].map(definition => ({ ...definition, assetRoot: KAYKIT_ROOT }));
 
@@ -168,6 +280,178 @@ const NATURE_DEFINITIONS = [
     {
         id: 'kenney-mushrooms', label: 'Kenney Red Mushrooms', file: 'mushroom_redGroup.glb', height: 0.55,
         placements: [placement(-35, -17, 55), placement(-20, 35, 175), placement(36, 30, 295)]
+    },
+    {
+        id: 'kenney-cactus-short', label: 'Kenney Short Cactus', file: 'cactus_short.glb', height: 1.4,
+        placements: [placement(-52, -20, 20), placement(-55, -4, 130), placement(-48, 12, 245)]
+    },
+    {
+        id: 'kenney-cactus-tall', label: 'Kenney Tall Cactus', file: 'cactus_tall.glb', height: 2.4,
+        placements: [placement(-56, -13, 10), placement(-53, 3, 120), placement(-50, 18, 235)]
+    },
+    {
+        id: 'kenney-campfire', label: 'Kenney Stone Campfire', file: 'campfire_stones.glb', height: 0.5,
+        placements: [placement(44, 40, 35), placement(-43, 46, 210)]
+    },
+    {
+        id: 'kenney-canoe', label: 'Kenney Canoe', file: 'canoe.glb', height: 0.65,
+        placements: [placement(54, 13, 80), placement(53, 2, 95)]
+    },
+    {
+        id: 'kenney-carrots', label: 'Kenney Carrots', file: 'crop_carrot.glb', height: 0.55,
+        placements: [
+            placement(32, -28, 0), placement(36, -28, 0), placement(40, -28, 0), placement(44, -28, 0)
+        ]
+    },
+    {
+        id: 'kenney-melons', label: 'Kenney Melons', file: 'crop_melon.glb', height: 0.65,
+        placements: [
+            placement(32, -24, 0), placement(36, -24, 0), placement(40, -24, 0), placement(44, -24, 0)
+        ]
+    },
+    {
+        id: 'kenney-pumpkins', label: 'Kenney Pumpkins', file: 'crop_pumpkin.glb', height: 0.65,
+        placements: [
+            placement(32, -20, 0), placement(36, -20, 0), placement(40, -20, 0), placement(44, -20, 0)
+        ]
+    },
+    {
+        id: 'kenney-turnips', label: 'Kenney Turnips', file: 'crop_turnip.glb', height: 0.55,
+        placements: [
+            placement(32, -16, 0), placement(36, -16, 0), placement(40, -16, 0), placement(44, -16, 0)
+        ]
+    },
+    {
+        id: 'kenney-flower-purple-b', label: 'Kenney Purple Flower Clumps', file: 'flower_purpleB.glb', height: 0.65,
+        placements: [placement(-37, -31, 25), placement(-31, 33, 115), placement(31, 35, 205), placement(35, -33, 295)]
+    },
+    {
+        id: 'kenney-flower-red-b', label: 'Kenney Red Flower Clumps', file: 'flower_redB.glb', height: 0.65,
+        placements: [placement(-43, -25, 5), placement(-35, 39, 95), placement(24, 40, 185), placement(41, -31, 275)]
+    },
+    {
+        id: 'kenney-flower-yellow-b', label: 'Kenney Yellow Flower Clumps', file: 'flower_yellowB.glb', height: 0.65,
+        placements: [placement(-47, -18, 15), placement(-40, 30, 105), placement(13, 42, 195), placement(46, -22, 285)]
+    },
+    {
+        id: 'kenney-leafy-grass', label: 'Kenney Leafy Grass', file: 'grass_leafsLarge.glb', height: 0.85,
+        placements: [
+            placement(-48, -28, 10), placement(-46, 24, 75), placement(-28, 47, 140),
+            placement(8, 49, 205), placement(47, 27, 270), placement(48, -30, 335)
+        ]
+    },
+    {
+        id: 'kenney-large-log', label: 'Kenney Large Fallen Log', file: 'log_large.glb', height: 0.9,
+        placements: [placement(-48, 31, 35), placement(0, 48, 155), placement(47, -36, 275)]
+    },
+    {
+        id: 'kenney-log-stack', label: 'Kenney Log Stack', file: 'log_stack.glb', height: 1.1,
+        placements: [placement(-54, 30, 20), placement(29, 49, 145), placement(50, -42, 260)]
+    },
+    {
+        id: 'kenney-tan-mushrooms', label: 'Kenney Tan Mushrooms', file: 'mushroom_tanGroup.glb', height: 0.55,
+        placements: [placement(-45, -35, 40), placement(-38, 43, 160), placement(43, 36, 280)]
+    },
+    {
+        id: 'kenney-tall-red-mushroom', label: 'Kenney Tall Red Mushroom', file: 'mushroom_redTall.glb', height: 0.75,
+        placements: [placement(-49, -38, 60), placement(-33, 47, 180), placement(47, 32, 300)]
+    },
+    {
+        id: 'kenney-bush-small', label: 'Kenney Small Bush', file: 'plant_bushSmall.glb', height: 0.9,
+        placements: [placement(-49, -32, 30), placement(-44, 38, 120), placement(35, 45, 210), placement(48, -34, 300)]
+    },
+    {
+        id: 'kenney-bush-triangle', label: 'Kenney Triangle Bush', file: 'plant_bushTriangle.glb', height: 1.25,
+        placements: [placement(-52, -27, 45), placement(-47, 34, 135), placement(40, 41, 225), placement(51, -29, 315)]
+    },
+    {
+        id: 'kenney-rock-large-b', label: 'Kenney Large Rock B', file: 'rock_largeB.glb', height: 2.3,
+        placements: [placement(-55, 22, 25), placement(19, 51, 145), placement(53, -19, 265)]
+    },
+    {
+        id: 'kenney-rock-large-c', label: 'Kenney Large Rock C', file: 'rock_largeC.glb', height: 2.1,
+        placements: [placement(-54, -30, 55), placement(-12, 51, 175), placement(53, 27, 295)]
+    },
+    {
+        id: 'kenney-rock-tall-a', label: 'Kenney Tall Rock A', file: 'rock_tallA.glb', height: 2,
+        placements: [placement(-55, 17, 35), placement(25, 52, 155), placement(54, -14, 275)]
+    },
+    {
+        id: 'kenney-rock-tall-b', label: 'Kenney Tall Rock B', file: 'rock_tallB.glb', height: 2.2,
+        placements: [placement(-53, -35, 65), placement(-20, 52, 185), placement(54, 31, 305)]
+    },
+    {
+        id: 'kenney-obelisk', label: 'Kenney Obelisk', file: 'statue_obelisk.glb', height: 3.2,
+        placements: [placement(-46, 0, 20), placement(46, 0, 200)]
+    },
+    {
+        id: 'kenney-stone-head', label: 'Kenney Stone Head', file: 'statue_head.glb', height: 1.8,
+        placements: [placement(-45, 8, 40), placement(45, 8, 220)]
+    },
+    {
+        id: 'kenney-old-stump', label: 'Kenney Old Stump', file: 'stump_old.glb', height: 1,
+        placements: [placement(-50, 27, 25), placement(-6, 48, 145), placement(49, -38, 265)]
+    },
+    {
+        id: 'kenney-detailed-stump', label: 'Kenney Detailed Stump', file: 'stump_roundDetailed.glb', height: 1.1,
+        placements: [placement(-51, -24, 55), placement(7, 48, 175), placement(50, 29, 295)]
+    },
+    {
+        id: 'kenney-closed-tent', label: 'Kenney Closed Tent', file: 'tent_detailedClosed.glb', height: 2.2,
+        placements: [placement(40, 43, 135), placement(-39, 49, 225)]
+    },
+    {
+        id: 'kenney-open-tent', label: 'Kenney Open Tent', file: 'tent_detailedOpen.glb', height: 2.2,
+        placements: [placement(47, 39, 145), placement(-46, 45, 215)]
+    },
+    {
+        id: 'kenney-oak', label: 'Kenney Oak Tree', file: 'tree_oak.glb', height: 7.5,
+        placements: [
+            placement(-63, -42, 15), placement(-64, 28, 85), placement(-28, 64, 155),
+            placement(28, 65, 225), placement(63, 43, 305)
+        ]
+    },
+    {
+        id: 'kenney-fall-oak', label: 'Kenney Fall Oak Tree', file: 'tree_oak_fall.glb', height: 7.5,
+        placements: [
+            placement(-64, -34, 30), placement(-61, 36, 100), placement(-19, 65, 170),
+            placement(39, 62, 240), placement(64, 34, 320)
+        ]
+    },
+    {
+        id: 'kenney-fat-tree', label: 'Kenney Fat Tree', file: 'tree_fat.glb', height: 6.5,
+        placements: [
+            placement(-65, -26, 45), placement(-57, 47, 115), placement(-9, 66, 185),
+            placement(47, 57, 255), placement(65, 25, 325)
+        ]
+    },
+    {
+        id: 'kenney-fall-tree', label: 'Kenney Fall Tree', file: 'tree_default_fall.glb', height: 6,
+        placements: [
+            placement(-65, -18, 60), placement(-50, 54, 130), placement(2, 65, 200),
+            placement(55, 50, 270), placement(65, 16, 340)
+        ]
+    },
+    {
+        id: 'kenney-tall-palm', label: 'Kenney Tall Palm', file: 'tree_palmDetailedTall.glb', height: 8,
+        placements: [
+            placement(-56, -48, 20), placement(-38, -64, 90), placement(10, -65, 160),
+            placement(46, -58, 230), placement(64, -44, 300)
+        ]
+    },
+    {
+        id: 'kenney-round-pine', label: 'Kenney Round Pine', file: 'tree_pineRoundA.glb', height: 7,
+        placements: [
+            placement(-66, -10, 35), placement(-43, 59, 105), placement(11, 64, 175),
+            placement(57, 46, 245), placement(66, 8, 315)
+        ]
+    },
+    {
+        id: 'kenney-detailed-tall-pine', label: 'Kenney Detailed Tall Pine', file: 'tree_pineTallA_detailed.glb', height: 8,
+        placements: [
+            placement(-66, -2, 50), placement(-35, 63, 120), placement(20, 63, 190),
+            placement(61, 38, 260), placement(66, -2, 330)
+        ]
     }
 ].map(definition => ({ ...definition, assetRoot: KENNEY_ROOT }));
 
