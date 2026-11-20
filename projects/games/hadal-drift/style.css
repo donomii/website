@@ -7,7 +7,7 @@ body {
 }
 #ocean, canvas { width: 100%; height: 100%; display: block; touch-action: none; }
 #ocean { position: fixed; inset: 0; }
-button, select {
+button, #other-dive {
   font: inherit;
   cursor: pointer;
   color: inherit;
@@ -17,16 +17,20 @@ button, select {
   padding: .45rem .7rem;
 }
 button:disabled { opacity: .65; cursor: default; }
-button:focus-visible, select:focus-visible { outline: 2px solid #aef9ed; outline-offset: 2px; }
-#mode { margin-left: .45rem; max-width: calc(100% - 4.2rem); }
-#menu-toggle {
+button:focus-visible, a:focus-visible { outline: 2px solid #aef9ed; outline-offset: 2px; }
+#other-dive { text-decoration: none; }
+#dive-actions {
   position: fixed;
   top: max(12px, env(safe-area-inset-top));
   right: max(12px, env(safe-area-inset-right));
-  background: #082b3cd9;
-  width: 42px;
-  height: 42px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: .4rem;
+  max-width: calc(100% - 24px);
 }
+[hidden] { display: none !important; }
 #vr {
   position: fixed;
   bottom: max(20px, env(safe-area-inset-bottom));
@@ -44,21 +48,20 @@ button:focus-visible, select:focus-visible { outline: 2px solid #aef9ed; outline
   font-weight: 700;
 }
 #vr:hover { background: #ffe9c1; }
-#controls { margin: .55rem 0; }
-#controls summary { cursor: pointer; }
-#menu {
-  position: fixed;
-  top: max(62px, calc(env(safe-area-inset-top) + 50px));
-  right: max(12px, env(safe-area-inset-right));
-  width: min(320px, calc(100% - 24px));
-  max-height: calc(100% - 76px);
-  overflow: auto;
-  padding: 1rem;
-  border: 1px solid #52818d;
-  border-radius: 8px;
-  background: #092937f5;
+#log {
+  color: #ffd598;
+  background: #082b3cdb;
+  border-radius: 6px;
+  padding: .35rem .6rem;
 }
-#menu h1 { font-size: 1.3rem; margin: 0; }
-#menu p { margin: .55rem 0; }
-#log { color: #ffd598; }
-#status { color: #ffc9a7; }
+#status {
+  position: fixed;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  background: #082b3c;
+  color: #ffc9a7;
+  padding: .45rem .7rem;
+  border-radius: 6px;
+}

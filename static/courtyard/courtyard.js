@@ -30,7 +30,6 @@ const aim = document.querySelector("#aim");
 function setMenu(open) {
     document.body.toggleAttribute("data-menu-open", open);
     menuToggle.setAttribute("aria-expanded", String(open));
-    menuToggle.setAttribute("aria-label", open ? "Close gallery menu" : "Open gallery menu");
     if (open) menuToggle.focus();
     else viewport.querySelector("canvas")?.focus();
 }

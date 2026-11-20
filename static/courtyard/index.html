@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="./courtyard.css?v=20261112d">
 </head>
 <body>
-  <button id="menu-toggle" aria-label="Open gallery menu" aria-expanded="false" title="Gallery menu">☰</button>
+  <button id="menu-toggle" aria-expanded="false" aria-controls="exhibit-controls">Exhibits</button>
   <button id="vr" hidden>Enter VR</button>
   <main>
     <div id="viewport" aria-label="Walkable Roman courtyard"></div>
@@ -18,7 +18,7 @@
       <h1>The Courtyard</h1>
       <p id="status" role="status">Choose an exhibit to visit.</p>
     </header>
-    <section aria-label="Exhibits">
+    <section id="exhibit-controls" aria-label="Exhibits">
       <div id="destinations">
         <label for="destination">Choose an exhibit</label>
         <select id="destination"></select>
@@ -72,6 +72,6 @@
     {"imports":{"three":"../../projects/games/domino-rush/vendor/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
   </script>
   <script src="../../projects/starsandships/datasets.js?v=20261111"></script>
-  <script type="module" src="./courtyard.js?v=20261112d"></script>
+  <script type="module" src="./courtyard.js?v=exhibits"></script>
 </body>
 </html>
