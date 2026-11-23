@@ -4378,6 +4378,21 @@
         vrHalveNormal,
         vrAtlasAllocate,
         vrEnsureAtlasScope,
+        vrAtlasCanvas: () => {
+          vrAtlasInit();
+          return vrAtlas.canvas;
+        },
+        vrNormalAtlasCanvas: () => {
+          vrNormalAtlasInit();
+          return vrNormalAtlas.canvas;
+        },
+        vrAtlasNeedsUpdate: () => {
+          if (vrAtlas.dirtyCells && vrAtlas.dirtyCells.length > 0) {
+            vrAtlas.dirtyCells.length = 0;
+            return true;
+          }
+          return false;
+        },
         vrShaderSources: () => ({ vertex: VR_VERTEX_SHADER, fragment: VR_FRAGMENT_SHADER, vertexFloats: VR_VERTEX_FLOATS }),
         vrTableState,
         vrTableLevel,

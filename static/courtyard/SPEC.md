@@ -1,9 +1,9 @@
 # Portfolio Courtyard
 
-The scene opens unobstructed, with only a small gallery-menu icon and, in
+The scene opens unobstructed, with a labeled Exhibits button and, in
 Asteroid Farmer, the aiming crosshair. The title, status prose, navigation,
 Return button and help remain hidden until the visitor opens that menu.
-Escape or gamepad Start opens or closes it; the icon also toggles it.
+Escape, gamepad Start, or the Exhibits button opens or closes it.
 Choose an exhibit and select Visit to enter it and close the menu.
 Controls expands the input reference only on request. Project links remain
 available in the menu; standalone 2D games and the L-World editor are destination
@@ -95,7 +95,7 @@ The portfolio homepage links to a walkable Roman courtyard. The gallery has a ti
 
 Drag on the scene to look around (grab-style pan axes) and hold the right mouse button or use WASD or arrow keys to walk. Choose an exhibit in the navigation strip to jump to it. Close to an exhibit, show its summary and the link to the project. Until approached, each wall display shows a procedural mosaic. Load its existing project preview only when a visitor approaches or jumps to it. Keep project links usable when WebGL is unavailable.
 
-On a browser that supports immersive WebXR, offer Enter VR. The headset supplies the view pose. The courtyard, Datatree, Orbit, and Jump show tracked controller models and, when the headset grants hand tracking, show the tracked joints of each hand. Select by pointing and pulling the trigger or pinching.
+On a browser that supports immersive WebXR, show a prominent always-visible Enter VR button directly on the VR page (outside any menu). The headset supplies the view pose. The courtyard, Datatree, Orbit, and Jump show tracked controller models and, when the headset grants hand tracking, show the tracked joints of each hand. Select by pointing and pulling the trigger or pinching.
 
 Enter VR once for the courtyard and its connected rooms. Walk or teleport
 through open, labeled doorways to load adjacent rooms on demand in one unified
@@ -109,7 +109,7 @@ directly inside their rooms. L-World renders its spatial panels workshop
 alongside its separate full-editor link. Local file selection, downloads, and
 full text editors remain in the standalone exhibits.
 
-Movement help is available in the on-demand Controls section. No control sign appears automatically inside VR. The left thumbstick moves at up to 1.7 meters per second relative to headset direction. The right stick turns 30 degrees per push and must return toward center before turning again. With one thumbstick, use it to move. Point at any open floor through a doorway and select to teleport cleanly within walkable bounds (blocked by solid walls). Point at an exhibit panel, gallery painting, or 3D control to select it.
+Movement help is available in the on-demand Controls section. No control sign appears automatically inside VR. Use standard SteamVR / Oculus locomotion: push a thumbstick forward to cast an arc and highlight a walkable move target through open doorways (blocked by solid walls), then pull the trigger to teleport to that target; push left or right on a thumbstick to snap-turn 90 degrees in that direction and return toward center before turning again. Point at an exhibit panel, gallery painting, or 3D control with neutral stick and pull the trigger to select it.
 
 Outside immersive VR, accept gamepads that the browser maps to its standard layout. Press a button to activate a gamepad. In the courtyard, the left stick walks and strafes and the right stick looks around. In the courtyard, Datatree, and Orbit, the D-pad moves focus through visible enabled buttons and links. A or Cross activates the focused control. Ignore small stick motion around center and handle button actions once per press.
 
@@ -157,6 +157,16 @@ stone** plaque, or menu button.
 Letter fitting loads an Arch / Stepped pyramid reference bench on the courtyard's
 east side, pausing and fading out when not viewed, and can be started or
 switched via the bench's 3D plaques or gallery menu.
+
+Crawl of the Beholder tabletop VR exhibit sits on the west promenade of the
+courtyard on an ornate classical walnut and marble table (`[-5.8, -3.5]`). It
+mounts a live 3D diorama of the dungeon generated natively by the game's VR
+geometry emitter, with textured walls peeking over the table and billboarded
+party/monster dolls. Visitors interact via a tactile 3D control apron (6-way
+D-Pad movement, Attack, Interact/Door, Rest/Wait, Class Skill, Auto-Explore, and
+6 Game Mode Totems), direct board raycasting (clicking dungeon tiles to pathfind
+or fight), and an angled retro scrying console displaying party health bars,
+compass heading, floor title, combat log, and first-person viewport.
 
 The courtyard persists the visitor's last valid position and view orientation in
 `localStorage` (`courtyard.pose.v1`) so reloading restores them in place across

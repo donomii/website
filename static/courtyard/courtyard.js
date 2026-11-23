@@ -203,6 +203,7 @@ const galleryMaps = [
 const CARVE_POS = [-4.2, -7.2];
 const STARS_POS = [3.4, -7.2];
 const FIT_POS = [6.4, -3.5];
+const BEHOLDER_POS = [-5.8, -3.5];
 
 const exhibits = [
     { x: galleryMaps[0].x, z: galleryMaps[0].z, image: null, note: "Entirety · Explore Mediterranean, Japan, Europe, and Africa gallery maps on the south-west and south-east walls." },
@@ -210,6 +211,7 @@ const exhibits = [
     { x: STARS_POS[0], z: STARS_POS[1], image: null, note: "Stars & Ships · Free-standing 3D stars and ships arching into a living roof over the courtyard." },
     { x: 0, z: 4.2, image: null, note: "Creatures · Fox and Bunny explore the courtyard — call them over to meet them." },
     { x: FIT_POS[0], z: FIT_POS[1], image: null, note: "Letter fitting · Choose a reference shape on the left and reconstruct it with solid letters on the right." },
+    { x: BEHOLDER_POS[0], z: BEHOLDER_POS[1], image: null, note: "Crawl of the Beholder · Tabletop VR dungeon crawl with retro 3D diorama, party status, and live controls." },
 ];
 
 const scene = new T.Scene();
@@ -369,9 +371,10 @@ function buildCourtyard() {
         }
     }
 
-    // Obstacle reservations for main-courtyard carving & letter-fit pedestals.
+    // Obstacle reservations for main-courtyard carving, letter-fit, and beholder pedestals.
     obstacles.push({ kind: "circle", x: CARVE_POS[0], z: CARVE_POS[1], r: 1.05 });
     obstacles.push({ kind: "box", x: FIT_POS[0], z: FIT_POS[1], hx: 2.25, hz: 1.25 });
+    obstacles.push({ kind: "box", x: BEHOLDER_POS[0], z: BEHOLDER_POS[1], hx: 0.95, hz: 1.25 });
 
     // Mount framed Entirety Map Gallery pictures along the SW & SE courtyard gallery walls.
     for (const [index, entry] of galleryMaps.entries()) {
@@ -603,6 +606,24 @@ function loadStarsExhibit() {
     return starsRequest;
 }
 
+let beholderRequest = null;
+let beholderState = null;
+
+function loadBeholder() {
+    if (!beholderRequest) {
+        beholderRequest = import(mod("./beholder-table.js")).then(async m => {
+            const api = await m.createBeholderExhibit(scene, BEHOLDER_POS[0], BEHOLDER_POS[1]);
+            beholderState = createExhibitFadeState(api.group, api, new T.Vector3(BEHOLDER_POS[0], 0.9, BEHOLDER_POS[1]));
+            return beholderState;
+        }).catch(err => {
+            console.warn("Could not load Crawl of the Beholder exhibit", err);
+            beholderRequest = null;
+            return null;
+        });
+    }
+    return beholderRequest;
+}
+
 // Navigation & smooth sliding collision across the continuous world.
 let yaw = 0;
 let pitch = 0;
@@ -793,6 +814,14 @@ function visitExhibit(index) {
     } else if (index === 4) {
         rig.position.set(FIT_POS[0], 0, FIT_POS[1] + 2.7);
         loadLetterFit();
+    } else if (index === 5) {
+        rig.position.set(BEHOLDER_POS[0] + 1.45, 0, BEHOLDER_POS[1]);
+        loadBeholder();
+        yaw = Math.PI / 2;
+        pitch = 0.08;
+        pendingVrYaw = 0;
+        camera.rotation.set(pitch, yaw, 0, "YXZ");
+        return;
     }
     yaw = 0;
     pitch = index === 2 ? 0.14 : 0;
@@ -810,6 +839,7 @@ async function restoreSavedPose(pose) {
     loadCreatures();
     loadLetterFit();
     loadStarsExhibit();
+    loadBeholder();
     const restoreZone = zoneAt(pose.x, pose.z, 0) || zoneAt(pose.x, pose.z, 0.75);
     if (!restoreZone || restoreZone.id === "courtyard") return;
     const st = await loadZone(restoreZone.id);
@@ -915,8 +945,10 @@ function updateContextUI(zone) {
         isLookedAt(ctxPoint.set(STARS_POS[0], 2.2, STARS_POS[1]), 0.12, 2.5, 6.5));
     const nearFit = Math.hypot(FIT_POS[0] - rig.position.x, FIT_POS[1] - rig.position.z) < 4.0 &&
         isLookedAt(ctxPoint.set(FIT_POS[0], 1.1, FIT_POS[1]), 0.12, 2.2, 5.5);
+    const nearBeholder = Math.hypot(BEHOLDER_POS[0] - rig.position.x, BEHOLDER_POS[1] - rig.position.z) < 4.6 &&
+        isLookedAt(ctxPoint.set(BEHOLDER_POS[0], 0.9, BEHOLDER_POS[1]), 0.12, 2.2, 5.8);
     const nearCreatures = rig.position.z > 1.5 && Math.hypot(rig.position.x, rig.position.z - 4.4) < 5.0;
-    const index = nearbyMap ? 0 : nearCarve ? 1 : nearStars ? 2 : nearFit ? 4 : nearCreatures ? 3 : -1;
+    const index = nearbyMap ? 0 : nearCarve ? 1 : nearStars ? 2 : nearFit ? 4 : nearBeholder ? 5 : nearCreatures ? 3 : -1;
 
     callCreatures.hidden = index !== 3;
     carveButton.hidden = index !== 1;
@@ -1028,6 +1060,13 @@ function updateRoomsAndExhibits(now, frame, dt, frameMs, renderer) {
         applyFade(starsState, nextFade);
         if (active && nextFade > 0.05) starsState.api.update(dt);
     }
+
+    if (beholderState) {
+        const active = nearCourtyard && (currentId === "courtyard" ? isLookedAt(beholderState.focalWorld, 0.22, 3.2, 28) : courtyardDoorLook);
+        const nextFade = active ? Math.min(1, beholderState.fade + fadeStep) : Math.max(0, beholderState.fade - fadeStep);
+        applyFade(beholderState, nextFade);
+        if (active && nextFade > 0.05) beholderState.api.update(dt, renderer.xr.getSession(), renderer);
+    }
 }
 
 // Unified interaction handler (desktop click, crosshair Space/A, and XR select).
@@ -1040,6 +1079,12 @@ function interactAlongRay(ray) {
     if (activeRoom?.room?.select?.(ray)) return true;
 
     // 2. Courtyard interactive objects (blocked behind solid walls).
+    if (beholderState?.fade > 0.1) {
+        const hit = ray.intersectObjects(beholderState.api.targets, false)[0];
+        if (hit && hit.distance < wallDist) {
+            if (beholderState.api.select(ray)) return true;
+        }
+    }
     if (carvingState?.fade > 0.1) {
         const hit = ray.intersectObjects(carvingState.api.targets, false)[0];
         if (hit && hit.distance < wallDist) {
@@ -1573,6 +1618,14 @@ function start() {
 
 try {
     start();
+    window.__courtyard = {
+        T,
+        get rig() { return rig; },
+        get camera() { return camera; },
+        get scene() { return scene; },
+        get beholderState() { return beholderState; },
+        interactAlongRay
+    };
 } catch (error) {
     setMenu(true);
     document.querySelector("#destinations").hidden = true;
