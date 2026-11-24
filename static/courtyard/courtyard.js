@@ -371,10 +371,9 @@ function buildCourtyard() {
         }
     }
 
-    // Obstacle reservations for main-courtyard carving, letter-fit, and beholder pedestals.
+    // Obstacle reservations for main-courtyard carving & letter-fit pedestals.
     obstacles.push({ kind: "circle", x: CARVE_POS[0], z: CARVE_POS[1], r: 1.05 });
     obstacles.push({ kind: "box", x: FIT_POS[0], z: FIT_POS[1], hx: 2.25, hz: 1.25 });
-    obstacles.push({ kind: "box", x: BEHOLDER_POS[0], z: BEHOLDER_POS[1], hx: 1.05, hz: 1.05 });
 
     // Mount framed Entirety Map Gallery pictures along the SW & SE courtyard gallery walls.
     for (const [index, entry] of galleryMaps.entries()) {
@@ -611,7 +610,7 @@ let beholderState = null;
 
 function loadBeholder() {
     if (!beholderRequest) {
-        beholderRequest = import("./beholder-table.js?v=20261124").then(async m => {
+        beholderRequest = import("./beholder-table.js?v=20261124b").then(async m => {
             const api = await m.createBeholderExhibit(scene, BEHOLDER_POS[0], BEHOLDER_POS[1]);
             beholderState = createExhibitFadeState(api.group, api, new T.Vector3(BEHOLDER_POS[0], 0.9, BEHOLDER_POS[1]));
             return beholderState;
@@ -1205,7 +1204,7 @@ function walk(dt, [strafe = 0, travel = 0, lookX = 0, lookY = 0] = []) {
 }
 
 const up = new T.Vector3(0, 1, 0);
-const VR_TURN_ANGLE = Math.PI / 2;
+const VR_TURN_ANGLE = Math.PI / 4;
 const TELEPORT_STEPS = 28;
 const TELEPORT_DT = 0.085;
 const TELEPORT_SPEED = 10.5;
@@ -1216,8 +1215,20 @@ let turnReady = true;
 let sessionHasStick = false;
 let teleportTarget = null;
 let teleportVisual = null;
+let worldGrab = null;
+const grabTmpVec = new T.Vector3();
+const grabFwd = new T.Vector3();
 const headOffset = new T.Vector3();
 const vrInputs = [];
+
+function controllerLocalYaw(controller) {
+    grabFwd.set(0, 0, -1).applyQuaternion(controller.quaternion);
+    if (Math.hypot(grabFwd.x, grabFwd.z) > 0.15) {
+        return Math.atan2(-grabFwd.x, -grabFwd.z);
+    }
+    grabFwd.set(1, 0, 0).applyQuaternion(controller.quaternion);
+    return Math.atan2(grabFwd.z, grabFwd.x);
+}
 
 function createTeleportVisual() {
     if (teleportVisual) return teleportVisual;
@@ -1369,6 +1380,24 @@ function walkVr(renderer, frame) {
         return;
     }
 
+    if (worldGrab) {
+        const ctrl = worldGrab.controller;
+        if (!ctrl.visible) {
+            worldGrab = null;
+        } else {
+            const curLocalYaw = controllerLocalYaw(ctrl);
+            let stepYaw = curLocalYaw - worldGrab.lastLocalYaw;
+            stepYaw = ((stepYaw + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+            worldGrab.accumYaw += stepYaw;
+            worldGrab.lastLocalYaw = curLocalYaw;
+            rig.rotation.y = worldGrab.startRigYaw - worldGrab.accumYaw;
+            rig.updateMatrixWorld(true);
+            ctrl.getWorldPosition(grabTmpVec);
+            rig.position.add(worldGrab.anchorWorld).sub(grabTmpVec);
+            rig.updateMatrixWorld(true);
+        }
+    }
+
     headOffset.copy(pose.transform.position).setY(0).applyAxisAngle(up, rig.rotation.y);
     const sticks = vrSticks(frame.session.inputSources);
     sessionHasStick = sticks.length > 0;
@@ -1424,12 +1453,29 @@ async function bindVR(renderer, inputs) {
             input.handedness = event.data?.handedness || "";
         });
         controller.addEventListener("disconnected", () => {
+            if (worldGrab?.input === input) worldGrab = null;
             if (teleportTarget?.input === input) {
                 teleportVisual?.hide();
                 teleportTarget = null;
             }
             input.source = null;
             input.handedness = "";
+        });
+        controller.addEventListener("squeezestart", () => {
+            if (!controller.visible) return;
+            rig.updateMatrixWorld(true);
+            const startLocalYaw = controllerLocalYaw(controller);
+            worldGrab = {
+                input,
+                controller,
+                anchorWorld: controller.getWorldPosition(new T.Vector3()),
+                lastLocalYaw: startLocalYaw,
+                accumYaw: 0,
+                startRigYaw: rig.rotation.y,
+            };
+        });
+        controller.addEventListener("squeezeend", () => {
+            if (worldGrab?.input === input) worldGrab = null;
         });
         controller.addEventListener("selectstart", () => {
             if (!controller.visible) {
@@ -1480,6 +1526,7 @@ async function bindVR(renderer, inputs) {
             teleportVisual?.hide();
             rig.rotation.y = pendingVrYaw;
             session.addEventListener("end", () => {
+                worldGrab = null;
                 teleportVisual?.hide();
                 teleportTarget = null;
                 turnReady = true;

@@ -312,30 +312,6 @@ export async function createBeholderExhibit(scene, posX = -5.8, posZ = -3.5) {
         group.add(leg, capTop, capBot);
     }
 
-    // Small front brass title plaque on the table edge
-    const plaqueCanvas = document.createElement("canvas");
-    plaqueCanvas.width = 768;
-    plaqueCanvas.height = 112;
-    const pCtx = plaqueCanvas.getContext("2d");
-    pCtx.fillStyle = "#1b130d";
-    pCtx.fillRect(0, 0, 768, 112);
-    pCtx.strokeStyle = "#c8963e";
-    pCtx.lineWidth = 6;
-    pCtx.strokeRect(8, 8, 752, 96);
-    pCtx.fillStyle = "#ffdf96";
-    pCtx.font = "bold 40px Georgia, serif";
-    pCtx.textAlign = "center";
-    pCtx.fillText("CRAWL OF THE BEHOLDER · VR", 384, 52);
-    pCtx.font = "24px Georgia, serif";
-    pCtx.fillStyle = "#d4b578";
-    pCtx.fillText("Point & click tiles, totems, or floating panes", 384, 88);
-    const plaqueMesh = new T.Mesh(
-        new T.PlaneGeometry(0.92, 0.135),
-        new T.MeshBasicMaterial({ map: new T.CanvasTexture(plaqueCanvas) })
-    );
-    plaqueMesh.position.set(0, 0.785, 0.955);
-    group.add(plaqueMesh);
-
     // 3. Real 3D CotB VR Diorama (using CotB's own shaders, atlas & normal atlas)
     const dioramaGroup = new T.Group();
     dioramaGroup.position.set(0, 0.836, 0);
@@ -530,8 +506,8 @@ export async function createBeholderExhibit(scene, posX = -5.8, posZ = -3.5) {
             const activeCam = (renderer?.xr?.isPresenting && renderer.xr.getCamera) ? renderer.xr.getCamera() : camera;
             stepFrame(performance.now(), activeCam);
         },
-        canStand(x, z) {
-            return Math.hypot(x - posX, z - posZ) >= 1.3;
+        canStand() {
+            return true;
         },
         context: ctx,
         api: {
