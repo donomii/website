@@ -374,7 +374,7 @@ function buildCourtyard() {
     // Obstacle reservations for main-courtyard carving, letter-fit, and beholder pedestals.
     obstacles.push({ kind: "circle", x: CARVE_POS[0], z: CARVE_POS[1], r: 1.05 });
     obstacles.push({ kind: "box", x: FIT_POS[0], z: FIT_POS[1], hx: 2.25, hz: 1.25 });
-    obstacles.push({ kind: "box", x: BEHOLDER_POS[0], z: BEHOLDER_POS[1], hx: 0.95, hz: 1.25 });
+    obstacles.push({ kind: "box", x: BEHOLDER_POS[0], z: BEHOLDER_POS[1], hx: 1.05, hz: 1.05 });
 
     // Mount framed Entirety Map Gallery pictures along the SW & SE courtyard gallery walls.
     for (const [index, entry] of galleryMaps.entries()) {
@@ -611,7 +611,7 @@ let beholderState = null;
 
 function loadBeholder() {
     if (!beholderRequest) {
-        beholderRequest = import(mod("./beholder-table.js")).then(async m => {
+        beholderRequest = import("./beholder-table.js?v=20261124").then(async m => {
             const api = await m.createBeholderExhibit(scene, BEHOLDER_POS[0], BEHOLDER_POS[1]);
             beholderState = createExhibitFadeState(api.group, api, new T.Vector3(BEHOLDER_POS[0], 0.9, BEHOLDER_POS[1]));
             return beholderState;
@@ -815,10 +815,10 @@ function visitExhibit(index) {
         rig.position.set(FIT_POS[0], 0, FIT_POS[1] + 2.7);
         loadLetterFit();
     } else if (index === 5) {
-        rig.position.set(BEHOLDER_POS[0] + 1.45, 0, BEHOLDER_POS[1]);
+        rig.position.set(BEHOLDER_POS[0] + 1.95, 0, BEHOLDER_POS[1]);
         loadBeholder();
         yaw = Math.PI / 2;
-        pitch = 0.08;
+        pitch = -0.34;
         pendingVrYaw = 0;
         camera.rotation.set(pitch, yaw, 0, "YXZ");
         return;
@@ -1065,7 +1065,7 @@ function updateRoomsAndExhibits(now, frame, dt, frameMs, renderer) {
         const active = nearCourtyard && (currentId === "courtyard" ? isLookedAt(beholderState.focalWorld, 0.22, 3.2, 28) : courtyardDoorLook);
         const nextFade = active ? Math.min(1, beholderState.fade + fadeStep) : Math.max(0, beholderState.fade - fadeStep);
         applyFade(beholderState, nextFade);
-        if (active && nextFade > 0.05) beholderState.api.update(dt, renderer.xr.getSession(), renderer);
+        if (active && nextFade > 0.05) beholderState.api.update(dt, renderer.xr.getSession(), renderer, camera);
     }
 }
 
@@ -1542,6 +1542,7 @@ function start() {
         loadCarving();
         loadCreatures();
         loadLetterFit();
+        loadBeholder();
     } else if (resolvedRoom && roomStates.has(resolvedRoom)) {
         goToZone(resolvedRoom);
     } else if (savedPose) {
@@ -1551,6 +1552,7 @@ function start() {
         loadCreatures();
         loadLetterFit();
         loadStarsExhibit();
+        loadBeholder();
     }
 
     mapChoices.querySelectorAll("button").forEach(button =>

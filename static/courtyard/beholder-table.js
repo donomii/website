@@ -1,9 +1,9 @@
 import * as T from "three";
 
 // Crawl of the Beholder VR Tabletop Exhibit
-// Reuses the complete original JavaScript codebase of Crawl of the Beholder
-// by mounting a 3D diorama, interactive 3D control console, and retro scrying screen
-// on a carved marble table in the Roman Courtyard.
+// Embeds the actual Crawl of the Beholder VR tabletop diorama, shaders, normal-mapped
+// tile atlas, 3D paper dolls, floating damage numbers, 3D mode totems/cards, and
+// floating VR panes directly onto a table in the Roman Courtyard.
 
 const COTB_BASE = "/projects/games/crawlofthebeholder/";
 const COTB_SCRIPTS = [
@@ -161,56 +161,81 @@ async function ensureCotBEngine() {
     return cotbLoadPromise;
 }
 
-function updateGeometryFromVerts(geom, verts) {
+// Verbatim CotB VR shaders adapted to Three.js ShaderMaterial built-in matrices.
+const COTB_THREE_VERT = `
+attribute vec3 aPos;
+attribute vec2 aUv;
+attribute vec4 aColor;
+attribute vec3 aTangent;
+attribute vec3 aBitangent;
+attribute float aHasNormal;
+varying vec2 vUv;
+varying vec4 vColor;
+varying vec3 vTangent;
+varying vec3 vBitangent;
+varying float vHasNormal;
+void main() {
+    vUv = aUv;
+    vColor = aColor;
+    mat3 modelBasis = mat3(modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz);
+    vTangent = normalize(modelBasis * aTangent);
+    vBitangent = normalize(modelBasis * aBitangent);
+    vHasNormal = aHasNormal;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(aPos, 1.0);
+}
+`;
+
+const COTB_THREE_FRAG = `
+uniform sampler2D uTex;
+uniform sampler2D uNormalTex;
+uniform vec3 uLightDir;
+uniform float uCutoff;
+varying vec2 vUv;
+varying vec4 vColor;
+varying vec3 vTangent;
+varying vec3 vBitangent;
+varying float vHasNormal;
+void main() {
+    vec4 color = texture2D(uTex, vUv) * vColor;
+    if (color.a < uCutoff) discard;
+    if (vHasNormal > 0.5) {
+        vec3 mapped = texture2D(uNormalTex, vUv).rgb * 2.0 - 1.0;
+        vec3 tileUp = normalize(-vBitangent);
+        vec3 surfaceNormal = normalize(cross(vTangent, tileUp));
+        vec3 worldNormal = normalize(vTangent * mapped.x + tileUp * mapped.y + surfaceNormal * mapped.z);
+        float diffuse = max(dot(worldNormal, normalize(uLightDir)), 0.0);
+        color.rgb *= 0.55 + diffuse * 0.45;
+    }
+    gl_FragColor = color;
+}
+`;
+
+function setInterleavedVerts(geom, verts) {
     if (!verts || verts.length === 0) {
-        geom.setAttribute("position", new T.BufferAttribute(new Float32Array(0), 3));
-        geom.setAttribute("uv", new T.BufferAttribute(new Float32Array(0), 2));
-        geom.setAttribute("color", new T.BufferAttribute(new Float32Array(0), 3));
+        geom.setDrawRange(0, 0);
         return;
     }
-    const count = verts.length / 16;
-    const positions = new Float32Array(count * 3);
-    const uvs = new Float32Array(count * 2);
-    const colors = new Float32Array(count * 3);
-    for (let i = 0, p = 0, u = 0, c = 0; i < verts.length; i += 16) {
-        positions[p++] = verts[i];
-        positions[p++] = verts[i + 1];
-        positions[p++] = verts[i + 2];
-        uvs[u++] = verts[i + 3];
-        uvs[u++] = verts[i + 4];
-        colors[c++] = verts[i + 5];
-        colors[c++] = verts[i + 6];
-        colors[c++] = verts[i + 7];
-    }
-    geom.setAttribute("position", new T.BufferAttribute(positions, 3));
-    geom.setAttribute("uv", new T.BufferAttribute(uvs, 2));
-    geom.setAttribute("color", new T.BufferAttribute(colors, 3));
-    geom.computeVertexNormals();
+    const arr = new Float32Array(verts);
+    const count = Math.floor(arr.length / 16);
+    const ib = new T.InterleavedBuffer(arr, 16);
+    geom.setAttribute("position", new T.InterleavedBufferAttribute(ib, 3, 0));
+    geom.setAttribute("aPos", new T.InterleavedBufferAttribute(ib, 3, 0));
+    geom.setAttribute("aUv", new T.InterleavedBufferAttribute(ib, 2, 3));
+    geom.setAttribute("aColor", new T.InterleavedBufferAttribute(ib, 4, 5));
+    geom.setAttribute("aTangent", new T.InterleavedBufferAttribute(ib, 3, 9));
+    geom.setAttribute("aBitangent", new T.InterleavedBufferAttribute(ib, 3, 12));
+    geom.setAttribute("aHasNormal", new T.InterleavedBufferAttribute(ib, 1, 15));
+    geom.setDrawRange(0, count);
 }
 
 export async function createBeholderExhibit(scene, posX = -5.8, posZ = -3.5) {
     await ensureCotBEngine();
 
-    // 1. Core Headless Game Context
-    const viewportDiv = document.createElement("div");
-    viewportDiv.style.width = "400px";
-    viewportDiv.style.height = "260px";
-    viewportDiv.getBoundingClientRect = () => ({
-        width: 400,
-        height: 260,
-        left: 0,
-        top: 0,
-        right: 400,
-        bottom: 260
-    });
-
+    // 1. Headless CotB Game Engine Context (no 2D flat-screen DOM chrome)
     const dummyEls = new Map();
     const customDoc = {
         getElementById: (id) => {
-            if (id === "viewport") return viewportDiv;
-            if (!dummyEls.has(id)) {
-                dummyEls.set(id, document.createElement("div"));
-            }
+            if (!dummyEls.has(id)) dummyEls.set(id, document.createElement("div"));
             return dummyEls.get(id);
         },
         createElement: (...args) => document.createElement(...args),
@@ -220,65 +245,64 @@ export async function createBeholderExhibit(scene, posX = -5.8, posZ = -3.5) {
 
     const ctx = window.CotBRuntime.createCoreContext(window.CotBResources, customDoc);
 
-    // Intercept image loader to guarantee correct root prefix on courtyard page
-    const origImageEntry = ctx.imageEntry;
-    ctx.imageEntry = function (src, allowClassicFallback = true) {
-        if (typeof src === "string" && !src.startsWith("data:") && !src.startsWith("http") && !src.startsWith("/")) {
-            src = COTB_BASE + src;
-        }
-        return origImageEntry(src, allowClassicFallback);
-    };
-
-    // Install all engine systems
     for (const [k, fn] of Object.entries(window.CotBRuntime)) {
         if (k.startsWith("install") && typeof fn === "function") {
             fn(ctx);
         }
     }
 
+    // Wrap imageEntry AFTER installViewportRendering so dynamic paths (portals, linocut, normals) resolve from CotB root
+    if (typeof ctx.imageEntry === "function") {
+        const origImageEntry = ctx.imageEntry;
+        ctx.imageEntry = function (src, allowClassicFallback = true) {
+            if (typeof src === "string" && !src.startsWith("data:") && !src.startsWith("http") && !src.startsWith("/") && !src.startsWith("furniture://")) {
+                src = COTB_BASE + src;
+            }
+            return origImageEntry(src, allowClassicFallback);
+        };
+    }
+
     if (typeof ctx.vrPark2dRendering === "function") {
         ctx.vrPark2dRendering();
     }
-
     ctx.beginRun({});
 
-    // 2. Physical 3D Table Assembly
+    // 2. Roman Courtyard Tabletop Pedestal
     const group = new T.Group();
     group.position.set(posX, 0, posZ);
-    // Face East (+X toward courtyard center, player stands at ~ -4.3, looking West)
+    // Face East (+X toward the courtyard center; visitor stands at posX + 1.65 looking West)
     group.rotation.y = Math.PI / 2;
     scene.add(group);
 
-    const matWood = new T.MeshStandardMaterial({ color: 0x271912, roughness: 0.65, metalness: 0.1 });
-    const matMarble = new T.MeshStandardMaterial({ color: 0xe0d2be, roughness: 0.88 });
-    const matBronze = new T.MeshStandardMaterial({ color: 0x8a623a, roughness: 0.42, metalness: 0.65 });
-    const matGold = new T.MeshStandardMaterial({ color: 0xd9a84e, roughness: 0.32, metalness: 0.75 });
+    const matWood = new T.MeshStandardMaterial({ color: 0x2a1c14, roughness: 0.72, metalness: 0.08 });
+    const matSlate = new T.MeshStandardMaterial({ color: 0x161310, roughness: 0.92, metalness: 0.05 });
+    const matBronze = new T.MeshStandardMaterial({ color: 0x8a623a, roughness: 0.45, metalness: 0.62 });
 
-    // Tabletop Slab (2.2m wide, 1.55m deep, 0.08m thick at y = 0.78)
-    const slab = new T.Mesh(new T.BoxGeometry(2.2, 0.08, 1.55), matWood);
+    // Square tabletop (1.84m × 1.84m) at y = 0.82m so CotB's 1.6m diorama sits cleanly inside
+    const slab = new T.Mesh(new T.BoxGeometry(1.86, 0.08, 1.86), matWood);
     slab.position.set(0, 0.78, 0);
     group.add(slab);
 
-    // Marble Inlay for the diorama area
-    const inlay = new T.Mesh(new T.BoxGeometry(1.48, 0.015, 1.08), matMarble);
-    inlay.position.set(0, 0.825, -0.16);
-    group.add(inlay);
+    // Dark slate tabletop bed so the lit 3D dungeon diorama pops off the table
+    const bed = new T.Mesh(new T.BoxGeometry(1.72, 0.012, 1.72), matSlate);
+    bed.position.set(0, 0.824, 0);
+    group.add(bed);
 
-    // Bronze Rim Borders
-    const rimFront = new T.Mesh(new T.BoxGeometry(2.24, 0.09, 0.05), matBronze);
-    rimFront.position.set(0, 0.785, 0.78);
-    const rimBack = new T.Mesh(new T.BoxGeometry(2.24, 0.09, 0.05), matBronze);
-    rimBack.position.set(0, 0.785, -0.78);
-    const rimLeft = new T.Mesh(new T.BoxGeometry(0.05, 0.09, 1.55), matBronze);
-    rimLeft.position.set(-1.11, 0.785, 0);
-    const rimRight = new T.Mesh(new T.BoxGeometry(0.05, 0.09, 1.55), matBronze);
-    rimRight.position.set(1.11, 0.785, 0);
-    group.add(rimFront, rimBack, rimLeft, rimRight);
+    // Bronze edge trim
+    const rimF = new T.Mesh(new T.BoxGeometry(1.90, 0.09, 0.04), matBronze);
+    rimF.position.set(0, 0.785, 0.93);
+    const rimB = new T.Mesh(new T.BoxGeometry(1.90, 0.09, 0.04), matBronze);
+    rimB.position.set(0, 0.785, -0.93);
+    const rimL = new T.Mesh(new T.BoxGeometry(0.04, 0.09, 1.86), matBronze);
+    rimL.position.set(-0.93, 0.785, 0);
+    const rimR = new T.Mesh(new T.BoxGeometry(0.04, 0.09, 1.86), matBronze);
+    rimR.position.set(0.93, 0.785, 0);
+    group.add(rimF, rimB, rimL, rimR);
 
-    // 4 Ornate Carved Classical Legs
+    // Four carved Roman legs
     const legGeom = new T.CylinderGeometry(0.075, 0.055, 0.74, 16);
     const legCapGeom = new T.BoxGeometry(0.18, 0.06, 0.18);
-    for (const [lx, lz] of [[-0.98, -0.66], [0.98, -0.66], [-0.98, 0.66], [0.98, 0.66]]) {
+    for (const [lx, lz] of [[-0.78, -0.78], [0.78, -0.78], [-0.78, 0.78], [0.78, 0.78]]) {
         const leg = new T.Mesh(legGeom, matWood);
         leg.position.set(lx, 0.37, lz);
         const capTop = new T.Mesh(legCapGeom, matBronze);
@@ -288,658 +312,231 @@ export async function createBeholderExhibit(scene, posX = -5.8, posZ = -3.5) {
         group.add(leg, capTop, capBot);
     }
 
-    // Lower Stretcher Shelf
-    const shelf = new T.Mesh(new T.BoxGeometry(1.85, 0.03, 1.2), matWood);
-    shelf.position.set(0, 0.22, 0);
-    group.add(shelf);
+    // Small front brass title plaque on the table edge
+    const plaqueCanvas = document.createElement("canvas");
+    plaqueCanvas.width = 768;
+    plaqueCanvas.height = 112;
+    const pCtx = plaqueCanvas.getContext("2d");
+    pCtx.fillStyle = "#1b130d";
+    pCtx.fillRect(0, 0, 768, 112);
+    pCtx.strokeStyle = "#c8963e";
+    pCtx.lineWidth = 6;
+    pCtx.strokeRect(8, 8, 752, 96);
+    pCtx.fillStyle = "#ffdf96";
+    pCtx.font = "bold 40px Georgia, serif";
+    pCtx.textAlign = "center";
+    pCtx.fillText("CRAWL OF THE BEHOLDER · VR", 384, 52);
+    pCtx.font = "24px Georgia, serif";
+    pCtx.fillStyle = "#d4b578";
+    pCtx.fillText("Point & click tiles, totems, or floating panes", 384, 88);
+    const plaqueMesh = new T.Mesh(
+        new T.PlaneGeometry(0.92, 0.135),
+        new T.MeshBasicMaterial({ map: new T.CanvasTexture(plaqueCanvas) })
+    );
+    plaqueMesh.position.set(0, 0.785, 0.955);
+    group.add(plaqueMesh);
 
-    // Bronze Front Nameplate
-    const nameplateCanvas = document.createElement("canvas");
-    nameplateCanvas.width = 1024;
-    nameplateCanvas.height = 160;
-    const npCtx = nameplateCanvas.getContext("2d");
-    npCtx.fillStyle = "#1e140d";
-    npCtx.fillRect(0, 0, 1024, 160);
-    npCtx.strokeStyle = "#c8963e";
-    npCtx.lineWidth = 8;
-    npCtx.strokeRect(10, 10, 1004, 140);
-    npCtx.fillStyle = "#ffdf96";
-    npCtx.font = "bold 52px Georgia, serif";
-    npCtx.textAlign = "center";
-    npCtx.fillText("⚔ CRAWL OF THE BEHOLDER ⚔", 512, 68);
-    npCtx.font = "italic 32px Georgia, serif";
-    npCtx.fillStyle = "#d4b578";
-    npCtx.fillText("Tabletop VR Dungeon Crawl · Point & Click to Play", 512, 118);
-    const npTex = new T.CanvasTexture(nameplateCanvas);
-    const npMat = new T.MeshBasicMaterial({ map: npTex });
-    const nameplate = new T.Mesh(new T.PlaneGeometry(1.4, 0.22), npMat);
-    nameplate.position.set(0, 0.74, 0.81);
-    group.add(nameplate);
-
-    // 3. 3D Dungeon Diorama Meshes
+    // 3. Real 3D CotB VR Diorama (using CotB's own shaders, atlas & normal atlas)
     const dioramaGroup = new T.Group();
-    dioramaGroup.position.set(0, 0.835, -0.16);
+    dioramaGroup.position.set(0, 0.836, 0);
     group.add(dioramaGroup);
 
     const atlasCanvas = ctx.vrAtlasCanvas();
+    const normalCanvas = ctx.vrNormalAtlasCanvas();
+
     const atlasTex = new T.CanvasTexture(atlasCanvas);
-    atlasTex.magFilter = T.NearestFilter;
-    atlasTex.minFilter = T.NearestFilter;
+    atlasTex.flipY = false;
+    atlasTex.magFilter = T.LinearFilter;
+    atlasTex.minFilter = T.LinearFilter;
     atlasTex.generateMipmaps = false;
-    atlasTex.colorSpace = T.SRGBColorSpace;
+    atlasTex.colorSpace = T.NoColorSpace;
 
-    const solidMat = new T.MeshStandardMaterial({
-        map: atlasTex,
-        vertexColors: true,
-        roughness: 0.85,
-        metalness: 0.05
-    });
-    const transMat = new T.MeshStandardMaterial({
-        map: atlasTex,
-        vertexColors: true,
-        transparent: true,
-        alphaTest: 0.04,
-        roughness: 0.85,
-        depthWrite: false
-    });
-    const dollMat = new T.MeshStandardMaterial({
-        map: atlasTex,
-        vertexColors: true,
-        transparent: true,
-        alphaTest: 0.04,
-        roughness: 0.85,
-        depthWrite: false,
-        side: T.DoubleSide
-    });
+    const normalTex = new T.CanvasTexture(normalCanvas);
+    normalTex.flipY = false;
+    normalTex.magFilter = T.LinearFilter;
+    normalTex.minFilter = T.LinearFilter;
+    normalTex.generateMipmaps = false;
+    normalTex.colorSpace = T.NoColorSpace;
 
-    const solidGeom = new T.BufferGeometry();
-    const transGeom = new T.BufferGeometry();
-    const dollsGeom = new T.BufferGeometry();
+    const lightDir = new T.Vector3(0.35, 0.82, 0.45);
 
-    const solidMesh = new T.Mesh(solidGeom, solidMat);
-    const transMesh = new T.Mesh(transGeom, transMat);
-    const dollsMesh = new T.Mesh(dollsGeom, dollMat);
-    dioramaGroup.add(solidMesh, transMesh, dollsMesh);
+    function makeDioramaMat(cutoff, depthWrite, transparent) {
+        const mat = new T.ShaderMaterial({
+            vertexShader: COTB_THREE_VERT,
+            fragmentShader: COTB_THREE_FRAG,
+            uniforms: {
+                uTex: { value: atlasTex },
+                uNormalTex: { value: normalTex },
+                uLightDir: { value: lightDir },
+                uCutoff: { value: cutoff }
+            },
+            side: T.DoubleSide,
+            depthWrite,
+            transparent
+        });
+        mat.userData = { dynamicFade: true };
+        return mat;
+    }
 
-    // Invisible board plane for raycasting dungeon clicks
-    const boardMesh = new T.Mesh(
-        new T.PlaneGeometry(1.46, 1.06),
+    const solidMat = makeDioramaMat(0.45, true, false);
+    const transMat = makeDioramaMat(0.02, false, true);
+
+    const archSolidGeom = new T.BufferGeometry();
+    const dollSolidGeom = new T.BufferGeometry();
+    const archTransGeom = new T.BufferGeometry();
+    const dollTransGeom = new T.BufferGeometry();
+
+    const archSolidMesh = new T.Mesh(archSolidGeom, solidMat);
+    const dollSolidMesh = new T.Mesh(dollSolidGeom, solidMat);
+    const archTransMesh = new T.Mesh(archTransGeom, transMat);
+    const dollTransMesh = new T.Mesh(dollTransGeom, transMat);
+    archSolidMesh.frustumCulled = false;
+    dollSolidMesh.frustumCulled = false;
+    archTransMesh.frustumCulled = false;
+    dollTransMesh.frustumCulled = false;
+    archTransMesh.renderOrder = 2;
+    dollTransMesh.renderOrder = 3;
+
+    dioramaGroup.add(archSolidMesh, dollSolidMesh, archTransMesh, dollTransMesh);
+
+    // Invisible raycast hit volume covering the tabletop diorama & rim props
+    const boardHitMesh = new T.Mesh(
+        new T.BoxGeometry(1.84, 0.45, 1.84),
         new T.MeshBasicMaterial({ visible: false })
     );
-    boardMesh.rotation.x = -Math.PI / 2;
-    boardMesh.position.set(0, 0.836, -0.16);
-    group.add(boardMesh);
+    boardHitMesh.position.set(0, 0.98, 0);
+    group.add(boardHitMesh);
 
-    let dioramaScale = 0.05;
-    let dirtyDiorama = true;
+    // 4. Real CotB VR Floating Tabletop Panes (HUD, Control Palette, Party, Inventory)
+    const paneTargets = [];
+    const paneRefs = {};
 
-    function rebuildDiorama() {
-        const archModel = ctx.vrStructureModel();
-        const maxDim = Math.max(archModel.width || 24, archModel.height || 24);
-        dioramaScale = Math.min(0.065, 1.35 / maxDim);
-        dioramaGroup.scale.set(dioramaScale, dioramaScale, dioramaScale);
-
-        const arch = ctx.vrEmitArchitecture(archModel);
-        updateGeometryFromVerts(solidGeom, arch.solid);
-        updateGeometryFromVerts(transGeom, arch.translucent);
-
-        rebuildDolls();
-        atlasTex.needsUpdate = true;
-        dirtyDiorama = false;
-    }
-
-    function rebuildDolls(nowMs = performance.now()) {
-        const dollModel = ctx.vrDollModel();
-        const headRel = [0, 1.4, 1.8];
-        const dolls = ctx.vrEmitDolls(dollModel, headRel, "billboard", nowMs);
-        const combined = [...(dolls.solid || []), ...(dolls.translucent || [])];
-        updateGeometryFromVerts(dollsGeom, combined);
-    }
-
-    // 4. Tactile 3D Buttons & Controls Apron
-    const interactiveButtons = [];
-    const bolster = new T.Group();
-    bolster.position.set(-0.25, 0.83, 0.46);
-    bolster.rotation.x = -0.28; // Tilted toward player
-    group.add(bolster);
-
-    const buttonBevelGeom = (w, h, d) => new T.BoxGeometry(w, h, d);
-
-    function createTactileButton({ label, sublabel, color, textColor, w = 0.12, h = 0.035, d = 0.11, x = 0, z = 0, onTrigger }) {
-        const canvas = document.createElement("canvas");
-        canvas.width = 256;
-        canvas.height = 256;
-        const bCtx = canvas.getContext("2d");
-        bCtx.fillStyle = color;
-        bCtx.fillRect(0, 0, 256, 256);
-        bCtx.strokeStyle = "#f3d59b";
-        bCtx.lineWidth = 10;
-        bCtx.strokeRect(8, 8, 240, 240);
-        bCtx.textAlign = "center";
-        bCtx.fillStyle = textColor || "#ffffff";
-        bCtx.font = "bold 72px sans-serif";
-        bCtx.fillText(label, 128, sublabel ? 115 : 150);
-        if (sublabel) {
-            bCtx.font = "bold 34px sans-serif";
-            bCtx.fillStyle = "#ffedcb";
-            bCtx.fillText(sublabel, 128, 190);
-        }
-        const tex = new T.CanvasTexture(canvas);
-        const mat = new T.MeshStandardMaterial({
-            map: tex,
-            roughness: 0.45,
-            metalness: 0.2
+    function makeFloatingPane(key, width, height, x, y, z, rotY, rotX = 0, clickable = true) {
+        const mat = new T.MeshBasicMaterial({
+            transparent: true,
+            side: T.DoubleSide,
+            depthWrite: true
         });
-        const btn = new T.Mesh(buttonBevelGeom(w, h, d), mat);
-        btn.position.set(x, h / 2, z);
-
-        const basePlate = new T.Mesh(
-            buttonBevelGeom(w + 0.015, 0.012, d + 0.015),
-            matBronze
-        );
-        basePlate.position.set(x, 0.006, z);
-        bolster.add(basePlate, btn);
-
-        const baseY = btn.position.y;
-        let depressing = false;
-
-        btn.userData = {
-            onTrigger: () => {
-                if (depressing) return;
-                depressing = true;
-                btn.position.y = baseY - 0.012;
-                setTimeout(() => {
-                    btn.position.y = baseY;
-                    depressing = false;
-                }, 130);
-                onTrigger();
-            }
-        };
-
-        interactiveButtons.push(btn);
-        return btn;
+        const mesh = new T.Mesh(new T.PlaneGeometry(width, height), mat);
+        mesh.position.set(x, y, z);
+        mesh.rotation.set(rotX, rotY, 0, "YXZ");
+        mesh.userData = { paneKey: key, clickable };
+        group.add(mesh);
+        paneRefs[key] = { mesh, mat, tex: null };
+        if (clickable) paneTargets.push(mesh);
+        return mesh;
     }
 
-    // D-Pad Movement Cluster
-    // Top row: Turn Left, Forward, Turn Right
-    createTactileButton({
-        label: "↰",
-        sublabel: "Turn L",
-        color: "#28343f",
-        x: -0.13,
-        z: -0.065,
-        onTrigger: () => {
-            ctx.handleAction("turnLeft");
-            dirtyDiorama = true;
-            scheduleScreenRender();
+    // Floating VR HUD banner behind the diorama
+    makeFloatingPane("hud", 0.96, 0.48, 0, 1.34, -1.04, 0, -0.14, false);
+    // Floating VR Control Palette on the left
+    makeFloatingPane("palette", 0.54, 0.54, -1.14, 1.12, 0.08, 0.46, -0.10, true);
+    // Floating VR Party Pane on the right-rear
+    makeFloatingPane("party", 0.50, 0.50, 1.06, 1.18, -0.58, -0.34, -0.10, true);
+    // Floating VR Inventory Pane on the right-front
+    makeFloatingPane("inventory", 0.48, 0.53, 1.22, 1.10, 0.26, -0.56, -0.10, true);
+
+    function bindPaneTexture(key, paneObj, dirty) {
+        const ref = paneRefs[key];
+        if (!ref || !paneObj?.canvas) return;
+        if (!ref.tex) {
+            ref.tex = new T.CanvasTexture(paneObj.canvas);
+            ref.tex.minFilter = T.LinearFilter;
+            ref.tex.magFilter = T.LinearFilter;
+            ref.tex.colorSpace = T.SRGBColorSpace;
+            ref.mat.map = ref.tex;
+            ref.mat.needsUpdate = true;
+        } else if (dirty) {
+            ref.tex.needsUpdate = true;
         }
-    });
-    createTactileButton({
-        label: "↑",
-        sublabel: "Step",
-        color: "#1d4734",
-        textColor: "#6effb4",
-        x: 0,
-        z: -0.065,
-        onTrigger: () => {
-            ctx.handleAction("moveForward");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-    createTactileButton({
-        label: "↱",
-        sublabel: "Turn R",
-        color: "#28343f",
-        x: 0.13,
-        z: -0.065,
-        onTrigger: () => {
-            ctx.handleAction("turnRight");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-
-    // Bottom row: Strafe Left, Back, Strafe Right
-    createTactileButton({
-        label: "←",
-        sublabel: "Left",
-        color: "#2a282f",
-        x: -0.13,
-        z: 0.065,
-        onTrigger: () => {
-            ctx.handleAction("moveLeft");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-    createTactileButton({
-        label: "↓",
-        sublabel: "Back",
-        color: "#3d2b28",
-        x: 0,
-        z: 0.065,
-        onTrigger: () => {
-            ctx.handleAction("moveBack");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-    createTactileButton({
-        label: "→",
-        sublabel: "Right",
-        color: "#2a282f",
-        x: 0.13,
-        z: 0.065,
-        onTrigger: () => {
-            ctx.handleAction("moveRight");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-
-    // Action Buttons Cluster (Attack, Door/Stairs, Wait, Ability, Auto-explore)
-    createTactileButton({
-        label: "⚔",
-        sublabel: "Attack",
-        color: "#6e1c18",
-        textColor: "#ffdb66",
-        w: 0.18,
-        x: 0.32,
-        z: -0.065,
-        onTrigger: () => {
-            ctx.handleAction("attack");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-    createTactileButton({
-        label: "🚪",
-        sublabel: "Interact",
-        color: "#54391e",
-        w: 0.18,
-        x: 0.32,
-        z: 0.065,
-        onTrigger: () => {
-            ctx.handleAction("interact");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-    createTactileButton({
-        label: "💤",
-        sublabel: "Wait",
-        color: "#26354a",
-        w: 0.16,
-        x: 0.51,
-        z: -0.065,
-        onTrigger: () => {
-            ctx.handleAction("wait");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-    createTactileButton({
-        label: "★",
-        sublabel: "Skill",
-        color: "#6b4716",
-        textColor: "#ffe17d",
-        w: 0.16,
-        x: 0.51,
-        z: 0.065,
-        onTrigger: () => {
-            ctx.handleAction("signature");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-    createTactileButton({
-        label: "🧭",
-        sublabel: "Explore",
-        color: "#184238",
-        w: 0.16,
-        x: 0.69,
-        z: 0.0,
-        onTrigger: () => {
-            ctx.handleAction("autoExplore");
-            dirtyDiorama = true;
-            scheduleScreenRender();
-        }
-    });
-
-    // Game Mode Totems along the left flank of the table
-    const totemsGroup = new T.Group();
-    totemsGroup.position.set(-0.95, 0.83, 0);
-    group.add(totemsGroup);
-
-    const totemModes = [
-        { key: "standard", label: "Standard", color: 0xffffff, gem: 0xe6e6fa },
-        { key: "sprint", label: "Sprint", color: 0xcc2222, gem: 0xff3b30 },
-        { key: "foresight", label: "Tactics", color: 0x8e44ad, gem: 0xaf52de },
-        { key: "oldschool", label: "Wireframe", color: 0x00bc8c, gem: 0x30d158 },
-        { key: "tempo", label: "Tempo", color: 0xf39c12, gem: 0xff9f0a },
-        { key: "cardcrawl", label: "Cards", color: 0x2980b9, gem: 0x0a84ff }
-    ];
-
-    const totemGeom = new T.CylinderGeometry(0.035, 0.045, 0.07, 12);
-    const gemGeom = new T.OctahedronGeometry(0.024, 0);
-
-    totemModes.forEach((tm, i) => {
-        const tz = (i - 2.5) * 0.16;
-        const base = new T.Mesh(totemGeom, matBronze);
-        base.position.set(0, 0.035, tz);
-
-        const gemMat = new T.MeshStandardMaterial({
-            color: tm.gem,
-            emissive: tm.gem,
-            emissiveIntensity: 0.45,
-            roughness: 0.2,
-            metalness: 0.8
-        });
-        const gem = new T.Mesh(gemGeom, gemMat);
-        gem.position.set(0, 0.085, tz);
-
-        // Plaque
-        const pCanvas = document.createElement("canvas");
-        pCanvas.width = 128;
-        pCanvas.height = 48;
-        const pCtx = pCanvas.getContext("2d");
-        pCtx.fillStyle = "#1e130c";
-        pCtx.fillRect(0, 0, 128, 48);
-        pCtx.fillStyle = "#ffde9e";
-        pCtx.font = "bold 20px sans-serif";
-        pCtx.textAlign = "center";
-        pCtx.fillText(tm.label, 64, 32);
-        const pTex = new T.CanvasTexture(pCanvas);
-        const pMesh = new T.Mesh(new T.PlaneGeometry(0.09, 0.034), new T.MeshBasicMaterial({ map: pTex }));
-        pMesh.rotation.x = -Math.PI / 4;
-        pMesh.position.set(0.045, 0.03, tz);
-
-        const totemHolder = new T.Group();
-        totemHolder.add(base, gem, pMesh);
-        totemsGroup.add(totemHolder);
-
-        base.userData = {
-            onTrigger: () => {
-                gem.scale.set(1.4, 1.4, 1.4);
-                setTimeout(() => gem.scale.set(1, 1, 1), 200);
-                if (typeof ctx.restartInGameMode === "function") {
-                    ctx.restartInGameMode(tm.key);
-                }
-                dirtyDiorama = true;
-                scheduleScreenRender();
-            }
-        };
-        gem.userData = base.userData;
-        interactiveButtons.push(base, gem);
-    });
-
-    // 5. Retro Screen / Scrying Console
-    const screenGroup = new T.Group();
-    // Mounted on right flank of table angled toward the player
-    screenGroup.position.set(0.72, 0.98, 0.32);
-    screenGroup.rotation.y = -0.38;
-    screenGroup.rotation.x = -0.25;
-    group.add(screenGroup);
-
-    // Screen wooden / bronze frame
-    const frameMesh = new T.Mesh(new T.BoxGeometry(0.48, 0.36, 0.03), matWood);
-    const screenBevel = new T.Mesh(new T.BoxGeometry(0.44, 0.32, 0.035), matBronze);
-    screenGroup.add(frameMesh, screenBevel);
-
-    const screenCanvas = document.createElement("canvas");
-    screenCanvas.width = 512;
-    screenCanvas.height = 384;
-    const sCtx = screenCanvas.getContext("2d");
-    const screenTex = new T.CanvasTexture(screenCanvas);
-    screenTex.magFilter = T.LinearFilter;
-    screenTex.minFilter = T.LinearFilter;
-
-    const screenMesh = new T.Mesh(
-        new T.PlaneGeometry(0.42, 0.30),
-        new T.MeshBasicMaterial({ map: screenTex })
-    );
-    screenMesh.position.z = 0.02;
-    screenGroup.add(screenMesh);
-
-    let screenRenderTimer = null;
-    function scheduleScreenRender() {
-        if (screenRenderTimer) return;
-        screenRenderTimer = setTimeout(() => {
-            screenRenderTimer = null;
-            renderScreen();
-        }, 16);
     }
 
-    function renderScreen() {
-        if (!sCtx) return;
-        // Background
-        sCtx.fillStyle = "#0c0e12";
-        sCtx.fillRect(0, 0, 512, 384);
+    // Sync CotB's internal vrTable transform to our Three.js dioramaGroup world transform
+    const worldPos = new T.Vector3();
+    const worldQuat = new T.Quaternion();
+    const headPos = new T.Vector3(posX + 1.65, 1.65, posZ);
 
-        // Header
-        sCtx.fillStyle = "#161b24";
-        sCtx.fillRect(0, 0, 512, 44);
-        sCtx.fillStyle = "#ffdd80";
-        sCtx.font = "bold 20px Georgia, serif";
-        sCtx.textAlign = "left";
-        const floorObj = ctx.currentFloor ? ctx.currentFloor() : null;
-        const floorName = floorObj?.name || "Spiral Entry";
-        const floorIdx = (ctx.state?.floorIndex || 0) + 1;
-        sCtx.fillText(`⚔ Floor ${floorIdx}: ${floorName}`, 12, 28);
-
-        const dirNames = ["North ↑", "East →", "South ↓", "West ←"];
-        const curDir = dirNames[ctx.state?.dir || 0] || "North";
-        sCtx.fillStyle = "#9ad2ff";
-        sCtx.font = "bold 16px monospace";
-        sCtx.textAlign = "right";
-        sCtx.fillText(curDir, 500, 28);
-
-        // Party Health Bars (Left column)
-        const party = ctx.state?.party || [];
-        const partyY = 56;
-        sCtx.textAlign = "left";
-        party.forEach((member, idx) => {
-            const my = partyY + idx * 46;
-            sCtx.fillStyle = "#1e2430";
-            sCtx.fillRect(12, my, 220, 40);
-            sCtx.strokeStyle = "#384357";
-            sCtx.lineWidth = 2;
-            sCtx.strokeRect(12, my, 220, 40);
-
-            // Name & Class
-            sCtx.fillStyle = "#ffffff";
-            sCtx.font = "bold 15px sans-serif";
-            sCtx.fillText(member.name || `Hero ${idx + 1}`, 20, my + 18);
-            sCtx.fillStyle = "#b5c4db";
-            sCtx.font = "12px sans-serif";
-            sCtx.fillText(member.class || "Adventurer", 150, my + 18);
-
-            // Health bar
-            const hp = Math.max(0, member.hp ?? 20);
-            const maxHp = Math.max(1, member.maxHp ?? 20);
-            const ratio = Math.min(1, hp / maxHp);
-            sCtx.fillStyle = "#331515";
-            sCtx.fillRect(20, my + 24, 150, 10);
-            sCtx.fillStyle = ratio > 0.5 ? "#2ecc71" : ratio > 0.25 ? "#f39c12" : "#e74c3c";
-            sCtx.fillRect(20, my + 24, Math.floor(150 * ratio), 10);
-
-            sCtx.fillStyle = "#ffffff";
-            sCtx.font = "bold 11px monospace";
-            sCtx.fillText(`${hp}/${maxHp}`, 178, my + 33);
-        });
-
-        // Retro Viewport / First Person Render (Right column)
-        sCtx.fillStyle = "#12141a";
-        sCtx.fillRect(244, 56, 256, 180);
-        sCtx.strokeStyle = "#c8963e";
-        sCtx.lineWidth = 3;
-        sCtx.strokeRect(244, 56, 256, 180);
-
-        try {
-            if (typeof ctx.renderViewport === "function") {
-                ctx.renderViewport();
-            }
-        } catch (_) {}
-
-        const vpCanvas = viewportDiv.querySelector("canvas");
-        if (vpCanvas && vpCanvas.width > 0 && vpCanvas.height > 0) {
-            sCtx.drawImage(vpCanvas, 246, 58, 252, 176);
-        } else {
-            // Retro wireframe placeholder if first-person canvas is waiting
-            sCtx.fillStyle = "#1e2a38";
-            sCtx.fillRect(246, 58, 252, 176);
-            sCtx.fillStyle = "#6be0a4";
-            sCtx.font = "16px monospace";
-            sCtx.textAlign = "center";
-            sCtx.fillText("FIRST-PERSON EYE", 372, 140);
-            sCtx.font = "12px sans-serif";
-            sCtx.fillStyle = "#8eaec9";
-            sCtx.fillText("Step or tap to look through", 372, 165);
-        }
-
-        // Bottom Message Log Box
-        sCtx.fillStyle = "#13161c";
-        sCtx.fillRect(12, 248, 488, 124);
-        sCtx.strokeStyle = "#433527";
-        sCtx.lineWidth = 2;
-        sCtx.strokeRect(12, 248, 488, 124);
-
-        sCtx.fillStyle = "#ffdf96";
-        sCtx.font = "italic 15px Georgia, serif";
-        sCtx.textAlign = "left";
-        const rawMsg = ctx.state?.message || "You stand at the dungeon threshold. Beware the shadows.";
-        // Word wrap message
-        const words = rawMsg.split(" ");
-        let line = "";
-        let lineY = 276;
-        for (const w of words) {
-            const test = line + w + " ";
-            if (sCtx.measureText(test).width > 460) {
-                sCtx.fillText(line, 24, lineY);
-                line = w + " ";
-                lineY += 22;
-                if (lineY > 350) break;
-            } else {
-                line = test;
-            }
-        }
-        if (line && lineY <= 350) sCtx.fillText(line, 24, lineY);
-
-        // Turn & Stats line at bottom
-        sCtx.fillStyle = "#8ea3bf";
-        sCtx.font = "12px monospace";
-        const turn = ctx.state?.turnCount || 0;
-        const gold = ctx.state?.gold || 0;
-        sCtx.fillText(`Turn: ${turn}   Gold: ${gold}   Level: ${ctx.state?.level || 1}`, 24, 360);
-
-        screenTex.needsUpdate = true;
+    function syncTableWorld() {
+        group.updateMatrixWorld(true);
+        dioramaGroup.getWorldPosition(worldPos);
+        dioramaGroup.getWorldQuaternion(worldQuat);
+        const vt = ctx.vrTableState();
+        vt.x = worldPos.x;
+        vt.y = worldPos.y;
+        vt.z = worldPos.z;
+        vt.q = [worldQuat.x, worldQuat.y, worldQuat.z, worldQuat.w];
+        vt.scale = 1;
     }
 
-    // Initial render
-    rebuildDiorama();
-    renderScreen();
-
-    // 6. Direct Diorama Board Raycast Interaction
-    const scratchVec = new T.Vector3();
-
-    function handleBoardClick(point) {
-        dioramaGroup.worldToLocal(scratchVec.copy(point));
-        const archModel = ctx.vrStructureModel();
-        const halfW = (archModel.width || 24) / 2;
-        const halfH = (archModel.height || 24) / 2;
-        const tx = Math.floor(scratchVec.x + halfW);
-        const ty = Math.floor(scratchVec.z + halfH);
-
-        if (typeof ctx.mapContains === "function" && ctx.mapContains(tx, ty)) {
-            const isSolid = typeof ctx.solidAt === "function" ? ctx.solidAt(tx, ty) : false;
-            const dx = tx - ctx.state.x;
-            const dy = ty - ctx.state.y;
-
-            if (isSolid) {
-                if (Math.abs(dx) + Math.abs(dy) === 1 && typeof ctx.closedDoorAt === "function" && ctx.closedDoorAt(tx, ty)) {
-                    ctx.handleAction("interact");
-                    dirtyDiorama = true;
-                    scheduleScreenRender();
-                    return true;
-                }
-                return false;
-            }
-
-            const monster = typeof ctx.monsterAt === "function" ? ctx.monsterAt(tx, ty) : null;
-            if (monster && Math.abs(dx) + Math.abs(dy) === 1) {
-                ctx.handleAction("attack");
-                dirtyDiorama = true;
-                scheduleScreenRender();
-                return true;
-            }
-
-            if (dx === 0 && dy === 0) {
-                ctx.handleAction("wait");
-                dirtyDiorama = true;
-                scheduleScreenRender();
-                return true;
-            }
-
-            if (Math.abs(dx) + Math.abs(dy) === 1) {
-                if (typeof ctx.moveBy === "function") {
-                    ctx.moveBy(dx, dy);
-                } else {
-                    ctx.handleAction("moveForward");
-                }
-            } else if (typeof ctx.travelTo === "function") {
-                ctx.travelTo(tx, ty);
-            }
-            dirtyDiorama = true;
-            scheduleScreenRender();
-            return true;
+    function stepFrame(nowMs, cameraObj) {
+        syncTableWorld();
+        if (cameraObj) {
+            cameraObj.getWorldPosition(headPos);
         }
-        return false;
+        const out = ctx.vrEmbeddedStep(nowMs, { x: headPos.x, y: headPos.y, z: headPos.z });
+        const s = out.tileMetres;
+        dioramaGroup.scale.set(s, s, s);
+
+        if (out.archChanged && out.arch) {
+            setInterleavedVerts(archSolidGeom, out.arch.solid);
+            setInterleavedVerts(archTransGeom, out.arch.translucent);
+        }
+        setInterleavedVerts(dollSolidGeom, out.dolls.solid.concat(out.decals.solid));
+        setInterleavedVerts(dollTransGeom, out.dolls.translucent.concat(out.decals.translucent));
+
+        if (out.atlasDirty) atlasTex.needsUpdate = true;
+        if (out.normalDirty) normalTex.needsUpdate = true;
+
+        bindPaneTexture("hud", out.panes.hud, out.hudDirty);
+        bindPaneTexture("palette", out.panes.panel, out.panelDirty);
+        bindPaneTexture("party", out.panes.party, out.partyDirty);
+        bindPaneTexture("inventory", out.panes.inv, out.invDirty);
     }
 
-    let lastDollUpdate = 0;
+    // Initial frame emit
+    stepFrame(performance.now(), null);
 
     return {
         group,
-        targets: [...interactiveButtons, boardMesh],
-        boardMesh,
+        targets: [...paneTargets, boardHitMesh],
+        boardMesh: boardHitMesh,
         select(ray) {
-            // Check tactile buttons first
-            const buttonHits = ray.intersectObjects(interactiveButtons, false);
-            if (buttonHits.length > 0) {
-                const btn = buttonHits[0].object;
-                if (btn.userData?.onTrigger) {
-                    btn.userData.onTrigger();
-                    return true;
+            syncTableWorld();
+            // 1. Check floating CotB VR panes (Control Palette, Party, Inventory)
+            const paneHits = ray.intersectObjects(paneTargets, false);
+            if (paneHits.length > 0) {
+                const hit = paneHits[0];
+                const key = hit.object.userData?.paneKey;
+                if (key && hit.uv) {
+                    const u = hit.uv.x;
+                    const v = 1 - hit.uv.y;
+                    if (ctx.vrEmbeddedPaneClickUv(key, u, v)) {
+                        stepFrame(performance.now(), null);
+                        return true;
+                    }
                 }
             }
-            // Check direct diorama click
-            const boardHits = ray.intersectObject(boardMesh, false);
-            if (boardHits.length > 0) {
-                return handleBoardClick(boardHits[0].point);
+            // 2. Check direct 3D dungeon board & tabletop mode totems/cards via CotB's native raycaster
+            const origin = { x: ray.ray.origin.x, y: ray.ray.origin.y, z: ray.ray.origin.z };
+            const dir = { x: ray.ray.direction.x, y: ray.ray.direction.y, z: ray.ray.direction.z };
+            const head = { x: headPos.x, y: headPos.y, z: headPos.z };
+            if (ctx.vrEmbeddedTapWorld(origin, dir, head)) {
+                stepFrame(performance.now(), null);
+                return true;
             }
             return false;
         },
-        update(dt, xr, renderer) {
-            const now = performance.now();
-            if (dirtyDiorama) {
-                rebuildDiorama();
-            } else if (now - lastDollUpdate > 150) {
-                rebuildDolls(now);
-                lastDollUpdate = now;
-            }
-            if (ctx.vrAtlasNeedsUpdate && ctx.vrAtlasNeedsUpdate()) {
-                atlasTex.needsUpdate = true;
-            }
+        update(dt, xr, renderer, camera) {
+            const activeCam = (renderer?.xr?.isPresenting && renderer.xr.getCamera) ? renderer.xr.getCamera() : camera;
+            stepFrame(performance.now(), activeCam);
         },
         canStand(x, z) {
-            // Player cannot walk through the physical table
-            return Math.hypot(x - posX, z - posZ) >= 1.25;
+            return Math.hypot(x - posX, z - posZ) >= 1.3;
         },
         context: ctx,
         api: {
-            stepForward: () => { ctx.handleAction("moveForward"); dirtyDiorama = true; scheduleScreenRender(); },
-            attack: () => { ctx.handleAction("attack"); dirtyDiorama = true; scheduleScreenRender(); }
+            stepForward: () => { ctx.handleAction("moveForward"); stepFrame(performance.now(), null); },
+            attack: () => { ctx.handleAction("attack"); stepFrame(performance.now(), null); }
         }
     };
 }
