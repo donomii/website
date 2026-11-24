@@ -4314,8 +4314,8 @@
         let atlasDirty = false;
         let normalDirty = false;
         if (vrAtlasesNeedClear) {
-          if (vrAtlas.ctx) vrAtlas.ctx.clearRect(0, 0, vrAtlas.width, vrAtlas.height);
-          if (vrNormalAtlas.ctx) vrNormalAtlas.ctx.clearRect(0, 0, vrNormalAtlas.width, vrNormalAtlas.height);
+          // vrResetAtlases() already cleared vrAtlas.ctx before this frame's shapes were drawn;
+          // just mark the GPU textures dirty so Three.js uploads the fresh canvas.
           vrAtlasesNeedClear = false;
           atlasDirty = true;
           normalDirty = true;
