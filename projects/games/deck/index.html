@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Airship map</title>
+  <link rel="stylesheet" href="overmap.css">
+  <script src="deck.js"></script>
+  <script type="module" src="overmap.js"></script>
+</head>
+<body class="airship">
+  <header>
+    <h1>Airship map</h1>
+    <button class="game-deck-trigger game-deck-inline" type="button" data-deck-games>Games</button>
+  </header>
+  <main class="airship-chart" aria-label="Game destinations">
+    <canvas aria-hidden="true"></canvas>
+    <div class="airship-ports"></div>
+    <p class="airship-error" hidden>Couldn’t load the game destinations.</p>
+  </main>
+  <footer>
+    <span id="airship-port" aria-live="polite"></span>
+    <button class="airship-dock" type="button" disabled><span aria-hidden="true">×</span> Dock</button>
+  </footer>
+</body>
+</html>

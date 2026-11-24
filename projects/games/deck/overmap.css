@@ -1,0 +1,66 @@
+* { box-sizing: border-box; }
+.airship {
+  margin: 0;
+  height: 100dvh;
+  overflow: hidden;
+  color: #f6dfa6;
+  background: #102226;
+  font: 15px system-ui, sans-serif;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.airship > header, .airship > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px clamp(12px, 4vw, 48px);
+  gap: 12px;
+  background: #142428;
+}
+.airship > header { border-bottom: 1px solid #816941; }
+.airship > footer { border-top: 1px solid #816941; min-height: 49px; }
+.airship h1 {
+  margin: 0;
+  font: 500 clamp(23px, 3.3vw, 37px)/1.15 Georgia, serif;
+  letter-spacing: .025em;
+}
+.airship-chart { position: relative; min-height: 0; }
+.airship canvas, .airship-ports { position: absolute; inset: 0; width: 100%; height: 100%; }
+.airship-ports { pointer-events: none; }
+.airship-ports button {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  color: #fbeaca;
+  background: #102327ee;
+  border: 1px solid #8a7956;
+  border-radius: 5px;
+  padding: 6px clamp(4px, 1vw, 12px);
+  width: max-content;
+  max-width: 23%;
+  min-height: 32px;
+  font: 600 clamp(10px, 1.45vw, 15px)/1.15 system-ui, sans-serif;
+  cursor: pointer;
+}
+.airship-ports button[data-nearby], .airship-ports button:hover {
+  background: #483821;
+  color: #fff0c7;
+  border-color: #f0c77f;
+}
+.airship-ports button:focus-visible, .airship-dock:focus-visible {
+  outline: 2px solid #ffda94;
+  outline-offset: 3px;
+}
+.airship-dock {
+  appearance: none;
+  border: 1px solid #9e7940;
+  border-radius: 6px;
+  background: #523d1f;
+  color: #ffebbd;
+  font: 650 14px/1 system-ui, sans-serif;
+  padding: 7px 13px;
+  cursor: pointer;
+}
+.airship-dock span { margin-right: 3px; }
+.airship-dock:disabled { opacity: .45; cursor: default; }
+.airship-error { position: absolute; inset: 30% 0 auto; text-align: center; }

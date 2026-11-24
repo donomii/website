@@ -1,0 +1,170 @@
+[
+  {
+    "name": "Cinder Circuit",
+    "games": [
+      {
+        "name": "Cinder Circuit",
+        "url": "/projects/games/cinder-circuit/index.html"
+      }
+    ]
+  },
+  {
+    "name": "Hadal Drift",
+    "games": [
+      {
+        "name": "Hadal Drift",
+        "url": "/projects/games/hadal-drift/index.html"
+      },
+      {
+        "name": "Reef Dive",
+        "url": "/projects/games/hadal-drift/index.html?mode=reef"
+      }
+    ]
+  },
+  {
+    "name": "Asteroid Farmer",
+    "games": [
+      {
+        "name": "Asteroid Farmer",
+        "url": "/projects/games/asteroid-farmer/index.html"
+      },
+      {
+        "name": "Visit its VR outposts",
+        "url": "/static/courtyard/index.html?room=asteroid"
+      }
+    ]
+  },
+  {
+    "name": "Accumulative Station",
+    "games": [
+      {
+        "name": "Accumulative Station",
+        "url": "/projects/games/accumulative-station/index.html"
+      },
+      {
+        "name": "Enter the VR construction hangar",
+        "url": "/static/courtyard/index.html?room=station"
+      }
+    ]
+  },
+  {
+    "name": "Brushwork",
+    "games": [
+      {
+        "name": "Brushwork",
+        "url": "/projects/games/brushwork/index.html"
+      }
+    ]
+  },
+  {
+    "name": "No One Can Stop Mr. Domino!",
+    "games": [
+      {
+        "name": "No One Can Stop Mr. Domino!",
+        "url": "/projects/games/domino-rush/index.html"
+      }
+    ]
+  },
+  {
+    "name": "The Crown Below",
+    "games": [
+      {
+        "name": "The Crown Below",
+        "url": "/projects/games/kingdomcrown/index.html"
+      }
+    ]
+  },
+  {
+    "name": "Evil Empires",
+    "games": [
+      {
+        "name": "Evil Empires",
+        "url": "/projects/games/evilempires/index.html"
+      }
+    ]
+  },
+  {
+    "name": "Moon Patrol",
+    "games": [
+      {
+        "name": "Moon Patrol",
+        "url": "/projects/games/moon-patrol/index.html"
+      }
+    ]
+  },
+  {
+    "name": "Green Wave",
+    "games": [
+      {
+        "name": "Green Wave",
+        "url": "/projects/games/greenwave/index.html"
+      },
+      {
+        "name": "Influence Garden",
+        "url": "/projects/games/greenwave/influence.html"
+      },
+      {
+        "name": "Forest Life",
+        "url": "/projects/games/greenwave/automaton.html"
+      },
+      {
+        "name": "Turn the Earth",
+        "url": "/projects/games/greenwave/turn.html"
+      },
+      {
+        "name": "Watershed",
+        "url": "/projects/games/greenwave/watershed.html"
+      },
+      {
+        "name": "Wildlife Corridors",
+        "url": "/projects/games/greenwave/corridors.html"
+      },
+      {
+        "name": "Forest Mosaic",
+        "url": "/projects/games/greenwave/mosaic.html"
+      },
+      {
+        "name": "Travelling Spring",
+        "url": "/projects/games/greenwave/spring.html"
+      }
+    ]
+  },
+  {
+    "name": "Crawl of the Beholder",
+    "games": [
+      {
+        "name": "Crawl of the Beholder",
+        "url": "/projects/games/crawlofthebeholder/index.html"
+      },
+      {
+        "name": "Dungeon Sprint",
+        "url": "/projects/games/crawlofthebeholder/index.html?mode=sprint"
+      },
+      {
+        "name": "Foresight Tactics",
+        "url": "/projects/games/crawlofthebeholder/index.html?mode=foresight"
+      },
+      {
+        "name": "Oldschool Wireframe",
+        "url": "/projects/games/crawlofthebeholder/index.html?mode=oldschool"
+      },
+      {
+        "name": "Necro-Beat Tempo",
+        "url": "/projects/games/crawlofthebeholder/index.html?mode=tempo"
+      },
+      {
+        "name": "Card & AP Crawl",
+        "url": "/projects/games/crawlofthebeholder/index.html?mode=cardcrawl"
+      }
+    ]
+  },
+  {
+    "name": "Stars and Ships",
+    "games": [
+      {
+        "name": "Stars and Ships",
+        "url": "/projects/games/starsandships/index.html"
+      }
+    ]
+  }
+]
