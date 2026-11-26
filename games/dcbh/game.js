@@ -2,13 +2,14 @@
   "use strict";
 
   // Core constants faithfully ported from DCBH (gameplay.go, falling.go, System*.go)
+  // Enhanced with authentic Dungeon Crawl Stone Soup (DCSS) tileset graphics.
   const VIEW_WIDTH = 1024;
   const VIEW_HEIGHT = 1024;
 
   const PLAYER_MAX_HP = 10;
   const PLAYER_SPEED = 400; // px/s
-  const ENEMY_SPEED = 80; // px/s
-  const BULLET_SPEED = 620; // px/s
+  const ENEMY_SPEED = 84; // px/s
+  const BULLET_SPEED = 640; // px/s
 
   const BULLET_COOLDOWN = 0.18; // s
   const BULLET_MAX_LIFETIME = 2.4; // s
@@ -17,7 +18,15 @@
   const MIN_SPAWN_INTERVAL = 0.28; // s
   const SPAWN_RAMP_PER_SEC = 0.012;
 
+  const TILE_SIZE = 64; // 32px DCSS tile rendered at crisp 2x
+  const GRID_COLS = 25; // 25 * 64 = 1600px world
+  const GRID_ROWS = 25;
+  const WORLD_WIDTH = GRID_COLS * TILE_SIZE;
+  const WORLD_HEIGHT = GRID_ROWS * TILE_SIZE;
+  const WALL_MARGIN = TILE_SIZE; // 1-tile stone border around arena
+
   const STORAGE_BEST_KEY = "dcbh_best_kills_v1";
+  const DCSS_BASE = "/projects/games/crawlofthebeholder/art/tilesets/classic/";
 
   const CARDINAL_DIRS = [
     { x: 0, y: -1 },
@@ -26,19 +35,43 @@
     { x: -1, y: 0 }
   ];
 
-  // Octagon polygon from SystemRockSpawn.go for rock2.png (16x16 scaled 4x -> 64x64)
-  const ROCK_POLY_BASE = [
-    { x: 4, y: 0 },
-    { x: 12, y: 0 },
-    { x: 16, y: 4 },
-    { x: 16, y: 13 },
-    { x: 13, y: 13 },
-    { x: 13, y: 16 },
-    { x: 3, y: 16 },
-    { x: 3, y: 13 },
-    { x: 0, y: 13 },
-    { x: 0, y: 4 }
+  // DCSS branch progression (changes floor/wall palette & unlocks deeper monsters)
+  const BRANCHES = [
+    { id: "dungeon", label: "D:1", name: "The Dungeon", minTime: 0, accent: "#cbd5e1" },
+    { id: "crypt", label: "Crypt:1", name: "The Crypt", minTime: 25, accent: "#a78bfa" },
+    { id: "zot", label: "Zot:5", name: "The Realm of Zot", minTime: 60, accent: "#f87171" }
   ];
+
+  // Authentic DCSS monster roster grouped by dungeon depth
+  const MONSTER_TIERS = {
+    dungeon: [
+      { id: "goblin", name: "goblin", tile: "mons_goblin", speedMul: 1.15, burst: "#4ade80" },
+      { id: "orc", name: "orc", tile: "mons_orc", speedMul: 1.0, burst: "#86efac" },
+      { id: "orc_warrior", name: "orc warrior", tile: "mons_orc_warrior", speedMul: 0.96, burst: "#facc15" },
+      { id: "azure_jelly", name: "azure jelly", tile: "mons_azure_jelly", speedMul: 0.92, burst: "#38bdf8" },
+      { id: "eye_of_draining", name: "eye of draining", tile: "mons_eye", speedMul: 1.08, burst: "#c084fc" }
+    ],
+    crypt: [
+      { id: "hydra", name: "hydra", tile: "mons_hydra", speedMul: 0.95, burst: "#4ade80" },
+      { id: "manticore", name: "manticore", tile: "mons_manticore", speedMul: 1.12, burst: "#fb923c" },
+      { id: "mummy", name: "mummy", tile: "mons_mummy", speedMul: 0.86, burst: "#fde68a" },
+      { id: "wight", name: "wight", tile: "mons_wight", speedMul: 1.05, burst: "#93c5fd" },
+      { id: "orb_spider", name: "orb spider", tile: "mons_orb_spider", speedMul: 1.18, burst: "#f472b6" },
+      { id: "ogre", name: "ogre", tile: "mons_ogre", speedMul: 0.9, burst: "#d97706" }
+    ],
+    zot: [
+      { id: "starspawn", name: "tentacled starspawn", tile: "starspawn", speedMul: 1.05, burst: "#fb923c" },
+      { id: "tentacled_monstrosity", name: "tentacled monstrosity", tile: "mons_tentacled", speedMul: 0.96, burst: "#a855f7" },
+      { id: "chaos_spawn", name: "chaos spawn", tile: "mons_chaos", speedMul: 1.16, burst: "#e879f9" },
+      { id: "shadow_demon", name: "shadow demon", tile: "mons_shadow_demon", speedMul: 1.12, burst: "#818cf8" },
+      { id: "ancient_lich", name: "ancient lich", tile: "mons_ancient_lich", speedMul: 0.98, burst: "#c084fc" },
+      { id: "brimstone_fiend", name: "brimstone fiend", tile: "mons_brimstone", speedMul: 1.08, burst: "#ef4444" },
+      { id: "executioner", name: "executioner", tile: "mons_executioner", speedMul: 1.2, burst: "#f87171" },
+      { id: "balrug", name: "balrug", tile: "mons_balrug", speedMul: 1.02, burst: "#f97316" },
+      { id: "curse_skull", name: "curse skull", tile: "mons_curse_skull", speedMul: 1.1, burst: "#e2e8f0" },
+      { id: "crystal_guardian", name: "crystal guardian", tile: "mons_crystal", speedMul: 0.94, burst: "#67e8f9" }
+    ]
+  };
 
   const canvas = document.getElementById("game-canvas");
   const ctx = canvas.getContext("2d");
@@ -46,10 +79,6 @@
   const pauseBtn = document.getElementById("pause-btn");
   const restartBtn = document.getElementById("restart-btn");
   const muteBtn = document.getElementById("mute-btn");
-
-  const mapData = window.DCBH_MAP_DATA;
-  const worldWidth = mapData ? mapData.width * mapData.tileWidth : 1600;
-  const worldHeight = mapData ? mapData.height * mapData.tileHeight : 1600;
 
   // --- Retro Procedural Audio (WebAudio, zero external files) ---
   const sound = {
@@ -93,26 +122,218 @@
     hurt() {
       this.tone(170, 62, 0.18, "sawtooth", 0.09);
     },
+    descend() {
+      this.tone(280, 620, 0.25, "triangle", 0.06);
+    },
     gameOver() {
       this.tone(220, 55, 0.42, "sawtooth", 0.1);
     }
   };
 
-  // --- Asset Loader ---
+  // --- Asset Loader (DCBH + Authentic DCSS classic tileset) ---
   const ASSET_FILES = {
+    // Player & spell projectile
     player: "assets/deep_elf_annihilator.png",
     bullet: "assets/damnation.png",
-    rock: "assets/rock2.png",
     starspawn: "assets/tentacled_starspawn.png",
-    grass: "assets/grass-tiles-2-small.png",
-    trees: "assets/tree2-final.png",
-    cloud: "assets/cloud.png"
+
+    // DCSS dungeon floors
+    floor_norm_0: DCSS_BASE + "FLOOR_NORMAL_0.png",
+    floor_norm_1: DCSS_BASE + "FLOOR_NORMAL_1.png",
+    floor_norm_2: DCSS_BASE + "FLOOR_NORMAL_2.png",
+    floor_norm_3: DCSS_BASE + "FLOOR_NORMAL_3.png",
+    floor_crypt_0: DCSS_BASE + "FLOOR_CRYPT_0.png",
+    floor_crypt_1: DCSS_BASE + "FLOOR_CRYPT_1.png",
+    floor_cobalt_0: DCSS_BASE + "FLOOR_BLACK_COBALT_0.png",
+    floor_cobalt_1: DCSS_BASE + "FLOOR_BLACK_COBALT_1.png",
+    floor_cobalt_2: DCSS_BASE + "FLOOR_BLACK_COBALT_2.png",
+    floor_cobalt_3: DCSS_BASE + "FLOOR_BLACK_COBALT_3.png",
+    floor_mosaic_0: DCSS_BASE + "FLOOR_MOSAIC_0.png",
+    floor_mosaic_1: DCSS_BASE + "FLOOR_MOSAIC_1.png",
+    floor_mosaic_2: DCSS_BASE + "FLOOR_MOSAIC_2.png",
+    floor_mosaic_3: DCSS_BASE + "FLOOR_MOSAIC_3.png",
+    floor_blood_0: DCSS_BASE + "FLOOR_COBBLE_BLOOD_0.png",
+    floor_blood_1: DCSS_BASE + "FLOOR_COBBLE_BLOOD_1.png",
+
+    // DCSS walls & dungeon features
+    wall_cat_0: DCSS_BASE + "WALL_CATACOMBS_0.png",
+    wall_cat_1: DCSS_BASE + "WALL_CATACOMBS_1.png",
+    wall_cat_2: DCSS_BASE + "WALL_CATACOMBS_2.png",
+    wall_cat_3: DCSS_BASE + "WALL_CATACOMBS_3.png",
+    wall_vault_0: DCSS_BASE + "WALL_VAULT_0.png",
+    wall_vault_1: DCSS_BASE + "WALL_VAULT_1.png",
+    wall_vault_2: DCSS_BASE + "WALL_VAULT_2.png",
+    wall_vault_3: DCSS_BASE + "WALL_VAULT_3.png",
+    wall_zot_0: DCSS_BASE + "WALL_ZOT_RED_0.png",
+    wall_zot_1: DCSS_BASE + "WALL_ZOT_RED_1.png",
+    wall_zot_2: DCSS_BASE + "WALL_ZOT_RED_2.png",
+    wall_zot_3: DCSS_BASE + "WALL_ZOT_RED_3.png",
+    lava_0: DCSS_BASE + "DNGN_LAVA_0.png",
+    lava_1: DCSS_BASE + "DNGN_LAVA_1.png",
+    lava_2: DCSS_BASE + "DNGN_LAVA_2.png",
+    lava_3: DCSS_BASE + "DNGN_LAVA_3.png",
+    stairs_down: DCSS_BASE + "DNGN_SHOALS_STAIRS_DOWN_0.png",
+
+    // DCSS blood, spell clouds, and status icons
+    blood_0: DCSS_BASE + "BLOOD_0.png",
+    blood_1: DCSS_BASE + "BLOOD_1.png",
+    blood_2: DCSS_BASE + "BLOOD_2.png",
+    blood_3: DCSS_BASE + "BLOOD_3.png",
+    cloud_fire_0: DCSS_BASE + "CLOUD_FIRE_0.png",
+    cloud_fire_1: DCSS_BASE + "CLOUD_FIRE_1.png",
+    cloud_fire_2: DCSS_BASE + "CLOUD_FIRE_2.png",
+    cloud_cold_0: DCSS_BASE + "CLOUD_COLD_0.png",
+    cloud_cold_1: DCSS_BASE + "CLOUD_COLD_1.png",
+    cloud_poison_0: DCSS_BASE + "CLOUD_POISON_0.png",
+    cloud_poison_1: DCSS_BASE + "CLOUD_POISON_1.png",
+    icon_hasted: DCSS_BASE + "HASTED_0.png",
+    icon_flame: DCSS_BASE + "INNER_FLAME_0.png",
+    icon_berserk: DCSS_BASE + "BERSERK_0.png",
+
+    // DCSS monsters
+    mons_goblin: DCSS_BASE + "MONS_GOBLIN_0.png",
+    mons_orc: DCSS_BASE + "MONS_ORC_0.png",
+    mons_orc_warrior: DCSS_BASE + "MONS_ORC_WARRIOR_0.png",
+    mons_azure_jelly: DCSS_BASE + "MONS_AZURE_JELLY_0.png",
+    mons_eye: DCSS_BASE + "MONS_EYE_OF_DRAINING_0.png",
+    mons_hydra: DCSS_BASE + "MONS_HYDRA_0.png",
+    mons_manticore: DCSS_BASE + "MONS_MANTICORE_0.png",
+    mons_mummy: DCSS_BASE + "MONS_MUMMY_0.png",
+    mons_wight: DCSS_BASE + "MONS_WIGHT_0.png",
+    mons_orb_spider: DCSS_BASE + "MONS_ORB_SPIDER_0.png",
+    mons_ogre: DCSS_BASE + "MONS_OGRE_0.png",
+    mons_tentacled: DCSS_BASE + "MONS_TENTACLED_MONSTROSITY_0.png",
+    mons_chaos: DCSS_BASE + "MONS_CHAOS_SPAWN_0.png",
+    mons_shadow_demon: DCSS_BASE + "MONS_SHADOW_DEMON_0.png",
+    mons_ancient_lich: DCSS_BASE + "MONS_ANCIENT_LICH_0.png",
+    mons_brimstone: DCSS_BASE + "MONS_BRIMSTONE_FIEND_0.png",
+    mons_executioner: DCSS_BASE + "MONS_EXECUTIONER_0.png",
+    mons_balrug: DCSS_BASE + "MONS_BALRUG_0.png",
+    mons_curse_skull: DCSS_BASE + "MONS_CURSE_SKULL_0.png",
+    mons_crystal: DCSS_BASE + "MONS_CRYSTAL_GUARDIAN_0.png"
   };
 
   const assets = {};
   let assetsReady = false;
-  let grassCanvas = null;
-  let treesCanvas = null;
+  const branchCanvases = {
+    dungeon: null,
+    crypt: null,
+    zot: null
+  };
+
+  // Decorative animated lava braziers placed symmetrically in the dungeon hall
+  const LAVA_TILES = [
+    { gx: 4, gy: 4 }, { gx: 20, gy: 4 },
+    { gx: 4, gy: 20 }, { gx: 20, gy: 20 },
+    { gx: 9, gy: 9 }, { gx: 15, gy: 9 },
+    { gx: 9, gy: 15 }, { gx: 15, gy: 15 }
+  ];
+
+  // Deterministic tile hash so dungeon floors have organic DCSS variation
+  function tileHash(x, y, salt) {
+    let n = (x * 374761393 + y * 668265263 + (salt || 0) * 1442695041) | 0;
+    n = (n ^ (n >>> 13)) * 1274126177;
+    return ((n ^ (n >>> 16)) >>> 0);
+  }
+
+  function buildDungeonCanvas(branchId) {
+    const off = document.createElement("canvas");
+    off.width = WORLD_WIDTH;
+    off.height = WORLD_HEIGHT;
+    const octx = off.getContext("2d");
+    octx.imageSmoothingEnabled = false;
+
+    const floorSets = {
+      dungeon: [assets.floor_norm_0, assets.floor_norm_1, assets.floor_norm_2, assets.floor_norm_3],
+      crypt: [assets.floor_crypt_0, assets.floor_crypt_1, assets.floor_blood_0, assets.floor_blood_1],
+      zot: [assets.floor_cobalt_0, assets.floor_cobalt_1, assets.floor_cobalt_2, assets.floor_cobalt_3]
+    };
+    const wallSets = {
+      dungeon: [assets.wall_cat_0, assets.wall_cat_1, assets.wall_cat_2, assets.wall_cat_3],
+      crypt: [assets.wall_vault_0, assets.wall_vault_1, assets.wall_vault_2, assets.wall_vault_3],
+      zot: [assets.wall_zot_0, assets.wall_zot_1, assets.wall_zot_2, assets.wall_zot_3]
+    };
+    const mosaicSet = [assets.floor_mosaic_0, assets.floor_mosaic_1, assets.floor_mosaic_2, assets.floor_mosaic_3];
+
+    const floors = floorSets[branchId] || floorSets.dungeon;
+    const walls = wallSets[branchId] || wallSets.dungeon;
+    const fallbackFloor = branchId === "zot" ? "#131729" : branchId === "crypt" ? "#1a1720" : "#1c1c21";
+    const fallbackWall = branchId === "zot" ? "#451a1a" : branchId === "crypt" ? "#2e2938" : "#2f2c29";
+
+    const centerCol = Math.floor(GRID_COLS / 2);
+    const centerRow = Math.floor(GRID_ROWS / 2);
+
+    for (let gy = 0; gy < GRID_ROWS; gy++) {
+      for (let gx = 0; gx < GRID_COLS; gx++) {
+        const dx = gx * TILE_SIZE;
+        const dy = gy * TILE_SIZE;
+        const h = tileHash(gx, gy, branchId.length);
+        const isBorder = gx === 0 || gy === 0 || gx === GRID_COLS - 1 || gy === GRID_ROWS - 1;
+
+        if (isBorder) {
+          const wImg = walls[h % walls.length];
+          if (wImg) {
+            octx.drawImage(wImg, dx, dy, TILE_SIZE, TILE_SIZE);
+          } else {
+            octx.fillStyle = fallbackWall;
+            octx.fillRect(dx, dy, TILE_SIZE, TILE_SIZE);
+          }
+          continue;
+        }
+
+        // Central sanctuary mosaic ring + cardinal walkways
+        const distCenter = Math.max(Math.abs(gx - centerCol), Math.abs(gy - centerRow));
+        const onWalkway = gx === centerCol || gy === centerRow;
+        let fImg = null;
+        if (distCenter <= 3 || (onWalkway && distCenter <= 8)) {
+          fImg = mosaicSet[h % mosaicSet.length];
+        } else {
+          fImg = floors[h % floors.length];
+        }
+
+        if (fImg) {
+          octx.drawImage(fImg, dx, dy, TILE_SIZE, TILE_SIZE);
+        } else {
+          octx.fillStyle = fallbackFloor;
+          octx.fillRect(dx, dy, TILE_SIZE, TILE_SIZE);
+        }
+
+        // Subtle tile grid shadow for classic DCSS readability
+        octx.strokeStyle = "rgba(0, 0, 0, 0.22)";
+        octx.lineWidth = 1;
+        octx.strokeRect(dx + 0.5, dy + 0.5, TILE_SIZE - 1, TILE_SIZE - 1);
+      }
+    }
+
+    // Center descending stairs emblem (purely visual dungeon centerpiece)
+    if (assets.stairs_down) {
+      octx.drawImage(
+        assets.stairs_down,
+        centerCol * TILE_SIZE,
+        centerRow * TILE_SIZE,
+        TILE_SIZE,
+        TILE_SIZE
+      );
+    }
+
+    // Ambient drop shadow along the inner edge of the stone border
+    octx.strokeStyle = "rgba(0, 0, 0, 0.55)";
+    octx.lineWidth = 10;
+    octx.strokeRect(
+      WALL_MARGIN + 5,
+      WALL_MARGIN + 5,
+      WORLD_WIDTH - WALL_MARGIN * 2 - 10,
+      WORLD_HEIGHT - WALL_MARGIN * 2 - 10
+    );
+
+    return off;
+  }
+
+  function buildAllDungeonLayers() {
+    branchCanvases.dungeon = buildDungeonCanvas("dungeon");
+    branchCanvases.crypt = buildDungeonCanvas("crypt");
+    branchCanvases.zot = buildDungeonCanvas("zot");
+  }
 
   function loadAllAssets() {
     const keys = Object.keys(ASSET_FILES);
@@ -125,77 +346,18 @@
         remaining -= 1;
         if (remaining === 0) {
           assetsReady = true;
-          buildStaticTileLayers();
+          buildAllDungeonLayers();
         }
       };
       img.onerror = function () {
         remaining -= 1;
         if (remaining === 0) {
           assetsReady = true;
-          buildStaticTileLayers();
+          buildAllDungeonLayers();
         }
       };
       img.src = ASSET_FILES[key];
     });
-  }
-
-  function findTilesetForGid(gid) {
-    if (!mapData || !mapData.tilesets) return null;
-    let chosen = null;
-    for (let i = 0; i < mapData.tilesets.length; i++) {
-      const ts = mapData.tilesets[i];
-      if (gid >= ts.firstgid) {
-        chosen = ts;
-      }
-    }
-    return chosen;
-  }
-
-  function tilesetImage(ts) {
-    if (!ts) return null;
-    if (ts.image.indexOf("grass") !== -1) return assets.grass || null;
-    if (ts.image.indexOf("tree") !== -1) return assets.trees || null;
-    return null;
-  }
-
-  function prerenderTileLayer(layerName) {
-    if (!mapData || !mapData.layers || !mapData.layers[layerName]) return null;
-    const off = document.createElement("canvas");
-    off.width = worldWidth;
-    off.height = worldHeight;
-    const octx = off.getContext("2d");
-    octx.imageSmoothingEnabled = false;
-
-    const gids = mapData.layers[layerName];
-    const cols = mapData.width;
-    const tw = mapData.tileWidth;
-    const th = mapData.tileHeight;
-
-    for (let idx = 0; idx < gids.length; idx++) {
-      const rawGid = gids[idx];
-      // Clear TMX flip flags in upper 3 bits if any
-      const gid = rawGid & 0x1fffffff;
-      if (gid === 0) continue;
-
-      const ts = findTilesetForGid(gid);
-      const img = tilesetImage(ts);
-      if (!ts || !img) continue;
-
-      const localId = gid - ts.firstgid;
-      const sx = (localId % ts.columns) * ts.tileWidth;
-      const sy = Math.floor(localId / ts.columns) * ts.tileHeight;
-      const dx = (idx % cols) * tw;
-      const dy = Math.floor(idx / cols) * th;
-
-      octx.drawImage(img, sx, sy, ts.tileWidth, ts.tileHeight, dx, dy, tw, th);
-    }
-
-    return off;
-  }
-
-  function buildStaticTileLayers() {
-    grassCanvas = prerenderTileLayer("grass");
-    treesCanvas = prerenderTileLayer("trees");
   }
 
   // --- Helpers (matching gameplay.go) ---
@@ -233,6 +395,16 @@
     return interval < MIN_SPAWN_INTERVAL ? MIN_SPAWN_INTERVAL : interval;
   }
 
+  function currentBranchForTime(elapsed) {
+    let chosen = BRANCHES[0];
+    for (let i = 0; i < BRANCHES.length; i++) {
+      if (elapsed >= BRANCHES[i].minTime) {
+        chosen = BRANCHES[i];
+      }
+    }
+    return chosen;
+  }
+
   function loadBestScore() {
     try {
       const raw = window.localStorage.getItem(STORAGE_BEST_KEY);
@@ -262,6 +434,7 @@
     menuLockTimer: 0,
 
     elapsed: 0,
+    branch: BRANCHES[0],
     spawnCooldown: INITIAL_SPAWN_DELAY,
     bulletCooldown: 0,
     bulletSweep: 0,
@@ -270,24 +443,43 @@
     enemies: [],
     bullets: [],
     particles: [],
+    decals: [], // persistent DCSS blood splatters on dungeon floor
+    spellClouds: [], // transient DCSS fire/cold/poison puffs on kill/hit
+    ambientClouds: [], // drifting dungeon miasma/smoke
+    combatLog: [], // DCSS-style combat messages
     camera: { x: 0, y: 0 },
     shakeTimer: 0,
     hurtFlash: 0,
-    cloudOffset: 0
+    animTime: 0
   };
 
+  function pushLog(text, color) {
+    state.combatLog.push({ text: text, color: color || "#cbd5e1" });
+    if (state.combatLog.length > 4) {
+      state.combatLog.shift();
+    }
+  }
+
+  function initAmbientClouds() {
+    state.ambientClouds = [
+      { x: 240, y: 260, vx: 14, kind: "poison", scale: 1.5, alpha: 0.34 },
+      { x: 960, y: 480, vx: -11, kind: "cold", scale: 1.7, alpha: 0.3 },
+      { x: 520, y: 1120, vx: 16, kind: "fire", scale: 1.4, alpha: 0.28 },
+      { x: 1240, y: 1080, vx: -13, kind: "poison", scale: 1.6, alpha: 0.3 }
+    ];
+  }
+
   function createPlayer() {
-    const width = 64; // 32 * 2x scale
-    const height = 64;
+    const size = 64; // 32 * 2x scale
     return {
-      x: 500,
-      y: 500,
-      width: width,
-      height: height,
+      x: Math.floor(WORLD_WIDTH / 2 - size / 2),
+      y: Math.floor(WORLD_HEIGHT / 2 - size / 2),
+      width: size,
+      height: size,
       hp: PLAYER_MAX_HP,
       maxHp: PLAYER_MAX_HP,
       facingX: 1,
-      invulnVisual: 0
+      walkPhase: 0
     };
   }
 
@@ -301,8 +493,8 @@
   function updateCamera() {
     if (!state.player) return;
     const pc = centerOf(state.player);
-    const maxCamX = Math.max(0, worldWidth - VIEW_WIDTH);
-    const maxCamY = Math.max(0, worldHeight - VIEW_HEIGHT);
+    const maxCamX = Math.max(0, WORLD_WIDTH - VIEW_WIDTH);
+    const maxCamY = Math.max(0, WORLD_HEIGHT - VIEW_HEIGHT);
     state.camera.x = clamp(pc.x - VIEW_WIDTH / 2, 0, maxCamX);
     state.camera.y = clamp(pc.y - VIEW_HEIGHT / 2, 0, maxCamY);
   }
@@ -313,6 +505,7 @@
     state.score = 0;
     state.gameOver = false;
     state.elapsed = 0;
+    state.branch = BRANCHES[0];
     state.spawnCooldown = INITIAL_SPAWN_DELAY;
     state.bulletCooldown = 0;
     state.bulletSweep = 0;
@@ -320,19 +513,26 @@
     state.enemies = [];
     state.bullets = [];
     state.particles = [];
+    state.decals = [];
+    state.spellClouds = [];
+    state.combatLog = [];
     state.shakeTimer = 0;
     state.hurtFlash = 0;
+    initAmbientClouds();
+    pushLog("Welcome, Deep Elf Annihilator! You enter D:1.", "#facc15");
+    pushLog("Damnation bolts auto-target the nearest monster.", "#94a3b8");
     updateCamera();
     syncUI();
     canvas.focus();
   }
 
-  function finishRun() {
+  function finishRun(killerName) {
     state.lastScore = state.score;
     if (state.score > state.bestScore) {
       state.bestScore = state.score;
       saveBestScore(state.bestScore);
     }
+    pushLog("You die... slain by " + (killerName || "the swarm") + ".", "#ef4444");
     state.gameOver = true;
     state.scene = "menu";
     state.paused = false;
@@ -344,7 +544,7 @@
   function syncUI() {
     if (state.scene === "menu") {
       startBtn.classList.remove("hidden");
-      startBtn.textContent = state.gameOver ? "Play Again" : "Start Run";
+      startBtn.textContent = state.gameOver ? "Descend Again" : "Enter Dungeon";
       pauseBtn.disabled = true;
       pauseBtn.textContent = "Pause";
     } else {
@@ -380,11 +580,7 @@
   }
 
   window.addEventListener("keydown", function (e) {
-    if (
-      isMovementKey(e.code) ||
-      e.code === "Space" ||
-      e.code === "Enter"
-    ) {
+    if (isMovementKey(e.code) || e.code === "Space" || e.code === "Enter") {
       e.preventDefault();
     }
 
@@ -512,8 +708,8 @@
   // --- Spawning Systems ---
   function spawnPosition() {
     const pc = centerOf(state.player);
-    const halfWidth = VIEW_WIDTH / 2 + 96;
-    const halfHeight = VIEW_HEIGHT / 2 + 96;
+    const halfWidth = VIEW_WIDTH / 2 + 84;
+    const halfHeight = VIEW_HEIGHT / 2 + 84;
 
     const side = Math.floor(Math.random() * 4);
     switch (side) {
@@ -528,47 +724,40 @@
     }
   }
 
+  function pickMonsterArchetype() {
+    const roll = Math.random();
+    let pool = MONSTER_TIERS.dungeon;
+    if (state.branch.id === "zot") {
+      if (roll < 0.65) pool = MONSTER_TIERS.zot;
+      else if (roll < 0.88) pool = MONSTER_TIERS.crypt;
+      else pool = MONSTER_TIERS.dungeon;
+    } else if (state.branch.id === "crypt") {
+      if (roll < 0.65) pool = MONSTER_TIERS.crypt;
+      else if (roll < 0.8) pool = MONSTER_TIERS.zot;
+      else pool = MONSTER_TIERS.dungeon;
+    } else {
+      if (roll < 0.8) pool = MONSTER_TIERS.dungeon;
+      else pool = MONSTER_TIERS.crypt;
+    }
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
   function spawnEnemy() {
     const pos = spawnPosition();
-    const variant = Math.floor(Math.random() * 3);
-    const rotRad = ((45 * Math.random()) * Math.PI) / 180;
-
-    if (variant === 0) {
-      // Dark ellipse / void orb (SystemRockSpawn.go case 0)
-      const yscale = 1.0 + Math.random();
-      const width = 64;
-      const height = 64 * yscale;
-      state.enemies.push({
-        kind: "ellipse",
-        x: pos.x,
-        y: pos.y,
-        width: width,
-        height: height,
-        rotation: rotRad,
-        rx: width / 2,
-        ry: height / 2
-      });
-    } else if (variant === 1) {
-      // rock2.png scaled 4x (SystemRockSpawn.go case 1)
-      state.enemies.push({
-        kind: "rock",
-        x: pos.x,
-        y: pos.y,
-        width: 64,
-        height: 64,
-        rotation: rotRad
-      });
-    } else {
-      // tentacled_starspawn.png scaled 2x (SystemRockSpawn.go default)
-      state.enemies.push({
-        kind: "starspawn",
-        x: pos.x,
-        y: pos.y,
-        width: 64,
-        height: 64,
-        rotation: rotRad
-      });
-    }
+    const arch = pickMonsterArchetype();
+    state.enemies.push({
+      id: arch.id,
+      name: arch.name,
+      tile: arch.tile,
+      burst: arch.burst,
+      speed: ENEMY_SPEED * arch.speedMul,
+      x: pos.x,
+      y: pos.y,
+      width: 64,
+      height: 64,
+      bobPhase: Math.random() * Math.PI * 2,
+      facingX: 1
+    });
   }
 
   function nearestEnemyDirection(fromX, fromY) {
@@ -602,8 +791,8 @@
       state.bulletSweep += 1;
     }
 
-    const w = 32;
-    const h = 32;
+    const w = 36;
+    const h = 36;
     state.bullets.push({
       x: pc.x - w / 2,
       y: pc.y - h / 2,
@@ -618,6 +807,31 @@
     sound.shoot();
   }
 
+  function spawnBloodDecal(cx, cy) {
+    const bloodKeys = ["blood_0", "blood_1", "blood_2", "blood_3"];
+    state.decals.push({
+      x: clamp(cx - 24, WALL_MARGIN, WORLD_WIDTH - WALL_MARGIN - 48),
+      y: clamp(cy - 24, WALL_MARGIN, WORLD_HEIGHT - WALL_MARGIN - 48),
+      size: 48,
+      tile: bloodKeys[Math.floor(Math.random() * bloodKeys.length)],
+      alpha: 0.72
+    });
+    if (state.decals.length > 120) {
+      state.decals.shift();
+    }
+  }
+
+  function spawnSpellCloud(cx, cy, kind) {
+    state.spellClouds.push({
+      x: cx,
+      y: cy,
+      kind: kind || "fire",
+      life: 0,
+      maxLife: 0.34,
+      size: 56
+    });
+  }
+
   function spawnBurst(cx, cy, color, count) {
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
@@ -629,13 +843,13 @@
         vy: Math.sin(angle) * speed,
         life: 0,
         maxLife: 0.22 + Math.random() * 0.24,
-        size: 3 + Math.random() * 5,
+        size: 4 + Math.random() * 4,
         color: color
       });
     }
   }
 
-  // --- Collision Detection (AABB + rotated ellipse / polygon refinement) ---
+  // --- Collision Detection ---
   function aabbOverlap(a, b) {
     return (
       a.x < b.x + b.width &&
@@ -643,19 +857,6 @@
       a.y < b.y + b.height &&
       a.y + a.height > b.y
     );
-  }
-
-  function pointInRotatedEllipse(px, py, enemy, pad) {
-    const ec = centerOf(enemy);
-    const cos = Math.cos(-enemy.rotation);
-    const sin = Math.sin(-enemy.rotation);
-    const dx = px - ec.x;
-    const dy = py - ec.y;
-    const lx = dx * cos - dy * sin;
-    const ly = dx * sin + dy * cos;
-    const rx = enemy.rx + pad;
-    const ry = enemy.ry + pad;
-    return (lx * lx) / (rx * rx) + (ly * ly) / (ry * ry) <= 1;
   }
 
   function entityHitsEnemy(ent, enemy, inset) {
@@ -668,17 +869,10 @@
     };
     if (!aabbOverlap(box, enemy)) return false;
 
-    if (enemy.kind === "ellipse") {
-      const c = centerOf(box);
-      const radius = Math.min(box.width, box.height) * 0.42;
-      return pointInRotatedEllipse(c.x, c.y, enemy, radius);
-    }
-
-    // Tight circle-ish hitbox for rock & starspawn to feel crisp and fair
     const c1 = centerOf(box);
     const c2 = centerOf(enemy);
     const r1 = Math.min(box.width, box.height) * 0.44;
-    const r2 = Math.min(enemy.width, enemy.height) * 0.42;
+    const r2 = Math.min(enemy.width, enemy.height) * 0.4;
     const dx = c1.x - c2.x;
     const dy = c1.y - c2.y;
     return dx * dx + dy * dy <= (r1 + r2) * (r1 + r2);
@@ -686,7 +880,15 @@
 
   // --- Simulation Step ---
   function update(dt) {
-    state.cloudOffset = (state.cloudOffset + dt * 10) % (worldWidth + 500);
+    state.animTime += dt;
+
+    // Drift ambient dungeon clouds
+    for (let i = 0; i < state.ambientClouds.length; i++) {
+      const c = state.ambientClouds[i];
+      c.x += c.vx * dt;
+      if (c.x > WORLD_WIDTH + 96) c.x = -96;
+      if (c.x < -96) c.x = WORLD_WIDTH + 96;
+    }
 
     if (state.scene === "menu") {
       if (state.menuLockTimer > 0) {
@@ -701,18 +903,29 @@
     if (state.shakeTimer > 0) state.shakeTimer = Math.max(0, state.shakeTimer - dt);
     if (state.hurtFlash > 0) state.hurtFlash = Math.max(0, state.hurtFlash - dt);
 
-    // 1. ControlSystem: move player & clamp to tilemap bounds
+    // Branch progression check
+    const nextBranch = currentBranchForTime(state.elapsed);
+    if (nextBranch.id !== state.branch.id) {
+      state.branch = nextBranch;
+      pushLog("You descend into " + nextBranch.name + " (" + nextBranch.label + ")!", nextBranch.accent);
+      sound.descend();
+    }
+
+    // 1. ControlSystem: move player & clamp inside stone dungeon walls
     const move = readMovementInput();
     state.player.x += move.x * PLAYER_SPEED * dt;
     state.player.y += move.y * PLAYER_SPEED * dt;
     if (move.x < -0.05) state.player.facingX = -1;
     if (move.x > 0.05) state.player.facingX = 1;
+    if (Math.hypot(move.x, move.y) > 0.05) {
+      state.player.walkPhase += dt * 14;
+    }
 
-    state.player.x = clamp(state.player.x, 0, Math.max(0, worldWidth - state.player.width));
-    state.player.y = clamp(state.player.y, 0, Math.max(0, worldHeight - state.player.height));
+    state.player.x = clamp(state.player.x, WALL_MARGIN, WORLD_WIDTH - WALL_MARGIN - state.player.width);
+    state.player.y = clamp(state.player.y, WALL_MARGIN, WORLD_HEIGHT - WALL_MARGIN - state.player.height);
     updateCamera();
 
-    // 2. RockSpawnSystem: time-ramped enemy spawning
+    // 2. RockSpawnSystem: time-ramped DCSS monster spawning
     state.spawnCooldown -= dt;
     if (state.spawnCooldown <= 0) {
       spawnEnemy();
@@ -720,14 +933,17 @@
       state.spawnCooldown = enemySpawnInterval(state.elapsed) * jitter;
     }
 
-    // 3. ChasingSystem: move enemies toward player; despawn far enemies
+    // 3. ChasingSystem: move monsters toward player; despawn far monsters
     const pc = centerOf(state.player);
     for (let i = state.enemies.length - 1; i >= 0; i--) {
       const e = state.enemies[i];
       const ec = centerOf(e);
       const dir = directionBetween(ec.x, ec.y, pc.x, pc.y);
-      e.x += dir.x * ENEMY_SPEED * dt;
-      e.y += dir.y * ENEMY_SPEED * dt;
+      e.x += dir.x * e.speed * dt;
+      e.y += dir.y * e.speed * dt;
+      e.bobPhase += dt * 6;
+      if (dir.x < -0.05) e.facingX = -1;
+      if (dir.x > 0.05) e.facingX = 1;
 
       const dist = Math.hypot(ec.x - pc.x, ec.y - pc.y);
       if (dist > VIEW_WIDTH * 2) {
@@ -735,14 +951,14 @@
       }
     }
 
-    // 4. BulletSpawnSystem: auto-fire toward nearest enemy or sweep cardinals
+    // 4. BulletSpawnSystem: auto-fire Damnation toward nearest monster
     state.bulletCooldown -= dt;
     if (state.bulletCooldown <= 0) {
       state.bulletCooldown = BULLET_COOLDOWN;
       spawnBullet();
     }
 
-    // 5. BulletSystem: move bullets & expire by lifetime
+    // 5. BulletSystem: move bolts & expire by lifetime
     for (let i = state.bullets.length - 1; i >= 0; i--) {
       const b = state.bullets[i];
       b.x += b.dx * BULLET_SPEED * dt;
@@ -754,7 +970,7 @@
     }
 
     // 6. CollisionSystem + DeathSystem
-    // 6a. Bullet vs Enemy
+    // 6a. Bolt vs Monster
     for (let bi = state.bullets.length - 1; bi >= 0; bi--) {
       const b = state.bullets[bi];
       let hit = false;
@@ -762,11 +978,15 @@
         const e = state.enemies[ei];
         if (entityHitsEnemy(b, e, 4)) {
           const ec = centerOf(e);
-          const color = e.kind === "ellipse" ? "#a855f7" : e.kind === "rock" ? "#cbd5e1" : "#f97316";
-          spawnBurst(ec.x, ec.y, color, 9);
+          spawnBloodDecal(ec.x, ec.y);
+          spawnSpellCloud(ec.x, ec.y, "fire");
+          spawnBurst(ec.x, ec.y, e.burst || "#f97316", 8);
           state.enemies.splice(ei, 1);
           state.bullets.splice(bi, 1);
           state.score += 1;
+          if (state.score <= 3 || state.score % 10 === 0) {
+            pushLog("You blast the " + e.name + "! (" + state.score + " slain)", "#fde047");
+          }
           sound.kill();
           hit = true;
           break;
@@ -775,26 +995,29 @@
       if (hit) continue;
     }
 
-    // 6b. Enemy vs Player
+    // 6b. Monster vs Player
     for (let ei = state.enemies.length - 1; ei >= 0; ei--) {
       const e = state.enemies[ei];
-      if (entityHitsEnemy(state.player, e, 8)) {
+      if (entityHitsEnemy(state.player, e, 10)) {
         const ec = centerOf(e);
+        spawnSpellCloud(ec.x, ec.y, "cold");
         spawnBurst(ec.x, ec.y, "#ef4444", 12);
+        const attackerName = e.name;
         state.enemies.splice(ei, 1);
         state.player.hp = Math.max(0, state.player.hp - 1);
         state.hurtFlash = 0.25;
         state.shakeTimer = 0.2;
         if (state.player.hp <= 0) {
-          finishRun();
+          finishRun("a " + attackerName);
           return;
         } else {
+          pushLog("The " + attackerName + " hits you! (" + state.player.hp + "/" + state.player.maxHp + " HP)", "#f87171");
           sound.hurt();
         }
       }
     }
 
-    // 7. Particles
+    // 7. Particles & transient spell clouds
     for (let i = state.particles.length - 1; i >= 0; i--) {
       const p = state.particles[i];
       p.x += p.vx * dt;
@@ -806,47 +1029,59 @@
         state.particles.splice(i, 1);
       }
     }
+
+    for (let i = state.spellClouds.length - 1; i >= 0; i--) {
+      const sc = state.spellClouds[i];
+      sc.life += dt;
+      if (sc.life >= sc.maxLife) {
+        state.spellClouds.splice(i, 1);
+      }
+    }
   }
 
   // --- Rendering ---
+  function drawLavaBraziers() {
+    const lavaFrames = [assets.lava_0, assets.lava_1, assets.lava_2, assets.lava_3];
+    const frameIdx = Math.floor(state.animTime * 4);
+    for (let i = 0; i < LAVA_TILES.length; i++) {
+      const t = LAVA_TILES[i];
+      const img = lavaFrames[(frameIdx + i) % lavaFrames.length];
+      const dx = t.gx * TILE_SIZE;
+      const dy = t.gy * TILE_SIZE;
+      if (img) {
+        ctx.drawImage(img, dx, dy, TILE_SIZE, TILE_SIZE);
+      } else {
+        ctx.fillStyle = "#dc2626";
+        ctx.fillRect(dx, dy, TILE_SIZE, TILE_SIZE);
+      }
+      ctx.strokeStyle = "rgba(251, 146, 60, 0.45)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(dx + 1, dy + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+    }
+  }
+
   function drawEnemy(e) {
     const cx = e.x + e.width / 2;
     const cy = e.y + e.height / 2;
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(e.rotation);
+    const bob = Math.sin(e.bobPhase) * 2.5;
 
-    if (e.kind === "ellipse") {
-      // Dark shadow ellipse (SystemRockSpawn.go case 0) with subtle rim so it reads crisply
-      ctx.beginPath();
-      ctx.ellipse(0, 0, e.rx, e.ry, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "#08070d";
-      ctx.fill();
-      ctx.lineWidth = 2.5;
-      ctx.strokeStyle = "rgba(168, 85, 247, 0.55)";
-      ctx.stroke();
-    } else if (e.kind === "rock") {
-      if (assets.rock) {
-        ctx.drawImage(assets.rock, -e.width / 2, -e.height / 2, e.width, e.height);
-      } else {
-        ctx.beginPath();
-        for (let i = 0; i < ROCK_POLY_BASE.length; i++) {
-          const px = ROCK_POLY_BASE[i].x * 4 - e.width / 2;
-          const py = ROCK_POLY_BASE[i].y * 4 - e.height / 2;
-          if (i === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
-        ctx.closePath();
-        ctx.fillStyle = "#64748b";
-        ctx.fill();
-      }
+    ctx.save();
+    // Ground shadow
+    ctx.fillStyle = "rgba(0, 0, 0, 0.42)";
+    ctx.beginPath();
+    ctx.ellipse(cx, e.y + e.height - 6, 22, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.translate(cx, cy + bob);
+    if (e.facingX < 0) {
+      ctx.scale(-1, 1);
+    }
+    const img = assets[e.tile];
+    if (img) {
+      ctx.drawImage(img, -e.width / 2, -e.height / 2, e.width, e.height);
     } else {
-      if (assets.starspawn) {
-        ctx.drawImage(assets.starspawn, -e.width / 2, -e.height / 2, e.width, e.height);
-      } else {
-        ctx.fillStyle = "#ea580c";
-        ctx.fillRect(-e.width / 2, -e.height / 2, e.width, e.height);
-      }
+      ctx.fillStyle = e.burst || "#ea580c";
+      ctx.fillRect(-e.width / 2, -e.height / 2, e.width, e.height);
     }
     ctx.restore();
   }
@@ -856,6 +1091,12 @@
     const cy = b.y + b.height / 2;
     ctx.save();
     ctx.translate(cx, cy);
+    // Fiery DCSS damnation aura
+    ctx.fillStyle = "rgba(251, 146, 60, 0.28)";
+    ctx.beginPath();
+    ctx.arc(0, 0, 19, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.rotate(b.rotation);
     if (assets.bullet) {
       ctx.drawImage(assets.bullet, -b.width / 2, -b.height / 2, b.width, b.height);
@@ -872,14 +1113,22 @@
     const p = state.player;
     const cx = p.x + p.width / 2;
     const cy = p.y + p.height / 2;
+    const bob = Math.sin(p.walkPhase) * 2;
+
     ctx.save();
-    // Subtle ground shadow
-    ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+    // Subtle arcane ring under Deep Elf Annihilator
+    ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
     ctx.beginPath();
-    ctx.ellipse(cx, p.y + p.height - 6, 22, 10, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx, p.y + p.height - 5, 24, 10, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.translate(cx, cy);
+    ctx.strokeStyle = "rgba(250, 204, 21, 0.45)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(cx, p.y + p.height - 6, 26, 11, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.translate(cx, cy + bob);
     if (p.facingX < 0) {
       ctx.scale(-1, 1);
     }
@@ -892,75 +1141,142 @@
     ctx.restore();
   }
 
+  function drawSpellClouds() {
+    const fireFrames = [assets.cloud_fire_0, assets.cloud_fire_1, assets.cloud_fire_2];
+    const coldFrames = [assets.cloud_cold_0, assets.cloud_cold_1];
+    const poisonFrames = [assets.cloud_poison_0, assets.cloud_poison_1];
+
+    // Transient death/impact clouds
+    for (let i = 0; i < state.spellClouds.length; i++) {
+      const sc = state.spellClouds[i];
+      const progress = sc.life / sc.maxLife;
+      const frames = sc.kind === "cold" ? coldFrames : fireFrames;
+      const img = frames[Math.min(frames.length - 1, Math.floor(progress * frames.length))];
+      if (!img) continue;
+      ctx.save();
+      ctx.globalAlpha = clamp(1 - progress, 0, 1) * 0.85;
+      const sz = sc.size * (0.85 + progress * 0.45);
+      ctx.drawImage(img, sc.x - sz / 2, sc.y - sz / 2, sz, sz);
+      ctx.restore();
+    }
+
+    // Ambient drifting DCSS clouds
+    const fIdx = Math.floor(state.animTime * 3);
+    for (let i = 0; i < state.ambientClouds.length; i++) {
+      const c = state.ambientClouds[i];
+      const frames = c.kind === "fire" ? fireFrames : c.kind === "cold" ? coldFrames : poisonFrames;
+      const img = frames[(fIdx + i) % frames.length];
+      if (!img) continue;
+      const sz = TILE_SIZE * c.scale;
+      ctx.save();
+      ctx.globalAlpha = c.alpha;
+      ctx.drawImage(img, c.x - sz / 2, c.y - sz / 2, sz, sz);
+      ctx.restore();
+    }
+  }
+
   function drawHUD() {
     const p = state.player;
     const frac = healthFraction(p.hp, p.maxHp);
 
-    // Top proportional yellow HP bar (matching SystemHUD.go: X:10, Y:10, Width: (W-20)*frac, Height:50)
+    // Top proportional DCSS/DCBH HP bar
     const barX = 14;
     const barY = 14;
     const barMaxW = VIEW_WIDTH - 28;
     const barH = 38;
 
     ctx.save();
-    // Backing
-    ctx.fillStyle = "rgba(10, 12, 18, 0.72)";
+    ctx.fillStyle = "rgba(10, 10, 15, 0.84)";
     ctx.fillRect(barX, barY, barMaxW, barH);
 
-    // Yellow HP fill (shifts warmer at low HP while keeping iconic DCBH yellow)
-    ctx.fillStyle = frac <= 0.3 ? "#f97316" : "#ffff00";
+    // Iconic DCSS-inspired HP bar (green -> yellow -> red/orange)
+    ctx.fillStyle = frac <= 0.3 ? "#dc2626" : frac <= 0.6 ? "#facc15" : "#4ade80";
     ctx.fillRect(barX, barY, barMaxW * frac, barH);
 
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "#ffffff";
+    ctx.strokeStyle = "#d4af37";
     ctx.strokeRect(barX, barY, barMaxW, barH);
 
-    // HP label inside bar
     ctx.font = "bold 20px ui-monospace, SFMono-Regular, Menlo, monospace";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = frac > 0.14 ? "#111111" : "#ffffff";
+    ctx.fillStyle = frac > 0.16 ? "#0c0d12" : "#ffffff";
     ctx.fillText("HP " + p.hp + "/" + p.maxHp, barX + 14, barY + barH / 2 + 1);
 
-    // Bottom-left HUD panel (matching SystemHUD.go bottom-left kills & HP text)
-    const boxW = 240;
-    const boxH = 112;
+    // Branch badge on right side of HP bar
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(state.branch.label + " — " + state.branch.name, barX + barMaxW - 14, barY + barH / 2 + 1);
+    ctx.textAlign = "left";
+
+    // Bottom-left DCSS character & score panel
+    const boxW = 300;
+    const boxH = 114;
     const boxX = 16;
     const boxY = VIEW_HEIGHT - boxH - 16;
 
-    ctx.fillStyle = "rgba(10, 12, 18, 0.76)";
+    ctx.fillStyle = "rgba(10, 10, 16, 0.86)";
     ctx.fillRect(boxX, boxY, boxW, boxH);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.strokeStyle = "#7c6a38";
     ctx.lineWidth = 2;
     ctx.strokeRect(boxX, boxY, boxW, boxH);
 
-    ctx.textBaseline = "top";
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 28px ui-monospace, SFMono-Regular, Menlo, monospace";
-    ctx.fillText(state.score + " kills", boxX + 16, boxY + 14);
+    if (assets.player) {
+      ctx.drawImage(assets.player, boxX + 12, boxY + 24, 64, 64);
+    }
+    if (assets.icon_flame) {
+      ctx.drawImage(assets.icon_flame, boxX + 258, boxY + 14, 28, 28);
+    }
+    if (assets.icon_hasted) {
+      ctx.drawImage(assets.icon_hasted, boxX + 258, boxY + 46, 28, 28);
+    }
 
+    ctx.textBaseline = "top";
     ctx.fillStyle = "#facc15";
-    ctx.font = "bold 22px ui-monospace, SFMono-Regular, Menlo, monospace";
-    ctx.fillText("HP " + p.hp + "/" + p.maxHp, boxX + 16, boxY + 50);
+    ctx.font = "bold 26px ui-monospace, SFMono-Regular, Menlo, monospace";
+    ctx.fillText(state.score + " slain", boxX + 86, boxY + 14);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "bold 18px ui-monospace, SFMono-Regular, Menlo, monospace";
+    ctx.fillText("DEAn • " + state.branch.label, boxX + 86, boxY + 48);
 
     const mins = Math.floor(state.elapsed / 60);
     const secs = Math.floor(state.elapsed % 60);
     const timeStr = mins + ":" + (secs < 10 ? "0" + secs : secs);
-    ctx.fillStyle = "#cbd5e1";
-    ctx.font = "16px ui-monospace, SFMono-Regular, Menlo, monospace";
-    ctx.fillText("Time " + timeStr + "  •  Best " + Math.max(state.bestScore, state.score), boxX + 16, boxY + 82);
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "15px ui-monospace, SFMono-Regular, Menlo, monospace";
+    ctx.fillText("Time " + timeStr + " • Best " + Math.max(state.bestScore, state.score), boxX + 86, boxY + 78);
+
+    // Bottom-right DCSS combat message log
+    const logW = 540;
+    const logH = 114;
+    const logX = VIEW_WIDTH - logW - 16;
+    const logY = VIEW_HEIGHT - logH - 16;
+
+    ctx.fillStyle = "rgba(10, 10, 16, 0.84)";
+    ctx.fillRect(logX, logY, logW, logH);
+    ctx.strokeStyle = "#4b4536";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(logX, logY, logW, logH);
+
+    ctx.font = "15px ui-monospace, SFMono-Regular, Menlo, monospace";
+    for (let i = 0; i < state.combatLog.length; i++) {
+      const entry = state.combatLog[i];
+      ctx.fillStyle = entry.color;
+      ctx.fillText(entry.text, logX + 14, logY + 14 + i * 23);
+    }
     ctx.restore();
   }
 
   function drawMenu() {
     ctx.save();
-    // Dark background (matching MenuScene common.SetBackground(color.Black))
-    ctx.fillStyle = "#08090e";
+    ctx.fillStyle = "#08080d";
     ctx.fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
 
-    // Subtle dimmed preview of the grass map behind the menu
-    if (grassCanvas) {
-      ctx.globalAlpha = 0.22;
-      ctx.drawImage(grassCanvas, 200, 200, VIEW_WIDTH, VIEW_HEIGHT, 0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+    // Dimmed authentic DCSS dungeon backdrop
+    const preview = branchCanvases.dungeon;
+    if (preview) {
+      ctx.globalAlpha = 0.34;
+      ctx.drawImage(preview, 288, 288, VIEW_WIDTH, VIEW_HEIGHT, 0, 0, VIEW_WIDTH, VIEW_HEIGHT);
       ctx.globalAlpha = 1;
     }
 
@@ -973,25 +1289,31 @@
       VIEW_HEIGHT / 2,
       VIEW_WIDTH * 0.65
     );
-    grad.addColorStop(0, "rgba(8, 9, 14, 0.25)");
-    grad.addColorStop(1, "rgba(4, 5, 10, 0.92)");
+    grad.addColorStop(0, "rgba(8, 8, 14, 0.25)");
+    grad.addColorStop(1, "rgba(4, 4, 8, 0.94)");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
 
-    // Center showcase sprites
+    // DCSS Monster Lineup Showcase
     ctx.imageSmoothingEnabled = false;
-    if (assets.player) {
-      ctx.drawImage(assets.player, VIEW_WIDTH / 2 - 48, 250, 96, 96);
-    }
-    if (assets.starspawn) {
-      ctx.drawImage(assets.starspawn, VIEW_WIDTH / 2 - 210, 270, 80, 80);
-    }
-    if (assets.rock) {
-      ctx.drawImage(assets.rock, VIEW_WIDTH / 2 + 130, 270, 80, 80);
+    const showcase = [
+      { img: assets.mons_ancient_lich, x: VIEW_WIDTH / 2 - 330, y: 266, s: 76 },
+      { img: assets.mons_hydra, x: VIEW_WIDTH / 2 - 235, y: 274, s: 72 },
+      { img: assets.starspawn, x: VIEW_WIDTH / 2 - 145, y: 270, s: 76 },
+      { img: assets.player, x: VIEW_WIDTH / 2 - 48, y: 248, s: 96 },
+      { img: assets.mons_brimstone, x: VIEW_WIDTH / 2 + 70, y: 270, s: 76 },
+      { img: assets.mons_executioner, x: VIEW_WIDTH / 2 + 162, y: 274, s: 72 },
+      { img: assets.mons_balrug, x: VIEW_WIDTH / 2 + 252, y: 266, s: 76 }
+    ];
+    for (let i = 0; i < showcase.length; i++) {
+      const item = showcase[i];
+      if (item.img) {
+        ctx.drawImage(item.img, item.x, item.y, item.s, item.s);
+      }
     }
     if (assets.bullet) {
-      ctx.drawImage(assets.bullet, VIEW_WIDTH / 2 - 125, 290, 44, 44);
-      ctx.drawImage(assets.bullet, VIEW_WIDTH / 2 + 80, 290, 44, 44);
+      ctx.drawImage(assets.bullet, VIEW_WIDTH / 2 - 84, 294, 34, 34);
+      ctx.drawImage(assets.bullet, VIEW_WIDTH / 2 + 48, 294, 34, 34);
     }
 
     ctx.textAlign = "center";
@@ -1002,39 +1324,39 @@
     ctx.fillText("Dungeon Crawl Bullet Hell", VIEW_WIDTH / 2, 165);
 
     ctx.fillStyle = "#cbd5e1";
-    ctx.font = "24px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-    ctx.fillText("Survive the swarm. Auto-fire at the nearest monster.", VIEW_WIDTH / 2, 405);
+    ctx.font = "23px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    ctx.fillText("Deep Elf Annihilator vs. the Dungeon, Crypt, and Realm of Zot.", VIEW_WIDTH / 2, 398);
 
     if (state.gameOver) {
       ctx.fillStyle = "#ef4444";
       ctx.font = "bold 36px ui-monospace, SFMono-Regular, Menlo, monospace";
-      ctx.fillText("RUN OVER", VIEW_WIDTH / 2, 485);
+      ctx.fillText("YOU DIE...", VIEW_WIDTH / 2, 480);
 
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 32px ui-monospace, SFMono-Regular, Menlo, monospace";
-      ctx.fillText("Last run: " + state.lastScore + " kills", VIEW_WIDTH / 2, 545);
+      ctx.font = "bold 30px ui-monospace, SFMono-Regular, Menlo, monospace";
+      ctx.fillText("Last run: " + state.lastScore + " slain (" + state.branch.label + ")", VIEW_WIDTH / 2, 540);
 
       ctx.fillStyle = "#facc15";
-      ctx.font = "bold 32px ui-monospace, SFMono-Regular, Menlo, monospace";
-      ctx.fillText("Best run: " + state.bestScore + " kills", VIEW_WIDTH / 2, 595);
+      ctx.font = "bold 30px ui-monospace, SFMono-Regular, Menlo, monospace";
+      ctx.fillText("Best run: " + state.bestScore + " slain", VIEW_WIDTH / 2, 590);
     } else if (state.bestScore > 0) {
       ctx.fillStyle = "#facc15";
       ctx.font = "bold 28px ui-monospace, SFMono-Regular, Menlo, monospace";
-      ctx.fillText("Best run: " + state.bestScore + " kills", VIEW_WIDTH / 2, 510);
+      ctx.fillText("Best run: " + state.bestScore + " slain", VIEW_WIDTH / 2, 510);
     }
 
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 26px ui-monospace, SFMono-Regular, Menlo, monospace";
-    ctx.fillText("Press Enter, Space, or move to start.", VIEW_WIDTH / 2, 710);
+    ctx.font = "bold 25px ui-monospace, SFMono-Regular, Menlo, monospace";
+    ctx.fillText("Press Enter, Space, or move to descend.", VIEW_WIDTH / 2, 708);
 
     ctx.fillStyle = "#94a3b8";
-    ctx.font = "20px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-    ctx.fillText("WASD / Arrow keys (or drag on screen) to move • 10 HP", VIEW_WIDTH / 2, 760);
+    ctx.font = "19px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    ctx.fillText("WASD / Arrow keys (or drag) to move • Auto-casts Damnation • 10 HP", VIEW_WIDTH / 2, 758);
 
     if (!assetsReady) {
       ctx.fillStyle = "#94a3b8";
       ctx.font = "18px ui-monospace, SFMono-Regular, Menlo, monospace";
-      ctx.fillText("Loading sprites...", VIEW_WIDTH / 2, 810);
+      ctx.fillText("Loading DCSS dungeon tiles...", VIEW_WIDTH / 2, 810);
     }
 
     ctx.restore();
@@ -1049,7 +1371,7 @@
     }
 
     ctx.save();
-    ctx.fillStyle = "#1a2e1a";
+    ctx.fillStyle = "#0a0a0f";
     ctx.fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
 
     // Subtle screen shake on damage
@@ -1064,33 +1386,44 @@
     ctx.save();
     ctx.translate(-Math.round(state.camera.x) + shakeX, -Math.round(state.camera.y) + shakeY);
 
-    // Layer 0: grassLayer
-    if (grassCanvas) {
-      ctx.drawImage(grassCanvas, 0, 0);
+    // Layer 0: DCSS branch dungeon floor + stone walls
+    const floorCanvas = branchCanvases[state.branch.id] || branchCanvases.dungeon;
+    if (floorCanvas) {
+      ctx.drawImage(floorCanvas, 0, 0);
     } else {
-      ctx.fillStyle = "#365314";
-      ctx.fillRect(0, 0, worldWidth, worldHeight);
+      ctx.fillStyle = "#18181f";
+      ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     }
 
-    // Subtle world boundary border
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
-    ctx.lineWidth = 4;
-    ctx.strokeRect(2, 2, worldWidth - 4, worldHeight - 4);
+    // Animated DCSS lava braziers
+    drawLavaBraziers();
 
-    // Layer 1: guyLayer (player)
+    // Persistent DCSS blood splatters on the dungeon floor
+    for (let i = 0; i < state.decals.length; i++) {
+      const d = state.decals[i];
+      const img = assets[d.tile];
+      if (!img) continue;
+      ctx.save();
+      ctx.globalAlpha = d.alpha;
+      ctx.drawImage(img, d.x, d.y, d.size, d.size);
+      ctx.restore();
+    }
+
+    // Layer 1: Player (Deep Elf Annihilator)
     drawPlayer();
 
-    // Layer 2: monsterLayer (enemies)
+    // Layer 2: DCSS Monster swarm
     for (let i = 0; i < state.enemies.length; i++) {
       drawEnemy(state.enemies[i]);
     }
 
-    // Layer 3: bulletLayer (bullets)
+    // Layer 3: Damnation bolts
     for (let i = 0; i < state.bullets.length; i++) {
       drawBullet(state.bullets[i]);
     }
 
-    // Hit particles
+    // Layer 4: DCSS spell clouds & hit particles
+    drawSpellClouds();
     for (let i = 0; i < state.particles.length; i++) {
       const p = state.particles[i];
       const alpha = 1 - p.life / p.maxLife;
@@ -1100,43 +1433,42 @@
     }
     ctx.globalAlpha = 1;
 
-    // Layer 4: treeLayer (drawn above entities, matching falling.go z-index!)
-    if (treesCanvas) {
-      ctx.drawImage(treesCanvas, 0, 0);
-    }
-
-    // Layer 5: cloudLayer (from example.tmx image layer)
-    if (assets.cloud) {
-      ctx.globalAlpha = 0.72;
-      const cx1 = (state.cloudOffset) % (worldWidth + 400) - 400;
-      ctx.drawImage(assets.cloud, cx1, 40);
-      const cx2 = (state.cloudOffset + 850) % (worldWidth + 400) - 400;
-      ctx.drawImage(assets.cloud, cx2, 780);
-      ctx.globalAlpha = 1;
-    }
-
     ctx.restore(); // end world camera transform
+
+    // Subtle dungeon torchlight vignette
+    const torch = ctx.createRadialGradient(
+      VIEW_WIDTH / 2,
+      VIEW_HEIGHT / 2,
+      VIEW_WIDTH * 0.28,
+      VIEW_WIDTH / 2,
+      VIEW_HEIGHT / 2,
+      VIEW_WIDTH * 0.68
+    );
+    torch.addColorStop(0, "rgba(0, 0, 0, 0)");
+    torch.addColorStop(1, "rgba(0, 0, 0, 0.36)");
+    ctx.fillStyle = torch;
+    ctx.fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
 
     // Damage vignette flash
     if (state.hurtFlash > 0) {
-      ctx.fillStyle = "rgba(239, 68, 68, " + (state.hurtFlash * 1.1).toFixed(3) + ")";
+      ctx.fillStyle = "rgba(220, 38, 38, " + (state.hurtFlash * 1.1).toFixed(3) + ")";
       ctx.fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
     }
 
-    // Layer 6: hudLayer
+    // Layer 5: DCSS HUD & combat log
     drawHUD();
 
     // Pause overlay
     if (state.paused) {
-      ctx.fillStyle = "rgba(8, 9, 14, 0.68)";
+      ctx.fillStyle = "rgba(8, 8, 14, 0.72)";
       ctx.fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#facc15";
-      ctx.font = "bold 56px ui-monospace, SFMono-Regular, Menlo, monospace";
+      ctx.font = "bold 56px Georgia, 'Times New Roman', serif";
       ctx.fillText("PAUSED", VIEW_WIDTH / 2, VIEW_HEIGHT / 2 - 20);
       ctx.fillStyle = "#ffffff";
-      ctx.font = "24px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+      ctx.font = "22px ui-monospace, SFMono-Regular, Menlo, monospace";
       ctx.fillText("Press P or Esc to resume", VIEW_WIDTH / 2, VIEW_HEIGHT / 2 + 40);
     }
 
@@ -1149,7 +1481,6 @@
   function frame(now) {
     const rawDt = (now - lastTime) / 1000;
     lastTime = now;
-    // Clamp dt to avoid giant jumps when switching tabs
     const dt = Math.min(0.05, Math.max(0, rawDt));
 
     update(dt);
@@ -1157,6 +1488,7 @@
     window.requestAnimationFrame(frame);
   }
 
+  initAmbientClouds();
   loadAllAssets();
   syncUI();
   window.requestAnimationFrame(frame);
