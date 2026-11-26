@@ -31,23 +31,18 @@
       const VR_MARKER_COLORS = { goal: "#58c470", warn: "#e05a3a", treasure: "#f1d07a" };
       const VR_SHADE = { floor: 1, faceNS: 0.82, faceEW: 0.68, top: 0.52, doorFace: 0.92, doorTop: 0.6 };
 
-      // Full in-VR control panel: a labelled button grid the player points at
-      // and activates with trigger or tracked-hand pinch. Supports the whole
-      // game alongside physical tabletop grabs, drops, 3D Mode Totems, and
-      // 3D Tactical Cards so every VR input method can play completely.
-      const VR_CONTROL_COLS = 4;
+      // Minimal VR session/view utility strip (non-gameplay controls only).
+      // All gameplay actions (moving, turning, attacking, shoving, doors, traps,
+      // floor items, fixtures, walls, stairs, class abilities, cards, and mode
+      // switching) happen directly on the 3D tabletop via physical grabs, drops,
+      // gestures, Mode Totems, and 3D Tactical Cards.
+      const VR_CONTROL_COLS = 3;
       const VR_CONTROL_BUTTONS = [
-        { label: "Turn L", action: "turnLeft" }, { label: "Forward", action: "moveForward" }, { label: "Turn R", action: "turnRight" }, { label: "Back", action: "moveBack" },
-        { label: "Strafe L", action: "moveLeft" }, { label: "Attack", action: "attack" }, { label: "Strafe R", action: "moveRight" }, { label: "Interact", action: "interact" },
-        { label: "Wait", action: "wait" }, { label: "Examine", action: "examine" }, { label: "Search", action: "search" }, { label: "Pickup", action: "pickup" },
-        { label: "Disarm", action: "disarm" }, { label: "Primary", action: "signature" }, { label: "Secondary", action: "ultimate" }, { label: "Formation", action: "cycleFormation" },
-        { label: "Explore", action: "autoExplore" }, { label: "To Stairs", action: "travelToStairs" }, { label: "Use Stairs", action: "stairs" }, { label: "Use potion", action: "vr:recovery" },
-        { label: "Recovery", action: "rest" }, { label: "Mode", action: "vr:mode" }, { label: "Level", action: "vr:level" }, { label: "Overhead", action: "vr:overhead" },
-        { label: "Doll Mode", action: "vr:dolls" }, { label: "Art Style", action: "vr:art" }, { label: "Reset View", action: "vr:reset" }, { label: "Exit VR", action: "vr:exit" }
+        { label: "Level", action: "vr:level" }, { label: "Overhead", action: "vr:overhead" }, { label: "Doll Mode", action: "vr:dolls" },
+        { label: "Art Style", action: "vr:art" }, { label: "Reset View", action: "vr:reset" }, { label: "Exit VR", action: "vr:exit" }
       ];
-      // Panel plane, in metres: anchored to the left of the diorama, billboarded
-      // to face the head. width/height are the full quad; cols/rows tile it.
-      const VR_PANEL = { offsetX: -0.62, offsetY: 0.14, offsetZ: 0.12, width: 0.56, height: 0.64 };
+      // Compact 2-row utility bar tucked off to the left corner of the diorama.
+      const VR_PANEL = { offsetX: -0.68, offsetY: 0.04, offsetZ: 0.18, width: 0.44, height: 0.22 };
 
       let vrSession = null;
       let vrSessionMode = null;   // "immersive-vr" | "immersive-ar" while active
@@ -2705,7 +2700,7 @@
           if (item) return { kind: "item", id: item.id, tile: item.tile };
         }
         const prop = vrRayTablePropHit(origin, dir);
-        const dungeon = vrRayDungeonHit(origin, dir);
+        const dungeon = vrRayBoardHit(origin, dir, head);
         if (prop && (!best || prop.t < best.t) && (!dungeon || prop.t <= dungeon.t)) {
           if (prop.kind === "modeTotem") {
             return { kind: "modeTotem", modeKey: prop.modeKey, label: prop.label, glyph: prop.glyph, color: prop.color };
@@ -3401,9 +3396,12 @@
         if (!tile) return null;
         const { x, y } = tile;
         const floorIndex = state.floorIndex;
+        const discovered = currentFloorState().discovered.has(keyOf(x, y));
         const adjacent = Math.abs(x - state.x) + Math.abs(y - state.y) === 1;
-        if (adjacent && currentFloorState().discovered.has(keyOf(x, y))) {
-          if (tile.kind === "wall" && closedDoorAt(x, y)) return { kind: "door", x, y, floorIndex };
+        if (discovered && tile.kind === "wall" && closedDoorAt(x, y)) {
+          return adjacent ? { kind: "door", x, y, floorIndex } : { kind: "travelTo", x, y, floorIndex, door: true };
+        }
+        if (adjacent && discovered) {
           if (tile.kind === "floor") {
             const monster = monsterAt(x, y);
             if (monster) return { kind: "enemy", x, y, floorIndex, monsterId: monster.id };
@@ -3422,6 +3420,31 @@
         } else {
           return { kind: "travelTo", x, y, floorIndex };
         }
+      }
+
+      function vrStepToward(targetX, targetY) {
+        if (typeof bfsNextStep === "function") {
+          const goals = [];
+          if (mapKind(targetX, targetY) === "floor") {
+            goals.push({ x: targetX, y: targetY });
+          } else {
+            for (const dir of dirs) {
+              const nx = targetX + dir.x;
+              const ny = targetY + dir.y;
+              if (mapContains(nx, ny) && mapKind(nx, ny) === "floor" && currentFloorState().discovered.has(keyOf(nx, ny))) {
+                goals.push({ x: nx, y: ny });
+              }
+            }
+          }
+          if (goals.length) {
+            const move = bfsNextStep(goals);
+            if (move && !move.reached) {
+              moveBy(move.dx, move.dy);
+              return true;
+            }
+          }
+        }
+        return false;
       }
 
       function vrRunFloorOperation(op) {
@@ -3452,7 +3475,24 @@
             // A single aimed step is manual movement, even with enemies nearby.
             moveBy(dx, dy);
           } else if (op.kind === "travelTo") {
-            travelTo(op.x, op.y);
+            const unsafe = (typeof restNearbyThreat === "function" && restNearbyThreat())
+              || (typeof restBlockingCondition === "function" && restBlockingCondition());
+            if (op.door) {
+              if (unsafe) {
+                vrStepToward(op.x, op.y);
+              } else {
+                const adjacentFloors = dirs
+                  .map((d) => ({ x: op.x + d.x, y: op.y + d.y }))
+                  .filter((p) => mapContains(p.x, p.y) && mapKind(p.x, p.y) === "floor" && currentFloorState().discovered.has(keyOf(p.x, p.y)))
+                  .sort((a, b) => (Math.abs(a.x - state.x) + Math.abs(a.y - state.y)) - (Math.abs(b.x - state.x) + Math.abs(b.y - state.y)));
+                if (adjacentFloors.length) travelTo(adjacentFloors[0].x, adjacentFloors[0].y);
+                else vrStepToward(op.x, op.y);
+              }
+            } else if (unsafe) {
+              vrStepToward(op.x, op.y);
+            } else {
+              travelTo(op.x, op.y);
+            }
           } else if (op.kind === "door" && Math.abs(dx) + Math.abs(dy) === 1 && closedDoorAt(op.x, op.y)) {
             moveBy(dx, dy);
           } else if (op.kind === "enemy" && Math.abs(dx) + Math.abs(dy) === 1) {
@@ -3775,7 +3815,7 @@
           if (hit) return Math.max(0.05, hit.t);
         }
         if (target && target.kind === "partyPiece") {
-          const dungeon = vrRayDungeonHit(origin, dir);
+          const dungeon = vrRayBoardHit(origin, dir, head);
           if (dungeon) return Math.max(0.05, dungeon.t);
         }
         if (target !== "table" && VR_PANE_DEFS[target]) {
@@ -3956,7 +3996,7 @@
               const relAnchor = vrQRotate(vrQConj(vrTable.q), [anchor.x - vrTable.x, anchor.y - vrTable.y, anchor.z - vrTable.z]);
               const liftMetres = Math.max(0, relAnchor[1]);
               hand.grabTarget.peakLift = Math.max(hand.grabTarget.peakLift || 0, liftMetres);
-              const dungeon = vrRayDungeonHit(ray.origin, ray.dir);
+              const dungeon = vrRayBoardHit(ray.origin, ray.dir, head);
               if (dungeon) {
                 const isStart = dungeon.x === hand.grabTarget.x && dungeon.y === hand.grabTarget.y;
                 if (isStart) {
@@ -4022,7 +4062,7 @@
           } else if (!step.grabbing) {
             if (hand.grabTarget && hand.grabTarget.kind === "partyPiece") {
               if (ray) {
-                const dungeon = vrRayDungeonHit(ray.origin, ray.dir);
+                const dungeon = vrRayBoardHit(ray.origin, ray.dir, head);
                 if (dungeon) {
                   const isStart = dungeon.x === hand.grabTarget.x && dungeon.y === hand.grabTarget.y;
                   const adjacent = Math.abs(dungeon.x - state.x) + Math.abs(dungeon.y - state.y) === 1;
@@ -4073,7 +4113,7 @@
               // Dropping the dragged item: on a party card or party piece on the table → give/use it; onto the dungeon → throw it.
               if (ray) {
                 const partyHit = vrRayPanelHit(ray.origin, ray.dir, vrPaneFrame("party", head));
-                const dungeonHit = vrRayDungeonHit(ray.origin, ray.dir);
+                const dungeonHit = vrRayBoardHit(ray.origin, ray.dir, head);
                 if (partyHit && partyHit.index >= 0 && partyHit.u >= 0 && partyHit.u <= 1 && partyHit.v >= 0 && partyHit.v <= 1) {
                   vrPendingOps.push({ kind: "giveTo", member: partyHit.index, id: hand.grabTarget.id });
                 } else if (dungeonHit && dungeonHit.x === state.x && dungeonHit.y === state.y) {
@@ -4397,6 +4437,7 @@
         vrTabletopCards,
         vrTableProps,
         vrRayTablePropHit,
+        vrFloorOperation,
         vrRunFloorOperation,
         vrEmitPartyOverlay,
         vrBillboardAxes,
