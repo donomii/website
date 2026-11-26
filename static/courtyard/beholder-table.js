@@ -99,8 +99,8 @@ const COTB_SCRIPTS = [
     "src/runtime/systems/constellations.js",
     "src/runtime/systems/charms.js",
     "src/runtime/render/mobile.js",
-    "src/runtime/render/vr_feedback.js",
-    "src/runtime/render/vr.js",
+    "src/runtime/render/vr_feedback.js?v=3",
+    "src/runtime/render/vr.js?v=0.5.54",
     "src/runtime/systems/short_expedition.js",
     "src/runtime/systems/game_modes.js",
     "src/runtime/io/dev_options.js",
@@ -504,6 +504,28 @@ export async function createBeholderExhibit(scene, posX = -5.8, posZ = -3.5) {
         },
         update(dt, xr, renderer, camera) {
             const activeCam = (renderer?.xr?.isPresenting && renderer.xr.getCamera) ? renderer.xr.getCamera() : camera;
+            syncTableWorld();
+            if (activeCam) activeCam.getWorldPosition(headPos);
+            if (typeof ctx.vrEmbeddedHoverWorld === "function" && renderer?.xr?.isPresenting && typeof renderer.xr.getController === "function") {
+                const ctrlOrigin = new T.Vector3();
+                const ctrlQuat = new T.Quaternion();
+                const ctrlDir = new T.Vector3();
+                let hovered = false;
+                for (let ci = 0; ci < 2; ci += 1) {
+                    const ctrl = renderer.xr.getController(ci);
+                    if (!ctrl || !ctrl.visible) continue;
+                    ctrl.getWorldPosition(ctrlOrigin);
+                    ctrl.getWorldQuaternion(ctrlQuat);
+                    ctrlDir.set(0, 0, -1).applyQuaternion(ctrlQuat).normalize();
+                    const hit = ctx.vrEmbeddedHoverWorld(
+                        { x: ctrlOrigin.x, y: ctrlOrigin.y, z: ctrlOrigin.z },
+                        { x: ctrlDir.x, y: ctrlDir.y, z: ctrlDir.z },
+                        { x: headPos.x, y: headPos.y, z: headPos.z }
+                    );
+                    if (hit) { hovered = true; break; }
+                }
+                if (!hovered) ctx.vrEmbeddedHoverWorld(null, null, null);
+            }
             stepFrame(performance.now(), activeCam);
         },
         canStand() {

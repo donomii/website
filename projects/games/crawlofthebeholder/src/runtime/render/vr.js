@@ -4353,6 +4353,216 @@
         gl.depthMask(true);
       }
 
+      function vrFlushAtlasToCanvas() {
+        vrAtlasInit();
+        vrNormalAtlasInit();
+        let atlasDirty = false;
+        let normalDirty = false;
+        if (vrAtlasesNeedClear) {
+          // vrResetAtlases() already cleared vrAtlas.ctx before this frame's shapes were drawn;
+          // just mark the GPU textures dirty so Three.js uploads the fresh canvas.
+          vrAtlasesNeedClear = false;
+          atlasDirty = true;
+          normalDirty = true;
+        }
+        const flushOne = (atlas) => {
+          if (!atlas.ctx || !atlas.dirtyCells.length) return false;
+          let changed = false;
+          while (atlas.dirtyCells.length > 0) {
+            const cell = atlas.dirtyCells.shift();
+            if (cell.flat) {
+              const [r, g, b, a] = cell.flat;
+              atlas.ctx.clearRect(cell.x, cell.y, cell.w, cell.h);
+              atlas.ctx.fillStyle = `rgba(${r},${g},${b},${(a / 255).toFixed(4)})`;
+              atlas.ctx.fillRect(cell.x, cell.y, cell.w, cell.h);
+              changed = true;
+            } else if (cell.pixels) {
+              const imgData = new ImageData(
+                new Uint8ClampedArray(cell.pixels.buffer, cell.pixels.byteOffset, cell.pixels.byteLength),
+                cell.w,
+                cell.h
+              );
+              atlas.ctx.putImageData(imgData, cell.x, cell.y);
+              changed = true;
+            } else {
+              changed = true;
+            }
+          }
+          return changed;
+        };
+        if (flushOne(vrAtlas)) atlasDirty = true;
+        if (flushOne(vrNormalAtlas)) normalDirty = true;
+        return { atlasDirty, normalDirty };
+      }
+
+      function vrEmbeddedStep(nowMs, headWorldPos) {
+        const time = nowMs || vrNow();
+        if (typeof isGameMode === "function" && isGameMode("tempo") && typeof tempoTickAt === "function") {
+          tempoTickAt(Date.now());
+        }
+        vrEnsureAtlasScope();
+        vrStampPendingTiles();
+        vrStampPendingNormals();
+
+        let archChanged = false;
+        let arch = null;
+        const signature = vrStructureSignature();
+        if (signature !== vrLastArchSignature) {
+          vrLastArchSignature = signature;
+          vrStructureEmits += 1;
+          arch = vrEmitArchitecture(vrStructureModel());
+          archChanged = true;
+        }
+
+        if (state.floorIndex !== vrFeelFloor) {
+          vrFeelFloor = state.floorIndex;
+          vrResetGameFeel();
+        }
+        if ((state.damageTaken || 0) > vrLastDamageTaken) vrPartyHitAt = time;
+        vrLastDamageTaken = state.damageTaken || 0;
+
+        const headModel = headWorldPos ? vrHeadToModel(headWorldPos) : { x: 0, y: 8, z: 8 };
+        const dolls = vrEmitDolls(vrDollModel(), headModel, vrDollMode(), time);
+        const decals = vrEmitArchitecture({ ...vrStructureDims(), surfaces: vrDynamicDecalSurfaces(time) });
+
+        const { atlasDirty, normalDirty } = vrFlushAtlasToCanvas();
+
+        let hudDirty = false;
+        const hudSignature = JSON.stringify(vrHudModel());
+        if (hudSignature !== vrLastHudSignature) {
+          vrLastHudSignature = hudSignature;
+          if (vrDrawHud()) hudDirty = true;
+        }
+        let panelDirty = false;
+        const paletteHover = vrHover?.pane === "palette" ? vrHover.index : -1;
+        if (paletteHover !== vrPaletteDrawnHover) {
+          vrPaletteDrawnHover = paletteHover;
+          if (vrDrawControlPanel(paletteHover)) panelDirty = true;
+        }
+        let partyDirty = false;
+        const partySig = vrPartyPaneSignature(vrHover?.pane === "party" ? vrHover.index : -1);
+        if (partySig !== vrPartyDrawnSig) {
+          vrPartyDrawnSig = partySig;
+          if (vrDrawPartyPane(vrHover?.pane === "party" ? vrHover.index : -1)) partyDirty = true;
+        }
+        let invDirty = false;
+        const invSig = vrInventoryPaneSignature(vrHover?.pane === "inventory" ? vrHover.index : -1);
+        if (invSig !== vrInvDrawnSig) {
+          vrInvDrawnSig = invSig;
+          if (vrDrawInventoryPane(vrHover?.pane === "inventory" ? vrHover.index : -1)) invDirty = true;
+        }
+
+        return {
+          archChanged,
+          arch,
+          dolls,
+          decals,
+          atlasDirty,
+          normalDirty,
+          hudDirty,
+          panelDirty,
+          partyDirty,
+          invDirty,
+          tileMetres: vrTableTileMetres(),
+          dims: vrStructureDims(),
+          panes: {
+            hud: vrHud,
+            panel: vrPanel,
+            party: vrPartyPane,
+            inv: vrInvPane
+          }
+        };
+      }
+
+      function vrEmbeddedHoverWorld(origin, dir, headWorldPos) {
+        vrAimTiles.clear();
+        vrBoardHover = null;
+        if (!origin || !dir) return null;
+        const prop = vrRayTablePropHit(origin, dir);
+        const dungeon = vrRayBoardHit(origin, dir, headWorldPos);
+        if (prop && (!dungeon || prop.t <= dungeon.t)) {
+          return prop;
+        }
+        if (dungeon) {
+          vrBoardHover = { x: dungeon.x, y: dungeon.y };
+          const floorOp = vrFloorOperation(dungeon);
+          if (floorOp) {
+            const isDoor = floorOp.kind === "door" || floorOp.door;
+            const glyph = isDoor ? "↔" : floorOp.kind === "enemy" ? "⚔" :
+              floorOp.kind === "stairs" ? (floorOp.direction === "down" ? "▼" : "▲") :
+              floorOp.kind === "pickup" ? "✦" :
+              floorOp.kind === "interact" ? "✦" :
+              floorOp.kind === "wait" ? "⏳" :
+              floorOp.kind === "disarm" ? "⚠" : "▣";
+            const lift = isDoor ? VR.wallHeight + 0.028 : 0.028;
+            vrAimTiles.set(keyOf(dungeon.x, dungeon.y), { x: dungeon.x, y: dungeon.y, glyph, lift });
+          }
+          return dungeon;
+        }
+        return null;
+      }
+
+      function vrEmbeddedTapWorld(origin, dir, headWorldPos) {
+        const prop = vrRayTablePropHit(origin, dir);
+        const dungeon = vrRayBoardHit(origin, dir, headWorldPos);
+        if (prop && (!dungeon || prop.t <= dungeon.t)) {
+          if (prop.kind === "modeTotem" && typeof restartInGameMode === "function") {
+            restartInGameMode(prop.modeKey);
+            vrInvalidateAll();
+            return true;
+          }
+          if (prop.kind === "tableCard") {
+            const cast = typeof playCardIndex === "function" ? playCardIndex : (typeof playCardByIndex === "function" ? playCardByIndex : null);
+            if (cast) {
+              cast(prop.cardIndex);
+              vrInvalidateAll();
+              return true;
+            }
+          }
+        }
+        if (dungeon) {
+          vrBoardHover = { x: dungeon.x, y: dungeon.y };
+          const op = vrFloorOperation(dungeon);
+          if (op) {
+            vrRunFloorOperation(op);
+            return true;
+          }
+        }
+        return false;
+      }
+
+      function vrEmbeddedPaneClickUv(paneKey, u, v) {
+        const frame = vrPaneFrame(paneKey, vrLastHeadPose?.position || { x: 0, y: 1.6, z: 0 });
+        if (!frame || u < 0 || u > 1 || v < 0 || v > 1) return false;
+        let index = -1;
+        if (paneKey === "inventory" && v >= frame.gridV1 && v < VR_INV_FOOTER_TOP / vrInventoryPaneHeightPx()) {
+          index = u < 1 / VR_INV_COLS ? VR_INV_PREV : u >= 1 - 1 / VR_INV_COLS ? VR_INV_NEXT : -1;
+        } else {
+          let gridV = v;
+          if (frame.gridV0 !== undefined) {
+            gridV = (v - frame.gridV0) / Math.max(1e-6, (frame.gridV1 ?? 1) - frame.gridV0);
+            if (gridV < 0 || gridV >= 1) return false;
+          }
+          const col = Math.min((frame.cols || 1) - 1, Math.floor(u * (frame.cols || 1)));
+          const row = Math.min((frame.rows || 1) - 1, Math.floor(gridV * (frame.rows || 1)));
+          index = row * (frame.cols || 1) + col;
+        }
+        if (index === -1) return false;
+        if (paneKey === "palette") {
+          vrActivateButton(index);
+          return true;
+        }
+        if (paneKey === "party") {
+          vrPartyClick(index);
+          return true;
+        }
+        if (paneKey === "inventory") {
+          vrInventoryClick(index);
+          return true;
+        }
+        return false;
+      }
+
       bindVr();
 
       Object.assign(context, {
@@ -4423,6 +4633,27 @@
         vrHalveNormal,
         vrAtlasAllocate,
         vrEnsureAtlasScope,
+        vrAtlasCanvas: () => {
+          vrAtlasInit();
+          return vrAtlas.canvas;
+        },
+        vrNormalAtlasCanvas: () => {
+          vrNormalAtlasInit();
+          return vrNormalAtlas.canvas;
+        },
+        vrAtlasNeedsUpdate: () => {
+          if (vrAtlas.dirtyCells && vrAtlas.dirtyCells.length > 0) {
+            vrAtlas.dirtyCells.length = 0;
+            return true;
+          }
+          return false;
+        },
+        vrFlushAtlasToCanvas,
+        vrEmbeddedStep,
+        vrEmbeddedHoverWorld,
+        vrEmbeddedTapWorld,
+        vrEmbeddedPaneClickUv,
+        vrTableTileMetres,
         vrShaderSources: () => ({ vertex: VR_VERTEX_SHADER, fragment: VR_FRAGMENT_SHADER, vertexFloats: VR_VERTEX_FLOATS }),
         vrTableState,
         vrTableLevel,
