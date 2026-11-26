@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/png" href="data:image/png;base64,">
+<title>Games</title>
+<style>
+  @media (prefers-color-scheme: dark){
+    body {
+      background:#000;
+      --bg-color: #000;
+    }
+  }
+  body{
+    margin:1em auto;
+    max-width:40em;
+    padding:0 .62em 3.24em;
+    font:1.2em/1.62 sans-serif;
+    --bg-color: white;
+  }
+  h1,h2,h3 {
+    line-height:1.2
+  }
+  article h1 {
+    margin-left: 0;
+    text-align: center;
+  }
+  .summary {
+    text-align: center;
+  }
+  img {
+    max-width: 25%;
+    height: auto;
+    float: left;
+    margin: 0 1em 1em 0;
+    image-rendering: pixelated;
+  }
+  .home-link {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    text-decoration: none;
+    color: #888;
+    font-size: 0.9em;
+    transition: color 0.2s;
+    z-index: 1000;
+  }
+  .home-link:hover {
+    color: #333;
+  }
+  @media (prefers-color-scheme: dark){
+    .home-link {
+      color: #555;
+    }
+    .home-link:hover {
+      color: #ccc;
+    }
+  }
+</style>
+<a href="../index.html" class="home-link" title="Home">(↑)</a>
+<article>
+  <header>
+    <h1>Games</h1>
+  </header>
+  <div class="summary">
+    <p>Playable browser games and arcade experiments.</p>
+  </div>
+  <div style="clear:both"></div>
+  <div style="text-align: center; margin: 2em 0;"><span style="display: inline-block; width: 20%; border-top: 2px solid #333; position: relative;"><span style="position: absolute; top: -0.6em; left: 50%; transform: translateX(-50%); background: var(--bg-color, white); padding: 0 0.5em; font-size: 1.5em;">◆</span></span></div>
+
+  <h2 id="dcbh">Dungeon Crawl Bullet Hell (DCBH)</h2>
+  <p><a href="dcbh/index.html"><img src="dcbh/assets/deep_elf_annihilator.png" alt="Dungeon Crawl Bullet Hell" width="64" height="64"></a> <a href="dcbh/index.html">Play Dungeon Crawl Bullet Hell</a> — A top-down HTML5 Canvas bullet-hell survival game ported from Go/Engo. Wander the scrolling tilemap, dodge pursuing starspawn, boulders, and void orbs, and rack up kills as your character auto-fires at the nearest monster.</p>
+  <div style="clear:both"></div>
+
+  <h2 id="more-games">More Games</h2>
+  <p>Explore the full collection in <a href="/projects/games/index.html">All Browser Games</a> — including Brushwork, Mr. Domino, The Crown Below, Evil Empires, Moon Patrol, Green Wave, and Crawl of the Beholder.</p>
+</article>
+</html>

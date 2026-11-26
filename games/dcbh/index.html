@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <title>Dungeon Crawl Bullet Hell (DCBH)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top-nav">
+    <nav class="nav-links" aria-label="Site navigation">
+      <a href="../../index.html" title="Home">(↑) Home</a>
+      <a href="../index.html">Games</a>
+    </nav>
+    <span class="nav-title">Dungeon Crawl Bullet Hell</span>
+  </header>
+
+  <main class="game-shell">
+    <div class="canvas-frame">
+      <canvas id="game-canvas" width="1024" height="1024" tabindex="0" aria-label="Dungeon Crawl Bullet Hell game canvas"></canvas>
+      <div class="overlay-actions">
+        <button id="start-btn" class="start-btn" type="button">Start Run</button>
+      </div>
+    </div>
+
+    <section class="controls-bar" aria-label="Game controls">
+      <div class="controls-hints">
+        <span>Move: <kbd>WASD</kbd> / <kbd>Arrows</kbd> or drag</span>
+        <span>Auto-fire: nearest enemy</span>
+        <span><kbd>P</kbd> Pause</span>
+        <span><kbd>R</kbd> Restart</span>
+      </div>
+      <div class="controls-buttons">
+        <button id="pause-btn" class="ctrl-btn" type="button">Pause</button>
+        <button id="restart-btn" class="ctrl-btn" type="button">Restart</button>
+        <button id="mute-btn" class="ctrl-btn" type="button">Sound: On</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/map-data.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -166,5 +166,14 @@
         "url": "/projects/games/starsandships/index.html"
       }
     ]
+  },
+  {
+    "name": "Dungeon Crawl Bullet Hell",
+    "games": [
+      {
+        "name": "Dungeon Crawl Bullet Hell",
+        "url": "/games/dcbh/index.html"
+      }
+    ]
   }
 ]
