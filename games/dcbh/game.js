@@ -555,15 +555,20 @@
     muteBtn.textContent = sound.muted ? "Sound: Off" : "Sound: On";
   }
 
-  // --- Input Handling ---
+  // --- Input Handling (Keyboard + Numpad + Mouse-follow + Touch + Gamepad) ---
   const keys = Object.create(null);
-  const pointerMove = {
+  const pointerTarget = {
     active: false,
+    mode: null, // "mouse" | "touch"
     id: null,
-    originX: 0,
-    originY: 0,
-    dx: 0,
-    dy: 0
+    canvasX: VIEW_WIDTH / 2,
+    canvasY: VIEW_HEIGHT / 2
+  };
+  const gamepadState = {
+    prevStart: false,
+    prevA: false,
+    prevBack: false,
+    prevB: false
   };
 
   function isMovementKey(code) {
@@ -575,8 +580,23 @@
       code === "ArrowUp" ||
       code === "ArrowDown" ||
       code === "ArrowLeft" ||
-      code === "ArrowRight"
+      code === "ArrowRight" ||
+      code === "Numpad8" ||
+      code === "Numpad2" ||
+      code === "Numpad4" ||
+      code === "Numpad6" ||
+      code === "Numpad7" ||
+      code === "Numpad9" ||
+      code === "Numpad1" ||
+      code === "Numpad3"
     );
+  }
+
+  function updatePointerCanvasCoords(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+    pointerTarget.canvasX = clamp(((e.clientX - rect.left) / rect.width) * VIEW_WIDTH, 0, VIEW_WIDTH);
+    pointerTarget.canvasY = clamp(((e.clientY - rect.top) / rect.height) * VIEW_HEIGHT, 0, VIEW_HEIGHT);
   }
 
   window.addEventListener("keydown", function (e) {
@@ -585,6 +605,9 @@
     }
 
     keys[e.code] = true;
+    if (isMovementKey(e.code)) {
+      pointerTarget.active = false;
+    }
 
     if (state.scene === "menu") {
       if (state.menuLockTimer <= 0) {
@@ -614,27 +637,24 @@
     for (const k in keys) {
       keys[k] = false;
     }
-    pointerMove.active = false;
-    pointerMove.dx = 0;
-    pointerMove.dy = 0;
+    pointerTarget.active = false;
+    pointerTarget.id = null;
   });
 
-  // Touch / mouse drag virtual joystick on canvas
+  // Mouse-follow & Touch-to-move on canvas
   canvas.addEventListener("pointerdown", function (e) {
     canvas.focus();
+    updatePointerCanvasCoords(e);
     if (state.scene === "menu") {
       if (state.menuLockTimer <= 0) {
         startRun();
       }
       return;
     }
-    pointerMove.active = true;
-    pointerMove.id = e.pointerId;
-    pointerMove.originX = e.clientX;
-    pointerMove.originY = e.clientY;
-    pointerMove.dx = 0;
-    pointerMove.dy = 0;
-    if (canvas.setPointerCapture) {
+    pointerTarget.active = true;
+    pointerTarget.mode = e.pointerType === "mouse" ? "mouse" : "touch";
+    pointerTarget.id = e.pointerId;
+    if (pointerTarget.mode === "touch" && canvas.setPointerCapture) {
       try {
         canvas.setPointerCapture(e.pointerId);
       } catch (_e) {}
@@ -642,32 +662,35 @@
   });
 
   canvas.addEventListener("pointermove", function (e) {
-    if (!pointerMove.active || e.pointerId !== pointerMove.id) return;
-    const rawX = e.clientX - pointerMove.originX;
-    const rawY = e.clientY - pointerMove.originY;
-    const maxRadius = 48;
-    const dist = Math.hypot(rawX, rawY);
-    if (dist < 4) {
-      pointerMove.dx = 0;
-      pointerMove.dy = 0;
-    } else {
-      const clamped = Math.min(dist, maxRadius) / maxRadius;
-      pointerMove.dx = (rawX / dist) * clamped;
-      pointerMove.dy = (rawY / dist) * clamped;
+    if (e.pointerType === "mouse") {
+      updatePointerCanvasCoords(e);
+      if (state.scene === "game") {
+        pointerTarget.active = true;
+        pointerTarget.mode = "mouse";
+        pointerTarget.id = e.pointerId;
+      }
+      return;
+    }
+    if (pointerTarget.active && pointerTarget.mode === "touch" && e.pointerId === pointerTarget.id) {
+      updatePointerCanvasCoords(e);
     }
   });
 
-  function endPointer(e) {
-    if (pointerMove.active && e.pointerId === pointerMove.id) {
-      pointerMove.active = false;
-      pointerMove.id = null;
-      pointerMove.dx = 0;
-      pointerMove.dy = 0;
+  canvas.addEventListener("pointerleave", function (e) {
+    if (e.pointerType === "mouse" && pointerTarget.mode === "mouse") {
+      pointerTarget.active = false;
+    }
+  });
+
+  function endTouchPointer(e) {
+    if (pointerTarget.mode === "touch" && e.pointerId === pointerTarget.id) {
+      pointerTarget.active = false;
+      pointerTarget.id = null;
     }
   }
 
-  canvas.addEventListener("pointerup", endPointer);
-  canvas.addEventListener("pointercancel", endPointer);
+  canvas.addEventListener("pointerup", endTouchPointer);
+  canvas.addEventListener("pointercancel", endTouchPointer);
 
   startBtn.addEventListener("click", function () {
     startRun();
@@ -690,19 +713,106 @@
     canvas.focus();
   });
 
-  function readMovementInput() {
+  function readGamepad() {
+    const out = { x: 0, y: 0, startPressed: false, aPressed: false, backPressed: false };
+    if (!navigator.getGamepads) return out;
+    const pads = navigator.getGamepads();
+    if (!pads) return out;
+
+    let pad = null;
+    for (let i = 0; i < pads.length; i++) {
+      if (pads[i] && pads[i].connected) {
+        pad = pads[i];
+        break;
+      }
+    }
+    if (!pad) return out;
+
+    const deadzone = 0.18;
+    let gx = pad.axes && pad.axes.length > 0 ? pad.axes[0] : 0;
+    let gy = pad.axes && pad.axes.length > 1 ? pad.axes[1] : 0;
+    if (Math.hypot(gx, gy) < deadzone) {
+      gx = 0;
+      gy = 0;
+    }
+
+    const btns = pad.buttons || [];
+    const btnDown = function (idx) {
+      return !!(btns[idx] && (btns[idx].pressed || btns[idx].value > 0.5));
+    };
+    if (btnDown(12)) gy -= 1; // D-pad Up
+    if (btnDown(13)) gy += 1; // D-pad Down
+    if (btnDown(14)) gx -= 1; // D-pad Left
+    if (btnDown(15)) gx += 1; // D-pad Right
+
+    const aNow = btnDown(0);
+    const startNow = btnDown(9);
+    const backNow = btnDown(8);
+
+    out.aPressed = aNow && !gamepadState.prevA;
+    out.startPressed = startNow && !gamepadState.prevStart;
+    out.backPressed = backNow && !gamepadState.prevBack;
+
+    gamepadState.prevA = aNow;
+    gamepadState.prevStart = startNow;
+    gamepadState.prevBack = backNow;
+
+    const v = movementVector(gx, gy);
+    out.x = v.x;
+    out.y = v.y;
+    return out;
+  }
+
+  function pollGamepadActions(gp) {
+    if (state.scene === "menu") {
+      if (state.menuLockTimer <= 0 && (gp.aPressed || gp.startPressed || Math.hypot(gp.x, gp.y) > 0.35)) {
+        startRun();
+      }
+      return;
+    }
+    if (gp.startPressed) {
+      state.paused = !state.paused;
+      syncUI();
+    } else if (gp.backPressed) {
+      startRun();
+    }
+  }
+
+  function readMovementInput(gp) {
     let hori = 0;
     let vert = 0;
-    if (keys.KeyA || keys.ArrowLeft) hori -= 1;
-    if (keys.KeyD || keys.ArrowRight) hori += 1;
-    if (keys.KeyW || keys.ArrowUp) vert -= 1;
-    if (keys.KeyS || keys.ArrowDown) vert += 1;
+    if (keys.KeyA || keys.ArrowLeft || keys.Numpad4 || keys.Numpad7 || keys.Numpad1) hori -= 1;
+    if (keys.KeyD || keys.ArrowRight || keys.Numpad6 || keys.Numpad9 || keys.Numpad3) hori += 1;
+    if (keys.KeyW || keys.ArrowUp || keys.Numpad8 || keys.Numpad7 || keys.Numpad9) vert -= 1;
+    if (keys.KeyS || keys.ArrowDown || keys.Numpad2 || keys.Numpad1 || keys.Numpad3) vert += 1;
 
-    if (hori === 0 && vert === 0 && pointerMove.active) {
-      hori = pointerMove.dx;
-      vert = pointerMove.dy;
+    if (hori !== 0 || vert !== 0) {
+      return movementVector(hori, vert);
     }
-    return movementVector(hori, vert);
+
+    if (gp && (gp.x !== 0 || gp.y !== 0)) {
+      pointerTarget.active = false;
+      return { x: gp.x, y: gp.y };
+    }
+
+    if (pointerTarget.active && state.player) {
+      const pc = centerOf(state.player);
+      const targetX = state.camera.x + pointerTarget.canvasX;
+      const targetY = state.camera.y + pointerTarget.canvasY;
+      const dx = targetX - pc.x;
+      const dy = targetY - pc.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist <= 8) {
+        return { x: 0, y: 0 };
+      }
+      const speedScale = dist < 28 ? dist / 28 : 1;
+      return {
+        x: (dx / dist) * speedScale,
+        y: (dy / dist) * speedScale
+      };
+    }
+
+    return { x: 0, y: 0 };
   }
 
   // --- Spawning Systems ---
@@ -882,6 +992,10 @@
   function update(dt) {
     state.animTime += dt;
 
+    // Poll Gamepad API (works in both menu and gameplay)
+    const gp = readGamepad();
+    pollGamepadActions(gp);
+
     // Drift ambient dungeon clouds
     for (let i = 0; i < state.ambientClouds.length; i++) {
       const c = state.ambientClouds[i];
@@ -911,8 +1025,8 @@
       sound.descend();
     }
 
-    // 1. ControlSystem: move player & clamp inside stone dungeon walls
-    const move = readMovementInput();
+    // 1. ControlSystem: move player (keyboard / numpad / gamepad / mouse-follow / touch) & clamp inside walls
+    const move = readMovementInput(gp);
     state.player.x += move.x * PLAYER_SPEED * dt;
     state.player.y += move.y * PLAYER_SPEED * dt;
     if (move.x < -0.05) state.player.facingX = -1;
@@ -1351,7 +1465,7 @@
 
     ctx.fillStyle = "#94a3b8";
     ctx.font = "19px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-    ctx.fillText("WASD / Arrow keys (or drag) to move • Auto-casts Damnation • 10 HP", VIEW_WIDTH / 2, 758);
+    ctx.fillText("Mouse, Touch, WASD / Arrows / Numpad, or Gamepad • 10 HP", VIEW_WIDTH / 2, 758);
 
     if (!assetsReady) {
       ctx.fillStyle = "#94a3b8";
@@ -1411,6 +1525,29 @@
 
     // Layer 1: Player (Deep Elf Annihilator)
     drawPlayer();
+
+    // Subtle DCSS target reticle when steering via mouse or touch
+    if (pointerTarget.active) {
+      const tx = state.camera.x + pointerTarget.canvasX;
+      const ty = state.camera.y + pointerTarget.canvasY;
+      ctx.save();
+      ctx.strokeStyle = "rgba(250, 204, 21, 0.55)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(tx, ty, 12, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(tx - 16, ty);
+      ctx.lineTo(tx - 6, ty);
+      ctx.moveTo(tx + 6, ty);
+      ctx.lineTo(tx + 16, ty);
+      ctx.moveTo(tx, ty - 16);
+      ctx.lineTo(tx, ty - 6);
+      ctx.moveTo(tx, ty + 6);
+      ctx.lineTo(tx, ty + 16);
+      ctx.stroke();
+      ctx.restore();
+    }
 
     // Layer 2: DCSS Monster swarm
     for (let i = 0; i < state.enemies.length; i++) {
