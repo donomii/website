@@ -164,9 +164,9 @@
       }
 
       // Billboard orientation axes for an upright sprite/icon at model-space (cx, cy, cz).
-      // In "billboard" mode, rotates in yaw AND tilts off vertical toward the head
-      // when viewed from above so icons stay readable and never vanish edge-on
-      // when looking straight down from overhead.
+      // Tilts off vertical toward the viewer up to 45° (π/4) when viewed from above
+      // in BOTH "dungeon" and "billboard" modes so upright pieces stay readable and
+      // never vanish edge-on when the viewer is directly overhead.
       function vrBillboardAxes(cx, cy, cz, headModel, mode = "billboard", fixedFacing = 0) {
         const yaw = mode === "billboard" && headModel
           ? Math.atan2(headModel.x - cx, headModel.z - cz)
@@ -174,20 +174,21 @@
         const rx = Math.cos(yaw);
         const rz = -Math.sin(yaw);
         let ux = 0, uy = 1, uz = 0;
-        if (mode === "billboard" && headModel) {
+        if (headModel) {
           const dx = headModel.x - cx;
           const dz = headModel.z - cz;
           const horiz = Math.hypot(dx, dz);
           const dy = Math.max(0, headModel.y - cy);
           const elevation = Math.atan2(dy, Math.max(1e-4, horiz));
-          const tilt = Math.min(elevation * 0.9, Math.PI * 0.46);
+          const tilt = Math.min(elevation * 0.5, Math.PI / 4);
           const sinT = Math.sin(tilt);
           const cosT = Math.cos(tilt);
           const fwdX = Math.sin(yaw);
           const fwdZ = Math.cos(yaw);
-          ux = -fwdX * sinT;
+          const side = mode === "billboard" ? 1 : ((dx * fwdX + dz * fwdZ) >= 0 ? 1 : -1);
+          ux = -side * fwdX * sinT;
           uy = cosT;
-          uz = -fwdZ * sinT;
+          uz = -side * fwdZ * sinT;
         }
         return { yaw, rx, rz, ux, uy, uz };
       }
@@ -780,7 +781,11 @@
 
       function vrHudModel() {
         const floor = currentFloor();
-        const message = state.victory ? `VICTORY — ${state.message}` : state.defeated ? `DEFEATED — ${state.message}` : state.message || "";
+        const message = state.victory
+          ? `VICTORY — ${state.message} · Pull trigger on board to start a new run.`
+          : state.defeated
+            ? `DEFEATED — ${state.message} · Pull trigger on board to start a new run.`
+            : state.message || "";
         const modeTag = typeof modeStatusLabel === "function" ? modeStatusLabel() : "";
         const prefix = modeTag ? `${modeTag} ` : "";
         return {
@@ -789,7 +794,7 @@
           party: state.party.map((member) => ({ name: member.name, hp: Math.max(0, member.hp), maxHp: member.maxHp })),
           mode: vrDollMode(),
           gameMode: state.gameMode || "standard",
-          inspection: vrBoardHover ? vrInspectCell(vrBoardHover.x, vrBoardHover.y) : null,
+          inspection: (state.victory || state.defeated) ? null : (vrBoardHover ? vrInspectCell(vrBoardHover.x, vrBoardHover.y) : null),
           statuses: vrStatusInfo(state),
           hints: "Grab & place party piece to move · Drop on enemy to attack, door to open, in place to wait · Twist piece or stick turns · Drop potion on piece to heal"
         };
@@ -1525,10 +1530,11 @@
           const fwdX = Math.sin(yaw);
           const fwdZ = Math.cos(yaw);
           const sinTilt = Math.hypot(ux, uz);
+          const normalSide = (ux * fwdX + uz * fwdZ) <= 0 ? 1 : -1;
           // Outward unit normal of the (possibly tilted) billboard plane toward the viewer.
-          const nx = fwdX * uy;
+          const nx = normalSide * fwdX * uy;
           const ny = sinTilt;
-          const nz = fwdZ * uy;
+          const nz = normalSide * fwdZ * uy;
           let cx = baseX;
           let cz = baseZ;
           if (slotCount > 1) {
@@ -3437,18 +3443,47 @@
             }
           }
           if (goals.length) {
-            const move = bfsNextStep(goals);
+            let move = bfsNextStep(goals);
+            if (!move) move = bfsNextStep(goals, { allowMonsterTiles: true });
             if (move && !move.reached) {
               moveBy(move.dx, move.dy);
               return true;
             }
           }
         }
+        // Fallback when a closed door or narrow choke blocks BFS: take the best
+        // cardinal step toward the target that is walkable or a closed door.
+        const dx = targetX - state.x;
+        const dy = targetY - state.y;
+        const candidates = [];
+        if (dx !== 0) candidates.push({ dx: Math.sign(dx), dy: 0, priority: Math.abs(dx) });
+        if (dy !== 0) candidates.push({ dx: 0, dy: Math.sign(dy), priority: Math.abs(dy) });
+        candidates.sort((a, b) => b.priority - a.priority);
+        for (const step of candidates) {
+          const nx = state.x + step.dx;
+          const ny = state.y + step.dy;
+          if (!mapContains(nx, ny)) continue;
+          if (!solidAt(nx, ny) || closedDoorAt(nx, ny)) {
+            moveBy(step.dx, step.dy);
+            return true;
+          }
+        }
         return false;
       }
 
       function vrRunFloorOperation(op) {
-        if (state.floorIndex === op.floorIndex && !state.victory && !state.defeated) {
+        if (state.victory || state.defeated) {
+          if (typeof restartInGameMode === "function") {
+            restartInGameMode(state.gameMode || "standard");
+            vrInvalidateAll();
+          } else if (typeof beginRun === "function") {
+            state.characterCreated = false;
+            beginRun({});
+            vrInvalidateAll();
+          }
+          return;
+        }
+        if (state.floorIndex === op.floorIndex) {
           const dx = op.x - state.x;
           const dy = op.y - state.y;
           if (op.kind === "wait") {
@@ -3477,6 +3512,9 @@
           } else if (op.kind === "travelTo") {
             const unsafe = (typeof restNearbyThreat === "function" && restNearbyThreat())
               || (typeof restBlockingCondition === "function" && restBlockingCondition());
+            const beforeX = state.x;
+            const beforeY = state.y;
+            const beforeTurn = state.turnCount;
             if (op.door) {
               if (unsafe) {
                 vrStepToward(op.x, op.y);
@@ -3486,12 +3524,17 @@
                   .filter((p) => mapContains(p.x, p.y) && mapKind(p.x, p.y) === "floor" && currentFloorState().discovered.has(keyOf(p.x, p.y)))
                   .sort((a, b) => (Math.abs(a.x - state.x) + Math.abs(a.y - state.y)) - (Math.abs(b.x - state.x) + Math.abs(b.y - state.y)));
                 if (adjacentFloors.length) travelTo(adjacentFloors[0].x, adjacentFloors[0].y);
-                else vrStepToward(op.x, op.y);
+                if (state.x === beforeX && state.y === beforeY && state.turnCount === beforeTurn) {
+                  vrStepToward(op.x, op.y);
+                }
               }
             } else if (unsafe) {
               vrStepToward(op.x, op.y);
             } else {
               travelTo(op.x, op.y);
+              if (state.x === beforeX && state.y === beforeY && state.turnCount === beforeTurn) {
+                vrStepToward(op.x, op.y);
+              }
             }
           } else if (op.kind === "door" && Math.abs(dx) + Math.abs(dy) === 1 && closedDoorAt(op.x, op.y)) {
             moveBy(dx, dy);

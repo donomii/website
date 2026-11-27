@@ -4,7 +4,7 @@
 // served stale until CACHE_VERSION was bumped by hand, which looked like fixes
 // "breaking again". Network-first means a reload always picks up new code.)
 
-const CACHE_VERSION = "cotb-v68-embedded-vr-table-api";
+const CACHE_VERSION = "cotb-v69-vr-tilt45-trigger-move";
 const APP_SHELL = [
   "./",
   "./index.html",
