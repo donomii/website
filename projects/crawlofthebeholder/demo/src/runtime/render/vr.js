@@ -284,7 +284,7 @@
       function vrDollMode() {
         if (vrDollModeValue === null) {
           const settings = typeof readSettings === "function" ? readSettings() : {};
-          vrDollModeValue = settings.vrDollMode === "billboard" ? "billboard" : "dungeon";
+          vrDollModeValue = settings.vrDollMode === "dungeon" ? "dungeon" : "billboard";
         }
         return vrDollModeValue;
       }

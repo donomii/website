@@ -100,7 +100,7 @@ const COTB_SCRIPTS = [
     "src/runtime/systems/charms.js",
     "src/runtime/render/mobile.js",
     "src/runtime/render/vr_feedback.js?v=3",
-    "src/runtime/render/vr.js?v=0.5.54",
+    "src/runtime/render/vr.js?v=0.5.56",
     "src/runtime/systems/short_expedition.js",
     "src/runtime/systems/game_modes.js",
     "src/runtime/io/dev_options.js",

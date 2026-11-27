@@ -610,7 +610,7 @@ let beholderState = null;
 
 function loadBeholder() {
     if (!beholderRequest) {
-        beholderRequest = import("./beholder-table.js?v=20261126").then(async m => {
+        beholderRequest = import("./beholder-table.js?v=20261127b").then(async m => {
             const api = await m.createBeholderExhibit(scene, BEHOLDER_POS[0], BEHOLDER_POS[1]);
             beholderState = createExhibitFadeState(api.group, api, new T.Vector3(BEHOLDER_POS[0], 0.9, BEHOLDER_POS[1]));
             return beholderState;
