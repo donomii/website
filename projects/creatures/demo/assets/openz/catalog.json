@@ -1,0 +1,1985 @@
+[
+ {
+  "path": "Intro/Models/EndTitle/OPENZ_Logo3D.fbx",
+  "sha256": "998ccd10e7b71989e29dcc84c133b010826ea66789975c35fe2660a061a53418",
+  "textures": {
+   "OPENZ_Logo3D_DarkMetal_Normal.png": "textures/fecf24d8414d34362bc3.webp",
+   "OPENZ_BulletHole_Normal.png": "textures/8a51c16039448c22a47b.webp",
+   "OPENZ_Logo3D_Face_Normal.png": "textures/afbfe97486b3e381aa33.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/EndTitle/OPENZ_MetalChips.fbx",
+  "sha256": "2653952d3674a539eb1349f39ec3afde1bb76ae8ccf4c28e8bffef17f8ccc712",
+  "textures": {
+   "OPENZ_BulletHole_Normal.png": "textures/8a51c16039448c22a47b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_Alan.fbx",
+  "sha256": "25750e772076e51a033119a4e1f2811f4b2a5aa17732a4bdbfdae1792de4c9f0",
+  "textures": {
+   "IC_Alan_BaseColor.png": "textures/4ebfca074122ff300984.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_Brad.fbx",
+  "sha256": "c9b3ce623e8a7b5abb2e389afe1d3492411864081340ee14c6a57ce5e1955b5a",
+  "textures": {
+   "IC_Brad_BaseColor.png": "textures/f2eccf593523051fa002.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_CanMound_L.fbx",
+  "sha256": "aaa43d2eb4ffdb020b290fa5b41fd7fd307910081d99d032fd637a82167c6eff",
+  "textures": {
+   "IC_CanHeap_Normal.png": "textures/9f75ceb9487c07b57545.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_CanMound_M.fbx",
+  "sha256": "f4dc704d46fa7c0f001c6e89a573b1e0fcbe92db729ef8f8d9b367d751c37a6e",
+  "textures": {
+   "IC_CanHeap_Normal.png": "textures/9f75ceb9487c07b57545.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_CanMound_S.fbx",
+  "sha256": "2c6f8522fd13e08feab7347f560ff96225e81ae4e50e9a8ffed87f6ba175e837",
+  "textures": {
+   "IC_CanHeap_Normal.png": "textures/9f75ceb9487c07b57545.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_CanRing.fbx",
+  "sha256": "80d7bb36028d4a20088afc980a5ffdb2082ae0ff4f991a998c1c8493ba3f1f90",
+  "textures": {
+   "IC_CanRing_BaseColor.png": "textures/30c74966134d90797948.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_FuelCan.fbx",
+  "sha256": "78118c80ba736f5ebf46aaa200c60b5f3db6ded1290bfcd9ea0c88d71782dddd",
+  "textures": {
+   "IC_FuelCan_BaseColor.png": "textures/6cf24ff142d6db20a83d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_FuelCan_Crushed.fbx",
+  "sha256": "b5961234dd8e9d40fb2f6e5d7cd88c525e2c41f36ab5e3755d85040a3a751637",
+  "textures": {
+   "IC_FuelCan_BaseColor.png": "textures/6cf24ff142d6db20a83d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_FuelCan_Dented.fbx",
+  "sha256": "76346f4ace7b6295b550294153a323ddefd80ccafbfe83766c696fca5b2e4154",
+  "textures": {
+   "IC_FuelCan_BaseColor.png": "textures/6cf24ff142d6db20a83d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_Moon.fbx",
+  "sha256": "cf1b7a09ab687a0c54ffd8fd405e2c68688335161245725af8e43f53f28868d3",
+  "textures": {
+   "IC_Moon_BaseColor.png": "textures/70e0e585fca36e6eb6cc.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_Planet.fbx",
+  "sha256": "3ec895c1b23450583dd60f9c9d2df8c843b6143604e000ecf8debb706d45746a",
+  "textures": {
+   "IC_Planet_BaseColor.png": "textures/75d5e71ef5c54b01ed2b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_Set_Ground.fbx",
+  "sha256": "27061f379431068ba10a2e88fe43082c60ea70d406bbde9ceebeaae3a0aa0241",
+  "textures": {
+   "IC_Sand_BaseColor.png": "textures/301d29aae91a82b909e3.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Intro/Models/IC_Shuttle.fbx",
+  "sha256": "587c5a373885291d701c858683546984dd33dcf87c66a44609c0c8415bd9fdd5",
+  "textures": {
+   "IC_Shuttle_BaseColor.png": "textures/b9ee1d5630fcd774d001.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_Bobber.fbx",
+  "sha256": "55489b33fde203d027f7d4b8ae40a8a0b702c273e7963f6ceb681efd2e2737e1",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_Fish.fbx",
+  "sha256": "a3fde589f43a3f0a84d9f3020feb4c2ec3624f19af1c332f44aca032011516d7",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_FishingRod.fbx",
+  "sha256": "8072e019c15f7074296f8a5092c566db950d751f414be24511444c6d6b3cd4a5",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_Parasol_Blue.fbx",
+  "sha256": "7017a2b202ef6d40eafb77dd3c05f8d5ca21d31f50ad8c20d28862f8701c64e1",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_Parasol_Red.fbx",
+  "sha256": "104bbdc36e1c91d4a32eba27427ee0e04d91caa04fad59ac7e96bf09e1f73bcb",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_Phone.fbx",
+  "sha256": "cd9b878fc8514eb6f9c1fcc3cd200a21795d4c1c02d1df72cc304c8487671349",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_SunbedA_Blue.fbx",
+  "sha256": "15426f788e772c027883a3440d5465be85f1896f8f03035f3c949e9a2a15237d",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_SunbedA_Red.fbx",
+  "sha256": "ff5b487bb22d4bf4ce41060a627112c661a7947f0db81a7458dfbe724557a785",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_SunbedB_Blue.fbx",
+  "sha256": "d698e45828270fb239a4d717b1cb7877e986dc425dae26d912db718c77c7292a",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Antics/ANT_SunbedB_Red.fbx",
+  "sha256": "a6fe6024cbcc48d23ef8a77b4e6f0428e6e41cff950ac238d1ef04141e774c42",
+  "textures": {
+   "antics_emission.png": "textures/342581c413ee8899a54d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Atom/AtomJeep.fbx",
+  "sha256": "bb7339182fc2e2eb0488d9bfb13875748360cb7a571c0030edcdea844c922126",
+  "textures": {
+   "atom_jeep_body_2048.png": "textures/d2ba55e93d6908f8c1b8.webp",
+   "atom_jeep_tire_2048.png": "textures/410079a8eb4d93c8ea5a.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/BS01_Robot.fbx",
+  "sha256": "81c645049feaf1aadcd16101d8a29013c93141260e5cebe6a910f8f63d15e3d8",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/BS01_Robot_Anims.fbx",
+  "sha256": "561593f03d2c52b1cd070aed4a2f1dfbfd7e525ebdf64d3b734b3c6720428139",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/BS01_Weapon_Grunt.fbx",
+  "sha256": "898049fdff2b35cf1a77f292492d86d0bdffb3dd09c540f2adb5b94e5cec78d9",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/BS01_Weapon_Psycho.fbx",
+  "sha256": "11b9fbce67246d2120cbfe868163f23744c13c4793499fb962318a13e74f6ca5",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/BS01_Weapon_Pyro.fbx",
+  "sha256": "00d371b5f97ce50b6e112ec36b23c5963dfff1bff8748ce85a3dfcf7fcc64025",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/BS01_Weapon_Sniper.fbx",
+  "sha256": "f4e4c790cc6edd1b1e22a16c9d4c9ac09e916479a8aa979eb1d5f3cd0f99233b",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/BS01_Weapon_Tough.fbx",
+  "sha256": "30375f776e4448ec8d4cab4bd7e505d2909b0f114a3085487ec54f70c02257d4",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/Clips_v1/BS01_RobotClips_v1.fbx",
+  "sha256": "8f27d8f928ccd9e79cad79a4c9ca61e8b42d15e5a3c03dcceb4eb6dae7d6a15c",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/LEGACY_Robot_Clips.fbx",
+  "sha256": "a33527f02b62c38f702cbc167a4f1c1af5176c48f8c5d925771c0100b426b21b",
+  "mesh": true,
+  "textures": {
+   "Image_2_003": "textures/2c60ab9e96c3d0c46c9a.webp"
+  }
+ },
+ {
+  "path": "Models/BS01/Types/BS01_Type_Grunt.fbx",
+  "sha256": "3e1589f5af9cc7ac1654caffdab54ce4f5a3af3ea4a6a0a6aa852eb83a2a645a",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/Types/BS01_Type_Psycho.fbx",
+  "sha256": "85049515435c4e19d08273fec2eed7d0520e4172c8457ffe789745aae695d21b",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/Types/BS01_Type_Pyro.fbx",
+  "sha256": "9d85f5fc798b95c3fcad320e96ea686d00645a7d5d95eec97733034cb4b72ba2",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/Types/BS01_Type_Sniper.fbx",
+  "sha256": "5d556c0185c14dc4d59d315a60c3feb9289e95c5f0c5e76426c9e5d296e35ccf",
+  "mesh": true
+ },
+ {
+  "path": "Models/BS01/Types/BS01_Type_Tough.fbx",
+  "sha256": "acb2db947521959c7b4cce96f710b091ea4179f0fb6c9c89588fa1b0280f99a3",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L02_Chunks.fbx",
+  "sha256": "9ab2479ee52e2313861c0f74af18e7f0ef0714bdd0c1fa178a38ddeb1e33cd35",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L02_Comms.fbx",
+  "sha256": "41e64eae212dde9d882425aa6c76255956f39155896d5bc1f78e2f128e3f7772",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L02_Fuel.fbx",
+  "sha256": "669ad94e11614fb399fb75e5e9461405b42ec2683ae964b5017499a96da093e7",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L02_Generator.fbx",
+  "sha256": "a9bcf9f158dd0c4889cdf6b4f659defafb9c32f464f1d9d19c5b97ec95ab560f",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L02_Solar.fbx",
+  "sha256": "49bdc4a5275b3077859fb35c63bffce7c93c16fe9c737cbcffa3b3eb61ef3987",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L02_Supply.fbx",
+  "sha256": "592edcde3d8cb19afeee26ca5ea4bf41eb0126ea4ce8181880aabcb191c173ef",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L17_Chunks.fbx",
+  "sha256": "f53037f5fcff864fa2636a614df33120b64d2b19ee3169ba66eaf790df683c53",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L17_Comms.fbx",
+  "sha256": "a05cf755fe8706ad3d541300fcb53e86d121186aecc287ee81cc04d2496a360b",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L17_Fuel.fbx",
+  "sha256": "61a9bacd7e568ff50d2c163c3f069ddb0cf1c827822ea1f631cd9573207a9970",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L17_Generator.fbx",
+  "sha256": "02f5ff746947b7ca5176265f2a12ede89e33c8ec8d129ee661c9eb6962e3f9a5",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L17_Solar.fbx",
+  "sha256": "45916a8aeada090908f1014ce006ca66c61d6d8d68de412338e00b39d96dce89",
+  "mesh": true
+ },
+ {
+  "path": "Models/BaseProps2/BP2_L17_Supply.fbx",
+  "sha256": "f82e68e16149e84346b29364f46b3f46cfe6ca21928abe4e762b07c49445411d",
+  "mesh": true
+ },
+ {
+  "path": "Models/BigTanks/bizon_game.glb",
+  "sha256": "3a8beac4ebf4d4a135b4c032d559d93e86c49e5fbfbe17642dbd821a804efe88"
+ },
+ {
+  "path": "Models/BigTanks/mammoth_game.glb",
+  "sha256": "64912dd5bf0afa118582ad6eb51b1ad480cbfbc96fa62b38d591ee48f5622ee1"
+ },
+ {
+  "path": "Models/DetailsV2/DV2_L02_Kit.fbx",
+  "sha256": "9ffb038412d92944424827b601bca2ea06731fc00d1ac5367e46c0347299ad0c",
+  "mesh": true
+ },
+ {
+  "path": "Models/DetailsV2/DV2_L07_Kit.fbx",
+  "sha256": "7c8aad7666a57fede7f5843ee5929fcd181cb0f24b7157aff82f3c06bde3ad8d",
+  "mesh": true
+ },
+ {
+  "path": "Models/DetailsV2/DV2_L17_FuelBanner_Kit.fbx",
+  "sha256": "3a032914dee877e07b44b11188f9f9350995818216019cc8f2f9b53f37b14d44",
+  "textures": {
+   "oz_fuelbanner_A_d0_weathered.png": "textures/08de31b55b6b3e14ab1d.webp",
+   "oz_fuelbanner_A_d0_weathered_back.png": "textures/264b2710f6eadb8b7f82.webp",
+   "oz_fuelbanner_B_d0_weathered.png": "textures/8ac100bd167c41d3140b.webp",
+   "oz_fuelbanner_B_d0_weathered_back.png": "textures/9042a9f04b6378a0d9d2.webp",
+   "oz_fuelbanner_A_d1_damaged.png": "textures/f2fdb0560b21ffd8f6da.webp",
+   "oz_fuelbanner_A_d1_damaged_back.png": "textures/48e8e3c9c286c555b6be.webp",
+   "oz_fuelbanner_B_d1_damaged.png": "textures/9ee0d07f0ed1467c801e.webp",
+   "oz_fuelbanner_B_d1_damaged_back.png": "textures/e932e0c16da08f0aeab6.webp",
+   "oz_fuelbanner_A_strips.png": "textures/ec1368b5cb556ea504e9.webp",
+   "oz_fuelbanner_A_strips_back.png": "textures/690656d3fa688731739b.webp",
+   "oz_fuelbanner_B_strips.png": "textures/9d42e5b57ffe0cbd82ae.webp",
+   "oz_fuelbanner_B_strips_back.png": "textures/302cc4d45fdf75e6e7ee.webp",
+   "dv2_atlas_L17.png": "textures/e0731be0b2c28797e0cc.webp",
+   "oz_fuelbanner_A_flap.png": "textures/45daabaaa982e26f0276.webp",
+   "oz_fuelbanner_A_flap_back.png": "textures/4e09c60d122f32af2643.webp",
+   "oz_fuelbanner_B_flap.png": "textures/a24e618f068aa66cb688.webp",
+   "oz_fuelbanner_B_flap_back.png": "textures/750f1298ddb94c06577e.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/DetailsV2/DV2_L17_Kit.fbx",
+  "sha256": "8150009a45821198a07511c0c932394c48d41e87b8527793f16c3b8ab099b129",
+  "mesh": true
+ },
+ {
+  "path": "Models/DetailsV2/L18S_ConcreteBlock.fbx",
+  "sha256": "04dab1ad092abe73f6d5dce074f1fef5800cc5e67b3e4901870853495dd3d6d9",
+  "mesh": true
+ },
+ {
+  "path": "Models/DetailsV2/L18S_StreetSign.fbx",
+  "sha256": "13219a7f8c072aa29c357e996212ba8332e36b4ffafdc3e7852a3ca28a0a5dce",
+  "mesh": true
+ },
+ {
+  "path": "Models/DetailsV2/PalmsV3/PalmA_v3.fbx",
+  "sha256": "4b756d20b9d5a4bc3304e1c058bddd0404e82ba0fbb40a9cb477b8b1d3ba827f",
+  "mesh": true
+ },
+ {
+  "path": "Models/DetailsV2/PalmsV3/PalmB_v3.fbx",
+  "sha256": "9dac7d180aadb3cf6a50216d5fb6937afcbbb40c85efa1a6ceb8443fa024d111",
+  "mesh": true
+ },
+ {
+  "path": "Models/DetailsV2/WF3/WF3_L02_Waterfall.fbx",
+  "sha256": "302d5fc3c3c5f223c19d5afc4acdf02f6f0b739fd5b928797348c1f231bcf58d",
+  "textures": {
+   "cliffv3_top_L02_normal.png": "textures/363f367b3786d2f82cee.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/BRGJ_Approach.fbx",
+  "sha256": "e77823c330b1ddfc49f0bdcb09612fed4a7bc1913073c9782d6d9478e6f13655",
+  "textures": {
+   "BRG_jungle_v2_palette.png": "textures/cad35245b3ee1170c1d3.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/BRG_city.fbx",
+  "sha256": "c3cedaee0918311c36f6847823adfc6b0b5c9527acd548ba38db4379b9aada44",
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/BRG_city_long.fbx",
+  "sha256": "28283e9a9a16564c9a50ebfb1d33a42fd9aa1e061ff71fb6d51fd283a9255d51",
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/BRG_desert.fbx",
+  "sha256": "3eaf7fa5ddec23fcdd9c1fa134ea2dd596d0bb73ed66f0695a78c157f637a902",
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/BRG_jungle.fbx",
+  "sha256": "1b94b32dfff8a651d8c324ad006ecce4a10df099ab5e6c57a668dc3d50460d4e",
+  "textures": {
+   "BRG_jungle_palette.png": "textures/cad35245b3ee1170c1d3.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/CliffsV3/L02_cliffs_v3.fbx",
+  "sha256": "bc3e40ae2f1c4f913cb6adc8b1abcc15a4b8bd7817ae14df530349e6e99da60b",
+  "textures": {
+   "cliffv3_rock_L02_normal.png": "textures/1c81c33660690abef9ae.webp",
+   "cliffv3_top_L02_normal.png": "textures/363f367b3786d2f82cee.webp",
+   "L02_ground_paint.png": "textures/d4c84f756bfed7dba5d4.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/CliffsV3/L02_outer_v3.fbx",
+  "sha256": "74b6014af49323677a72fe7a9e2bf27a5cfc8317863d70fa18b60bc0d76fd00a",
+  "textures": {
+   "cliffv3_rock_L02_normal.png": "textures/1c81c33660690abef9ae.webp",
+   "cliffv3_top_L02_normal.png": "textures/363f367b3786d2f82cee.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/CliffsV3/L17_cliffs_v3.fbx",
+  "sha256": "141ac5ee0160fc2700bc85b99025436bb7d8e746cc36895cf46152011f4a412a",
+  "textures": {
+   "cliffv3_concrete_L17_normal.png": "textures/f3144556955aa1361a36.webp",
+   "cliffv3_rock_L17_normal.png": "textures/046a310b4a378f0af7f5.webp",
+   "cliffv3_top_L17_normal.png": "textures/905fa3bdfb1ca69f8fe3.webp",
+   "L17_ground_paint.png": "textures/170b1c1491e1286bb8c0.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/CliffsV3/L17_outer_v3.fbx",
+  "sha256": "26d15c6fc7d8c84f45f17b080a85dd5c93a2a7648f288f8194db4101e47255f0",
+  "textures": {
+   "cliffv3_concrete_L17_normal.png": "textures/f3144556955aa1361a36.webp",
+   "cliffv3_rock_L17_normal.png": "textures/046a310b4a378f0af7f5.webp",
+   "cliffv3_top_L17_normal.png": "textures/905fa3bdfb1ca69f8fe3.webp",
+   "lake_ripple_normal.png": "textures/8d0536b6cbc4b922d14e.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/CliffsV3/L18_cliffs_v3.fbx",
+  "sha256": "64abe3893db00211ab3e19cc922c981eae3b66b2a64b6f05c2ccb388f8c1150b",
+  "textures": {
+   "cliffv3_concrete_L18_normal.png": "textures/f3144556955aa1361a36.webp",
+   "cliffv3_rock_L18_normal.png": "textures/046a310b4a378f0af7f5.webp",
+   "cliffv3_top_L18_normal.png": "textures/905fa3bdfb1ca69f8fe3.webp",
+   "L18_ground_paint.png": "textures/5cecf02124d91e31e35b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/CliffsV3/L18_outer_v3.fbx",
+  "sha256": "32b8544cd0a88533926f205627dcd4244af029c494c105cb9e52f03210133e02",
+  "textures": {
+   "cliffv3_top_L18_normal.png": "textures/905fa3bdfb1ca69f8fe3.webp",
+   "cliffv3_concrete_L18_normal.png": "textures/f3144556955aa1361a36.webp",
+   "cliffv3_rock_L18_normal.png": "textures/046a310b4a378f0af7f5.webp",
+   "lake_ripple_normal.png": "textures/8d0536b6cbc4b922d14e.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/L02_environment.fbx",
+  "sha256": "87fb9e4ab077e1b966e72de2fc797b0d5c12be5d7f184a631af6db0a93ea964a",
+  "textures": {
+   "sandstone_shared": "textures/5c8d403704254ca5299a.webp",
+   "desert_ground_seamless_shore": "textures/d4c84f756bfed7dba5d4.webp",
+   "cliff_strata.png": "textures/b697fae360cab2f9c761.webp",
+   "L02_ground_paint.png": "textures/d4c84f756bfed7dba5d4.webp",
+   "lake_ripple_normal.png": "textures/8d0536b6cbc4b922d14e.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/L07_environment.fbx",
+  "sha256": "7044303dcdb291e79f7646cf3b26b500eaf3f857e8723bb67a02eba4908eef6f",
+  "textures": {
+   "L07_ground_paint.png": "textures/12c104758b675ea29942.webp",
+   "L07_cliff_rock.png": "textures/a1c4ff92e1a1aab19594.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/L16_environment.fbx",
+  "sha256": "4d6fd04c91e70b4558d0dd933f795b7ac63e1aa89ed6634ba51470e213b11cf3",
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/L16_rims.fbx",
+  "sha256": "6e93ff8bbce8b64e6d4a27fd6e3f5b9b86a543996302e9d5f67ab7d31fdbecbd",
+  "textures": {
+   "rim_floor_4096.png": "textures/9ff7b321b60d4b3a2402.webp",
+   "rim_foot_bank_4096x512.png": "textures/189ff2898c1f07e460ea.webp",
+   "rim_log_bark_2048x1024.png": "textures/7057f652e9275af21a98.webp",
+   "rim_log_end_512.png": "textures/e9eb71fbe02375b32850.webp",
+   "rim_rock_wall_4096x2048.png": "textures/5b4af584056de0b233b4.webp",
+   "wallfall_rock_damp_1024.png": "textures/2d7a1037620645836244.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/L17_environment.fbx",
+  "sha256": "d3ef23a3d037ae6c2f07bbc8a548b7418dcc11ba67f175b72ae83889ccdbbe52",
+  "textures": {
+   "cliff_strata_city.png": "textures/68a434bcb05df21c0916.webp",
+   "L17_ground_paint.png": "textures/170b1c1491e1286bb8c0.webp",
+   "lake_ripple_normal.png": "textures/8d0536b6cbc4b922d14e.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/L18_environment.fbx",
+  "sha256": "e42cc1ec8ded11b9867d62a9bc2bca7a37129ca137207f8af0932ae3334ea4ad",
+  "textures": {
+   "cliff_strata_city.png": "textures/68a434bcb05df21c0916.webp",
+   "L18_ground_paint.png": "textures/5cecf02124d91e31e35b.webp",
+   "lake_ripple_normal.png": "textures/8d0536b6cbc4b922d14e.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/props_map12.fbx",
+  "sha256": "41798e2be1c1f9e6b70ae71728a6c65c9034c35d64850af82397b3f2bbda5fef",
+  "textures": {
+   "sandstone_shared": "textures/5c8d403704254ca5299a.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Environment/props_vicecity.fbx",
+  "sha256": "0aac055dfb120ec400a9ab5fad68f066ec90a71aaa23057a0357487f9b0013a9",
+  "mesh": true
+ },
+ {
+  "path": "Models/Gates/Fort_Gate.glb",
+  "sha256": "cf7d023923d254d07642be905ac4881967624a44e8e4af525e3417c94518447f"
+ },
+ {
+  "path": "Models/Gates/robot_factory_Gate.glb",
+  "sha256": "5843249717499a204de92945b2af5125d79cccdf4f49825d6c9786f0fc3ea380"
+ },
+ {
+  "path": "Models/Gates/vehicle_factory_Gate.glb",
+  "sha256": "79e88253d12667eefae977eff106b6a09e8c61ae73d307af85fa731c9f7acc77"
+ },
+ {
+  "path": "Models/Gen/Fort_Split.fbx",
+  "sha256": "bf3b42e37b4875af9313d46cbbf9917dece48b390f8d790cf28cad0b481d5394",
+  "textures": {
+   "FortV2_Base_Albedo.png": "textures/805e577faa548d094482.webp",
+   "FortV2_Base_Normal.png": "textures/8126fe983481d77b8d90.webp",
+   "FortV2_Gun_Albedo.png": "textures/d5817e3d3678838445cf.webp",
+   "FortV2_Gun_Normal.png": "textures/427424badebdda534c35.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Gen/apc_crane_v1/OZ_APC_Live.glb",
+  "sha256": "3cea49686b358f7deaa05a1131cae2d64f2b383a6b4e391e897cc45eae75e0e5"
+ },
+ {
+  "path": "Models/Gen/apc_crane_v1/OZ_APC_Wreck_V1.glb",
+  "sha256": "1ca1d6ab5af91c48a087345e2bf223fc74d50ee114afb6f5eb021000d0121c4a"
+ },
+ {
+  "path": "Models/Gen/apc_crane_v1/OZ_APC_Wreck_V2.glb",
+  "sha256": "146ef7321b4c4b07ade929ef74e40ac7469bb2b75da67dfaa501353c18ae1b92"
+ },
+ {
+  "path": "Models/Gen/apc_crane_v1/OZ_APC_Wreck_V3.glb",
+  "sha256": "f7834ac9d6d4829827a5f370f6846506ba634475b4ce34293bd6214669280bee"
+ },
+ {
+  "path": "Models/Gen/apc_crane_v1/OZ_CRANE_Live.glb",
+  "sha256": "80c6ec3ea669509a581c5a8f2d2980ab88cfb6f521345a67099376539190eb5a"
+ },
+ {
+  "path": "Models/Gen/apc_crane_v1/OZ_CRANE_Wreck_V1.glb",
+  "sha256": "b8fff8b93e7167a000e0e3d0a2313bb69f8c30301db5688b0a4ef54c42fea0a7"
+ },
+ {
+  "path": "Models/Gen/apc_crane_v1/OZ_CRANE_Wreck_V2.glb",
+  "sha256": "ec5f28f6d3d86e2b120ed4285738ea233496451f06a88ef4d008bd5e07de651c"
+ },
+ {
+  "path": "Models/Gen/apc_crane_v1/OZ_CRANE_Wreck_V3.glb",
+  "sha256": "42188e79f2af714693d036c6b59df0320f505df7bdc5a6cc42ed4a59ce47df30"
+ },
+ {
+  "path": "Models/Gen/m01_fort.glb",
+  "sha256": "8eaf1a5000cf1a1a35a694038d0db7415484fa56593a14d45c92b50d89b8d5f0"
+ },
+ {
+  "path": "Models/Gen/m02_robot_factory.glb",
+  "sha256": "e4cd2f5c7265b9110a361a970f584984951690b7d70bd85d2c04ae4886d56999"
+ },
+ {
+  "path": "Models/Gen/m03_vehicle_factory.glb",
+  "sha256": "02843972b55491ae7cf58f49abc024ae029aa4a05b3f8863d95d7d834e245c3f"
+ },
+ {
+  "path": "Models/Gen/m04_repair_station.glb",
+  "sha256": "a4213353e030b48f461a9b2d8a9a7847579584b41491e040a8eb23f9d9d61db6"
+ },
+ {
+  "path": "Models/Gen/m05_radar.glb",
+  "sha256": "3f868ba2127f388af78d282d80c26ecb23bbb55e1ae14edb8248ece1b19261f9"
+ },
+ {
+  "path": "Models/Gen/m06_apc.glb",
+  "sha256": "691f8a03a9b4aa7d3071c9db0b24ffb635715c1f061cffc3b89163440e7d2494"
+ },
+ {
+  "path": "Models/Gen/m07_crane.glb",
+  "sha256": "7d674e2d55f528ccebe558c82f8c9189c8733b9c7d22f38fea895112e8134ea1"
+ },
+ {
+  "path": "Models/Gen/m08_medium_tank.glb",
+  "sha256": "10e453c3851768160c29cafde5ad0dd7ad732b557d4ba03b9ed1233d85cf47d0"
+ },
+ {
+  "path": "Models/Gen/m09_gatling.glb",
+  "sha256": "ee568dae5e492ec7a4b410a5c1e466be516dc1477242c24fc64a014bd3dec8b7"
+ },
+ {
+  "path": "Models/Gen/m10_howitzer.glb",
+  "sha256": "3d72a72e7b288f7559156394344cc3bc67313dd26a5b1005cd94bfbd1fd12240"
+ },
+ {
+  "path": "Models/Gen/m11_missile_cannon.glb",
+  "sha256": "5e61208eb72f6f34c9fd24b0aa13868cd4c4ceb7c67dadcf4af4963a452f3cc6"
+ },
+ {
+  "path": "Models/HeroSquad/Hero_Alan.fbx",
+  "sha256": "24845feb3f248aba226503309ef556299122ac29a57057382fa31f832719ac8d",
+  "textures": {
+   "Alan_BaseColor.png": "textures/857b4bd33523e08c56ac.webp",
+   "Alan_Normal.png": "textures/7a951e741a45e507fc35.webp",
+   "IC_FuelCan_BaseColor.png": "textures/6cf24ff142d6db20a83d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/HeroSquad/Hero_Brad.fbx",
+  "sha256": "b896095f6a46af917b65be519c151ce94bb64713b037e71945fe710a7f348cc6",
+  "textures": {
+   "Brad_BaseColor.png": "textures/b40039205821900f2abc.webp",
+   "Brad_Normal.png": "textures/b00afadf1c8e31ce2895.webp",
+   "IC_FuelCan_BaseColor.png": "textures/6cf24ff142d6db20a83d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/HeroSquad/Hero_EvilZod.fbx",
+  "sha256": "ba38c7ec07810c8f1d42ae51006b3a50bd0a8f60fb0bcd253f6bd003d97edb21",
+  "textures": {
+   "EvilZod_BaseColor.png": "textures/2e1ffd347662973341c4.webp",
+   "EvilZod_Emission.png": "textures/b4bbebb7e3e1cbe51020.webp",
+   "EvilZod_Normal.png": "textures/59a8760aab829d5e9a4f.webp",
+   "Shotgun_BaseColor.png": "textures/33393e58e324b63d41a5.webp",
+   "Shotgun_Normal.png": "textures/f8d278d3c7ad595185e9.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L07/L07_hut.fbx",
+  "sha256": "ee5923ab4047866475496add4884f886be2f4ae14c2744520b4fd62ad82082ad",
+  "mesh": true
+ },
+ {
+  "path": "Models/L07/L07_lava_dress.fbx",
+  "sha256": "210e141dd8b2ebfd5661373a777f859ba1953e6ff907f0489f1cdc634b07bfc7",
+  "textures": {
+   "L07_bank_atlas.png": "textures/b547287b3a4e56127f57.webp",
+   "L07_bank_emis.png": "textures/ad346d03ce34966f0e6a.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L07/L07_rocks_decor.fbx",
+  "sha256": "e8658457147a0cdde2b3db97d9e4e2ef1d8cfe28cd9254a904349c9874696726",
+  "mesh": true
+ },
+ {
+  "path": "Models/L07/L07_volcanoes.fbx",
+  "sha256": "f6693eb99a1b02f8ec15605f90bf2c77cfe1d20fb44c021c195196177e70951f",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Flora/L16_flora_kit.fbx",
+  "sha256": "e7c0924c81c4d7e11809e9ca742be689f6ed11e1799c563537a8808080dd693d",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Rocks/JG2_RockGroups.fbx",
+  "sha256": "334a61f8cc5649b81934c0193f26026e52c31d0e2116614573488f6efea0a914",
+  "textures": {
+   "jg2_rock_strata_1024.png": "textures/b3c320bc7e7e857bea28.webp",
+   "jg2_top_jungle_1024.png": "textures/db57ad4531ab69570dc5.webp",
+   "jungle_verge_moss_1024.png": "textures/264de9e0c159dd0c2adc.webp",
+   "jg2_rock_fresh_1024.png": "textures/ea6160593e8a7714bf0f.webp",
+   "jg2_palette.png": "textures/6e90f7475f21336b8349.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Rocks/JGH_BoulderCluster_A.fbx",
+  "sha256": "81b46aa60829b7046d56ff9b1fbf2edb88b03cc204ce619f4f8a51f8c7c462bc",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Rocks/JGH_BoulderCluster_B.fbx",
+  "sha256": "ae1feedd283c48263afd07f199a11d456128544e237e077d88895c1f38f8385e",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Rocks/JGH_CliffFace_A.fbx",
+  "sha256": "1865790e3da70a161c38beab02d81f41283e41295c3bed5c570e0c44efc4e6ad",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Rocks/JGH_CliffMass_C.fbx",
+  "sha256": "802d9849f664bd5b4661000e37ca3c9e78e663a5ac3869b66751ad20d938535d",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Rocks/JGH_LowOutcrop_A.fbx",
+  "sha256": "239aac98256d8a2189a8a480e7dba274cba10831330810ac75295390fde1a63d",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Rocks/JGH_SpireGroup_A.fbx",
+  "sha256": "02388c6f67ee2c7f8ea20a53c9eecf5f271cef34db70bb987abcc9e6779661ca",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Rocks/JGH_WaterfallFace_B.fbx",
+  "sha256": "ec75708f7f8774813d9852ccb660f5385f3ef574fa60d1767f18049a2b58dc45",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Shuttle/L16_FieldSearchlight.fbx",
+  "sha256": "b2b0c3958837e3f5e10fe16d17a5814cda885fa6ae89b0cdcad37e6cdbe2adc5",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Shuttle/L16_Shuttle.fbx",
+  "sha256": "e9ea8ba280f3d483923a180165808e2309d31cac64242d58a88778a298d9ff16",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Structures/L16_structures_kit.fbx",
+  "sha256": "32e6b8abcf82078e6ac6c74313685ffbdc54c76702c677fc7a70946c7f7df17e",
+  "mesh": true
+ },
+ {
+  "path": "Models/L16/Water/L16_water.fbx",
+  "sha256": "00f9390bad2f94bb8bccfd55b1f5e901e8b879d94e89e30ad54d108e99729574",
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18C_Container_A.fbx",
+  "sha256": "759890d2cb2cad055fb2a2ad2d577189bba3ca36ee4ef4f9de1e4692b9fd46f3",
+  "textures": {
+   "L18C_Container_Red_BaseColor.png": "textures/3daa449e7a0ac087a7b8.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18C_Container_B.fbx",
+  "sha256": "7758701a4d180e3e76fc331055cd8685de3aec9d0cc8c03c5dc8d44cf765455a",
+  "textures": {
+   "L18C_Container_Red_BaseColor.png": "textures/3daa449e7a0ac087a7b8.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18C_Container_C.fbx",
+  "sha256": "f575df95e5fe253d3296c6531d3c632080ef231e1cb4748bcb1a85d66753e6e3",
+  "textures": {
+   "L18C_Container_Red_BaseColor.png": "textures/3daa449e7a0ac087a7b8.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18C_Container_W.fbx",
+  "sha256": "2e256c7edb9c5dae4feb931b6d76d586cb1acaee52ed90d02bbed2c4ea03861c",
+  "textures": {
+   "L18C_Container_Red_BaseColor.png": "textures/3daa449e7a0ac087a7b8.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18D_BargeSunk.fbx",
+  "sha256": "701320204c4ced54b2bdde687ea4518058285c43bd283449206f0ed112310040",
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18D_ContainersA.fbx",
+  "sha256": "415d2a9a3222b49bd6ad1ec7972f156ebf070591f198ee128852da8b2c08ec2f",
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18D_ContainersB.fbx",
+  "sha256": "8cb113f69572a2bd857a51b4b5740a534fe39c3b4cc96836455e7fa761aed33c",
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18D_TankPair.fbx",
+  "sha256": "818b2d4af3aa67e03c6f9fecef0626b868469463361aae0d5f9dcc216bdef7bf",
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18R_CraneStanding.fbx",
+  "sha256": "e26eeff118b56575e5d13f446b9a96d2728a96708e037927db7bd22e84b3730d",
+  "textures": {
+   "L18R_CraneStanding_BaseColor.png": "textures/8017e6e440881676395b.webp",
+   "L18R_CraneStanding_LOD2_BaseColor.png": "textures/db25960f87033ea7c498.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18R_CraneToppled.fbx",
+  "sha256": "c149332b9c34007de2fc513297cc31fd1795b5394e0efe24e0d17b3097d7b258",
+  "textures": {
+   "L18R_CraneToppled_BaseColor.png": "textures/00dc11b9afbc76235710.webp",
+   "L18R_CraneToppled_LOD2_BaseColor.png": "textures/c8fd79c77bff1ff53a07.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18R_FactoryHall.fbx",
+  "sha256": "5d6d203856b2405e11256b02499978fc46c8fe8307a129057cf9ecf3e5066855",
+  "textures": {
+   "L18R_FactoryHall_BaseColor.png": "textures/2ae15cfa6cb6b0e3207b.webp",
+   "L18R_FactoryHall_LOD1_BaseColor.png": "textures/756ea0e6cb15e58f0a44.webp",
+   "L18R_FactoryHall_LOD2_BaseColor.png": "textures/f1d422b8a16c62a02000.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18R_PipeRun.fbx",
+  "sha256": "367df1777a39244cd97b114211e9d3b3535db374e32f226febeffc9a41457d2f",
+  "textures": {
+   "L18R_PipeRun_BaseColor.png": "textures/12f57c57b1276623030a.webp",
+   "L18R_PipeRun_LOD2_BaseColor.png": "textures/c871cc3e889a89f9d571.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18R_ShipWreck.fbx",
+  "sha256": "108d964c2a2de87ef768325863786308430e81d2ecc9f048bd5f041c0ab3f3bf",
+  "textures": {
+   "L18R_ShipWreck_BaseColor.png": "textures/b26dca69f804d7b8d52b.webp",
+   "L18R_ShipWreck_LOD2_BaseColor.png": "textures/d240774a97a91a7036df.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18R_SlabTower.fbx",
+  "sha256": "e3817a9683acdd2a990790a7b8aa49f116435f0f244d1e01d04b669224b93b73",
+  "textures": {
+   "L18R_SlabTower_BaseColor.png": "textures/55b52139caca78b93c17.webp",
+   "L18R_SlabTower_LOD2_BaseColor.png": "textures/44b25eab67b4f181a0ff.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18R_StumpA.fbx",
+  "sha256": "9f53fa03ce77b582bc0bd95c32bedd68f97bef64d3d4ac3a8e2170a048df4cba",
+  "textures": {
+   "L18R_StumpA_BaseColor.png": "textures/561f6ee6c32a570e0096.webp",
+   "L18R_StumpA_LOD2_BaseColor.png": "textures/8d8c83ccf79b41c01cc9.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/L18/Ruins/L18R_StumpB.fbx",
+  "sha256": "1f4a68a9c48322386e3d799fc6876f4a6ce8cee5299ad3fe54dfad5070aedbda",
+  "textures": {
+   "L18R_StumpB_BaseColor.png": "textures/00e88d5bd517e64c7639.webp",
+   "L18R_StumpB_LOD2_BaseColor.png": "textures/c0903353b20f31e10520.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/Legacy/MlrsV2b/MLRS_v2_hull.fbx",
+  "sha256": "36e8990d7b55fa5e848318485d4e812e02d293000b8007d1a2f35c1938e4bad4",
+  "mesh": true
+ },
+ {
+  "path": "Models/Legacy/bazooka.glb",
+  "sha256": "2b21083c943df928206bf71e60c6a38694447139ad7ed3c41c3f52b22f19a01a"
+ },
+ {
+  "path": "Models/Legacy/cannon.glb",
+  "sha256": "337d46fcb76275d0c6e02b42dfc3edd9df908102d48a1480b3ddc54c95180e65"
+ },
+ {
+  "path": "Models/Legacy/debris_crate.glb",
+  "sha256": "e23467fad9c5fa8b093042cb74a86b9e8f83f5e653c457b286d346c0667eb6af"
+ },
+ {
+  "path": "Models/Legacy/gun_v2.glb",
+  "sha256": "6f76d83f9220c379a792379cfb2b3d83572d77bfa7f67d704bb773c4d7573d7c"
+ },
+ {
+  "path": "Models/Legacy/heavy_tank.glb",
+  "sha256": "cd2bf5245f3289cb74db6fe184a18c7e196b8b18de521c1532b32b02a20f9a49"
+ },
+ {
+  "path": "Models/Legacy/heavy_tank_v2.glb",
+  "sha256": "f4ac4165629904774a34f389c101f250759f4f1861fe4b7fa2175871e5c29c54"
+ },
+ {
+  "path": "Models/Legacy/jeep.glb",
+  "sha256": "3a4228a075ab9a0a4fb9d824a86617cf7f57ea5549fb6034e3200c7c48b4b8af"
+ },
+ {
+  "path": "Models/Legacy/light_tank_v2.glb",
+  "sha256": "b02b7e1579654463d316cf1003d40b3718241a19fd19cb5bd0d2195b5e6a1ef0"
+ },
+ {
+  "path": "Models/Legacy/mech.glb",
+  "sha256": "1bf3f0a97d7c8532fc36163062c00658c96e5d1a029ccf667f34c86066178682"
+ },
+ {
+  "path": "Models/Legacy/mech_v2.glb",
+  "sha256": "64bea88b7291588a691db6cb04869181281df1caf32b9363119a7cb8e01e3c2e"
+ },
+ {
+  "path": "Models/Legacy/mlrs.glb",
+  "sha256": "97d11bce6fecef26bbd97b9b3bdebb328868a8c80981a89a77d3592a242b3ae3"
+ },
+ {
+  "path": "Models/Legacy/mlrs_v2.glb",
+  "sha256": "0dac15c154908f34e24429ecda9d5b8674510eed0c0cc563149426ee9dae539b"
+ },
+ {
+  "path": "Models/Legacy/mtank_v2.glb",
+  "sha256": "610fd47909db9b41f6aaf335bcf018c2647611fef8a06d162d92ad40369d0b0d"
+ },
+ {
+  "path": "Models/Legacy/other-bot.glb",
+  "sha256": "8ac374ac76c0cf631b39fbae5fa662e866a11a1ef8859b4a46d22ecbbce38692"
+ },
+ {
+  "path": "Models/Legacy/tank.glb",
+  "sha256": "3a1a29ed22f90c29d0b70ea12a082255a583f5f37384a2032bc2fe64bc8c7488"
+ },
+ {
+  "path": "Models/Props/GrenadeCrate/GrenadeCrate.fbx",
+  "sha256": "9cc6ab73882b7339ba555145209394bd83053e205530a295ca0355de8131f879",
+  "mesh": true
+ },
+ {
+  "path": "Models/Props/GrenadeCrate/GrenadeCrate_Pieces.fbx",
+  "sha256": "3a2fe482fcddcaa18fa97e0355e9dbcc93c7d5dbe641e2296de57f0082e6e1d8",
+  "mesh": true
+ },
+ {
+  "path": "Models/Props/GrenadeCrate/GrenadeCrate_Stack.fbx",
+  "sha256": "d1a26c9fd05e54acb3d9a64bbe67caf52684a2b410c2f64e298a1d466b4da1cd",
+  "mesh": true
+ },
+ {
+  "path": "Models/Props/GrenadeCrate_v2/GrenadeCrate.fbx",
+  "sha256": "8516f1f2ba24e273ed40a60a55491bfe4b9cdea44a854cf0c63116afabb2102c",
+  "mesh": true
+ },
+ {
+  "path": "Models/Props/GrenadeCrate_v2/GrenadeCrate_Pieces.fbx",
+  "sha256": "62482acc9194e330421e463d6c3ff102d06030a3b469f2a5571318fba4b241d4",
+  "mesh": true
+ },
+ {
+  "path": "Models/Props/GrenadeCrate_v2/GrenadeCrate_Stack.fbx",
+  "sha256": "c2e044d52b16517e5e9040d77d27203e6bfa3276c786a61afcc28f2a418c5dbf",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Electrobot.fbx",
+  "sha256": "500fdcb73fdb01ea0749b0f5edc02a8e546a1fb4eb3c78e4a995aa9c0ed0c82a",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Laser.fbx",
+  "sha256": "10749ded66527c41a073c6e721fb1bcbf9d71f1aabf49ba540fbd5d552449a73",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Psycho.fbx",
+  "sha256": "0c98425751a507fb4fe21dabb39a34649f120d470c4a6971a5c39813cc64637f",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Pyro.fbx",
+  "sha256": "6346f71b952ea61f126aa2aa6063b3cc96a3153872886520a321d77eee50a474",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Sniper.fbx",
+  "sha256": "5a5f1f24d591bf53792bc856331d1080352446aca8bc81c398d445c89628d569",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Tough.fbx",
+  "sha256": "7e70c8d04f85feac7f757965449d8b9b6bb7be51b1d986a9998a37e93e43b39e",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Weapon_Electrobot.fbx",
+  "sha256": "1b36237e5da25f91144807c7c49f7b0bfaba945bcc482e762e131d577e62ae39",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Weapon_Laser.fbx",
+  "sha256": "9496688a1f930a26a0299452a1e42893a3d50fe7217e0d8212abd5eba348d8f1",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Weapon_Psycho.fbx",
+  "sha256": "b053a10d6f56963d836f1b3009e665cd44f1b93fb4bc6404100fdf403675ae85",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Weapon_Pyro.fbx",
+  "sha256": "30cd5acd8a50c366e7c153e5be778d32ebb1a450f0b0f5bb4bc0fa0632120633",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Weapon_Sniper.fbx",
+  "sha256": "bc0baf9a19a3f7eca8bf3121abdfe9f8beda160546259d04a6d80a9f4b98fe91",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/BS01V3_Weapon_Tough.fbx",
+  "sha256": "fc57e543b6b9388d7ab10fb68f89a469170c5a3cf07d1afde936fe94df560e25",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/Clips_v1/BS01V3_Electrobot_RobotClips_v1.fbx",
+  "sha256": "97af75751558574e9df93d5dfb74915b24281ec091bc79145634d65ed5949267",
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/Clips_v1/BS01V3_Psycho_RobotClips_v1.fbx",
+  "sha256": "d396936027efeffdce86bed5f59739e49ca03578ad67d881da19ef9823b04106",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/Clips_v1/BS01V3_Pyro_RobotClips_v1.fbx",
+  "sha256": "320a6ddb70a8b39d87f82c0f34d55509000460d735293a56b8a79521cb8df373",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/Clips_v1/BS01V3_Sniper_RobotClips_v1.fbx",
+  "sha256": "eaebbe0f329c35493d7e6f9756709c880b6c5b66a94d0839fe4c480973ce8271",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RobotsV3/Clips_v1/BS01V3_Tough_RobotClips_v1.fbx",
+  "sha256": "f55bbec88f588e2553712e372b5ca3ca6cd221865ea1a428f8b4a5700cc695e9",
+  "textures": {
+   "BS01_Body_BaseColor.png": "textures/2b8de8a69b3f3a859665.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Chunk_0.fbx",
+  "sha256": "03985022a17658b2133ccc5f059a3dfe73e8be8f82295d721d0d238810dcc76d",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Chunk_1.fbx",
+  "sha256": "0968c39a99fa74aeea3d50ada4dc0ec00f6f39f833f47186f6f096d965b2ccec",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Chunk_2.fbx",
+  "sha256": "d0b7ae5c96ae3c8e5bd9602bd47347b7b4c00593364bb4c19dd62e8ed04626d5",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Chunk_3.fbx",
+  "sha256": "481b9b0f8c28eef6c7f87d9fbb1c80d42d668e7ca2ce6fa5894a66fd593b166a",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Chunk_4.fbx",
+  "sha256": "ef4a8b4234e3f162fcbfd3726fc74c5a10e02a776caa442a9d7691961cd608d6",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Chunk_5.fbx",
+  "sha256": "b1da17cfdeb88d2d1083c5aad1665b0ea5c86d754b90296bd0dfc3c13e6f77e2",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Chunk_6.fbx",
+  "sha256": "f284092632023f368d92890b7598fd27d01792290be104a3d422cb292a74966b",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Chunk_7.fbx",
+  "sha256": "a7178f19494be8e83619ca91fadfbc9d937ee2488515756bd52f12ac5f72fb35",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Damaged.fbx",
+  "sha256": "cbd4b8b2a828d27a21e28014caa225da70cb6e2d27009a7f095039d584a37719",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Pillar_A.fbx",
+  "sha256": "5dcc8e5a579e7fc28547454ed0ec252ea60675e961c679748cbbdfda7d01662e",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Pillar_B.fbx",
+  "sha256": "0f3be77ab64600f8357228261acc8d2d2427508d72a37c02e5a4372f7a1d3246",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Pillar_C.fbx",
+  "sha256": "4dfac2b601a1ecac4ac2f93e24ad63b98f9b106f15cd8b4b2a58dffaf4c93e42",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Pillar_D.fbx",
+  "sha256": "5ce6367a145dc655a9598604035aafc02fccec1026b331803b3a0124b2d9e8a0",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_City_Rubble.fbx",
+  "sha256": "6018e7216dfae8c3214a8afb35ee5c5244e53fb3ab0615c906f6d1b53d24b02b",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Chunk_0.fbx",
+  "sha256": "931ea9f38efda66787e907dc14c168d297b7255bd56d52e7989da6402da610e0",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Chunk_1.fbx",
+  "sha256": "a415faa77da9b575ae8c8e40e1e4173419cdf6fa0ba9b78c7c53d02aa5977b04",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Chunk_2.fbx",
+  "sha256": "647a985da801aaa2284d6ef9ac7bbeb6814a9c49e946222474db12b704293bba",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Chunk_3.fbx",
+  "sha256": "df02790b060bbcd0fd24ea620ef6dc890be6f9834c5e4d8085ef7a2155bfb5f2",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Chunk_4.fbx",
+  "sha256": "de25f7beb8dcb89d35de5edae8051cc6cb3b3e9bb99e9535b36c7ea71c466bff",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Chunk_5.fbx",
+  "sha256": "6f245cc3af0c72d51b26611e0f61ce6f0c25987d97155e35576a314721df723e",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Chunk_6.fbx",
+  "sha256": "081b199ed258f3c3275937b3215eba35e43e79e54567d404182ed38922234673",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Chunk_7.fbx",
+  "sha256": "251d9853939e5d27f6c3463d759922322eac2748aaab3bbec24f4aeb16fcca5a",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Damaged.fbx",
+  "sha256": "35f4f45270518eabf4cbb3dccb423de4dc2535ed315b12f4e33159ca811a04e0",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Pillar_A.fbx",
+  "sha256": "406833acbdce30f4c2077c7883614a47de2c340d407b437b45e993dd53059d99",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Pillar_B.fbx",
+  "sha256": "3973c132e53f51bd766649f72dcde497abc1dd8440819dea76ef28dd44879e25",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Pillar_C.fbx",
+  "sha256": "91b436fc7480c97b7a4fafe04e8b7af12ca61360bd1e243c7042dd48d8fb49c6",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Pillar_D.fbx",
+  "sha256": "0729df9ead0e3bfa131bf1ddaf3ce6a29fbc88cae9c1379e9bb998e25670d44c",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Desert_Rubble.fbx",
+  "sha256": "7c2c3fee30a8c2b9fc2ca4f4bf5f3d0941dc6311c924854e534cea326207b55c",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Chunk_0.fbx",
+  "sha256": "a5672f180ab7dfa58d124afd4ee00a5f3f4fc60c6cd80b783daaf4aec36f2c36",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Chunk_1.fbx",
+  "sha256": "9a75124e0d36a9bfb81231955467de7e581e971f2952b0fe87711b8ba42552dd",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Chunk_2.fbx",
+  "sha256": "2ead6f6f8ced83378c853d0eee3421f60b51732280aa0897da7d118ed2cf0117",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Chunk_3.fbx",
+  "sha256": "5854dfb209c773b91a8e058196168c033c9bb25a7f1c1ef2efd37749b7bcf514",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Chunk_4.fbx",
+  "sha256": "2bbf2b173167b229dccecc783f6b9220086fb105ed824a8d8067cd3095c71fa0",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Chunk_5.fbx",
+  "sha256": "28bf52f726e291e80d07c4813faa774186ded540441b38480d4e51e9b9b5941e",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Chunk_6.fbx",
+  "sha256": "7a62f2d90dc4e579ee77d416e599898bc30ba45598e785de9f7bb0f759c943e6",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Chunk_7.fbx",
+  "sha256": "26ea17fbbb07d9c3f27ce573411054e4d04fc7410be087a46d61d5e1aa5004e3",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Damaged.fbx",
+  "sha256": "6711f22799cfbae2ca3d3b64d2a44eeb30a82d79a1b6d404135c9afc950e868d",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Pillar_A.fbx",
+  "sha256": "4bfaa9e7924b827c487cc9dfeb44fc2c2b5d646332c438f80c31601243b148f1",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Pillar_B.fbx",
+  "sha256": "cf3e77c8e597670e1518cfb410ba2ea61f46d7d9a8174116e149adaa2cceb5a3",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Pillar_C.fbx",
+  "sha256": "4a32e889c00b93940620c72e6c1d7526b2648262449596a645a2c45a06c2dd50",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Pillar_D.fbx",
+  "sha256": "2d8f229297052f7cabd03b5f1abfe7f12712cdd185beabbb2f18c9179dab0b98",
+  "mesh": true
+ },
+ {
+  "path": "Models/RocksZ/RockZ_Volcanic_Rubble.fbx",
+  "sha256": "529f0aa7176d27a0ddf715769c81796dd686b4f444117e03287eee577cd77c4b",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_D2_LOD1.fbx",
+  "sha256": "dc0099608545a2d891c981b6d9e3f24ddc169e19aa7c45862d0d585c9da733ff",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_D3_LOD1.fbx",
+  "sha256": "a4df0a7cd50ae240e2d28f610fa14e141230d7a16231ed93ad29514cbc6f77d0",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_D4_LOD1.fbx",
+  "sha256": "12573b87c3066a355f3b82abc6fce3ba4c9d6b468409ea3d565e2a2c2d063657",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_DCM_LOD1.fbx",
+  "sha256": "e1d26f849a077399ced101ec408d817138a167f8a68c44a4f1c3d34b0538423c",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_DC_LOD1.fbx",
+  "sha256": "e17fa721696fdb1f56eb7fc4389d89d6cc695564a69db168d1198e1364f68780",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I2_v0_LOD1.fbx",
+  "sha256": "3ec8934feeea75f6fb72758ed05358cee14eea6275f4665c0c3c2c1fb5fdd5ca",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I2_v1_LOD1.fbx",
+  "sha256": "d362441b9625d1dd7b4cd15038a21c8f38ecfb1686b65c34112069818530295c",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I2_v2_LOD1.fbx",
+  "sha256": "4ac206fee6fa38840b38f4903af29f2fa9baf7144c55dbb6f283e094ebdb55f0",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I3T_v0_LOD1.fbx",
+  "sha256": "37da038aefe067f4ce8da47d5e360e806c6a5525b37a19544af72fe5133bf8a1",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I3T_v1_LOD1.fbx",
+  "sha256": "c8f32b07d0dbad5098ff62d442406dd7c4f6ab01b1c4480de70495fae3e5e442",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I3T_v2_LOD1.fbx",
+  "sha256": "3f893848e7072fdd8f3946dbb75bb360e782e42f46069b238814398681bde79f",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I3_v0_LOD1.fbx",
+  "sha256": "8fc62c7777120b88ce819d163c41e6b5baf5e6ff7f9e73c4f016a27e4390e819",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I3_v1_LOD1.fbx",
+  "sha256": "4a2e2c9e6ef4a73147c602147aa89331adacfa69230e01c36d93f66c0d958e31",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I3_v2_LOD1.fbx",
+  "sha256": "89ce715dffa4564c83c989d812512c95343748b5b3884a89f0d48b1520e90a82",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I4T_v0_LOD1.fbx",
+  "sha256": "cdba781550df176c0fc14b832af10e6727c09f1d9b22691c42c5f9d5f7747133",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I4T_v1_LOD1.fbx",
+  "sha256": "e76cac8a91a9240a0d0f33ca791095200d7f00fa4fb4bf703454b0a337c03fdc",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I4T_v2_LOD1.fbx",
+  "sha256": "d1c7520f929128383a30f0b889e265134b4544a1a60faf989c3fadef77eb7478",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I4_v0_LOD1.fbx",
+  "sha256": "087198b887139bebd3173c0fd856909dec4d4f7e69a64922d2afd8b999cc60b6",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I4_v1_LOD1.fbx",
+  "sha256": "d24c76d9c7717df23e1c53f0835f47f2e47e754bceac54b90219fb12149de4fa",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_I4_v2_LOD1.fbx",
+  "sha256": "d98e9dd73fb66d65a98ad5f93090c3dade50043671981582a09d699b30938c7e",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_ICM_v0_LOD1.fbx",
+  "sha256": "95800213dbc824e1c406a77993ed50ee071fb4cc30aca8b9a1e57ce9dde1fae6",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_ICM_v1_LOD1.fbx",
+  "sha256": "39c4eb15a75750a3b2b5d44b0539fe1e0de9792d0756f1e9bdc7d8534c38e4b9",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_IC_v0_LOD1.fbx",
+  "sha256": "9fc1acf1674396812fdc479e8b6ee9939c24035087e0815469315e80abde529a",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_IC_v1_LOD1.fbx",
+  "sha256": "902c907390bf8007cc9a2361290582c9afb1aa1bea2d63ea643441b5213e557a",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_R2_LOD1.fbx",
+  "sha256": "322fb40ec536831435132e83e4e6c40a19879c433a4b81088abfea27ff37059f",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_R3_LOD1.fbx",
+  "sha256": "20a1f308794710534f64665fce14d7e6d09e34362883687fff2abc6df488aa41",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_R4_LOD1.fbx",
+  "sha256": "8734473a346d480619d041cc5894722bf42734602bcfc64c63263a7136b84da8",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_RCM_LOD1.fbx",
+  "sha256": "b347ecf3f9001736f14457c9e53f09af87202af1c3d0634376557955b285c076",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/LOD1/SB2_Seg_RC_LOD1.fbx",
+  "sha256": "b5b09e0c919432b933423738174d731fbb556a22f0a47e555081ea4baeacafeb",
+  "mesh": true
+ },
+ {
+  "path": "Models/Sandbags/V2/SandbagsV2_Kit.fbx",
+  "sha256": "94a4e3a3ed207a9e2855a02089af33c5730d19573a2ff7abc6e1cc149125c9a4",
+  "mesh": true
+ },
+ {
+  "path": "Models/ZodBoys/Alan.fbx",
+  "sha256": "d0eac4773810125b170dd8d8a976cbb27849f02c37608d3c02c6e488ade7538d",
+  "textures": {
+   "Alan_BaseColor.png": "textures/857b4bd33523e08c56ac.webp",
+   "Alan_Normal.png": "textures/7a951e741a45e507fc35.webp",
+   "IC_FuelCan_BaseColor.png": "textures/6cf24ff142d6db20a83d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Models/ZodBoys/Brad.fbx",
+  "sha256": "b896095f6a46af917b65be519c151ce94bb64713b037e71945fe710a7f348cc6",
+  "textures": {
+   "Brad_BaseColor.png": "textures/b40039205821900f2abc.webp",
+   "Brad_Normal.png": "textures/b00afadf1c8e31ce2895.webp",
+   "IC_FuelCan_BaseColor.png": "textures/6cf24ff142d6db20a83d.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Blue/Characters/EvilZod.fbx",
+  "sha256": "ba38c7ec07810c8f1d42ae51006b3a50bd0a8f60fb0bcd253f6bd003d97edb21",
+  "textures": {
+   "EvilZod_BaseColor.png": "textures/2e1ffd347662973341c4.webp",
+   "EvilZod_Emission.png": "textures/b4bbebb7e3e1cbe51020.webp",
+   "EvilZod_Normal.png": "textures/59a8760aab829d5e9a4f.webp",
+   "Shotgun_BaseColor.png": "textures/33393e58e324b63d41a5.webp",
+   "Shotgun_Normal.png": "textures/f8d278d3c7ad595185e9.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Blue/Characters/EvilZod@Fist.fbx",
+  "sha256": "9827fe2c088a542c70654efea661e3a89dc077e00b9d8fedaeedb6fa70e9a308",
+  "mesh": false
+ },
+ {
+  "path": "Resources/OpenZ/Blue/Characters/EvilZod@GripPump.fbx",
+  "sha256": "103f98c8bdbc1cec6cf315ac80751ce73f086d9cdcd6dbcfae53742a90f4ccc5",
+  "mesh": false
+ },
+ {
+  "path": "Resources/OpenZ/Blue/Characters/EvilZod@GripShotgun.fbx",
+  "sha256": "f412e7f61b42fae1b352d412416e5db102d6f49bc861c437fcd79585db3ec68d",
+  "mesh": false
+ },
+ {
+  "path": "Resources/OpenZ/Blue/Characters/EvilZod@HandsOpen.fbx",
+  "sha256": "29b71b70e5c174c55b5721fe83701e306bdea1e3e991d30f2eb3fa8d9c02f4d5",
+  "mesh": false
+ },
+ {
+  "path": "Resources/OpenZ/Blue/Characters/EvilZod@Walk.fbx",
+  "sha256": "401eb99947d725b1c0608b4a8389d8fd73e088199973d2dc6010983e28c72ca1",
+  "mesh": false
+ },
+ {
+  "path": "Resources/OpenZ/Blue/Characters/Sidekick.fbx",
+  "sha256": "48341a4ceba63a92608726400ec438a0dcb740d23b8e6f88ae6ae371893daf0e",
+  "textures": {
+   "Sidekick_Eye.png": "textures/8b1c915712bb813d719c.webp",
+   "Sidekick_BaseColor.png": "textures/c9e9160a95f39628e3ca.webp",
+   "Sidekick_Emission.png": "textures/492497534d38c9601559.webp",
+   "Sidekick_Normal.png": "textures/f0cbe84c8d55183f9cd2.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Blue/Characters/Sidekick@Walk.fbx",
+  "sha256": "894e0eae5b2f35820b8af1582addb52277814bbe70c49d0f199c97c7db762391",
+  "mesh": false
+ },
+ {
+  "path": "Resources/OpenZ/BuildingAnims/radar_Split.glb",
+  "sha256": "7035399453946022f02ec5778043dfba2b25243530f59ada29c9fbecb5a13e2b"
+ },
+ {
+  "path": "Resources/OpenZ/BuildingAnims/repair_Split.glb",
+  "sha256": "e07e0c67b7a4b855c039c8abea522220a684062e0c25efb608b60ce509a9e66d"
+ },
+ {
+  "path": "Resources/OpenZ/BuildingAnims/vehicle_factory_Split.glb",
+  "sha256": "a4ae3c5cb5efb6965480d4f34b3e6c5db88fcdca5cf1fe4ed333543d94af984e"
+ },
+ {
+  "path": "Resources/OpenZ/ConcreteChunks/OZ_ConcreteChunks.fbx",
+  "sha256": "b60c1b904157c5d631770f61e7eb4e0d10393b8a815db19eff5a8d134aa118d1",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/ConcreteChunks/OZ_ConcreteChunks_Colliders.fbx",
+  "sha256": "031b909a116f6915fe5ac724568800f2452581487f0b7123f0ce43599f1c2927",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Craters/CraterClodKit.fbx",
+  "sha256": "8c238222d24e210c01746d55febb106b751b731308d9d9d91f938b0ed396429a",
+  "textures": {
+   "CraterKit_Atlas.png": "textures/9a5421da5ea91193649b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Craters/CraterPatch_Paved_A.fbx",
+  "sha256": "ef4cbdb0f1a180445c4e454f22dc0c337194f7fc249b08236fa3a029a685e86c",
+  "textures": {
+   "CraterKit_Atlas.png": "textures/9a5421da5ea91193649b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Craters/CraterPatch_Paved_B.fbx",
+  "sha256": "05cac338a6a18177fcfec991539758c9862cb6deecf17163b6261f5dab40007c",
+  "textures": {
+   "CraterKit_Atlas.png": "textures/9a5421da5ea91193649b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Craters/CraterPatch_Sand_A.fbx",
+  "sha256": "ea7bd520893f1b3b16d4585fa21c574938efab7bbc9e8c8849a3663706f1c42c",
+  "textures": {
+   "CraterKit_Atlas.png": "textures/9a5421da5ea91193649b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Craters/CraterPatch_Sand_B.fbx",
+  "sha256": "7432a7b90fe8c330eb62080fae4b445e790ac991ef2a017b44d28ee88bf3edca",
+  "textures": {
+   "CraterKit_Atlas.png": "textures/9a5421da5ea91193649b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Craters/CraterPatch_Sand_C.fbx",
+  "sha256": "f849dd78757b906b016be7b30cac58ec8ee66b0f1cf2c599c88a426df7b116a5",
+  "textures": {
+   "CraterKit_Atlas.png": "textures/9a5421da5ea91193649b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Craters/CraterPatch_Sand_D.fbx",
+  "sha256": "1e8d6802a0defc9481ef34e5c3019c8dda9974824da2a1c85850e72691d8543b",
+  "textures": {
+   "CraterKit_Atlas.png": "textures/9a5421da5ea91193649b.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Critters/Eagle.fbx",
+  "sha256": "3aecf3f63a973da7fced27762afa77d31ff5456bc449592547968f3aa8924e3f",
+  "textures": {
+   "critter_palette.png": "textures/a07deb7d79980b1e02d0.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Critters/LavaDragon.fbx",
+  "sha256": "1dba97eb281b22fb6bdd5f47fb16bc7fb3be6b7ff835b0fbb39d828c7c0155d2",
+  "textures": {
+   "critter_palette.png": "textures/a07deb7d79980b1e02d0.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Critters/PigDino.fbx",
+  "sha256": "5b8c56150c2e5a7d1bf68dfd87fd856d2144275e4e864590ab5eb162fc98cb58",
+  "textures": {
+   "pigdino_tex.png": "textures/ca5646298406b69397ea.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Critters/Raptor.fbx",
+  "sha256": "ef8e6d04aa9ccfe63829b64128a1f39f6cee085965d3b926065ec8b5d417cae9",
+  "textures": {
+   "raptor_tex.png": "textures/16b95a4d1f6a8d62c967.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Critters/Seagull.fbx",
+  "sha256": "ef5625e4a6c9fbb12bf8416f87568c06ff10756b20cb94274b6a4c478b854d11",
+  "textures": {
+   "critter_palette.png": "textures/a07deb7d79980b1e02d0.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Critters/Worm.fbx",
+  "sha256": "0356b47f59d8f03f0f862a9e9ed2affe3724c8caa78bf4cbb722f834c16d16f5",
+  "textures": {
+   "worm_tex.png": "textures/b5b5b0db50dd6b81ba03.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Critters/YellowWorm.fbx",
+  "sha256": "914d2d84ef3409077deed1ab25a81ff2ef827112833935bc9debc537ad6ea33b",
+  "textures": {
+   "yellowworm_tex.png": "textures/f056896b3221dfd049af.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/FX/airstrike_plane.glb",
+  "sha256": "642d47895fa9ae7020cd6ac8a08ae6393cc4292c0fc32524718299ca86bad1b0"
+ },
+ {
+  "path": "Resources/OpenZ/FX/combat_fx.glb",
+  "sha256": "f3bcf4b66df8f4e28dab74919ccfbdcbe381b340e5e369c0f555d807d4a28b8f"
+ },
+ {
+  "path": "Resources/OpenZ/FX/grenade.glb",
+  "sha256": "9e7ee6493c842ecb6141e0693ea6e92b40a7dca81d2db2d3dfa1a8764aa5b4aa"
+ },
+ {
+  "path": "Resources/OpenZ/FX/grenade_v1_pineapple.fbx",
+  "sha256": "eb7a51ce189b81f4aae2dcf429d5daa525e9a1e37d533cf929fd4ec944f149dc",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/FX/grenade_v2_round_band.fbx",
+  "sha256": "5a5926712994dc2d99aa1bb352be1556fcbd986a8767c1d7ffd6c8022fd74b6a",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/FX/legacy_nuke.glb",
+  "sha256": "a5b893e005c25919e59d01347325743dfa6c409078019fd942f106460f36bdd1"
+ },
+ {
+  "path": "Resources/OpenZ/FX/shell_fort.fbx",
+  "sha256": "631f2b08f5e50dfbe55780a812a2e7eeb2b1fa82c442564e1b00d065cd93fe5f",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/FX/shell_howitzer.fbx",
+  "sha256": "2a1691aec132eab8087e11f43b1fc5fc9934a8567bec7e4beffd1bffba09d749",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Faction/evil_poster_light.fbx",
+  "sha256": "50695f072ac0788d98f7b1cea5bcae894f397790ea0afa3ac8e7940f69e20bbf",
+  "textures": {
+   "evil_poster_BaseColor.png": "textures/cfe6a597a79d897b41e3.webp",
+   "evil_poster_Emission.png": "textures/71447a154bf95a8d0e04.webp",
+   "evil_poster_Normal.png": "textures/2c92e0cbfe97f93b51ed.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Faction/zod_poster_light.fbx",
+  "sha256": "4dc201ade2dc167cdfdffcac5f087199860732a4d708b85960278684ee301b2c",
+  "textures": {
+   "zod_poster_BaseColor.png": "textures/090ee2bfcae44745a2da.webp",
+   "zod_poster_Emission.png": "textures/b7337dc4eaba62e81ea5.webp",
+   "zod_poster_Normal.png": "textures/a0541139291fe17638d5.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/FortGunMount/OZ_FortGunWreck.glb",
+  "sha256": "90718429493d00752fda3838c1c19e1e4f6b44ae1e2d9c3d2ca34c0ec8a3a929"
+ },
+ {
+  "path": "Resources/OpenZ/FortGunNeck/OZ_FortGunNeck.fbx",
+  "sha256": "2307dbffa646a3fbe70cde7ab61d8d87568f6dee77e863a90aa540a186e13393",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L07Cut/L07_BradBody.fbx",
+  "sha256": "370720cac55d5f9ac82e9ee02e7c47987858b21d3c7debac78357bec6127331e",
+  "textures": {
+   "Brad_BaseColor.png": "textures/b40039205821900f2abc.webp",
+   "Brad_Normal.png": "textures/b00afadf1c8e31ce2895.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L07Cut/L07_ThumbArm.fbx",
+  "sha256": "a80b03ed01bd9ecf571e6885fb472a23f520cb9b66f377ac71c9f55a92e7e5c3",
+  "textures": {
+   "Image_0": "textures/e2c13630e723665f9310.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L07Cut/L07_TubSet.fbx",
+  "sha256": "b3f9b694ca0139b46ec1b86ed336cf213c4dfb84b98fced78a2f3683b57faeb1",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L16Animals/Croc.fbx",
+  "sha256": "4d94b01bd64311ac8898e307715f2940297ba744aa66935a3ae47f092b92d2e8",
+  "textures": {
+   "________________________________________________________________________croc_basecolor.png": "textures/cfe0e82e4bcd071eb858.webp",
+   "croc_basecolor.png": "textures/cfe0e82e4bcd071eb858.webp",
+   "________________________________________________________________________croc_eye.png": "textures/bad10ea6613491a19c31.webp",
+   "croc_eye.png": "textures/bad10ea6613491a19c31.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L16Animals/JG_Snake.fbx",
+  "sha256": "71a211db4837fbdd2e06bfc96f0570035aeca9d1458bff65225d4eb2b3658d20",
+  "textures": {
+   "JG_Snake_tex.png": "textures/8a6ad9874456e7529052.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L16Animals/Monkey.fbx",
+  "sha256": "6a361844e801043fd6212b7800234ac5a49b37807e1bf366bb940aa47c5e43af",
+  "textures": {
+   "Monkey_tex.png": "textures/c1fd85d63f943b8dfe4a.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L16Animals/Parrot_perched.fbx",
+  "sha256": "29f6367a3cb6ad6b821c5c1a15234709cb0859294939929d6b72b7686474d030",
+  "textures": {
+   "parrot_perched_tex.png": "textures/eae0142fab4dc200bd38.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L16Loungers/Alan_LoungerBody.fbx",
+  "sha256": "6725b68b2ab4b9f171d47d92fc6e0eb21802a25860945313a8edae15c01897a3",
+  "textures": {
+   "..............................................................................................................................Alan_BaseColor.png": "textures/857b4bd33523e08c56ac.webp",
+   "Alan_BaseColor.png": "textures/857b4bd33523e08c56ac.webp",
+   "..............................................................................................................................Alan_Normal.png": "textures/7a951e741a45e507fc35.webp",
+   "Alan_Normal.png": "textures/7a951e741a45e507fc35.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L16Loungers/Brad_LoungerBody.fbx",
+  "sha256": "e6bdc0eeb41ba45ed99f972f6266ce8185a727e79ee5a8d6e50453c235f360a2",
+  "textures": {
+   "..............................................................................................................................Brad_BaseColor.png": "textures/b40039205821900f2abc.webp",
+   "Brad_BaseColor.png": "textures/b40039205821900f2abc.webp",
+   "..............................................................................................................................Brad_Normal.png": "textures/b00afadf1c8e31ce2895.webp",
+   "Brad_Normal.png": "textures/b00afadf1c8e31ce2895.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L16Loungers/L16_LoungerSet.fbx",
+  "sha256": "f592dbff129e6fbd9616b78b94a93d716ddc127e6a738c60e23eaceb51d404a4",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L02C_Burrow.fbx",
+  "sha256": "b76f5b235973ffe0e259fc86e465cc530f8fb0f61133cf9f4f592272c01baf60",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L02C_Rabbit.fbx",
+  "sha256": "4762b4a2c8621393620cd28a5a520a4f7577a564a9344ee02546ccc9575459c2",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L17D_FloorLight.fbx",
+  "sha256": "893ba0bd0bda4bd0439291a6b2620390a3d27e0884e6dc8922ee630d36bf00b9",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L17D_Grate.fbx",
+  "sha256": "39d7e619cde0dc8c47f6d221db025762457e1d3936bde1c814aa7c1d7ebcadc0",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L17D_Hatch.fbx",
+  "sha256": "23a4be95c8c947435c319af57959472d07eddb5f5a63be974594c85af12dc930",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L17D_Outfall.fbx",
+  "sha256": "4c31374fd333f10db41991fa36bf044b84d173318d3e473189bcbf3c8c504a10",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L17D_Wreck_A.fbx",
+  "sha256": "cdbeafcdd43cfe5bc2155acfb62b11f4cc3fad12e377fe0f7dfd0ca009f2343d",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L17D_Wreck_B.fbx",
+  "sha256": "4bde0d00dc71c73efafd11197ac01f85fa6928bec6a2a3a7902e8394c4ec2e07",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L17Details/L17D_Wreck_C.fbx",
+  "sha256": "5d453abfc15b68f372ed7291343ae17b96a57d148f9f171b72ef683e35fd720b",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L18Cut/L18_AlanBody.fbx",
+  "sha256": "a6223cb1c78c25899e8b6caf5d490881b089fc6943ce2ce05580f2a8f84b8375",
+  "textures": {
+   "Alan_BaseColor.png": "textures/857b4bd33523e08c56ac.webp",
+   "Alan_Normal.png": "textures/7a951e741a45e507fc35.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L18Cut/L18_Binoculars.fbx",
+  "sha256": "c25719584c4eb4960f68bae6772757c3a3eb68f3e2d0322659cbeee09460ea1c",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L18Cut/L18_Console.fbx",
+  "sha256": "d0b045d57a62650da3d1a09383c70dd0874e492996fff0c1447f91524ac3d648",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L18Cut/L18_Parapet.fbx",
+  "sha256": "f96c23c77b9c1b581eddea5d8b16a8ce091a297d686178672d3dfa6ea8edb123",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L18Cut/L18_WatchPost.fbx",
+  "sha256": "415ccdbbfd957bcfd91b0a4ca24cecf5aae884453eb6c895a142b79e6c67ef49",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L18Cut/L18_WatchPost_r4.fbx",
+  "sha256": "571927ffad5b0bead03ca38cee6927449e2c0937f0304c818123e0e2a8948dcc",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/L18Cut/L18_WindowWall.fbx",
+  "sha256": "7cff9f1a069596909262a679ea7a203b34d5f2b52bc362b8a995660c41d1ec87",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Vehicles/L16_ShuttleKit.fbx",
+  "sha256": "01ceb28763c5bec508e607a15919565a9de940df0309525a71e800a7d12749ec",
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Zod/Zod_Cameo.fbx",
+  "sha256": "73e498df7b2ef3312fc7d3e25275fe01541af4998c3e6fa43b5cc6fb038e5800",
+  "textures": {
+   "Zod_Body_BaseColor.png": "textures/fd1847adc95892300184.webp",
+   "Zod_Cigar_BaseColor.png": "textures/bbef26f886ae481c33f2.webp",
+   "Zod_Cigar_Emission.png": "textures/9a6df8d8fce630a112d6.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Zod/v2/Zod_v2.fbx",
+  "sha256": "4d911409b1622e2fd1f1e33e55d547f5e5fd60c4e9e55f72a0c45f1c2c2b5979",
+  "textures": {
+   "Zod2_Body_BaseColor.png": "textures/de92e27883d43c8b0c12.webp",
+   "Zod2_Cigar_BaseColor.png": "textures/bbef26f886ae481c33f2.webp",
+   "Zod2_Cigar_Emission.png": "textures/9a6df8d8fce630a112d6.webp"
+  },
+  "mesh": true
+ },
+ {
+  "path": "Resources/OpenZ/Zod/v3/Zod_v3.fbx",
+  "sha256": "e506e892921d18add18e1c20d04736e43674fbffeaa171469efca387243851a8",
+  "textures": {
+   "Zod3_Body_BaseColor.png": "textures/1754680088667beba946.webp",
+   "Zod3_Cigar_BaseColor.png": "textures/bbef26f886ae481c33f2.webp",
+   "Zod3_Cigar_Emission.png": "textures/9a6df8d8fce630a112d6.webp",
+   "Zod3_Gear_BaseColor.png": "textures/71b907e9ff025b551c76.webp"
+  },
+  "mesh": true
+ }
+]

@@ -1,8 +1,8 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/webxr/VRButton.js';
-import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js?v=20261120-1';
-import { RTSCameraControls } from './rts-camera-controls.js?v=20261120-1';
-import { loadScenery, SCENERY_MODEL_COUNT, SCENERY_PLACEMENT_COUNT } from './scenery.js?v=20261120-1';
+import { loadCreatureModels, CREATURE_MODEL_COUNT } from './creature-models.js?v=20261124-1';
+import { RTSCameraControls } from './rts-camera-controls.js?v=20261124-1';
+import { loadScenery, SCENERY_MODEL_COUNT, SCENERY_PLACEMENT_COUNT } from './scenery.js?v=20261124-1';
 
 const WORLD_SIZE = 140;
 const WORLD_HALF_EXTENT = WORLD_SIZE / 2;

@@ -1,7 +1,8 @@
-import { createUFOCreatureModelLoadJobs } from './ufo-models.js?v=20261120-1';
-import { createExtraCreatureModelLoadJobs } from './extra-models.js?v=20261120-1';
-import { createGLTFCreatureModelLoadJobs } from './gltf-models.js?v=20261120-1';
-import { createFBXCreatureModelLoadJobs } from './fbx-models.js?v=20261120-1';
+import { createUFOCreatureModelLoadJobs } from './ufo-models.js?v=20261124-1';
+import { createExtraCreatureModelLoadJobs } from './extra-models.js?v=20261124-1';
+import { createGLTFCreatureModelLoadJobs } from './gltf-models.js?v=20261124-1';
+import { openZActors } from './openz-actors.js?v=20261124-1';
+import { createFBXCreatureModelLoadJobs } from './fbx-models.js?v=20261124-1';
 
 const MAX_CONCURRENT_MODEL_LOADS = 2;
 const MAX_MODEL_LOAD_ATTEMPTS = 3;
@@ -16,6 +17,7 @@ function interleaveModelLoadJobs(jobGroups) {
 }
 
 const MODEL_LOAD_JOBS = interleaveModelLoadJobs([
+    createGLTFCreatureModelLoadJobs(openZActors),
     createUFOCreatureModelLoadJobs(),
     createExtraCreatureModelLoadJobs(),
     createGLTFCreatureModelLoadJobs(),

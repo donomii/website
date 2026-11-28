@@ -1,0 +1,376 @@
+
+			<!DOCTYPE html>
+			<html lang="en">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="color-scheme" content="light dark">
+			<link rel="icon" type="image/png" href="data:image/png;base64,">
+			<title>Digital Creatures specification</title>
+			<style>
+				@media (prefers-color-scheme: dark){
+					body {
+						background:#000;
+						--bg-color: #000;
+					}
+				}
+				body{
+					margin:1em auto;
+					max-width:40em;
+					padding:0 .62em 3.24em;
+					font:1.2em/1.62 sans-serif;
+					--bg-color: white;
+				}
+				h1,h2,h3 {
+					line-height:1.2
+				}
+				article h1 {
+					margin-left: 0;
+					text-align: center;
+				}
+				.summary {
+					text-align: center;
+				}
+				@media print{
+					body{
+						max-width:none
+					}
+				}
+				img {
+					max-width: 25%;
+					height: auto;
+					float: left;
+					margin: 0 1em 1em 0;
+				}
+				img.right {
+					float: right;
+					margin: 0 0 1em 1em;
+				}
+				article img {
+					cursor: pointer;
+					transition: opacity 0.2s;
+				}
+				article img:hover {
+					opacity: 0.85;
+				}
+				.lightbox-overlay {
+					display: none;
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: rgba(0, 0, 0, 0.9);
+					z-index: 9999;
+					justify-content: center;
+					align-items: center;
+					cursor: pointer;
+				}
+				.lightbox-overlay.active {
+					display: flex;
+				}
+				.lightbox-overlay img {
+					max-width: 90%;
+					max-height: 90%;
+					object-fit: contain;
+					border-radius: 4px;
+					box-shadow: 0 0 30px rgba(0,0,0,0.5);
+					float: none;
+					margin: 0;
+					cursor: default;
+				}
+				.lightbox-close {
+					position: absolute;
+					top: 20px;
+					right: 30px;
+					color: white;
+					font-size: 40px;
+					font-weight: bold;
+					cursor: pointer;
+				}
+				.lightbox-close:hover {
+					color: #ccc;
+				}
+				.home-link {
+					position: fixed;
+					top: 1rem;
+					left: 1rem;
+					text-decoration: none;
+					color: #888;
+					font-size: 0.9em;
+					transition: color 0.2s;
+					z-index: 1000;
+				}
+				.home-link:hover {
+					color: #333;
+				}
+				@media (prefers-color-scheme: dark){
+					.home-link {
+						color: #555;
+					}
+					.home-link:hover {
+						color: #ccc;
+					}
+				}
+			</style>
+			<a href="../../../index.html" class="home-link" title="Home">(↑)</a>
+			<article>
+			<header>
+
+			<h1>Digital Creatures specification</h1>
+			</header>
+			<p>This project is to be a small playground for playing with interacting populations with a graphical display.  The graphics should be simple but neat and appealing, primarily block based and simple forms.  The will be 3D, with the camera start position looking down onto the whole plane from an isometric viewpoint.</p>
+<p>There should be a ground plane populated by animated 3D actors that move around just above the ground.  Each actor must turn to face its direction of travel.</p>
+<p>Load one hundred thirty-one creatures from genuine game-model bundles and freely reusable animated-asset collections.  The Menu project's floaty2 desktop pet supplies nine UFO:AI actors: Taman, Ortnok, Shevaar, Bloodspider, Hovernet, Alien Tank, male PHALANX soldier, female PHALANX soldier, and civilian.  Fourteen more animated UFO:AI actors from Menu's pinned source catalogue join them: Taman variants B, C, and D; Taman in light and medium armour; Ortnok variants B and C; Ortnok in light and medium armour; Shevaar variants B and C; Advanced Bloodspider; Advanced Hovernet; and Fish.  The same catalogue supplies the Egoboo Bat, Cockatrice, Crab, and Minotore plus Sauerbraten's Hellpig.  Twenty-four more models from the pinned Egoboo collection join them: Cobol, Demon, Fire Lizard, Grub Bug, Lumpkin, Trog, Spider, Pit Cobra, Sand Troll, Jelly, Ghoul, Nautilus, Eyeball, Mimic, Mosquito, Scatterbrain, Trorc, Vampyre, Animated Mace, Carpet Mimic, Mephit, Rust Eater, Varguile, and Zombi.  Sixteen CC0 glTF actors from Quaternius' Ultimate Monsters collection add Blue Demon, Bunny, Cactoro, Dino, Frog, Mushroom King, Yeti, Cat, Chicken, Dog, Green Blob, Evolved Mushnub, Wizard, Evolved Armabee, Dragon, and Squidle.  Twenty-nine more glTF actors from the same collection add Monkroose, two Ninjas, three Orcs, two Tribals, Blob Alien, Blob Birb, Blob Cactoro, Blob Fish, Green Spiky Blob, Mushnub, Blob Pigeon, Pink Blob, Blob Yeti, Alpaking, Evolved Alpaking, Armabee, Evolved Dragon, Ghost, Skull Ghost, Glub, Evolved Glub, Goleling, Evolved Goleling, Hywirl, and Flying Pigeon.  Four original FBX bundles from that collection add Alien, Birb, Demon, and Fish with their shared texture atlas.  The Khronos glTF Sample Assets Fox adds one CC0/CC BY 4.0 actor.  KayKit's CC0 character packs add Barbarian, Knight, Mage, Rogue, Hooded Rogue, Skeleton Mage, Skeleton Minion, Skeleton Rogue, and Skeleton Warrior.  The CC0 RobotExpressive model from the three.js examples adds one Quaternius robot.  Seven OpenZ robot classes and twelve wildlife actors, including both raptor skins, use the original game's movement and idle animation data.  Have them randomly pick a place to move to, then move to it over the course of a few seconds.</p>
+<p>The camera uses RTS controls.  Left or middle click and drag must raycast onto the ground so the selected ground point stays under the pointer while the map slides.  Right click and drag must orbit horizontally and tilt vertically around the current ground target.  The tilt is limited to 15-75 degrees above the ground so the camera cannot flip or pass through the plane.  The scroll wheel must zoom toward the ground point under the pointer, with an 8-170 world-unit distance limit.  The camera target stays within the 140-by-140 ground plane.  Pointer capture must keep an active drag working when the pointer leaves the canvas, and the browser context menu must not interrupt right-button orbiting.</p>
+<h2 id="animated-creature-models">Animated Creature Models</h2>
+<ul>
+<li>Load each original MD2 body and diffuse skin.  Read UFO:AI animation tables and separate head <code>tag_head</code> attachments, Egoboo animation ranges from the MD2 frame-name prefixes, and Hellpig animation ranges from the <code>md2-config.txt</code> web copy of Sauerbraten's original <code>md2.cfg</code>; retain the original beside it for provenance because the public host rejects <code>.cfg</code> requests.</li>
+<li>Load glTF 2.0 JSON and binary actors with their embedded skeletal rigs, materials, textures, and named animation clips.  Clone each skinned hierarchy independently and cross-fade between its configured movement and idle clips.</li>
+<li>The OpenZ collection browser loads one model at a time. It includes the nineteen simulation actors and all 323 FBX and GLB source files from release 1.5. The six motion-only files display their skeletons. Each original can be downloaded from the viewer.</li>
+<li>Load original FBX actors with their skeletal rigs, named animation clips, and shared texture atlas.  Clone each skinned hierarchy independently and normalize it with the same movement and idle contract as the glTF actors.</li>
+<li>Keep only the configured running and idle clips in the KayKit and RobotExpressive web copies, losslessly resample them, prune unused data, and quantize uncompressed vertex attributes so the ten actors add less than three megabytes of model data.</li>
+<li>Demand-load model bundles through two concurrent workers instead of requesting the entire collection at once.  Interleave the source collections, spawn each creature immediately after its bundle validates, and yield between bundles so the simulation stays responsive while loading continues.</li>
+<li>Retry transient HTTP and network failures up to three total attempts with exponential backoff.  A permanent model failure must not remove creatures that already loaded or prevent later bundles from loading; show running and failed counts and log the detailed failure without substituting invented geometry.</li>
+<li>Give local JavaScript module URLs a shared release-version query so browsers do not retain obsolete loader modules under the public host's month-long JavaScript cache.  Bump every local module query together whenever the demo's JavaScript changes.</li>
+<li>Use the actor's configured walking animation while it moves and its configured standing animation while it waits.</li>
+<li>Demon, Grub Bug, Jelly, Ghoul, Eyeball, Mosquito, Scatterbrain, Animated Mace, Mephit, and Varguile use their native DA animation loops, slowed while waiting.  Carpet Mimic and Zombi use WA movement and DA idle frames; the remaining additional actors use WB movement and DA idle frames.</li>
+<li>Interpolate the compressed MD2 vertex frames and head attachment transforms, updating rendered geometry at 30 animation steps per second.</li>
+<li>Normalize each actor to an appropriate world height while preserving its original proportions; use a model-specific collision radius and carry blocks above its head or body.</li>
+<li>Reject malformed or missing model, animation, tag, skin, glTF scene, or skeletal clip data and show a visible loading failure instead of substituting invented geometry.</li>
+<li>Keep each bundle's original license and pinned-source provenance receipt beside the web assets, credit Hellpig creator Psionic, and link to those records from the demo.</li>
+</ul>
+<h2 id="scenery-models">Scenery Models</h2>
+<ul>
+<li>Place forty-two CC0 buildings and structures from KayKit's Medieval Hexagon Pack around the outer edge of the ground.  The original blue castle, church, tavern, two homes, market, blacksmith, barracks, archery range, lumbermill, windmill, watermill, mine, and well remain; blue towers, a complete red village and tower set, bridges, a ruin, grain store, scaffolding, and a stage form a larger outer settlement.</li>
+<li>Place two hundred two natural scenery objects from fifty-three CC0 Kenney Nature Kit models: deciduous, autumn, palm, and pine trees; cacti; bushes; rocks; grass; flowers; logs; mushrooms; crops; campfires; tents; canoes; stumps; and statues.  Together with the buildings, the scene contains two hundred forty-four static scenery objects loaded from ninety-five assets.</li>
+<li>Keep the central forty-by-forty movement area open.  Buildings and large scenery remain outside it so the existing creatures and block tasks do not require building collision or pathfinding.</li>
+<li>Normalize each scenery model to its configured world height, rest it on the ground, preserve its proportions, and enable shadows on its renderable meshes.</li>
+<li>Demand-load scenery through two concurrent workers, place every model's configured instances as soon as that asset validates, and yield between assets so creatures and camera controls remain responsive.</li>
+<li>Retry transient HTTP and network failures up to three total attempts with exponential backoff.  A permanent scenery failure must not prevent other assets or creatures from loading; show asset, placement, and failure counts and log detailed failures.</li>
+<li>Keep the original license and source receipt beside each web asset collection and link those records from the credits page.</li>
+</ul>
+<h2 id="vr-support">VR Support</h2>
+<p>The project now includes full WebXR support for Meta Quest and other VR headsets:</p>
+<h3 id="setup-requirements">Setup Requirements</h3>
+<p><strong>HTTPS Requirement</strong>: WebXR requires secure contexts (HTTPS) to function. For local development:</p>
+<ul>
+<li>Self-signed SSL certificates (cert.pem and key.pem) are generated using OpenSSL</li>
+<li>HTTPS server runs on port 8443</li>
+<li>Users must accept the certificate warning in their VR browser</li>
+</ul>
+<p><strong>Server Setup</strong>:</p>
+<ul>
+<li>Node.js HTTPS server (server.js) serves the application</li>
+<li>Automatically serves static files with correct MIME types</li>
+<li>Helper script (start-vr.sh) displays local IP for easy headset connection</li>
+</ul>
+<h3 id="vr-features">VR Features</h3>
+<p><strong>WebXR Integration</strong>:</p>
+<ul>
+<li>VR button automatically appears when headset is connected</li>
+<li>Renderer uses <code>renderer.xr.enabled = true</code> for WebXR support</li>
+<li>Animation loop uses <code>renderer.setAnimationLoop()</code> instead of <code>requestAnimationFrame()</code> for VR compatibility</li>
+</ul>
+<p><strong>VR Controllers</strong>:</p>
+<ul>
+<li>Two controller inputs supported (left and right hand)</li>
+<li>Visual representation with red spheres at controller positions</li>
+<li>White lines extend from controllers showing pointing direction (5 units long)</li>
+<li>Controllers support select events (trigger button) and squeeze events (grip button)</li>
+<li>Both controllers have identical control schemes</li>
+</ul>
+<p><strong>Interaction System</strong>:</p>
+<ul>
+<li><strong>Trigger (select)</strong>: Point controller at blocks and pull trigger to pick up
+<ul>
+<li>If pointing at a block: Pick up and carry the block</li>
+<li>If pointing at empty space: Enter camera pan mode (non-VR browser mode only)</li>
+<li>Release trigger to drop block at controller position</li>
+</ul>
+</li>
+<li><strong>Grip (squeeze)</strong>: Hold to rotate camera by moving controller horizontally (non-VR browser mode only)</li>
+<li>Raycasting from controller determines which block is targeted</li>
+<li>Only available (not carried, not eaten, not flying) blocks can be picked up</li>
+<li>Picked up blocks follow controller position in real-time</li>
+<li>Players can interact with the same blocks the creatures are using</li>
+</ul>
+<p><strong>Camera Behavior</strong>:</p>
+<ul>
+<li>Desktop camera controls (pan, rotate, zoom) disabled when in full VR presenting mode</li>
+<li>VR headset position and rotation control the camera directly in VR mode</li>
+<li>Player can physically walk around the scene using VR room-scale tracking</li>
+<li>Scene remains at ground level, easily viewable from standing position</li>
+</ul>
+<p><strong>VR Locomotion</strong> (Full VR Mode):</p>
+<ul>
+<li><strong>Thumbstick movement</strong>: Enabled when in VR presenting mode (after clicking &quot;Enter VR&quot;)
+<ul>
+<li>Forward/backward: Push thumbstick up/down to move in the direction you're looking</li>
+<li>Strafe left/right: Push thumbstick left/right to move sideways</li>
+<li>Movement follows camera (head) direction but stays locked to ground plane</li>
+<li>Movement speed: 0.1 units per frame</li>
+<li>Dead zone of 0.1 prevents controller drift</li>
+<li>Both controllers provide identical locomotion controls</li>
+<li>Allows smooth navigation around the scene without physical movement</li>
+</ul>
+</li>
+</ul>
+<p><strong>Non-VR Browser Mode Controls</strong> (VR headset browser, not in VR session):</p>
+<ul>
+<li><strong>Thumbstick</strong>:
+<ul>
+<li>Left/right: Rotate camera around scene</li>
+<li>Up/down: Zoom in/out</li>
+</ul>
+</li>
+<li><strong>Trigger drag</strong>: Pan camera when pointing at empty space</li>
+<li><strong>Grip drag</strong>: Rotate camera by moving controller horizontally</li>
+<li>These controls allow navigation before entering full VR mode</li>
+</ul>
+<h2 id="task-system">Task System</h2>
+<p>The simulation now includes an experimental task system that allows creatures to perform work:</p>
+<h3 id="architecture">Architecture</h3>
+<p><strong>Task Manager</strong>: Central system that manages all tasks and assigns them to available creatures</p>
+<ul>
+<li>Maintains a queue of pending tasks</li>
+<li>Tracks which creatures are available vs busy</li>
+<li>Automatically assigns tasks to random available creatures</li>
+<li>Removes completed tasks from the queue</li>
+</ul>
+<p><strong>Task</strong>: Represents a unit of work with type and associated data</p>
+<ul>
+<li>Type: Category of task (e.g., 'move_block')</li>
+<li>Data: Task-specific information (target object, locations, etc.)</li>
+<li>Assignment tracking: Which creature is assigned and completion status</li>
+</ul>
+<p><strong>Creature Task States</strong>: Creatures transition through states when executing tasks</p>
+<ul>
+<li><code>idle</code>: No task, wandering randomly</li>
+<li><code>moving_to_pickup</code>: Moving towards object to pick up (continuously follows block position)</li>
+<li><code>picking_up</code>: Brief pause while picking up object</li>
+<li><code>carrying</code>: Moving to drop location while carrying object</li>
+<li><code>dropping</code>: Brief pause while placing object</li>
+<li><code>eating</code>: Attempting to eat the dropped block for 5 seconds</li>
+<li>Returns to <code>idle</code> after eating completes or is interrupted</li>
+</ul>
+<h3 id="current-implementation">Current Implementation</h3>
+<p><strong>Movable Blocks</strong>: Multiple brown blocks that creatures can pick up and relocate</p>
+<ul>
+<li>Initially 8 blocks spawn at random locations</li>
+<li>Each block can be carried by one creature at a time</li>
+<li>Follows creature position when being carried (floating above their head)</li>
+<li>Dropped at random locations around the map</li>
+<li>Block list can grow (from emitter) and shrink (from eating) dynamically</li>
+<li>Blocks can be in flying state with physics-based trajectory</li>
+</ul>
+<p><strong>Block Emitter</strong>: A fountain structure that periodically launches new blocks</p>
+<ul>
+<li>Gray cylindrical fountain with a nozzle at position (-15, -15)</li>
+<li>Launches blocks every 10-25 seconds (random interval)</li>
+<li>Blocks are fired into the air with a ballistic trajectory</li>
+<li>Flight time of 1.5-2 seconds with realistic physics (gravity)</li>
+<li>Blocks spin while airborne for visual effect</li>
+<li>Landing range of up to 25 units from fountain</li>
+<li>Upon landing, blocks become available for creature interaction</li>
+<li>Continuously replenishes the block supply in the world</li>
+</ul>
+<p><strong>Task Generation</strong>: Block movement tasks are created periodically</p>
+<ul>
+<li>Random intervals of 3-10 seconds</li>
+<li>Picks a random available block (not being carried or eaten)</li>
+<li>Task assigns a random creature to pick up the chosen block</li>
+<li>Creature picks a random drop location upon pickup</li>
+<li>Multiple tasks can target different blocks simultaneously</li>
+</ul>
+<p><strong>Chase Behavior</strong>: Multiple creatures can compete for the same block</p>
+<ul>
+<li>When multiple creatures are assigned to move the same block, they chase it</li>
+<li>Creatures continuously update their target to follow the block's current position</li>
+<li>If one creature picks up the block, other assigned creatures will chase the carrier</li>
+<li>When the carrier drops the block, nearby pursuing creatures can steal it</li>
+<li>Creates emergent &quot;hot potato&quot; gameplay with creatures chasing each other</li>
+</ul>
+<p><strong>Eating Behavior</strong>: After dropping a block, creatures attempt to eat it</p>
+<ul>
+<li>Upon dropping the block, the creature enters an &quot;eating&quot; state</li>
+<li>Creature backs away 1.5 units and faces the block (visual improvement and accessibility)</li>
+<li>Eating takes 5 seconds to complete</li>
+<li>If another creature picks up the block during eating, the eating is cancelled</li>
+<li>The interrupted creature returns to idle wandering</li>
+<li>If eating completes successfully, the block disappears permanently</li>
+<li>The block is removed from the world and the blocks array shrinks</li>
+<li>The backup behavior gives other creatures easier access to steal the block</li>
+<li>With multiple blocks, creates distributed competition across the map</li>
+<li>As blocks are eaten, competition intensifies over remaining blocks</li>
+<li>Creates dynamic competition where creatures must defend their meal</li>
+</ul>
+<h3 id="future-extensions">Future Extensions</h3>
+<p>The task system is designed to be extensible:</p>
+<ul>
+<li>Multiple task types can coexist</li>
+<li>Tasks can have priorities</li>
+<li>Creatures could have different capabilities or preferences</li>
+<li>Resources could require multiple creatures to move</li>
+<li>Tasks could chain together (pickup -&gt; move -&gt; process -&gt; store)</li>
+</ul>
+<h2 id="collision-detection">Collision Detection</h2>
+<p>The simulation includes basic spherical collision detection for physical interactions:</p>
+<h3 id="implementation">Implementation</h3>
+<p><strong>Spherical Collision Detection</strong>: Uses distance-based collision checking</p>
+<ul>
+<li>Each creature has a model-specific collision radius between 0.6 and 1.0 units</li>
+<li>The movable block has a collision radius of 0.6 units</li>
+<li>Collision detection uses simple 2D distance calculations (X and Z axes only)</li>
+<li>Efficient for small populations (O(n²) is acceptable for 131 creatures)</li>
+</ul>
+<p><strong>Collision Response</strong>: Separation-based resolution</p>
+<ul>
+<li>When creatures collide with each other, they push apart equally (50% each)</li>
+<li>When creatures collide with the block, only the creature is pushed</li>
+<li>Collision response applies gradual separation to prevent jittering</li>
+<li>No collision occurs when a creature is carrying, picking up, dropping, or eating the block</li>
+<li>This allows smooth task interactions without physics interference</li>
+</ul>
+<p><strong>Performance</strong>: Simple but effective approach</p>
+<ul>
+<li>Direct iteration through all entity pairs</li>
+<li>No spatial partitioning needed for current population size</li>
+<li>Could be optimized with spatial hashing or quadtrees if population scales up</li>
+</ul>
+
+			</article>
+			<div class="lightbox-overlay" id="lightbox">
+				<span class="lightbox-close" id="lightbox-close">&times;</span>
+				<img src="" alt="" id="lightbox-img">
+			</div>
+			<script>
+			(function() {
+				var overlay = document.getElementById('lightbox');
+				var lightboxImg = document.getElementById('lightbox-img');
+				var closeBtn = document.getElementById('lightbox-close');
+				
+				// Add click handler to all images in the article (skip linked images)
+				document.querySelectorAll('article img:not(.no-lightbox)').forEach(function(img) {
+					img.addEventListener('click', function(e) {
+						e.preventDefault();
+						lightboxImg.src = this.src;
+						lightboxImg.alt = this.alt;
+						overlay.classList.add('active');
+					});
+				});
+				
+				// Close on any click
+				overlay.addEventListener('click', function() {
+					overlay.classList.remove('active');
+				});
+				
+				// Close on escape key
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape') {
+						overlay.classList.remove('active');
+					}
+				});
+			})();
+			</script>
+			</html>
+			

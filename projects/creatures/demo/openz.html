@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>OpenZ models · Digital Creatures</title>
+    <style>
+        * { box-sizing: border-box }
+        body { height: 100dvh; margin: 0; display: flex; flex-direction: column; background: #202832; color: #f3f5f7; font: 15px system-ui, sans-serif }
+        header { display: flex; flex-wrap: wrap; gap: .55rem 1rem; align-items: center; padding: .6rem .9rem; background: #151c24 }
+        label { display: flex; align-items: center; gap: .4rem; max-width: 100% }
+        select { max-width: min(64vw, 24rem); font: inherit }
+        a { color: #abd9ff }
+        #stage { flex: 1; min-height: 0; position: relative; }
+        canvas { display: block; width: 100%; height: 100%; touch-action: none }
+        output { position: absolute; bottom: .65rem; left: .8rem; background: #151c24; padding: .4rem .6rem }
+        [hidden] { display: none }
+    </style>
+    <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+    <header>
+        <a href="index.html">Creatures</a>
+        <label>Model <select id="model" title="Choose an OpenZ model to inspect"></select></label>
+        <label id="motion-label" hidden>Motion <select id="motion" title="Play an animation from this model"></select></label>
+        <a id="download" download hidden>Download original</a>
+        <a href="model-credits.html#openz">Credits</a>
+    </header>
+    <main id="stage"><canvas aria-label="OpenZ model. Drag to rotate and scroll or pinch to zoom."></canvas><output aria-live="polite">Loading models…</output></main>
+    <script type="module" src="openz-gallery.js?v=20261124-1"></script>
+</body>
+</html>
+

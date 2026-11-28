@@ -351,8 +351,8 @@ async function loadModel(definition) {
     }
 }
 
-export function createGLTFCreatureModelLoadJobs() {
-    return MODEL_DEFINITIONS.map(definition => ({
+export function createGLTFCreatureModelLoadJobs(definitions = MODEL_DEFINITIONS) {
+    return definitions.map(definition => ({
         id: definition.id,
         label: definition.label,
         load: () => loadModel(definition)

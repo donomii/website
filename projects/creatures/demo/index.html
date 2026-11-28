@@ -43,19 +43,20 @@
             border-radius: 5px;
             font-size: 12px;
         }
+        #credits a { color: inherit; }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
-    <div id="info">
-        <strong>World Stuff</strong><br>
+    <details id="info"><summary>Help and loading</summary>
+        <strong>Camera controls</strong><br>
         Left/Middle Drag: Grab and slide the ground<br>
         Right Drag: Orbit and tilt the camera<br>
         Scroll: Zoom toward the pointer<br>
         <span id="model-status">Loading animated models…</span>
         <span id="scenery-status">Loading scenery…</span>
-    </div>
-    <a id="credits" href="model-credits.html">Model credits</a>
+    </details>
+    <nav id="credits" aria-label="Models"><a href="openz.html">OpenZ models</a> · <a href="model-credits.html">Model credits</a></nav>
 
     <script type="importmap">
         {
@@ -65,6 +66,6 @@
             }
         }
     </script>
-    <script type="module" src="main.js?v=20261120-1"></script>
+    <script type="module" src="main.js?v=20261124-1"></script>
 </body>
 </html>

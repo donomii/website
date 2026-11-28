@@ -1,0 +1,19 @@
+OpenZ 1.5 · Art, models, and animation by the OpenZ contributors
+Source release: https://github.com/playopenz/OpenZ/releases/tag/v1.5
+Asset license: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+The 276 original FBX files and 47 original GLB files in originals/ are unchanged.
+catalog.json records their paths relative to Assets/OpenZ and the SHA-256 of each original.
+The viewer resolves their external images to reduced WebP copies of the source artwork.
+Raw files show the model as exported. The Unity project assembles additional materials, prefabs and effects.
+
+The nineteen GLBs in actors/ are adaptations under the same license. The BS-01 Grunt and six BS01V3 robot bodies carry their matching weapon on RightHandWeapon. The Grunt wears the original head, hip and back kit from BS01_Type_Grunt.fbx. Red and blue team colors are baked through the original alpha masks. The Grunt and shared robot movement use BS01_Robot_Anims.fbx. The specialized robot poses come from the respective body FBX files. Wildlife comes from Resources/OpenZ/Critters and Resources/OpenZ/L16Animals. The Mini Raptor uses the Raptor mesh with the original raptor_mini_tex.png skin. Web adaptations crop two loops, resize textures, adapt Unity materials, simplify and quantize mesh data, resample animation and normalize facing for Creatures.
+
+SHA-256 of the complete source release
+907da67c1e9f6b3eb67693db0600a0a9e689eb3b05cf44e69f77d25faa21f0e5  OpenZ_1.5_source_part1.zip
+9e22ffcd0124f9fbf202bc827a390f6188aaf5df8063811de0bdbe6ab3cefda0  OpenZ_1.5_source_part2.zip
+9c71734718818a9312c909c1534dcb720df872d761c8381c7b9c2c6322c6b58e  OpenZ_1.5_source_part3.zip
+
+Z was created by The Bitmap Brothers. Z, its names and characters belong to their respective owners.
+
