@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111b1c">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Room Mesh</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { color-scheme: dark; }
+    body { margin: 0; min-height: 100svh; display: grid; place-items: center; padding: 24px; background: #111b1c; color: #eef7ed; font: 18px/1.55 "Inter", system-ui, sans-serif; }
+    main { width: min(100%, 32rem); border-top: 2px solid #97e8b8; padding: 30px 0; }
+    h1 { font-size: clamp(46px, 9vw, 78px); letter-spacing: -.065em; line-height: 1; margin: 0 0 18px; }
+    p { margin: 0 0 20px; color: #c7d7d3; }
+    button { background: #a5f5c2; color: #10211c; padding: 14px 25px; border: none; border-radius: 8px; font: inherit; font-weight: 650; cursor: pointer; }
+    button:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+    button:disabled { opacity: .55; cursor: default; }
+    #status { margin: 15px 0 0; font-size: .88rem; }
+    #status:empty { display: none; }
+    small { display: block; margin-top: 24px; color: #9fb1ab; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Room Mesh</h1>
+    <p>See your scanned room as a wireframe over passthrough, with labels on objects your Quest recognizes.</p>
+    <button id="start" disabled>Show my room</button>
+    <p id="status" role="status">Checking for immersive AR…</p>
+    <small>Allow spatial data when prompted. Your room geometry stays on the headset. Use the Quest menu to exit.</small>
+    <noscript>Enable JavaScript in Quest Browser to start.</noscript>
+  </main>
+  <script type="module" src="./viewer.js"></script>
+</body>
+</html>
