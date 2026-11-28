@@ -7,16 +7,16 @@
         "url": "/projects/games/cinder-circuit/index.html"
       },
       {
-        "name": "Blitz",
-        "url": "/projects/games/cinder-circuit/index.html?mode=blitz"
-      },
-      {
         "name": "Crown Chase",
         "url": "/projects/games/cinder-circuit/index.html?mode=crown-chase"
       },
       {
-        "name": "High Stakes",
-        "url": "/projects/games/cinder-circuit/index.html?mode=high-stakes"
+        "name": "Banner Raid",
+        "url": "/projects/games/cinder-circuit/index.html?mode=banner-raid"
+      },
+      {
+        "name": "Siege",
+        "url": "/projects/games/cinder-circuit/index.html?mode=siege"
       }
     ]
   },

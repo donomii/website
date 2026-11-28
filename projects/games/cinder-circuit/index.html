@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#101c21">
   <title>Cinder Circuit</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="maps.js"></script>
   <script defer src="game.js"></script>
   <script defer src="art.js"></script>
   <script defer src="sound.js"></script>
@@ -38,7 +39,7 @@
       <div class="meter scales" title="Dragon health"><span>Scales</span><meter id="health" min="0" max="100" value="100" aria-label="Dragon health"></meter></div>
       <div class="meter breath" title="Fire breath remaining"><span>Breath</span><meter id="breath" min="0" max="1" value="1" aria-label="Fire breath remaining"></meter></div>
       <div class="cargo" title="Unbanked gold and deposit bonus">
-        <span>Cargo</span><output id="cargo" aria-label="Carried gold">0 / 155</output><b id="bonus" hidden></b><b id="royal" title="Princess aboard" hidden>♛</b>
+        <span id="cargo-label">Cargo</span><output id="cargo" aria-label="Carried gold">0 / 155</output><b id="bonus" hidden></b><b id="royal" title="Princess aboard" hidden>♛</b>
       </div>
       <div class="flight">
         <button id="flight-action" type="button">Fly</button>

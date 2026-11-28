@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const {WIDTH, HEIGHT, LAIRS, TOWNS, RULES, gap} = Cinder;
+  const {WIDTH, HEIGHT, TOWNS, RULES, gap} = Cinder;
   const PI = Math.PI;
   const playerInk = "#ffa65e";
   const rivalInk = "#87e0d8";
@@ -71,7 +71,7 @@
     ctx.letterSpacing = "0px";
   }
 
-  function terrain() {
+  function terrain(map) {
     const canvas = document.createElement("canvas");
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
@@ -83,6 +83,10 @@
       state = (Math.imul(state,1664525)+1013904223)>>>0;
       return state/4294967296;
     };
+    if (map?.palette) {
+      paintLandscape(ctx,map,rand);
+      return canvas;
+    }
     const water = ctx.createLinearGradient(0,0,WIDTH,HEIGHT);
     water.addColorStop(0,"#173b43");
     water.addColorStop(1,"#102931");
@@ -187,6 +191,53 @@
     return canvas;
   }
 
+  function paintLandscape(ctx,map,rand) {
+    const [water,edge,light,dark,accent] = map.palette;
+    const sky = ctx.createLinearGradient(0,0,WIDTH,HEIGHT);
+    sky.addColorStop(0,edge);
+    sky.addColorStop(1,water);
+    ctx.fillStyle=sky;
+    ctx.fillRect(0,0,WIDTH,HEIGHT);
+    for(let i=0;i<460;i+=1) {
+      const x=rand()*WIDTH,y=rand()*HEIGHT;
+      line(ctx,[[x,y],[x+4+rand()*20,y-1]],accent+"24",1);
+    }
+    for (const island of map.islands) {
+      const land = ctx.createLinearGradient(70,25,1050,680);
+      land.addColorStop(0,light);
+      land.addColorStop(1,dark);
+      ctx.lineWidth=17;
+      polygon(ctx,island,edge,edge);
+      ctx.lineWidth=3;
+      polygon(ctx,island,land,accent);
+      ctx.save();
+      ctx.clip();
+      for(let i=0;i<1150;i+=1) {
+        const x=rand()*WIDTH,y=rand()*HEIGHT;
+        ctx.fillStyle=(i%3===0?accent:water)+"25";
+        ctx.fillRect(x,y,1+rand()*3,1+rand()*2);
+      }
+      ctx.restore();
+    }
+    for(const [x,y,size] of map.ridges) {
+      ellipse(ctx,x,y+6,size*.92,size*.29,water+"85");
+      polygon(ctx,[[x-size,y],[x-size*.18,y-size],[x+size*.82,y],[x+size*.12,y+size*.21]],dark);
+      polygon(ctx,[[x-size,y],[x-size*.18,y-size],[x+size*.02,y-size*.21],[x+size*.12,y+size*.21]],light);
+      polygon(ctx,[[x-size*.56,y-size*.54],[x-size*.18,y-size],[x+size*.23,y-size*.59],[x-size*.13,y-size*.68]],accent);
+      for(let i=0;i<13;i+=1) {
+        const tx=x+(rand()-.5)*size*3.4, ty=y+rand()*size*.85;
+        const height=6+rand()*12;
+        polygon(ctx,[[tx-height*.42,ty],[tx,ty-height],[tx+height*.42,ty]],edge);
+      }
+    }
+    for (const road of map.roads ?? map.towns.map(town=>town.road)) {
+      line(ctx,road,water+"bd",12);
+      line(ctx,road,accent+"bc",7);
+      line(ctx,road,light,2);
+    }
+    label(ctx,map.name.toUpperCase(),600,42,accent,"italic 20px Georgia","4px");
+  }
+
   function crown(ctx,x,y,color,size=1) {
     ctx.save();
     ctx.translate(x,y);
@@ -255,6 +306,19 @@
   }
 
   function wagon(ctx,w,time) {
+    if (w.siege) {
+      ellipse(ctx,w.x,w.y+6,19,9,"#17192bac");
+      ctx.save();
+      ctx.translate(w.x,w.y);
+      ctx.rotate(w.angle);
+      ctx.lineWidth=1.7;
+      polygon(ctx,[[-17,-9],[9,-10],[18,0],[9,10],[-17,9]],"#792f45","#f1a48c");
+      polygon(ctx,[[-12,-5],[5,-5],[12,0],[5,5],[-12,5]],"#e7836b");
+      line(ctx,[[-13,0],[23,0]],"#43263c",3.6);
+      ctx.restore();
+      if (w.burning) glow(ctx,w.x,w.y,23,"#ffb55d9e");
+      return;
+    }
     ellipse(ctx,w.x,w.y+3,12,6,"#1d302a91");
     if (w.royal) {
       glow(ctx,w.x,w.y,26,"#fba3cf73");
@@ -336,7 +400,17 @@
     ctx.lineJoin="round";
     ctx.lineCap="round";
     ctx.drawImage(background,0,0);
-    for (const [i,home] of LAIRS.entries()) lair(ctx,home,game.dragons[i],time);
+    for (const [i,home] of game.map.lairs.entries()) lair(ctx,home,game.dragons[i],time);
+    if(game.map.sanctuary) {
+      const {x,y,name}=game.map.sanctuary;
+      const escort=game.dragons.some(drake=>drake.royal);
+      ctx.lineWidth=escort?3.5:2;
+      ellipse(ctx,x,y,RULES.lairRadius,RULES.lairRadius,"#e2a8cf28",escort?"#ffc8e8":"#e0abc1");
+      crown(ctx,x,y-9,"#ffd5eb",1.9);
+      label(ctx,name,x,y+25,"#ffedf7");
+    }
+    for (const beacon of game.beacons) drawBeacon(ctx,beacon,game.rules);
+    if (game.siege) drawKeep(ctx,game.map.lairs[0]);
     for (const town of game.towns) {
       for (const b of [...town.buildings].sort((a,b)=>a.y-b.y)) building(ctx,b,town,time);
       if (town.launch>0) {
@@ -389,6 +463,34 @@
       else ellipse(ctx,p.x,p.y,p.size*opacity+1,p.size*opacity+1,p.color);
       ctx.restore();
     }
+  }
+
+  function drawBeacon(ctx,beacon,rules) {
+    const {x,y,owner,claimant,progress,name}=beacon;
+    const colors=[playerInk,rivalInk];
+    const color=colors[owner] ?? "#dfc7aa";
+    const radius=rules.beaconRadius;
+    ctx.lineWidth=2;
+    ellipse(ctx,x,y,radius,radius,color+"26",color);
+    if (claimant!==null) {
+      ctx.beginPath();
+      ctx.arc(x,y,radius,-PI/2,-PI/2+PI*2*progress/rules.captureTime);
+      ctx.lineWidth=5;
+      ctx.strokeStyle=colors[claimant];
+      ctx.stroke();
+    }
+    ellipse(ctx,x,y+9,16,7,"#302836");
+    line(ctx,[[x,y+9],[x,y-27]],"#302836",4);
+    polygon(ctx,[[x,y-25],[x+24,y-19],[x,y-11]],color,"#443041");
+    label(ctx,name,x,y+36,"#ffe8ce");
+  }
+
+  function drawKeep(ctx,home) {
+    const {x,y}=home;
+    ctx.lineWidth=2;
+    polygon(ctx,[[x-30,y-5],[x-30,y-26],[x-22,y-26],[x-22,y-19],[x-9,y-19],[x-9,y-29],
+      [x+9,y-29],[x+9,y-19],[x+22,y-19],[x+22,y-26],[x+30,y-26],[x+30,y-5]],"#7d929e","#e3eddf");
+    ellipse(ctx,x,y-7,7,10,"#354657");
   }
 
   globalThis.CinderArt={terrain,draw};

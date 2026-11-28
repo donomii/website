@@ -5,7 +5,6 @@
   const byId = id => document.getElementById(id);
   const canvas = byId("board");
   const ctx = canvas.getContext("2d", {alpha:false});
-  const background = CinderArt.terrain();
   const sound = CinderSound.createSound();
   const roundEnd = byId("round-end");
   const flightAction = byId("flight-action");
@@ -23,6 +22,7 @@
   const effects = [];
   const tick = 1/120;
   let game = createGame(new URLSearchParams(location.search).get("mode"));
+  let background = CinderArt.terrain(game.map);
   let mode = "ready";
   let last = performance.now();
   let accumulator = 0;
@@ -48,6 +48,25 @@
   function updateVariant() {
     variantSelect.value = game.variant;
     variantSelect.title = `${VARIANTS[game.variant].description} Gamepad: LB / RB to choose a raid before takeoff.`;
+    canvas.setAttribute("aria-label",game.map.name+" dragon raiding map");
+    const [scores,player,rival] = {
+      classic:["Banked gold","Your banked gold","Rival's banked gold"],
+      "crown-chase":["Princesses delivered","Your princess deliveries","Rival's princess deliveries"],
+      "banner-raid":["Majority control time","Your control seconds","Rival's control seconds"],
+      siege:["Frostgate defenses","Keep health percent","Current siege wave"]
+    }[game.variant];
+    const scoreboard = readouts["player-score"].closest(".scoreboard");
+    scoreboard.setAttribute("aria-label",scores);
+    scoreboard.dataset.variant = game.variant;
+    for (const [id,title] of [["player-score",player],["rival-score",rival]]) {
+      readouts[id].setAttribute("aria-label",title);
+      readouts[id].parentElement.title = title;
+    }
+    const escort = game.variant === "crown-chase";
+    readouts.cargo.parentElement.hidden = game.variant !== "classic" && !escort;
+    readouts.cargo.parentElement.title = escort ? "Carry the princess to Crown Abbey" : "Unbanked gold and deposit bonus";
+    readouts.cargo.setAttribute("aria-label",escort ? "Princess aboard" : "Carried gold");
+    byId("cargo-label").textContent = escort ? "Escort" : "Cargo";
   }
 
   function worldPoint(e) {
@@ -107,7 +126,9 @@
   function resetRound(id) {
     if (roundEnd.open) roundEnd.close();
     clearInput();
+    const map = game.map;
     game = createGame(id);
+    if (game.map !== map) background = CinderArt.terrain(game.map);
     effects.length = 0;
     setMode("ready");
     updateVariant();
@@ -135,9 +156,19 @@
     clearInput();
     sound.firing(false);
     const [player,rival] = game.dragons;
-    byId("winner").textContent = player.score === rival.score ? "A draw" : player.score > rival.score ? "You won" : "The rival won";
     const {sorties,royals,burns,knockouts}=game.stats;
-    byId("result").textContent = `${player.score} to ${rival.score} gold · ${sorties} deposits · ${royals} princesses · ${burns} buildings burned · ${knockouts} knockouts`;
+    if (game.siege) {
+      byId("winner").textContent = game.outcome===0 ? "Frostgate held" : "Frostgate fell";
+      byId("result").textContent = `${game.siege.health}% walls · ${game.siege.destroyed} engines destroyed · wave ${game.siege.wave}/${game.siege.waves}`;
+    } else {
+      byId("winner").textContent = player.score === rival.score ? "A draw" : player.score > rival.score ? "You won" : "The rival won";
+      const total = `${player.score} to ${rival.score}`;
+      byId("result").textContent = {
+        classic:`${total} gold · ${sorties} deposits · ${royals} princesses · ${burns} buildings burned · ${knockouts} knockouts`,
+        "crown-chase":`${total} princesses delivered`,
+        "banner-raid":`${total} seconds holding a majority`
+      }[game.variant];
+    }
     roundEnd.showModal();
   }
 
@@ -308,12 +339,14 @@
       case "coin": sparks(x,y,ink,4); break;
       case "dash": sparks(x,y,"#e7dbb9",12); break;
       case "hit": sparks(x,y,"#ffae9c",11); break;
-      case "fall": caption(x,y-24,amount ? `−${amount} banked` : "Loot dropped","#ffc0a6"); sparks(x,y,"#fa795b",28); break;
+      case "fall": caption(x,y-24,game.variant==="classic"?"Loot dropped":"Knocked out","#ffc0a6"); sparks(x,y,"#fa795b",28); break;
       case "bank": caption(x,y-32,`+${amount}`,ink); sparks(x,y,ink,24); break;
       case "royal": caption(x,y-32,"Princess aboard","#ffd1ea"); break;
       case "royalDeparture": caption(x,y-35,"Royal carriage","#ffd1ea"); break;
       case "upgrade": if(actor===0) caption(x,y-57,RULES.upgradeNames[amount-1],ink); break;
       case "phase": caption(player.x,player.y-40,amount===1?"Towers on alert":"Towers fire faster","#ffc6a2"); break;
+      case "capture": sparks(x,y,ink,22); break;
+      case "breach": caption(x,y-30,`−${amount}% walls`,"#ffb3a1"); sparks(x,y,"#fa795b",26); break;
       case "finish": finish(); break;
       }
     }
@@ -323,16 +356,18 @@
     const [player,rival]=game.dragons;
     const left=Math.ceil(game.rules.duration-game.time);
     const show=(id,value)=>{ if(readouts[id].value!==String(value)) readouts[id].value=value; };
-    show("player-score",player.score);
-    show("rival-score",rival.score);
+    const suffix = game.variant==="banner-raid" ? "s" : "";
+    const goal = game.rules.target ? `/${game.rules.target}${suffix}` : "";
+    show("player-score",game.siege ? `${game.siege.health}%` : player.score+goal);
+    show("rival-score",game.siege ? `${game.siege.wave}/${game.siege.waves}` : rival.score+goal);
     show("clock",`${Math.floor(left/60)}:${String(left%60).padStart(2,"0")}`);
     readouts.clock.parentElement.classList.toggle("late",left<=30);
     readouts.health.value=player.health;
     readouts.breath.value=player.breath;
-    show("cargo",`${player.carry} / ${capacity(player)}`);
+    show("cargo",game.variant==="crown-chase" ? player.royal ? "To Crown Abbey" : "—" : `${player.carry} / ${capacity(player)}`);
     readouts.royal.hidden=!player.royal;
     readouts.bonus.hidden=player.marks.size<2;
-    readouts.bonus.textContent=`+${Math.round(100*game.rules.districtBonus*clamp(player.marks.size-1,0,3))}%`;
+    readouts.bonus.textContent=`+${25*clamp(player.marks.size-1,0,3)}%`;
     dashButton.classList.toggle("cooling",player.dash>0);
   }
 
