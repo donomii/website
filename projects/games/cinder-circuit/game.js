@@ -8,9 +8,23 @@
     speed: 220, breathRange: 144, capacity: 155, maxHealth: 100, dashCooldown: 2.5,
     lairRadius: 54, bankTime: 0.34, pickupRadius: 39, lootLifetime: 19, royalValue: 165,
     rivalStart: 0.85, rivalRest: 0.90,
+    districtBonus: 0.25, royalPriority: 170, rebuildScale: 1, knockoutPenalty: 0,
     upgradeScores: [450, 1500], upgradeNames: ["Deep pockets", "Hotter breath"],
     towerWindup: 0.54, towerLock: 0.17, boltSpeed: 380,
     towerInterval: [2.60, 1.65, 1.16], towerDamage: [21, 32, 40]
+  });
+  const VARIANTS = Object.freeze({
+    classic: Object.freeze({name: "Classic", description: "Four-minute raid. Bank more gold than your rival.", rules: RULES}),
+    blitz: Object.freeze({name: "Blitz", description: "90 seconds. Towns rebuild sooner and upgrades cost less.", rules: Object.freeze({
+      ...RULES, duration: 90, phases: [25, 58], royalDepartures: [15, 41, 66], upgradeScores: [300, 900], rebuildScale: 0.65
+    })}),
+    "crown-chase": Object.freeze({name: "Crown Chase", description: "Frequent royal carriages. Each princess pays 260 gold.", rules: Object.freeze({
+      ...RULES, duration: 150, phases: [45, 100], royalDepartures: [12, 24, 38, 52, 68, 82, 98, 114, 130, 140],
+      royalValue: 260, royalPriority: 295
+    })}),
+    "high-stakes": Object.freeze({name: "High Stakes", description: "Each extra district adds 40% to a deposit. A knockout costs a quarter of your banked gold.", rules: Object.freeze({
+      ...RULES, duration: 180, phases: [40, 105], royalDepartures: [26, 65, 103, 138, 170], districtBonus: 0.40, knockoutPenalty: 0.25
+    })})
   });
   const LAIRS = [{x: 148, y: 486, name: "Cinder Crag"}, {x: 1045, y: 182, name: "Blue Roost"}];
   const TOWNS = [
@@ -60,9 +74,15 @@
       readyAt: index === 1 ? RULES.rivalStart : 0};
   }
 
-  function createGame() {
+  function resolveVariant(id) {
+    return Object.hasOwn(VARIANTS,id) ? id : "classic";
+  }
+
+  function createGame(id) {
+    const variant = resolveVariant(id);
+    const {rules} = VARIANTS[variant];
     return {
-      time: 0, phase: 0, ended: false, seed: 75643, royalCount: 0,
+      variant, rules, time: 0, phase: 0, ended: false, seed: 75643, royalCount: 0,
       dragons: [dragon(0), dragon(1)], events: [], bolts: [], loot: [],
       wagons: [makeWagon(0, false, 21), makeWagon(4, false, 54)],
       towns: TOWNS.map((town,id) => ({...town, id, attention: 0, prosperity: 0, guard: 1 + id*0.24, launch: 0,
@@ -79,12 +99,12 @@
     return game.seed / 4294967296;
   }
 
-  function makeWagon(town, royal, progress = 0, ordinal = 0, trade = 48) {
+  function makeWagon(town, royal, progress = 0, ordinal = 0, value = 48) {
     const road = royal ? ROYAL_ROUTES[ordinal % ROYAL_ROUTES.length] : TOWNS[town].road;
     const position = pointOnRoad(road, progress);
-    const rich = !royal && trade >= 72;
+    const rich = !royal && value >= 72;
     return {...position, town, royal, rich, road, progress, health: royal ? 0.66 : rich ? 0.40 : 0.31,
-      value: royal ? RULES.royalValue : trade, burning: 0, underAttack: false};
+      value, burning: 0, underAttack: false};
   }
 
   function event(game, type, x, y, amount = 0, actor = 0) {
@@ -117,7 +137,7 @@
     const available = game.loot.filter(item => item.royal ? !rival.royal : rival.carry < capacity(rival));
     const prize = available.reduce((best,item) => !best || gap(rival,item)-(item.royal?100:0) < gap(rival,best)-(best.royal?100:0) ? item : best, null);
     if (rival.health < 50 || (rival.returning && rival.health < 80) || rival.royal || rival.carry >= capacity(rival)*0.73 ||
-        (RULES.duration-game.time < gap(rival,home)/(RULES.speed*.8)+1 && rival.carry > 0)) {
+        (game.rules.duration-game.time < gap(rival,home)/(RULES.speed*.8)+1 && rival.carry > 0)) {
       rival.returning = true;
       return steerTo(rival, home);
     }
@@ -129,7 +149,7 @@
     options.push(...game.wagons);
     const target = options.reduce((best,item) => {
       const cost = object => gap(rival,object) + (gap(player,object)<120 && !object.royal && !object.rich ? 60 : 0)
-        - (object.royal ? 170 : object.rich ? 52 : 0);
+        - (object.royal ? game.rules.royalPriority : object.rich ? 52 : 0);
       return !best || cost(item) < cost(best) ? item : best;
     }, null);
     if (target) {
@@ -198,7 +218,7 @@
         building.burning = 1.1;
         town.attention = Math.min(1,town.attention+dt*0.7);
         if (building.health <= 0) {
-          building.rebuild = 31+random(game)*10;
+          building.rebuild = (31+random(game)*10)*game.rules.rebuildScale;
           scatter(game, building.x, building.y, building.value, town.id);
           event(game, "burn", building.x, building.y, 0, drake.id);
           game.stats.burns += drake.id === 0 ? 1 : 0;
@@ -237,8 +257,8 @@
     if (gap(drake,LAIRS[drake.id])<RULES.lairRadius && (drake.carry || drake.royal)) {
       drake.bank += dt;
       if (drake.bank >= RULES.bankTime) {
-        const multiplier = 1+0.25*clamp(drake.marks.size-1,0,3);
-        const amount = Math.round(drake.carry*multiplier) + (drake.royal ? RULES.royalValue : 0);
+        const multiplier = 1+game.rules.districtBonus*clamp(drake.marks.size-1,0,3);
+        const amount = Math.round(drake.carry*multiplier) + (drake.royal ? game.rules.royalValue : 0);
         drake.score += amount;
         if (drake.id === 0) {
           game.stats.sorties += 1;
@@ -251,7 +271,7 @@
         drake.royal = false;
         drake.marks.clear();
         event(game,"bank",drake.x,drake.y,amount,drake.id);
-        const rank = RULES.upgradeScores.filter(score => drake.score >= score).length;
+        const rank = game.rules.upgradeScores.filter(score => drake.score >= score).length;
         if (rank > drake.rank) {
           drake.rank = rank;
           event(game,"upgrade",drake.x,drake.y,rank,drake.id);
@@ -269,8 +289,10 @@
     event(game,"hit",drake.x,drake.y,amount,drake.id);
     if (drake.health === 0) {
       for (const [town, value] of drake.marks) scatter(game,drake.x,drake.y,value,town);
-      if (drake.royal) scatter(game,drake.x,drake.y,RULES.royalValue,0,true);
-      event(game,"fall",drake.x,drake.y,0,drake.id);
+      if (drake.royal) scatter(game,drake.x,drake.y,game.rules.royalValue,0,true);
+      const penalty = Math.ceil(drake.score*game.rules.knockoutPenalty);
+      drake.score -= penalty;
+      event(game,"fall",drake.x,drake.y,penalty,drake.id);
       game.stats.knockouts += drake.id === 0 ? 1 : 0;
       Object.assign(drake,{x:LAIRS[drake.id].x,y:LAIRS[drake.id].y,vx:0,vy:0,
         breath:1,health:RULES.maxHealth,recover:1.65,invulnerable:2.4,firing:false,winded:false,carry:0,royal:false,bank:0});
@@ -334,9 +356,9 @@
         town.nextWagon += 14+(4-intact)*3+random(game)*4-2*town.prosperity;
       }
     }
-    if (game.time >= (RULES.royalDepartures[game.royalCount] ?? Infinity)) {
+    if (game.time >= (game.rules.royalDepartures[game.royalCount] ?? Infinity)) {
       const district = [2,5,4][game.royalCount%3];
-      const wagon = makeWagon(district,true,0,game.royalCount);
+      const wagon = makeWagon(district,true,0,game.royalCount,game.rules.royalValue);
       game.wagons.push(wagon);
       event(game,"royalDeparture",wagon.x,wagon.y);
       game.royalCount += 1;
@@ -366,8 +388,8 @@
   function step(game, input, dt) {
     game.events.length = 0;
     if (game.ended) return;
-    game.time = Math.min(RULES.duration,game.time+dt);
-    const phase = RULES.phases.filter(time => game.time>=time).length;
+    game.time = Math.min(game.rules.duration,game.time+dt);
+    const phase = game.rules.phases.filter(time => game.time>=time).length;
     if (phase !== game.phase) {
       game.phase = phase;
       event(game,"phase",0,0,phase);
@@ -377,13 +399,13 @@
     for (const drake of game.dragons) raid(game,drake,dt);
     for (const drake of game.dragons) collectAndBank(game,drake,dt);
     updateKingdom(game,dt);
-    if (game.time >= RULES.duration) {
+    if (game.time >= game.rules.duration) {
       game.ended = true;
       event(game,"finish",0,0);
     }
   }
 
-  globalThis.Cinder = {WIDTH, HEIGHT, RULES, LAIRS, TOWNS, createGame, step, gap, bearing, angleDelta, clamp, capacity};
+  globalThis.Cinder = {WIDTH, HEIGHT, RULES, VARIANTS, LAIRS, TOWNS, createGame, step, gap, bearing, angleDelta, clamp, capacity};
 })();
 
 if (typeof process !== "undefined" && process.argv[2] === "-test") require("./game.test.cjs");

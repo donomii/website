@@ -14,8 +14,11 @@
 </head>
 <body>
   <main class="shell">
-    <header class="rail">
-      <h1>Cinder <span>Circuit</span></h1>
+    <header class="rail match-header">
+      <div class="raid-heading">
+        <h1>Cinder <span>Circuit</span></h1>
+        <select id="raid-variant" aria-label="Raid variant"></select>
+      </div>
       <div class="scoreboard" aria-label="Banked gold">
         <div class="score player" title="Your banked gold"><i></i><output id="player-score" aria-label="Your gold">0</output></div>
         <div class="clock" title="Time remaining"><output id="clock" aria-label="Time remaining">4:00</output></div>
@@ -28,6 +31,7 @@
         <h2 id="winner"></h2>
         <p id="result"></p>
         <button id="play-again" type="button">Play again</button>
+        <button id="choose-raid" type="button">Choose raid</button>
       </dialog>
     </div>
     <footer class="rail instruments">

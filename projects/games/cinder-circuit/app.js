@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const {WIDTH,HEIGHT,RULES,createGame,step,capacity,bearing,gap,clamp} = Cinder;
+  const {WIDTH,HEIGHT,RULES,VARIANTS,createGame,step,capacity,bearing,gap,clamp} = Cinder;
   const byId = id => document.getElementById(id);
   const canvas = byId("board");
   const ctx = canvas.getContext("2d", {alpha:false});
@@ -10,6 +10,8 @@
   const roundEnd = byId("round-end");
   const flightAction = byId("flight-action");
   const restartButton = byId("restart");
+  const variantSelect = byId("raid-variant");
+  const variantIds = Object.keys(VARIANTS);
   const soundButton = byId("sound");
   const fireButton = byId("fire");
   const dashButton = byId("dash");
@@ -20,7 +22,7 @@
   const gameKeys = new Set([...flightKeys,"Space","ShiftLeft","ShiftRight"]);
   const effects = [];
   const tick = 1/120;
-  let game = createGame();
+  let game = createGame(new URLSearchParams(location.search).get("mode"));
   let mode = "ready";
   let last = performance.now();
   let accumulator = 0;
@@ -31,8 +33,22 @@
   let dashQueue = false;
   let heldDash = false;
   let heldStart = false;
+  let heldVariant = 0;
   let gamepadAllowed = true;
   let pendingDash = false;
+
+  for (const id of variantIds) {
+    const variant = VARIANTS[id];
+    const option = new Option(variant.name,id);
+    option.title = variant.description;
+    variantSelect.add(option);
+  }
+  updateVariant();
+
+  function updateVariant() {
+    variantSelect.value = game.variant;
+    variantSelect.title = `${VARIANTS[game.variant].description} Gamepad: LB / RB to choose a raid before takeoff.`;
+  }
 
   function worldPoint(e) {
     const bounds=canvas.getBoundingClientRect();
@@ -58,6 +74,7 @@
     soundButton.hidden = mode !== "paused";
     fireButton.hidden = mode === "paused" || mode === "finished";
     dashButton.hidden = fireButton.hidden;
+    variantSelect.disabled = mode !== "ready";
   }
 
   function begin() {
@@ -87,14 +104,30 @@
     }
   }
 
-  function restart() {
+  function resetRound(id) {
     if (roundEnd.open) roundEnd.close();
     clearInput();
-    game = createGame();
+    game = createGame(id);
     effects.length = 0;
-    setMode("playing");
-    canvas.focus();
-    sound.unlock();
+    setMode("ready");
+    updateVariant();
+  }
+
+  function restart() {
+    resetRound(game.variant);
+    begin();
+  }
+
+  function chooseVariant(id) {
+    resetRound(id);
+    const url = new URL(location.href);
+    if (game.variant === "classic") url.searchParams.delete("mode");
+    else url.searchParams.set("mode",game.variant);
+    try {
+      history.replaceState(null,"",url);
+    } catch (error) {
+      if (error.name !== "SecurityError") throw error;
+    }
   }
 
   function finish() {
@@ -111,6 +144,11 @@
   flightAction.addEventListener("click",flightActionClick);
   restartButton.addEventListener("click",restart);
   byId("play-again").addEventListener("click",restart);
+  byId("choose-raid").addEventListener("click",()=>{
+    resetRound(game.variant);
+    variantSelect.focus();
+  });
+  variantSelect.addEventListener("change",()=>chooseVariant(variantSelect.value));
   soundButton.addEventListener("click",event=>{
     const enabled=sound.toggle();
     event.currentTarget.textContent=enabled?"Sound on":"Sound off";
@@ -119,6 +157,7 @@
   roundEnd.addEventListener("cancel",event=>event.preventDefault());
 
   window.addEventListener("keydown",event=>{
+    if (event.target === variantSelect) return;
     if (event.code === "Escape" && !event.repeat && (mode === "playing" || mode === "paused")) {
       event.preventDefault();
       flightActionClick();
@@ -198,7 +237,7 @@
     const aim = standard || pad.axes.length === 4 ? stick(pad.axes,2,.25) : {x:0,y:0};
     const aiming = Boolean(aim.x || aim.y);
     return {...move, aim:aiming?Math.atan2(aim.y,aim.x):null,
-      fire:aiming || pressed(standard?7:1), dash:pressed(0), start:pressed(9)};
+      fire:aiming || pressed(standard?7:1), dash:pressed(0), start:pressed(9), variant:Number(pressed(5))-Number(pressed(4))};
   }
 
   function pollPad() {
@@ -207,7 +246,7 @@
       for (const pad of navigator.getGamepads()) {
         if (!pad?.connected || (pad.mapping !== "standard" && (pad.mapping !== "" || pad.axes.length < 2))) continue;
         const state = readPad(pad);
-        if (state.x || state.y || state.fire || state.dash || state.start) return state;
+        if (state.x || state.y || state.fire || state.dash || state.start || state.variant) return state;
       }
       return null;
     } catch (error) {
@@ -223,6 +262,12 @@
     const start = Boolean(pad?.start);
     const startPressed = start && !heldStart;
     heldStart = start;
+    const variantDirection = pad?.variant ?? 0;
+    if (variantDirection && variantDirection !== heldVariant && !document.hidden && (mode === "ready" || mode === "finished")) {
+      const next = (variantIds.indexOf(game.variant)+variantDirection+variantIds.length)%variantIds.length;
+      chooseVariant(variantIds[next]);
+    }
+    heldVariant = variantDirection;
     if (startPressed && !document.hidden) {
       if (mode === "finished") restart();
       else flightActionClick();
@@ -263,7 +308,7 @@
       case "coin": sparks(x,y,ink,4); break;
       case "dash": sparks(x,y,"#e7dbb9",12); break;
       case "hit": sparks(x,y,"#ffae9c",11); break;
-      case "fall": caption(x,y-24,"Loot dropped","#ffc0a6"); sparks(x,y,"#fa795b",28); break;
+      case "fall": caption(x,y-24,amount ? `−${amount} banked` : "Loot dropped","#ffc0a6"); sparks(x,y,"#fa795b",28); break;
       case "bank": caption(x,y-32,`+${amount}`,ink); sparks(x,y,ink,24); break;
       case "royal": caption(x,y-32,"Princess aboard","#ffd1ea"); break;
       case "royalDeparture": caption(x,y-35,"Royal carriage","#ffd1ea"); break;
@@ -276,7 +321,7 @@
 
   function updateHud() {
     const [player,rival]=game.dragons;
-    const left=Math.ceil(RULES.duration-game.time);
+    const left=Math.ceil(game.rules.duration-game.time);
     const show=(id,value)=>{ if(readouts[id].value!==String(value)) readouts[id].value=value; };
     show("player-score",player.score);
     show("rival-score",rival.score);
@@ -287,7 +332,7 @@
     show("cargo",`${player.carry} / ${capacity(player)}`);
     readouts.royal.hidden=!player.royal;
     readouts.bonus.hidden=player.marks.size<2;
-    readouts.bonus.textContent=`+${25*clamp(player.marks.size-1,0,3)}%`;
+    readouts.bonus.textContent=`+${Math.round(100*game.rules.districtBonus*clamp(player.marks.size-1,0,3))}%`;
     dashButton.classList.toggle("cooling",player.dash>0);
   }
 

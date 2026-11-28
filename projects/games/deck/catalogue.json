@@ -5,6 +5,18 @@
       {
         "name": "Cinder Circuit",
         "url": "/projects/games/cinder-circuit/index.html"
+      },
+      {
+        "name": "Blitz",
+        "url": "/projects/games/cinder-circuit/index.html?mode=blitz"
+      },
+      {
+        "name": "Crown Chase",
+        "url": "/projects/games/cinder-circuit/index.html?mode=crown-chase"
+      },
+      {
+        "name": "High Stakes",
+        "url": "/projects/games/cinder-circuit/index.html?mode=high-stakes"
       }
     ]
   },
