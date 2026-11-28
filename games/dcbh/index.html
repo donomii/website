@@ -29,7 +29,8 @@
     <section class="controls-bar" aria-label="Game controls">
       <div class="controls-hints">
         <span>Move: Mouse, Touch, <kbd>WASD</kbd>/<kbd>Arrows</kbd>/<kbd>Numpad</kbd>, or Gamepad</span>
-        <span>Auto-fire: nearest monster</span>
+        <span>Walk onto stairs to change floors</span>
+        <span>Auto-fire: nearest visible monster</span>
         <span><kbd>P</kbd> Pause</span>
         <span><kbd>R</kbd> Restart</span>
       </div>
@@ -42,6 +43,8 @@
   </main>
 
   <script src="assets/map-data.js"></script>
+  <script src="vendor/crawlmap/crawlmap.js"></script>
+  <script src="levels.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

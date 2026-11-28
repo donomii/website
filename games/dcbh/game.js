@@ -19,10 +19,7 @@
   const SPAWN_RAMP_PER_SEC = 0.012;
 
   const TILE_SIZE = 64; // 32px DCSS tile rendered at crisp 2x
-  const GRID_COLS = 25; // 25 * 64 = 1600px world
-  const GRID_ROWS = 25;
-  const WORLD_WIDTH = GRID_COLS * TILE_SIZE;
-  const WORLD_HEIGHT = GRID_ROWS * TILE_SIZE;
+  const MENU_GRID_SIZE = 25;
   const WALL_MARGIN = TILE_SIZE; // 1-tile stone border around arena
 
   const STORAGE_BEST_KEY = "dcbh_best_kills_v1";
@@ -173,6 +170,9 @@
     lava_2: DCSS_BASE + "DNGN_LAVA_2.png",
     lava_3: DCSS_BASE + "DNGN_LAVA_3.png",
     stairs_down: DCSS_BASE + "DNGN_SHOALS_STAIRS_DOWN_0.png",
+    stairs_up: DCSS_BASE + "DNGN_SHOALS_STAIRS_UP_0.png",
+    shallow_water: DCSS_BASE + "DNGN_SHALLOW_WATER_0.png",
+    deep_water: DCSS_BASE + "DNGN_DEEP_WATER_0.png",
 
     // DCSS blood, spell clouds, and status icons
     blood_0: DCSS_BASE + "BLOOD_0.png",
@@ -215,11 +215,8 @@
 
   const assets = {};
   let assetsReady = false;
-  const branchCanvases = {
-    dungeon: null,
-    crypt: null,
-    zot: null
-  };
+  let menuCanvas = null;
+  let arenaCanvas = null;
 
   // Decorative animated lava braziers placed symmetrically in the dungeon hall
   const LAVA_TILES = [
@@ -236,10 +233,12 @@
     return ((n ^ (n >>> 16)) >>> 0);
   }
 
-  function buildDungeonCanvas(branchId) {
+  function buildDungeonCanvas(branchId, level) {
     const off = document.createElement("canvas");
-    off.width = WORLD_WIDTH;
-    off.height = WORLD_HEIGHT;
+    const cols = level ? level.rows[0].length : MENU_GRID_SIZE;
+    const rows = level ? level.rows.length : MENU_GRID_SIZE;
+    off.width = cols * TILE_SIZE;
+    off.height = rows * TILE_SIZE;
     const octx = off.getContext("2d");
     octx.imageSmoothingEnabled = false;
 
@@ -260,17 +259,18 @@
     const fallbackFloor = branchId === "zot" ? "#131729" : branchId === "crypt" ? "#1a1720" : "#1c1c21";
     const fallbackWall = branchId === "zot" ? "#451a1a" : branchId === "crypt" ? "#2e2938" : "#2f2c29";
 
-    const centerCol = Math.floor(GRID_COLS / 2);
-    const centerRow = Math.floor(GRID_ROWS / 2);
+    const centerCol = Math.floor(cols / 2);
+    const centerRow = Math.floor(rows / 2);
 
-    for (let gy = 0; gy < GRID_ROWS; gy++) {
-      for (let gx = 0; gx < GRID_COLS; gx++) {
+    for (let gy = 0; gy < rows; gy++) {
+      for (let gx = 0; gx < cols; gx++) {
         const dx = gx * TILE_SIZE;
         const dy = gy * TILE_SIZE;
         const h = tileHash(gx, gy, branchId.length);
-        const isBorder = gx === 0 || gy === 0 || gx === GRID_COLS - 1 || gy === GRID_ROWS - 1;
+        const isBorder = gx === 0 || gy === 0 || gx === cols - 1 || gy === rows - 1;
+        const terrain = level ? level.rows[gy][gx] : (isBorder ? "x" : ".");
 
-        if (isBorder) {
+        if (terrain === "x") {
           const wImg = walls[h % walls.length];
           if (wImg) {
             octx.drawImage(wImg, dx, dy, TILE_SIZE, TILE_SIZE);
@@ -285,7 +285,9 @@
         const distCenter = Math.max(Math.abs(gx - centerCol), Math.abs(gy - centerRow));
         const onWalkway = gx === centerCol || gy === centerRow;
         let fImg = null;
-        if (distCenter <= 3 || (onWalkway && distCenter <= 8)) {
+        if (terrain === "w" || terrain === "W") {
+          fImg = terrain === "w" ? assets.shallow_water : assets.deep_water;
+        } else if (distCenter <= 3 || (onWalkway && distCenter <= 8)) {
           fImg = mosaicSet[h % mosaicSet.length];
         } else {
           fImg = floors[h % floors.length];
@@ -305,8 +307,15 @@
       }
     }
 
-    // Center descending stairs emblem (purely visual dungeon centerpiece)
-    if (assets.stairs_down) {
+    // The menu keeps its central stairs emblem. Arena stairs mark the two landings.
+    if (level) {
+      const stairs = [];
+      if (branchId !== BRANCHES[0].id) stairs.push([level.entry, assets.stairs_up]);
+      if (branchId !== BRANCHES[BRANCHES.length - 1].id) stairs.push([level.exit, assets.stairs_down]);
+      for (const [point, sprite] of stairs) {
+        if (sprite) octx.drawImage(sprite, point.x - TILE_SIZE / 2, point.y - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
+      }
+    } else if (assets.stairs_down) {
       octx.drawImage(
         assets.stairs_down,
         centerCol * TILE_SIZE,
@@ -322,17 +331,16 @@
     octx.strokeRect(
       WALL_MARGIN + 5,
       WALL_MARGIN + 5,
-      WORLD_WIDTH - WALL_MARGIN * 2 - 10,
-      WORLD_HEIGHT - WALL_MARGIN * 2 - 10
+      off.width - WALL_MARGIN * 2 - 10,
+      off.height - WALL_MARGIN * 2 - 10
     );
 
     return off;
   }
 
   function buildAllDungeonLayers() {
-    branchCanvases.dungeon = buildDungeonCanvas("dungeon");
-    branchCanvases.crypt = buildDungeonCanvas("crypt");
-    branchCanvases.zot = buildDungeonCanvas("zot");
+    menuCanvas = buildDungeonCanvas("dungeon");
+    if (state.level) arenaCanvas = buildDungeonCanvas(state.branch.id, state.level);
   }
 
   function loadAllAssets() {
@@ -435,6 +443,10 @@
 
     elapsed: 0,
     branch: BRANCHES[0],
+    levels: [],
+    level: null,
+    runSeed: 0,
+    onStairs: false,
     spawnCooldown: INITIAL_SPAWN_DELAY,
     bulletCooldown: 0,
     bulletSweep: 0,
@@ -472,8 +484,8 @@
   function createPlayer() {
     const size = 64; // 32 * 2x scale
     return {
-      x: Math.floor(WORLD_WIDTH / 2 - size / 2),
-      y: Math.floor(WORLD_HEIGHT / 2 - size / 2),
+      x: 0,
+      y: 0,
       width: size,
       height: size,
       hp: PLAYER_MAX_HP,
@@ -493,10 +505,34 @@
   function updateCamera() {
     if (!state.player) return;
     const pc = centerOf(state.player);
-    const maxCamX = Math.max(0, WORLD_WIDTH - VIEW_WIDTH);
-    const maxCamY = Math.max(0, WORLD_HEIGHT - VIEW_HEIGHT);
+    const maxCamX = Math.max(0, state.level.width - VIEW_WIDTH);
+    const maxCamY = Math.max(0, state.level.height - VIEW_HEIGHT);
     state.camera.x = clamp(pc.x - VIEW_WIDTH / 2, 0, maxCamX);
     state.camera.y = clamp(pc.y - VIEW_HEIGHT / 2, 0, maxCamY);
+  }
+
+  function enterLevel(index, descending) {
+    const branch = BRANCHES[index];
+    const level = state.levels[index] ||= new ArenaLevel(branch.id, state.runSeed, TILE_SIZE);
+    const landing = descending ? level.entry : level.exit;
+    state.level = level;
+    state.branch = branch;
+    state.player.x = landing.x - state.player.width / 2;
+    state.player.y = landing.y - state.player.height / 2;
+    state.onStairs = true;
+    state.enemies = level.enemies;
+    state.decals = level.decals;
+    state.bullets = [];
+    state.particles = [];
+    state.spellClouds = [];
+    arenaCanvas = buildDungeonCanvas(branch.id, level);
+    updateCamera();
+  }
+
+  function travelTo(index, descending) {
+    enterLevel(index, descending);
+    pushLog("You " + (descending ? "descend into " : "ascend to ") + state.branch.name + " (" + state.branch.label + ")!", state.branch.accent);
+    sound.descend();
   }
 
   function startRun() {
@@ -505,23 +541,19 @@
     state.score = 0;
     state.gameOver = false;
     state.elapsed = 0;
-    state.branch = BRANCHES[0];
+    state.runSeed = Math.floor(Math.random() * 0x100000000);
+    state.levels = [];
     state.spawnCooldown = INITIAL_SPAWN_DELAY;
     state.bulletCooldown = 0;
     state.bulletSweep = 0;
     state.player = createPlayer();
-    state.enemies = [];
-    state.bullets = [];
-    state.particles = [];
-    state.decals = [];
-    state.spellClouds = [];
+    enterLevel(0, true);
     state.combatLog = [];
     state.shakeTimer = 0;
     state.hurtFlash = 0;
     initAmbientClouds();
     pushLog("Welcome, Deep Elf Annihilator! You enter D:1.", "#facc15");
-    pushLog("Damnation bolts auto-target the nearest monster.", "#94a3b8");
-    updateCamera();
+    pushLog("Damnation bolts auto-target the nearest visible monster.", "#94a3b8");
     syncUI();
     canvas.focus();
   }
@@ -853,7 +885,22 @@
   }
 
   function spawnEnemy() {
-    const pos = spawnPosition();
+    const edge = spawnPosition();
+    const pc = centerOf(state.player);
+    let pos = null, nearest = Infinity, farthest = -1, fallback = null;
+    for (const cell of state.level.cells) {
+      const range = Math.hypot(cell.x - pc.x, cell.y - pc.y);
+      const offset = Math.hypot(cell.x - edge.x, cell.y - edge.y);
+      if (range > farthest) {
+        fallback = cell;
+        farthest = range;
+      }
+      if (range >= VIEW_WIDTH / 2 && offset < nearest) {
+        pos = cell;
+        nearest = offset;
+      }
+    }
+    pos ||= fallback;
     const arch = pickMonsterArchetype();
     state.enemies.push({
       id: arch.id,
@@ -861,8 +908,8 @@
       tile: arch.tile,
       burst: arch.burst,
       speed: ENEMY_SPEED * arch.speedMul,
-      x: pos.x,
-      y: pos.y,
+      x: pos.x - TILE_SIZE / 2,
+      y: pos.y - TILE_SIZE / 2,
       width: 64,
       height: 64,
       bobPhase: Math.random() * Math.PI * 2,
@@ -881,7 +928,7 @@
       const dx = ec.x - fromX;
       const dy = ec.y - fromY;
       const distSq = dx * dx + dy * dy;
-      if (distSq < bestDistSq) {
+      if (distSq < bestDistSq && state.level.clearPath({ x: fromX, y: fromY }, ec, 0)) {
         bestDistSq = distSq;
         bestX = ec.x;
         bestY = ec.y;
@@ -920,8 +967,8 @@
   function spawnBloodDecal(cx, cy) {
     const bloodKeys = ["blood_0", "blood_1", "blood_2", "blood_3"];
     state.decals.push({
-      x: clamp(cx - 24, WALL_MARGIN, WORLD_WIDTH - WALL_MARGIN - 48),
-      y: clamp(cy - 24, WALL_MARGIN, WORLD_HEIGHT - WALL_MARGIN - 48),
+      x: clamp(cx - 24, WALL_MARGIN, state.level.width - WALL_MARGIN - 48),
+      y: clamp(cy - 24, WALL_MARGIN, state.level.height - WALL_MARGIN - 48),
       size: 48,
       tile: bloodKeys[Math.floor(Math.random() * bloodKeys.length)],
       alpha: 0.72
@@ -997,11 +1044,12 @@
     pollGamepadActions(gp);
 
     // Drift ambient dungeon clouds
+    const worldWidth = state.level ? state.level.width : MENU_GRID_SIZE * TILE_SIZE;
     for (let i = 0; i < state.ambientClouds.length; i++) {
       const c = state.ambientClouds[i];
       c.x += c.vx * dt;
-      if (c.x > WORLD_WIDTH + 96) c.x = -96;
-      if (c.x < -96) c.x = WORLD_WIDTH + 96;
+      if (c.x > worldWidth + 96) c.x = -96;
+      if (c.x < -96) c.x = worldWidth + 96;
     }
 
     if (state.scene === "menu") {
@@ -1013,30 +1061,33 @@
 
     if (state.paused) return;
 
+    const previousElapsed = state.elapsed;
     state.elapsed += dt;
     if (state.shakeTimer > 0) state.shakeTimer = Math.max(0, state.shakeTimer - dt);
     if (state.hurtFlash > 0) state.hurtFlash = Math.max(0, state.hurtFlash - dt);
 
     // Branch progression check
     const nextBranch = currentBranchForTime(state.elapsed);
-    if (nextBranch.id !== state.branch.id) {
-      state.branch = nextBranch;
-      pushLog("You descend into " + nextBranch.name + " (" + nextBranch.label + ")!", nextBranch.accent);
-      sound.descend();
+    if (previousElapsed < nextBranch.minTime && state.branch.minTime < nextBranch.minTime) {
+      travelTo(BRANCHES.indexOf(nextBranch), true);
     }
 
     // 1. ControlSystem: move player (keyboard / numpad / gamepad / mouse-follow / touch) & clamp inside walls
     const move = readMovementInput(gp);
-    state.player.x += move.x * PLAYER_SPEED * dt;
-    state.player.y += move.y * PLAYER_SPEED * dt;
+    state.level.move(state.player, move.x * PLAYER_SPEED * dt, move.y * PLAYER_SPEED * dt);
     if (move.x < -0.05) state.player.facingX = -1;
     if (move.x > 0.05) state.player.facingX = 1;
     if (Math.hypot(move.x, move.y) > 0.05) {
       state.player.walkPhase += dt * 14;
     }
 
-    state.player.x = clamp(state.player.x, WALL_MARGIN, WORLD_WIDTH - WALL_MARGIN - state.player.width);
-    state.player.y = clamp(state.player.y, WALL_MARGIN, WORLD_HEIGHT - WALL_MARGIN - state.player.height);
+    const index = BRANCHES.indexOf(state.branch);
+    const stair = state.level.stairAt(centerOf(state.player), index, BRANCHES.length - 1);
+    if (stair && !state.onStairs) {
+      travelTo(index + stair, stair > 0);
+    } else {
+      state.onStairs = stair !== 0;
+    }
     updateCamera();
 
     // 2. RockSpawnSystem: time-ramped DCSS monster spawning
@@ -1052,9 +1103,10 @@
     for (let i = state.enemies.length - 1; i >= 0; i--) {
       const e = state.enemies[i];
       const ec = centerOf(e);
-      const dir = directionBetween(ec.x, ec.y, pc.x, pc.y);
-      e.x += dir.x * e.speed * dt;
-      e.y += dir.y * e.speed * dt;
+      const target = state.level.chaseTarget(ec, pc, e.width / 4);
+      const dir = directionBetween(ec.x, ec.y, target.x, target.y);
+      const step = Math.min(e.speed * dt, Math.hypot(target.x - ec.x, target.y - ec.y));
+      state.level.move(e, dir.x * step, dir.y * step);
       e.bobPhase += dt * 6;
       if (dir.x < -0.05) e.facingX = -1;
       if (dir.x > 0.05) e.facingX = 1;
@@ -1075,10 +1127,11 @@
     // 5. BulletSystem: move bolts & expire by lifetime
     for (let i = state.bullets.length - 1; i >= 0; i--) {
       const b = state.bullets[i];
+      const from = centerOf(b);
       b.x += b.dx * BULLET_SPEED * dt;
       b.y += b.dy * BULLET_SPEED * dt;
       b.age += dt;
-      if (b.age > b.maxAge) {
+      if (b.age > b.maxAge || !state.level.clearPath(from, centerOf(b), 0)) {
         state.bullets.splice(i, 1);
       }
     }
@@ -1162,6 +1215,9 @@
       const img = lavaFrames[(frameIdx + i) % lavaFrames.length];
       const dx = t.gx * TILE_SIZE;
       const dy = t.gy * TILE_SIZE;
+      const point = { x: dx + TILE_SIZE / 2, y: dy + TILE_SIZE / 2 };
+      if (state.level.terrain(point.x, point.y) !== "." ||
+          state.level.stairAt(point, BRANCHES.indexOf(state.branch), BRANCHES.length - 1)) continue;
       if (img) {
         ctx.drawImage(img, dx, dy, TILE_SIZE, TILE_SIZE);
       } else {
@@ -1387,7 +1443,7 @@
     ctx.fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
 
     // Dimmed authentic DCSS dungeon backdrop
-    const preview = branchCanvases.dungeon;
+    const preview = menuCanvas;
     if (preview) {
       ctx.globalAlpha = 0.34;
       ctx.drawImage(preview, 288, 288, VIEW_WIDTH, VIEW_HEIGHT, 0, 0, VIEW_WIDTH, VIEW_HEIGHT);
@@ -1501,12 +1557,12 @@
     ctx.translate(-Math.round(state.camera.x) + shakeX, -Math.round(state.camera.y) + shakeY);
 
     // Layer 0: DCSS branch dungeon floor + stone walls
-    const floorCanvas = branchCanvases[state.branch.id] || branchCanvases.dungeon;
+    const floorCanvas = arenaCanvas;
     if (floorCanvas) {
       ctx.drawImage(floorCanvas, 0, 0);
     } else {
       ctx.fillStyle = "#18181f";
-      ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+      ctx.fillRect(0, 0, state.level.width, state.level.height);
     }
 
     // Animated DCSS lava braziers
