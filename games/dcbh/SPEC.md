@@ -1,5 +1,7 @@
 # Browser arenas
 
+Opening the page starts a run directly in the arena. The canvas shows the dungeon, creatures and effects during play, pause and death. Health, kills, floor and pause or game-over status appear below it. The closed Menu disclosure below the arena contains navigation, controls, time and best score. After death, moving again starts a fresh run.
+
 A new run generates a seed. Each branch combines it with its branch ID to generate one persistent floor. The Dungeon has rooms connected by passages, the Crypt has crossing halls, and Zot has cave pods. Monsters and blood remain on their floor while the player is away. Projectiles and short-lived effects expire on travel. Health, kills, elapsed time and firing and spawn timers carry across floors.
 
 The player starts in the first room. Place a down stair on a dry tile at the greatest walking distance from the entry. Following it places the player on the next floor's up stair. Returning places the player on the matching down stair. The Dungeon has no up stair and Zot has no down stair. A stair responds when the player enters its tile, once per entry. Crossing 25 or 60 seconds also descends to the Crypt or Zot respectively if the player is still on an earlier floor.

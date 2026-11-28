@@ -10,36 +10,29 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="top-nav">
-    <nav class="nav-links" aria-label="Site navigation">
-      <a href="../../index.html" title="Home">(↑) Home</a>
-      <a href="../index.html">Games</a>
-    </nav>
-    <span class="nav-title">Dungeon Crawl Bullet Hell</span>
-  </header>
-
   <main class="game-shell">
-    <div class="canvas-frame">
-      <canvas id="game-canvas" width="1024" height="1024" tabindex="0" aria-label="Dungeon Crawl Bullet Hell game canvas"></canvas>
-      <div class="overlay-actions">
-        <button id="start-btn" class="start-btn" type="button">Start Run</button>
+    <canvas id="game-canvas" width="1024" height="1024" tabindex="0" aria-label="Dungeon Crawl Bullet Hell"></canvas>
+    <footer>
+      <div class="scoreline">
+        <span title="Current and maximum health">HP <span id="hp"></span></span>
+        <span title="Monsters defeated this run">Kills <span id="score"></span></span>
+        <span id="floor"></span>
+        <span id="run-status" role="status"></span>
       </div>
-    </div>
-
-    <section class="controls-bar" aria-label="Game controls">
-      <div class="controls-hints">
-        <span>Move: Mouse, Touch, <kbd>WASD</kbd>/<kbd>Arrows</kbd>/<kbd>Numpad</kbd>, or Gamepad</span>
-        <span>Walk onto stairs to change floors</span>
-        <span>Auto-fire: nearest visible monster</span>
-        <span><kbd>P</kbd> Pause</span>
-        <span><kbd>R</kbd> Restart</span>
-      </div>
-      <div class="controls-buttons">
-        <button id="pause-btn" class="ctrl-btn" type="button">Pause</button>
-        <button id="restart-btn" class="ctrl-btn" type="button">Restart</button>
-        <button id="mute-btn" class="ctrl-btn" type="button">Sound: On</button>
-      </div>
-    </section>
+      <details>
+        <summary>Menu</summary>
+        <div class="controls">
+          <button id="pause-btn" type="button">Pause</button>
+          <button id="restart-btn" type="button">Restart</button>
+          <button id="mute-btn" type="button">Sound: On</button>
+          <button data-deck-games type="button">Games</button>
+          <a href="../index.html">Arcade</a>
+          <a href="../../index.html">Home</a>
+        </div>
+        <p>Move with the mouse, touch, WASD, arrows, numpad or gamepad. Walk onto stairs to change floors.</p>
+        <p>P pauses, R restarts, M toggles sound. <span id="run-record"></span></p>
+      </details>
+    </footer>
   </main>
 
   <script src="assets/map-data.js"></script>
